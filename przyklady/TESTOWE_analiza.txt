@@ -1,0 +1,42 @@
+
+*** DANE TESTOWE / SYNTETYCZNE — nie są aktualnymi ofertami ***
+
+=== Analiza: profil 'stihl_ms391', przebieg 2 (import) ===
+Oferty: 13 | pasuje: 6 | odrzucone: 5 | do sprawdzenia: 2
+Ceny (oferty pasujące):
+  wszystkie (n=6): min 1 750,00 zł | Q1 2 162,50 zł | mediana 2 549,50 zł | Q3 2 786,50 zł | max 3 150,00 zł
+  stan: nowy (n=3): min 2 749,00 zł | Q1 — | mediana 2 799,00 zł | Q3 — | max 3 150,00 zł
+      ! mała próba (n=3) — wartości orientacyjne, bez mocnych wniosków
+  stan: używany (n=3): min 1 750,00 zł | Q1 — | mediana 2 100,00 zł | Q3 — | max 2 350,00 zł
+      ! mała próba (n=3) — wartości orientacyjne, bez mocnych wniosków
+Z dostawą (pokrycie 4/6):
+  cena z dostawą (n=4): min 1 769,99 zł | Q1 2 036,25 zł | mediana 2 250,00 zł | Q3 2 510,00 zł | max 2 914,99 zł
+      ! mała próba (n=4) — wartości orientacyjne, bez mocnych wniosków
+
+Najtańsze pasujące (do 10):
+  1 750,00 zł, z dostawą 1 769,99 zł | używany | STIHL MS 391 pilarka używana, stan bardzo dobry
+      https://allegro.pl/oferta/stihl-ms-391-pilarka-uzywana-99000000003
+  2 100,00 zł, z dostawą 2 125,00 zł | używany | Pilarka STIHL MS391 50 cm
+      https://allegro.pl/oferta/pilarka-stihl-ms391-99000000021
+  2 350,00 zł, z dostawą 2 375,00 zł | używany | Pilarka STIHL MS 391 jak nowa
+      https://allegro.pl/oferta/pilarka-stihl-ms-391-99000000023
+  2 749,00 zł, z dostawą 2 914,99 zł | nowy | Pilarka spalinowa STIHL MS 391 45 cm 3,3 KM
+      https://allegro.pl/oferta/pilarka-spalinowa-stihl-ms-391-45-cm-99000000001
+  2 799,00 zł | nowy | Pilarka STIHL MS391 promocja + łańcuch gratis
+      https://allegro.pl/oferta/pilarka-stihl-ms391-promocja-99000000012
+  3 150,00 zł | nowy | Piła łańcuchowa STIHL MS391 NOWA gwarancja
+      https://allegro.pl/oferta/pila-lancuchowa-stihl-ms391-nowa-99000000002
+
+Wymagają sprawdzenia (2):
+  2 999,00 zł | STIHL MS 391 pilarka – zestaw, różne prowadnice -> cena „od” (wariantowa) — nieporównywalna z ceną pełną
+  brak danych | Pilarka STIHL MS391 na raty -> brak ceny
+
+Główne powody odrzuceń:
+    1 × część zamienna / akcesorium / zamiennik (fraza „do stihl”)
+    1 × część zamienna: „prowadnic”
+    1 × inny model: MS362
+    1 × produkt uszkodzony / na części
+    1 × część zamienna / akcesorium / zamiennik (fraza „zamiennik”)
+  * Ceny ofertowe, nie potwierdzone ceny sprzedaży.
+  * Statystyki tylko dla ofert 'pasuje' z pełną ceną (bez cen „od”).
+  * Oferty 'wymaga_sprawdzenia' nie są wliczone w statystyki.

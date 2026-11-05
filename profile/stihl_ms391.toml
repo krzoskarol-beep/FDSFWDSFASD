@@ -1,0 +1,55 @@
+# Profil: kompletna pilarka spalinowa STIHL MS 391.
+# Słowa/frazy dopasowywane są „od początku słowa” bez polskich znaków i wielkości liter:
+# „łańcuch” trafia w „łańcucha”, „łańcuchem”. Słowo zakończone „=” musi wystąpić dokładnie.
+
+nazwa = "stihl_ms391"
+
+[wyszukiwanie]
+fraza = "pilarka stihl ms391"
+# Zamiast frazy możesz podać adres wyników z filtrami ustawionymi w przeglądarce
+# (ma pierwszeństwo przed frazą):
+# url = "https://allegro.pl/listing?string=pilarka%20stihl%20ms391"
+
+[produkt]
+marka = "STIHL"
+model = "MS391"                       # dopasuje też „MS 391”, „MS-391”; NIE dopasuje MS39, MS3910, MS 391C (to do sprawdzenia)
+aliasy_modelu = ["STIHL 391"]         # zapis bez „MS”, tylko z marką
+akceptowane_marki = ["STIHL"]
+# Słowa oznaczające kompletny produkt (rdzenie)
+slowa_produktu = ["pilarka", "pilarki", "pila spalinowa", "pila lancuchowa", "pila=", "pily=", "spalinowka", "spalinówka"]
+# Frazy usuwane przed szukaniem części — „piła łańcuchowa” to nazwa produktu, nie łańcuch
+frazy_neutralne = ["pilarka lancuchow", "pilarki lancuchow", "pila lancuchow", "pily lancuchow", "pile lancuchow"]
+
+[filtry]
+# Stany akceptowane: nowe, używane, uszkodzone
+stany = ["nowe", "używane"]
+# Zakres ceny pełnej (PLN). Poniżej minimum to zwykle część albo błąd — oferta zostanie odrzucona z opisem.
+cena_min = 800
+cena_max = 6000
+# Do analizy: ceny poniżej tego progu są oznaczane jako podejrzanie niskie
+cena_podejrzana_ponizej = 1500
+
+# Części i akcesoria. Wzmianka PO nazwie produktu („Pilarka … + łańcuch”) nie odrzuca oferty.
+slowa_czesci = [
+    "lancuch", "prowadnic", "zebatk", "koronk", "sprzegl", "bebn", "gaznik", "cylind", "tlok", "pierscien",
+    "korbowod", "wal korbow", "uszczelk", "filtr", "pokryw", "oslon", "rozrusznik", "linka", "sprezyn",
+    "swieca", "cewk", "modul zaplonow", "iskrownik", "pompa olej", "pompk", "zbiornik", "kolo zamachow",
+    "mocowanie", "amortyzator", "tlumik", "wydech", "kolektor", "manetk", "dzwignia", "przewod", "obudow",
+    "korpus", "zestaw naprawczy", "zestaw serwisowy", "olej=", "olej do", "pilnik", "ostrzark", "pokrowiec",
+    "czesc", "czesci", "kit=",
+]
+# Opakowania i dokumenty — osobny powód odrzucenia
+slowa_opakowania = ["pudelk", "karton", "opakowan", "instrukcj", "naklejk", "ulotk", "dokumentacj"]
+# Marki części i osprzętu — ich obecność wskazuje na część/zamiennik
+marki_czesci = ["Oregon", "Walbro", "Zama", "Hyway", "Meteor", "Caber", "Rezer", "Kox", "Hartung", "Winflex"]
+# Sygnały niekompletnego produktu — trafiają do sprawdzenia
+slowa_niekompletny = ["bez prowadnicy", "bez lancucha", "bez osprzetu", "sam silnik", "sama glowica", "niekompletn", "brak oslony", "brak pokrywy"]
+# Twarde wykluczenia (zawsze odrzuć)
+wykluczone_slowa = ["wynajem", "wypozyczal", "wypożyczę", "makieta", "zabawk", "atrapa", "kupie", "kupię", "skup"]
+
+[pobieranie]
+max_stron = 3          # maksymalnie stron wyników
+max_ofert = 150        # maksymalnie ofert w przebiegu
+odstep_s = 8           # sekundy między stronami (minimum 2)
+limit_czasu_s = 45     # limit czasu ładowania strony
+ponowienia = 2         # ponowienia tylko przy błędach przejściowych (nigdy po blokadzie)

@@ -2,5 +2,11 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
-data/
-logs/
+# Dane robocze: baza SQLite, logi, diagnostyka, zapisane strony. Nigdy nie commitować.
+dane/
+*.sqlite
+*.sqlite3
+*.db
+# Na wszelki wypadek: stany sesji przeglądarki
+storage_state*.json
+cookies*.json

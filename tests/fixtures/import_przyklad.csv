@@ -1,0 +1,4 @@
+id;tytul;cena;dostawa;stan;link;sprzedawca
+99000000051;Pilarka STIHL MS 391 (TEST CSV);2 450,00;15,00;używane;https://allegro.pl/oferta/pilarka-stihl-ms-391-99000000051;sprzedawca_testowy_51
+99000000052;Osłona prowadnicy STIHL MS391 (TEST CSV);39,99;;nowe;https://allegro.pl/oferta/oslona-99000000052;
+;Pilarka STIHL MS391 bez linku (TEST CSV);2 999,99;;;;
