@@ -42,4 +42,28 @@ final class Formatters {
         if (meters < 10_000) return String.format(POLISH, "%.1f km", meters / 1000);
         return Math.round(meters / 1000) + " km";
     }
+
+    /**
+     * Krótki adres do wyświetlenia: „Marszałkowska 10, Warszawa”. Gdy brak ulicy,
+     * używa pełnej linii adresu z Geocodera. Zwraca pusty tekst, jeśli nic nie wiadomo.
+     */
+    static String formatAddress(String street, String number, String city, String fullLine) {
+        StringBuilder sb = new StringBuilder();
+        if (notEmpty(street)) {
+            sb.append(street.trim());
+            if (notEmpty(number)) sb.append(' ').append(number.trim());
+        }
+        if (notEmpty(city) && !(sb.length() > 0 && sb.toString().contains(city.trim()))) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(city.trim());
+        }
+        if (sb.length() == 0 || !notEmpty(street)) {
+            if (notEmpty(fullLine)) return fullLine.trim();
+        }
+        return sb.toString();
+    }
+
+    private static boolean notEmpty(String s) {
+        return s != null && !s.trim().isEmpty();
+    }
 }

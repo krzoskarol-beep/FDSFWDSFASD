@@ -36,17 +36,24 @@ final class ParkingDetector {
     /** Pomiary mniej dokładne niż to pomijamy przy wyborze miejsca postoju. */
     static final float MAX_ACCURACY_M = 50f;
 
+    /** Ile ostatnich pomiarów pamiętamy (przy pomiarze co 2 s to ok. 10 minut). */
+    static final int HISTORY_SIZE = 300;
+
+    private final java.util.ArrayDeque<Fix> history = new java.util.ArrayDeque<>();
     private Fix last;
     private Fix lastDriving;
     private Fix stopCandidate;
 
     void reset() {
         last = lastDriving = stopCandidate = null;
+        history.clear();
     }
 
     void add(Fix fix) {
         float speed = Float.isNaN(fix.speed) ? speedFromPrevious(fix) : fix.speed;
         last = fix;
+        history.addLast(fix);
+        if (history.size() > HISTORY_SIZE) history.removeFirst();
         if (Float.isNaN(speed)) return;
 
         if (speed >= DRIVING_SPEED_MS) {
@@ -82,6 +89,31 @@ final class ParkingDetector {
      * Najlepsze przybliżenie miejsca parkowania: pierwszy postój po ostatniej jeździe,
      * a gdy go brak, ostatni punkt jazdy, a gdy i tego brak, ostatni pomiar.
      */
+    /**
+     * Pozycja z chwili zdarzenia (np. rozłączenia Bluetooth auta przy wyłączeniu silnika):
+     * ostatni dokładny pomiar nie późniejszy niż {@code timeMs} i nie starszy niż {@code maxGapMs}.
+     * Pomiary zrobione po zdarzeniu pomijamy: to już miejsce, w którym stoi kierowca, a nie auto.
+     */
+    Fix fixAt(long timeMs, long maxGapMs) {
+        java.util.Iterator<Fix> it = history.descendingIterator();
+        while (it.hasNext()) {
+            Fix f = it.next();
+            if (f.timeMs > timeMs) continue; // oba czasy z tego samego zegara (elapsedRealtime)
+            if (timeMs - f.timeMs > maxGapMs) return null;
+            if (f.accuracy <= MAX_ACCURACY_M) return f;
+        }
+        return null;
+    }
+
+    /**
+     * Czy w chwili {@code timeMs} auto jechało (pomiar z prędkością jazdy w ostatnich
+     * {@code windowMs}). Służy do odróżnienia chwilowego zerwania Bluetooth w trasie od parkowania.
+     */
+    boolean isMovingAt(long timeMs, long windowMs) {
+        Fix f = fixAt(timeMs, windowMs);
+        return f != null && !Float.isNaN(f.speed) && f.speed >= DRIVING_SPEED_MS;
+    }
+
     /** Skąd pochodzi {@link #parkingFix()}: do dziennika diagnostycznego. */
     String parkingFixSource() {
         if (stopCandidate != null) return "postój po jeździe";

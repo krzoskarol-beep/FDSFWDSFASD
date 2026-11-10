@@ -58,11 +58,19 @@ final class AutoParking {
         return Build.VERSION.SDK_INT < 29 || granted(c, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
     }
 
-    /** Wszystko, bez czego wykrywanie w tle nie zadziała (powiadomienia są opcjonalne). */
+    /** Czy wyzwalaczem jest Bluetooth auta (zamiast rozpoznawania aktywności). */
+    static boolean usesBluetooth(Context c) {
+        return CarBluetooth.isConfigured(c);
+    }
+
+    /**
+     * Wszystko, bez czego wykrywanie w tle nie zadziała (powiadomienia są opcjonalne).
+     * Tryb Bluetooth potrzebuje „Urządzeń w pobliżu”, tryb aktywności „Aktywności fizycznej”.
+     */
     static boolean hasRequiredPermissions(Context c) {
         return granted(c, Manifest.permission.ACCESS_FINE_LOCATION)
-                && hasActivityRecognitionPermission(c)
-                && hasBackgroundLocationPermission(c);
+                && hasBackgroundLocationPermission(c)
+                && (usesBluetooth(c) ? CarBluetooth.hasPermission(c) : hasActivityRecognitionPermission(c));
     }
 
     private static PendingIntent transitionsIntent(Context c) {
@@ -80,6 +88,14 @@ final class AutoParking {
         if (!hasRequiredPermissions(c)) {
             EventLog.log(c, "Nie można włączyć wykrywania jazdy: brak uprawnień");
             onFailure.accept(new SecurityException("missing permissions"));
+            return;
+        }
+        if (usesBluetooth(c)) {
+            // Zdarzenia Bluetooth odbiera odbiornik z manifestu, nic nie trzeba rejestrować.
+            stopActivityRecognition(c);
+            prefs(c).edit().putBoolean(K_ENABLED, true).apply();
+            EventLog.log(c, "Wykrywanie jazdy przez Bluetooth auta: " + CarBluetooth.names(c));
+            if (onSuccess != null) onSuccess.run();
             return;
         }
         ActivityTransitionRequest request = new ActivityTransitionRequest(Arrays.asList(
@@ -113,6 +129,8 @@ final class AutoParking {
         if (!isEnabled(c)) return;
         if (!hasRequiredPermissions(c)) {
             EventLog.log(c, "UWAGA: automatyczne zapisywanie włączone, ale brakuje uprawnień");
+        } else if (usesBluetooth(c)) {
+            // nic do odnowienia: odbiornik Bluetooth jest w manifeście
         } else if (!isPlayServicesAvailable(c)) {
             EventLog.log(c, "UWAGA: usługi Google Play niedostępne");
         } else {
@@ -120,16 +138,21 @@ final class AutoParking {
         }
     }
 
-    @SuppressLint("MissingPermission")
     static void disable(Context context) {
         Context c = context.getApplicationContext();
         prefs(c).edit().putBoolean(K_ENABLED, false).apply();
         EventLog.log(c, "Automatyczne zapisywanie wyłączone przez użytkownika");
+        stopActivityRecognition(c);
+        DrivingService.cancel(c);
+    }
+
+    @SuppressLint("MissingPermission")
+    private static void stopActivityRecognition(Context c) {
+        if (!isPlayServicesAvailable(c)) return;
         try {
             ActivityRecognition.getClient(c).removeActivityTransitionUpdates(transitionsIntent(c));
         } catch (SecurityException e) {
             // uprawnienie już odebrane: system i tak nie wysyła zdarzeń
         }
-        DrivingService.cancel(c);
     }
 }

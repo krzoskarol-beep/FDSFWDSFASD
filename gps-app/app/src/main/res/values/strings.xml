@@ -106,4 +106,28 @@
     <string name="diag_refresh">Odśwież</string>
     <string name="diag_clear">Wyczyść</string>
     <string name="diag_clear_confirm">Wyczyścić dziennik zdarzeń?</string>
+
+    <!-- Bluetooth auta -->
+    <string name="bt_choose">Wybierz Bluetooth auta</string>
+    <string name="bt_none">Bluetooth auta: nie wybrano (jazda rozpoznawana przez usługi Google). Wybierz radio lub zestaw głośnomówiący auta: zapis będzie dokładniejszy, szybszy i bez fałszywych alarmów w autobusie.</string>
+    <string name="bt_selected">Bluetooth auta: %1$s. Połączenie = początek jazdy, rozłączenie (wyłączenie silnika) = zapis parkingu.</string>
+    <string name="bt_dialog_title">Które urządzenie to Twoje auto?</string>
+    <string name="bt_car_label">%1$s (samochód)</string>
+    <string name="bt_clear">Żadne</string>
+    <string name="bt_unavailable">Ten telefon nie ma Bluetooth.</string>
+    <string name="bt_no_bonded">Brak sparowanych urządzeń. Najpierw sparuj telefon z autem w ustawieniach Bluetooth (i włącz Bluetooth).</string>
+    <string name="bt_permission_denied">Bez uprawnienia „Urządzenia w pobliżu” aplikacja nie wie, kiedy łączysz się z autem.</string>
+    <string name="auto_status_on_bt">Włączone. Gdy wyłączysz silnik i telefon rozłączy się z autem, miejsce zapisze się samo.</string>
+
+    <!-- Adres i historia -->
+    <string name="notif_parked_text_address">%1$s. Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
+    <string name="history_title">Historia parkowań</string>
+    <string name="history_hint">Dotknij, żeby otworzyć w mapach. Przytrzymaj, żeby przywrócić miejsce jako aktualne albo usunąć.</string>
+    <string name="history_empty">Historia jest pusta. Zapisane miejsca parkowania pojawią się tutaj.</string>
+    <string name="history_clear">Wyczyść historię</string>
+    <string name="history_clear_confirm">Usunąć całą historię parkowań?</string>
+    <string name="history_restore">Ustaw jako aktualne miejsce</string>
+    <string name="history_delete">Usuń z historii</string>
+    <string name="history_restored">Przywrócono miejsce parkowania</string>
+    <string name="history_current">● AKTUALNE</string>
 </resources>

@@ -43,4 +43,31 @@ public class FormattersTest {
         assertEquals("3 h", Formatters.formatAge(3 * 3_600_000L));
         assertEquals("2 dni", Formatters.formatAge(50 * 3_600_000L));
     }
+
+    @Test
+    public void formatAddress_streetNumberCity() {
+        assertEquals("Marszałkowska 10, Warszawa",
+                Formatters.formatAddress("Marszałkowska", "10", "Warszawa", "Marszałkowska 10, 00-001 Warszawa, Polska"));
+    }
+
+    @Test
+    public void formatAddress_withoutNumber() {
+        assertEquals("Floriańska, Kraków", Formatters.formatAddress("Floriańska", null, "Kraków", null));
+    }
+
+    @Test
+    public void formatAddress_noStreetFallsBackToFullLine() {
+        assertEquals("Parking P2, Lotnisko Chopina",
+                Formatters.formatAddress(null, null, "Warszawa", " Parking P2, Lotnisko Chopina "));
+    }
+
+    @Test
+    public void formatAddress_onlyCityWithoutLine() {
+        assertEquals("Gdańsk", Formatters.formatAddress("", " ", "Gdańsk", null));
+    }
+
+    @Test
+    public void formatAddress_nothingKnown() {
+        assertEquals("", Formatters.formatAddress(null, null, null, null));
+    }
 }

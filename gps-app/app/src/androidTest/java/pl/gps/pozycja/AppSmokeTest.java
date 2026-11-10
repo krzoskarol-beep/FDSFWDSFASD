@@ -32,6 +32,7 @@ public class AppSmokeTest {
     @Before
     public void setUp() {
         new ParkingStore(context).clear();
+        new ParkingStore(context).clearHistory();
         EventLog.clear(context);
     }
 
@@ -82,6 +83,33 @@ public class AppSmokeTest {
                 assertTrue(status, status.contains("Lokalizacja dokładna: tak"));
                 String log = ((TextView) a.findViewById(R.id.diagLog)).getText().toString();
                 assertTrue(log, log.contains("test diagnostyki"));
+            });
+        }
+    }
+
+    @Test
+    public void historyScreenListsSavedSpots() {
+        ParkingStore store = new ParkingStore(context);
+        store.save(new ParkingStore.Spot(52.2318, 21.006, 8f, System.currentTimeMillis(), "poziom -2",
+                "Marszałkowska 10, Warszawa"));
+        try (ActivityScenario<HistoryActivity> s = ActivityScenario.launch(HistoryActivity.class)) {
+            s.onActivity(a -> {
+                android.widget.ListView list = a.findViewById(R.id.historyList);
+                assertEquals(1, list.getAdapter().getCount());
+                assertEquals(View.GONE, a.findViewById(R.id.historyEmpty).getVisibility());
+            });
+        }
+    }
+
+    @Test
+    public void mainScreenShowsAddress() {
+        new ParkingStore(context).save(new ParkingStore.Spot(52.2318, 21.006, 8f,
+                System.currentTimeMillis(), "", "Marszałkowska 10, Warszawa"));
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            s.onActivity(a -> {
+                TextView addr = a.findViewById(R.id.parkingAddress);
+                assertEquals(View.VISIBLE, addr.getVisibility());
+                assertEquals("Marszałkowska 10, Warszawa", addr.getText().toString());
             });
         }
     }

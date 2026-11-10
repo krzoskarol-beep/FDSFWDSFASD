@@ -20,9 +20,19 @@ import android.os.SystemClock;
 
 /**
  * Usługa działająca w trakcie jazdy: śledzi GPS i po zakończeniu jazdy zapisuje
- * miejsce parkowania. Startuje ją {@link TransitionReceiver}, gdy usługi Google
- * wykryją jazdę samochodem, i zatrzymuje, gdy wykryją jej koniec.
- * GPS jest włączony tylko w trakcie jazdy.
+ * miejsce parkowania. GPS jest włączony tylko w trakcie jazdy.
+ *
+ * <p>Początek i koniec jazdy zgłasza jedno z dwóch źródeł:
+ * <ul>
+ *   <li>{@link CarBluetoothReceiver}: połączenie / rozłączenie z Bluetooth auta. Rozłączenie
+ *       następuje przy wyłączeniu silnika, więc wiemy dokładnie, kiedy auto stanęło.</li>
+ *   <li>{@link TransitionReceiver}: rozpoznawanie aktywności z usług Google. Koniec jazdy
+ *       jest zgłaszany z opóźnieniem, więc szukamy miejsca, w którym auto się zatrzymało.</li>
+ * </ul>
+ *
+ * <p>Zasada: pozycja ustalona po fakcie to miejsce, w którym stoi kierowca, a nie auto.
+ * Pozycje sprzed zdarzenia o więcej niż {@link #CACHED_FIX_WINDOW_MS} odrzucamy, bo mogą
+ * pochodzić z trasy (nawet kilometry od parkingu).
  */
 public class DrivingService extends Service {
 
@@ -30,13 +40,25 @@ public class DrivingService extends Service {
     static final String ACTION_DRIVING_ENDED = "pl.gps.pozycja.DRIVING_ENDED";
     static final String ACTION_CANCEL = "pl.gps.pozycja.DRIVING_CANCEL";
 
+    static final String EXTRA_SOURCE = "source";
+    /** Czas zdarzenia w {@link SystemClock#elapsedRealtime()} (ms). */
+    static final String EXTRA_EVENT_TIME = "eventTime";
+    static final String SOURCE_ACTIVITY = "activity";
+    static final String SOURCE_BLUETOOTH = "bluetooth";
+
     private static final long GPS_INTERVAL_MS = 2000;
     /** Jeśli przez tyle czasu nie było jazdy, uznajemy, że auto stoi (gdyby system nie zgłosił końca). */
     private static final long NO_DRIVING_TIMEOUT_MS = 20 * 60_000L;
     /** Po zgłoszeniu końca jazdy bez danych z jazdy czekamy tyle na aktualną pozycję. */
     private static final long WAIT_FOR_FIX_MS = 45_000;
-    /** Ostatnia znana pozycja z systemu jest użyteczna, jeśli jest młodsza niż to. */
-    private static final long LAST_KNOWN_MAX_AGE_MS = 5 * 60_000L;
+    /** Zapamiętana przez system pozycja jest użyteczna tylko, jeśli pochodzi z okolic zdarzenia. */
+    static final long CACHED_FIX_WINDOW_MS = 60_000;
+    /** Pomiar z chwili rozłączenia Bluetooth może być najwyżej tyle starszy od zdarzenia. */
+    private static final long BLUETOOTH_FIX_MAX_GAP_MS = 30_000;
+    /** Rozłączenie Bluetooth, gdy auto jechało w ostatnich tylu ms, to chwilowe zerwanie, a nie parking. */
+    private static final long BLUETOOTH_GLITCH_WINDOW_MS = 10_000;
+    /** Po zdarzeniu rozpoznawania aktywności starszym niż to nie szukamy już nowej pozycji. */
+    private static final long LATE_EVENT_MS = 2 * 60_000L;
     private static final float MAX_SAVE_ACCURACY_M = 100f;
 
     /** Stan widoczny dla ekranu aplikacji (ten sam proces). */
@@ -57,8 +79,10 @@ public class DrivingService extends Service {
      * Uruchamia usługę z odbiornika zdarzeń. Zwraca false, jeśli system nie pozwolił
      * jej uruchomić (wtedy wołający powinien zapisać pozycję w inny sposób).
      */
-    static boolean start(Context c, String action) {
-        Intent i = new Intent(c, DrivingService.class).setAction(action);
+    static boolean start(Context c, String action, String source, long eventTimeMs) {
+        Intent i = new Intent(c, DrivingService.class).setAction(action)
+                .putExtra(EXTRA_SOURCE, source)
+                .putExtra(EXTRA_EVENT_TIME, eventTimeMs);
         try {
             if (Build.VERSION.SDK_INT >= 26) {
                 c.startForegroundService(i);
@@ -93,6 +117,10 @@ public class DrivingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent == null ? null : intent.getAction();
+        String source = intent == null ? null : intent.getStringExtra(EXTRA_SOURCE);
+        if (source == null) source = SOURCE_ACTIVITY;
+        long eventTime = intent == null ? SystemClock.elapsedRealtime()
+                : intent.getLongExtra(EXTRA_EVENT_TIME, SystemClock.elapsedRealtime());
 
         if (ACTION_CANCEL.equals(action)) {
             EventLog.log(this, "Użytkownik: „To nie moje auto”, anulowano bez zapisu");
@@ -102,14 +130,14 @@ public class DrivingService extends Service {
         // Po startForegroundService() trzeba w ciągu kilku sekund pokazać powiadomienie.
         if (!goForeground(getString(ACTION_DRIVING_ENDED.equals(action)
                 ? R.string.notif_saving_text : R.string.notif_driving_text))) {
-            if (ACTION_DRIVING_ENDED.equals(action)) saveLastKnown(this);
+            if (ACTION_DRIVING_ENDED.equals(action)) saveLastKnown(this, eventTime);
             finishService();
             return START_NOT_STICKY;
         }
         running = true;
 
         if (ACTION_DRIVING_STARTED.equals(action)) {
-            EventLog.log(this, "Usługa: start śledzenia jazdy");
+            EventLog.log(this, "Usługa: start śledzenia jazdy (" + sourceName(source) + ")");
             if (!driving) {
                 detector.reset();
                 loggedDriving = false;
@@ -120,9 +148,16 @@ public class DrivingService extends Service {
             handler.removeCallbacks(watchdog);
             handler.postDelayed(watchdog, 60_000);
         } else if (ACTION_DRIVING_ENDED.equals(action)) {
-            EventLog.log(this, "Usługa: koniec jazdy, ustalam miejsce parkowania");
+            if (SOURCE_BLUETOOTH.equals(source) && driving
+                    && detector.isMovingAt(eventTime, BLUETOOTH_GLITCH_WINDOW_MS)) {
+                // Bluetooth zerwał się w trakcie jazdy (słaby zasięg, przełączenie telefonu): to nie parking.
+                EventLog.log(this, "Rozłączenie Bluetooth w trakcie jazdy, ignoruję i śledzę dalej");
+                goForeground(getString(R.string.notif_driving_text));
+                return START_NOT_STICKY;
+            }
+            EventLog.log(this, "Usługa: koniec jazdy (" + sourceName(source) + "), ustalam miejsce parkowania");
             driving = false;
-            onDrivingEnded();
+            onDrivingEnded(source, eventTime);
         } else {
             // Restart przez system bez polecenia: nie ma czego robić.
             EventLog.log(this, "Usługa uruchomiona bez polecenia (restart przez system), kończę");
@@ -234,8 +269,23 @@ public class DrivingService extends Service {
 
     // ------------------------------------------------------------------ koniec jazdy
 
-    private void onDrivingEnded() {
+    private void onDrivingEnded(String source, long eventTime) {
         handler.removeCallbacks(watchdog);
+        boolean bluetooth = SOURCE_BLUETOOTH.equals(source);
+
+        // 1. Bluetooth: pozycja z chwili wyłączenia silnika (telefon był jeszcze w aucie).
+        if (bluetooth) {
+            ParkingDetector.Fix atEvent = detector.fixAt(eventTime, BLUETOOTH_FIX_MAX_GAP_MS);
+            if (atEvent != null) {
+                EventLog.log(this, String.format(java.util.Locale.US,
+                        "Miejsce: pozycja z chwili rozłączenia Bluetooth (%d s przed), ±%.0f m",
+                        (eventTime - atEvent.timeMs) / 1000, atEvent.accuracy));
+                save(atEvent, false);
+                return;
+            }
+        }
+
+        // 2. Pierwszy postój po ostatnim odcinku jazdy.
         if (detector.hasDriven()) {
             ParkingDetector.Fix p = detector.parkingFix(), last = detector.lastFix();
             double walked = Geo.distanceMeters(p.latitude, p.longitude, last.latitude, last.longitude);
@@ -246,12 +296,24 @@ public class DrivingService extends Service {
             return;
         }
         EventLog.log(this, "Brak danych z jazdy (usługa nie śledziła jazdy)");
-        // Brak danych z jazdy (np. usługa nie działała w trakcie jazdy): weź świeżą pozycję.
-        ParkingDetector.Fix recent = freshLastKnown();
-        if (recent != null) {
+
+        // 3. Pozycja zapamiętana przez system, ale tylko z okolic zdarzenia.
+        ParkingDetector.Fix cached = cachedFixNear(this, eventTime);
+        if (cached != null) {
             EventLog.log(this, String.format(java.util.Locale.US,
-                    "Miejsce: ostatnia znana pozycja systemu, ±%.0f m", recent.accuracy));
-            save(recent, true);
+                    "Miejsce: pozycja systemu z okolic zdarzenia (%+d s), ±%.0f m",
+                    (cached.timeMs - eventTime) / 1000, cached.accuracy));
+            save(cached, true);
+            return;
+        }
+
+        // 4. Nowy pomiar ma sens tylko tuż po zdarzeniu (kierowca jest jeszcze przy aucie).
+        long eventAge = SystemClock.elapsedRealtime() - eventTime;
+        if (!bluetooth && eventAge > LATE_EVENT_MS) {
+            EventLog.log(this, "BŁĄD: zdarzenie sprzed " + eventAge / 1000
+                    + " s i brak pozycji z tamtej chwili; nie zapisuję zgadywanego miejsca");
+            notifyFailure(this);
+            finishService();
             return;
         }
         EventLog.log(this, "Czekam na aktualną pozycję GPS (do " + WAIT_FOR_FIX_MS / 1000 + " s)");
@@ -268,7 +330,7 @@ public class DrivingService extends Service {
             save(last, true);
         } else {
             EventLog.log(this, "BŁĄD: brak sygnału GPS, nie zapisano miejsca");
-            Notifications.showParked(this, getString(R.string.notif_parked_failed));
+            notifyFailure(this);
             finishService();
         }
     };
@@ -282,7 +344,7 @@ public class DrivingService extends Service {
             if (lastDriving >= 0 && now - lastDriving > NO_DRIVING_TIMEOUT_MS) {
                 EventLog.log(DrivingService.this, "Brak jazdy od 20 min, a system nie zgłosił końca: zapisuję");
                 driving = false;
-                onDrivingEnded();
+                onDrivingEnded(SOURCE_ACTIVITY, now);
                 return;
             }
             if (lastDriving < 0 && now - startedAtMs > NO_DRIVING_TIMEOUT_MS) {
@@ -295,24 +357,37 @@ public class DrivingService extends Service {
         }
     };
 
+    /**
+     * Najdokładniejsza pozycja zapamiętana przez system z okna wokół zdarzenia
+     * (od {@link #CACHED_FIX_WINDOW_MS} przed do teraz). Starsze mogą pochodzić z trasy.
+     */
     @SuppressLint("MissingPermission")
-    private ParkingDetector.Fix freshLastKnown() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    static ParkingDetector.Fix cachedFixNear(Context c, long eventTimeMs) {
+        if (c.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) return null;
+        LocationManager lm = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
         Location best = null;
         for (String p : new String[]{LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER,
                 LocationManager.PASSIVE_PROVIDER}) {
             try {
-                Location l = locationManager.getLastKnownLocation(p);
+                Location l = lm.getLastKnownLocation(p);
                 if (l == null || !l.hasAccuracy() || l.getAccuracy() > MAX_SAVE_ACCURACY_M) continue;
-                long age = (SystemClock.elapsedRealtimeNanos() - l.getElapsedRealtimeNanos()) / 1_000_000L;
-                if (age > LAST_KNOWN_MAX_AGE_MS) continue;
+                long t = l.getElapsedRealtimeNanos() / 1_000_000L;
+                if (t < eventTimeMs - CACHED_FIX_WINDOW_MS) continue;
                 if (best == null || l.getAccuracy() < best.getAccuracy()) best = l;
             } catch (SecurityException | IllegalArgumentException e) {
                 // pomijamy to źródło
             }
         }
         return best == null ? null : toFix(best);
+    }
+
+    static void notifyFailure(Context c) {
+        Notifications.showParked(c, c.getString(R.string.notif_parked_failed));
+    }
+
+    private static String sourceName(String source) {
+        return SOURCE_BLUETOOTH.equals(source) ? "Bluetooth auta" : "rozpoznawanie aktywności";
     }
 
     private void save(ParkingDetector.Fix fix, boolean approximate) {
@@ -325,45 +400,30 @@ public class DrivingService extends Service {
         // Fix.timeMs jest w czasie od uruchomienia telefonu; przeliczamy na zwykły zegar.
         long wallTime = System.currentTimeMillis() - (SystemClock.elapsedRealtime() - fix.timeMs);
         String note = c.getString(approximate ? R.string.auto_note_approx : R.string.auto_note);
-        new ParkingStore(c).save(new ParkingStore.Spot(fix.latitude, fix.longitude,
-                fix.accuracy, wallTime, note));
+        ParkingStore.Spot spot = new ParkingStore.Spot(fix.latitude, fix.longitude,
+                fix.accuracy, wallTime, note);
+        new ParkingStore(c).save(spot);
         EventLog.log(c, String.format(java.util.Locale.US, "ZAPISANO parking: %.6f, %.6f%s",
                 fix.latitude, fix.longitude, approximate ? " (przybliżony)" : ""));
         Notifications.showParked(c, c.getString(approximate
                 ? R.string.notif_parked_text_approx : R.string.notif_parked_text));
+        AddressLookup.lookupAsync(c, spot, true);
     }
 
-    @SuppressLint("MissingPermission")
-    /** Awaryjnie: zapis ostatniej znanej pozycji, gdy usługa nie mogła działać. */
-    static void saveLastKnown(Context c) {
-        if (c.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) return;
-        LocationManager lm = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
-        Location best = null;
-        for (String p : new String[]{LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER,
-                LocationManager.PASSIVE_PROVIDER}) {
-            try {
-                Location l = lm.getLastKnownLocation(p);
-                if (l != null && (best == null || l.getElapsedRealtimeNanos() > best.getElapsedRealtimeNanos())) {
-                    best = l;
-                }
-            } catch (SecurityException | IllegalArgumentException e) {
-                // pomijamy to źródło
-            }
-        }
-        if (best == null) {
-            EventLog.log(c, "Zapis awaryjny: system nie zna żadnej pozycji");
+    /**
+     * Awaryjnie, gdy usługa nie mogła wystartować: pozycja zapamiętana przez system,
+     * ale tylko z okolic zdarzenia. Jeśli jej brak, użytkownik dostaje powiadomienie,
+     * żeby zapisał miejsce ręcznie (lepsze niż zapis miejsca z trasy).
+     */
+    static void saveLastKnown(Context c, long eventTimeMs) {
+        ParkingDetector.Fix f = cachedFixNear(c, eventTimeMs);
+        if (f == null) {
+            EventLog.log(c, "Zapis awaryjny: brak pozycji z okolic zdarzenia, proszę o ręczny zapis");
+            notifyFailure(c);
             return;
         }
-        long ageMs = (SystemClock.elapsedRealtimeNanos() - best.getElapsedRealtimeNanos()) / 1_000_000L;
-        if (ageMs > 10 * 60_000L) {
-            EventLog.log(c, "Zapis awaryjny: ostatnia pozycja jest za stara (" + ageMs / 60_000 + " min)");
-            return;
-        }
-        EventLog.log(c, String.format(java.util.Locale.US, "Zapis awaryjny: pozycja sprzed %d s, ±%.0f m",
-                ageMs / 1000, best.hasAccuracy() ? best.getAccuracy() : -1f));
-        saveParking(c, new ParkingDetector.Fix(best.getLatitude(), best.getLongitude(),
-                best.hasAccuracy() ? best.getAccuracy() : 0f, Float.NaN,
-                best.getElapsedRealtimeNanos() / 1_000_000L), true);
+        EventLog.log(c, String.format(java.util.Locale.US, "Zapis awaryjny: pozycja %+d s od zdarzenia, ±%.0f m",
+                (f.timeMs - eventTimeMs) / 1000, f.accuracy));
+        saveParking(c, f, true);
     }
 }

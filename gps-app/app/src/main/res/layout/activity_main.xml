@@ -121,6 +121,16 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/parkingAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/text_primary"
+                    android:textIsSelectable="true"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/parkingCompassHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -212,6 +222,20 @@
                 android:text="@string/auto_desc"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/autoBtDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/autoBtChoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bt_choose" />
 
             <TextView
                 android:id="@+id/autoBatteryHint"
@@ -361,14 +385,28 @@
                 style="@style/SmallValue"
                 android:text="—" />
         </LinearLayout>
-        <Button
-            android:id="@+id/btnDiagnostics"
-            style="?android:attr/borderlessButtonStyle"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:text="@string/diag_title"
-            android:textColor="@color/text_secondary" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnHistory"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/history_title"
+                android:textColor="@color/primary" />
+
+            <Button
+                android:id="@+id/btnDiagnostics"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/diag_title"
+                android:textColor="@color/text_secondary" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

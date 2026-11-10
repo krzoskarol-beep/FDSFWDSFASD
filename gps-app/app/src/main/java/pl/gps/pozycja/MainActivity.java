@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
     private View parkingEmpty, parkingSaved;
     private ArrowView parkingArrow;
     private TextView parkingDistance, parkingDirection, parkingCompassHint;
-    private TextView parkingNote, parkingSavedAt, parkingSavedAccuracy;
+    private TextView parkingNote, parkingSavedAt, parkingSavedAccuracy, parkingAddress;
 
     // --- Automatyczne zapisywanie parkowania
     /** Akcja z powiadomienia „Zapisano miejsce parkowania” → „Prowadź”. */
@@ -99,10 +99,12 @@ public class MainActivity extends Activity {
     private static final int REQ_AUTO_LOCATION = 2;
     private static final int REQ_AUTO_FOREGROUND = 3;
     private static final int REQ_AUTO_BACKGROUND = 4;
+    private static final int REQ_BT_PICK = 5;
 
     private Switch autoSwitch;
     private TextView autoStatus, autoBatteryHint;
     private Button autoBatteryButton;
+    private TextView autoBtDevices;
     /** Zapobiega reakcji na programowe przestawienie przełącznika. */
     private boolean suppressSwitch;
     private boolean notificationsAsked;
@@ -140,6 +142,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.btnMaps).setOnClickListener(v -> openInMaps());
         findViewById(R.id.btnCopy).setOnClickListener(v -> copyCoordinates());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareCoordinates());
+        findViewById(R.id.btnHistory).setOnClickListener(
+                v -> startActivity(new Intent(this, HistoryActivity.class)));
         findViewById(R.id.btnDiagnostics).setOnClickListener(
                 v -> startActivity(new Intent(this, DiagnosticsActivity.class)));
 
@@ -150,6 +154,7 @@ public class MainActivity extends Activity {
         parkingDirection = findViewById(R.id.parkingDirection);
         parkingCompassHint = findViewById(R.id.parkingCompassHint);
         parkingNote = findViewById(R.id.parkingNote);
+        parkingAddress = findViewById(R.id.parkingAddress);
         parkingSavedAt = findViewById(R.id.parkingSavedAt);
         parkingSavedAccuracy = findViewById(R.id.parkingSavedAccuracy);
 
@@ -182,6 +187,8 @@ public class MainActivity extends Activity {
             if (!suppressSwitch) onAutoSwitchChanged(checked);
         });
         autoBatteryButton.setOnClickListener(v -> requestIgnoreBatteryOptimizations());
+        autoBtDevices = findViewById(R.id.autoBtDevices);
+        findViewById(R.id.autoBtChoose).setOnClickListener(v -> chooseCarBluetooth());
         Notifications.createChannels(this);
         AutoParking.reRegisterIfEnabled(this);
 
@@ -280,6 +287,11 @@ public class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode == REQ_BT_PICK) {
+            if (CarBluetooth.hasPermission(this)) chooseCarBluetooth();
+            else autoSetupFailed(R.string.bt_permission_denied);
+            return;
+        }
         if (requestCode == REQ_AUTO_LOCATION || requestCode == REQ_AUTO_FOREGROUND
                 || requestCode == REQ_AUTO_BACKGROUND) {
             onAutoPermissionResult(requestCode);
@@ -534,6 +546,8 @@ public class MainActivity extends Activity {
         }
         compass.start();
 
+        parkingAddress.setText(spot.address);
+        parkingAddress.setVisibility(spot.address.isEmpty() ? View.GONE : View.VISIBLE);
         parkingNote.setText(spot.note);
         parkingNote.setVisibility(spot.note.isEmpty() ? View.GONE : View.VISIBLE);
         parkingSavedAccuracy.setText(spot.accuracy > 0
@@ -652,6 +666,7 @@ public class MainActivity extends Activity {
         spot = new ParkingStore.Spot(best.getLatitude(), best.getLongitude(),
                 best.hasAccuracy() ? best.getAccuracy() : 0f, System.currentTimeMillis(), note);
         parkingStore.save(spot);
+        AddressLookup.lookupAsync(this, spot, false);
         EventLog.log(this, String.format(Locale.US, "Ręczny zapis parkingu, ±%.0f m", spot.accuracy));
         Toast.makeText(this, R.string.parking_saved_toast, Toast.LENGTH_SHORT).show();
         showParking();
@@ -696,7 +711,7 @@ public class MainActivity extends Activity {
             updateAutoUi();
             return;
         }
-        if (!AutoParking.isPlayServicesAvailable(this)) {
+        if (!AutoParking.usesBluetooth(this) && !AutoParking.isPlayServicesAvailable(this)) {
             Toast.makeText(this, R.string.auto_status_no_play_services, Toast.LENGTH_LONG).show();
             setAutoSwitch(false);
             return;
@@ -718,7 +733,9 @@ public class MainActivity extends Activity {
         }
 
         java.util.List<String> needed = new java.util.ArrayList<>();
-        if (!AutoParking.hasActivityRecognitionPermission(this)) {
+        if (AutoParking.usesBluetooth(this)) {
+            if (!CarBluetooth.hasPermission(this)) needed.add(Manifest.permission.BLUETOOTH_CONNECT);
+        } else if (!AutoParking.hasActivityRecognitionPermission(this)) {
             needed.add(Manifest.permission.ACTIVITY_RECOGNITION);
         }
         if (Build.VERSION.SDK_INT >= 33 && !notificationsAsked && !Notifications.canPost(this)) {
@@ -757,7 +774,11 @@ public class MainActivity extends Activity {
     private void onAutoPermissionResult(int requestCode) {
         if (requestCode == REQ_AUTO_LOCATION && !hasFinePermission()) {
             autoSetupFailed(R.string.auto_permission_denied_location);
-        } else if (requestCode == REQ_AUTO_FOREGROUND && !AutoParking.hasActivityRecognitionPermission(this)) {
+        } else if (requestCode == REQ_AUTO_FOREGROUND && AutoParking.usesBluetooth(this)
+                && !CarBluetooth.hasPermission(this)) {
+            autoSetupFailed(R.string.bt_permission_denied);
+        } else if (requestCode == REQ_AUTO_FOREGROUND && !AutoParking.usesBluetooth(this)
+                && !AutoParking.hasActivityRecognitionPermission(this)) {
             autoSetupFailed(R.string.auto_permission_denied_activity);
         } else if (requestCode == REQ_AUTO_BACKGROUND && !AutoParking.hasBackgroundLocationPermission(this)) {
             autoSetupFailed(R.string.auto_permission_denied_bg);
@@ -801,16 +822,72 @@ public class MainActivity extends Activity {
             text = getString(R.string.auto_status_driving);
             color = R.color.ok;
         } else {
-            text = getString(R.string.auto_status_on);
+            text = getString(AutoParking.usesBluetooth(this)
+                    ? R.string.auto_status_on_bt : R.string.auto_status_on);
             color = R.color.ok;
             if (!Notifications.canPost(this)) text += "\n\n" + getString(R.string.auto_status_no_notifications);
         }
         autoStatus.setText(text);
         autoStatus.setTextColor(getColor(color));
 
+        java.util.List<String> cars = CarBluetooth.names(this);
+        autoBtDevices.setText(cars.isEmpty() ? getString(R.string.bt_none)
+                : getString(R.string.bt_selected, android.text.TextUtils.join(", ", cars)));
+
         boolean showBattery = enabled && !isIgnoringBatteryOptimizations();
         autoBatteryHint.setVisibility(showBattery ? View.VISIBLE : View.GONE);
         autoBatteryButton.setVisibility(showBattery ? View.VISIBLE : View.GONE);
+    }
+
+    /** Wybór urządzeń Bluetooth auta spośród sparowanych z telefonem. */
+    private void chooseCarBluetooth() {
+        if (!CarBluetooth.hasPermission(this)) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQ_BT_PICK);
+            return;
+        }
+        if (CarBluetooth.adapter(this) == null) {
+            Toast.makeText(this, R.string.bt_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+        java.util.List<CarBluetooth.Device> devices = CarBluetooth.bondedDevices(this);
+        if (devices.isEmpty()) {
+            Toast.makeText(this, R.string.bt_no_bonded, Toast.LENGTH_LONG).show();
+            return;
+        }
+        java.util.Set<String> selected = CarBluetooth.addresses(this);
+        String[] labels = new String[devices.size()];
+        boolean[] checked = new boolean[devices.size()];
+        for (int i = 0; i < devices.size(); i++) {
+            CarBluetooth.Device d = devices.get(i);
+            labels[i] = d.looksLikeCar ? getString(R.string.bt_car_label, d.name) : d.name;
+            checked[i] = selected.contains(d.address);
+        }
+        openDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.bt_dialog_title)
+                .setMultiChoiceItems(labels, checked, (d, which, isChecked) -> checked[which] = isChecked)
+                .setPositiveButton(R.string.parking_dialog_save, (d, w) -> {
+                    java.util.Map<String, String> chosen = new java.util.HashMap<>();
+                    for (int i = 0; i < devices.size(); i++) {
+                        if (checked[i]) chosen.put(devices.get(i).address, devices.get(i).name);
+                    }
+                    applyCarBluetooth(chosen);
+                })
+                .setNeutralButton(R.string.bt_clear, (d, w) -> applyCarBluetooth(new java.util.HashMap<>()))
+                .setNegativeButton(R.string.parking_dialog_cancel, null)
+                .show();
+    }
+
+    private void applyCarBluetooth(java.util.Map<String, String> chosen) {
+        CarBluetooth.save(this, chosen);
+        EventLog.log(this, chosen.isEmpty() ? "Bluetooth auta: brak (rozpoznawanie aktywności)"
+                : "Bluetooth auta: wybrano " + CarBluetooth.names(this));
+        if (AutoParking.isEnabled(this)) {
+            // Zmiana trybu: przejdź przez konfigurację jeszcze raz (inne uprawnienia).
+            autoSetupInProgress = true;
+            notificationsAsked = true;
+            continueAutoSetup();
+        }
+        updateAutoUi();
     }
 
     private boolean isIgnoringBatteryOptimizations() {

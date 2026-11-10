@@ -20,6 +20,25 @@ Prosta aplikacja na Androida, która pokazuje aktualną pozycję telefonu.
   Aplikacja poczeka na aktualną pozycję i od razu zaproponuje zapis (Android 7.1+).
 - Ostrzega, gdy zapisywana pozycja jest niedokładna albo nieaktualna.
 
+### Bluetooth auta (zalecany wyzwalacz)
+
+W karcie „Automatyczne zapisywanie” → **Wybierz Bluetooth auta** wskaż radio albo zestaw
+głośnomówiący swojego auta (można kilka). Wtedy:
+
+- **połączenie** z autem = początek jazdy (start śledzenia GPS),
+- **rozłączenie** (wyłączenie silnika) = zapis parkingu z pozycji **z chwili rozłączenia**,
+  gdy telefon był jeszcze w aucie,
+- chwilowe zerwanie Bluetooth w trakcie jazdy (auto jedzie) jest ignorowane,
+- rozpoznawanie aktywności jest wtedy wyłączone, więc nie ma fałszywych alarmów w autobusie,
+- **nie są potrzebne usługi Google Play** (wystarczy uprawnienie „Urządzenia w pobliżu”).
+
+### Adres i historia
+
+- Po zapisie aplikacja ustala **adres** miejsca (systemowy Geocoder, wymaga internetu)
+  i pokazuje go na karcie i w powiadomieniu.
+- **Historia parkowań** (przycisk pod kartami): 30 ostatnich miejsc. Dotknięcie otwiera mapę,
+  przytrzymanie pozwala **przywrócić miejsce jako aktualne** (np. po fałszywym alarmie) albo je usunąć.
+
 ### Automatyczne zapisywanie parkowania (w tle)
 
 Włącz przełącznik **„Zapisuj parking automatycznie”**. Od tej pory:
@@ -30,6 +49,11 @@ Włącz przełącznik **„Zapisuj parking automatycznie”**. Od tej pory:
 3. Po zakończeniu jazdy aplikacja zapisuje **miejsce, w którym auto stanęło**
    (a nie to, do którego zdążyłeś dojść, zanim system zgłosił koniec jazdy)
    i pokazuje powiadomienie z przyciskiem **Prowadź**.
+
+Zasada (za projektem ParKing, patrz niżej): **pozycja ustalona po fakcie to miejsce, gdzie stoi
+kierowca, a nie auto.** Dlatego pozycje zapamiętane przez system są brane pod uwagę tylko z okolic
+zdarzenia (do 60 s przed). Jeśli takiej pozycji brak, aplikacja prosi o ręczny zapis zamiast
+zapisywać zgadywane miejsce.
 
 Jak wybierany jest punkt postoju (`ParkingDetector`): pierwszy pomiar z prędkością poniżej
 ok. 3,6 km/h po ostatnim odcinku jazdy powyżej ok. 15 km/h. Postój na światłach kasuje się,
@@ -99,6 +123,26 @@ Sekrety (Settings → Secrets and variables → Actions → New repository secre
 | `ANDROID_KEY_PASSWORD` | hasło klucza (to samo co do pliku) |
 
 Gotowy APK pobierzesz z zakładki **Actions** → wybrany przebieg → **Artifacts**.
+
+## Wydanie nowej wersji
+
+1. Podbij `versionCode` i `versionName` w `app/build.gradle` i opisz zmiany w `CHANGELOG.md`.
+2. Actions → **„Android – wydanie wersji”** → **Run workflow**.
+3. Workflow zbuduje podpisany APK i opublikuje go w GitHub Releases (tag `gps-vX.Y`).
+   Najnowsza wersja jest zawsze pod stałym linkiem:
+   `https://github.com/krzoskarol-beep/FDSFWDSFASD/releases/latest/download/MojaPozycjaGPS.apk`
+
+## Inspiracje (open source)
+
+Rozwiązania sprawdzone w innych projektach, zaimplementowane tu od nowa (te projekty nie mają
+licencji open source, więc kod nie był kopiowany, tylko pomysły):
+
+- [cssnr/parking-android](https://github.com/cssnr/parking-android) (ParKing): wyzwalacz
+  Bluetooth auta, zasada „nie ustalaj pozycji po fakcie”, historia, adres, alert przy braku
+  pozycji, wydania APK w GitHub Releases.
+- [marinolabtech/CarDash](https://github.com/marinolabtech/CarDash): automatyczny zapis po
+  zatrzymaniu po jeździe powyżej 15 km/h (ten sam próg co w `ParkingDetector`), ostrzeżenie
+  o słabym sygnale GPS przed zapisem, kompas do auta.
 
 ## Diagnostyka
 

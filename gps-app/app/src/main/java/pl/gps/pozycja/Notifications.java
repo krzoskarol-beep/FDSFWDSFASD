@@ -70,6 +70,11 @@ final class Notifications {
     }
 
     static void showParked(Context c, String text) {
+        showParked(c, text, false);
+    }
+
+    /** @param silent true przy odświeżeniu treści (np. dopisaniu adresu), bez ponownego dźwięku */
+    static void showParked(Context c, String text, boolean silent) {
         if (!canPost(c)) return;
         Notification n = builder(c, CHANNEL_PARKING)
                 .setSmallIcon(R.drawable.ic_stat_car)
@@ -77,6 +82,7 @@ final class Notifications {
                 .setContentText(text)
                 .setStyle(new Notification.BigTextStyle().bigText(text))
                 .setAutoCancel(true)
+                .setOnlyAlertOnce(silent)
                 .setContentIntent(openApp(c, Intent.ACTION_MAIN, 20))
                 .addAction(new Notification.Action.Builder(null,
                         c.getString(R.string.parking_navigate),

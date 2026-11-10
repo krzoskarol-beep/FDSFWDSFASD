@@ -19,6 +19,10 @@ public class TransitionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (!AutoParking.isEnabled(context) || !ActivityTransitionResult.hasResult(intent)) return;
+        if (CarBluetooth.isConfigured(context)) {
+            // Wybrano Bluetooth auta: to ono decyduje (bez fałszywych alarmów w autobusie).
+            return;
+        }
         ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
         if (result == null) return;
 
@@ -34,6 +38,7 @@ public class TransitionReceiver extends BroadcastReceiver {
 
         boolean started = latest.getTransitionType() == ActivityTransition.ACTIVITY_TRANSITION_ENTER;
         long ageMs = (SystemClock.elapsedRealtimeNanos() - latest.getElapsedRealTimeNanos()) / 1_000_000L;
+        long eventTime = latest.getElapsedRealTimeNanos() / 1_000_000L;
 
         EventLog.log(context, "Usługi Google: " + (started ? "POCZĄTEK" : "KONIEC")
                 + " jazdy (zdarzenie sprzed " + ageMs / 1000 + " s)");
@@ -41,13 +46,15 @@ public class TransitionReceiver extends BroadcastReceiver {
         if (started) {
             if (ageMs > MAX_ENTER_EVENT_AGE_MS) {
                 EventLog.log(context, "Pominięto zbyt stare zdarzenie początku jazdy");
-            } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_STARTED)) {
+            } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_STARTED,
+                    DrivingService.SOURCE_ACTIVITY, eventTime)) {
                 EventLog.log(context, "BŁĄD: system nie pozwolił uruchomić usługi jazdy");
             }
-        } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_ENDED)) {
-            // System nie pozwolił uruchomić usługi: zapisz ostatnią znaną pozycję.
+        } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_ENDED,
+                DrivingService.SOURCE_ACTIVITY, eventTime)) {
+            // System nie pozwolił uruchomić usługi: zapisz pozycję z okolic zdarzenia, jeśli jest.
             EventLog.log(context, "BŁĄD: system nie pozwolił uruchomić usługi, zapis awaryjny");
-            DrivingService.saveLastKnown(context);
+            DrivingService.saveLastKnown(context, eventTime);
         }
     }
 }
