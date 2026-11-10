@@ -1,0 +1,32 @@
+﻿element;obciążenie;nośność;jedn.;wytężenie;uwagi
+Rura jezdna L1/L3 100×40×3 (6082-T6) – zginanie, rozpiętość 2,5 m;150.97;227.27;MPa;0.664;koło 273 kg ×φ1.5 ×γ1.5, 75 % na jedną rurę, w środku + ciężar własny ×1,35
+To samo – CAŁE koło na jednej rurze (sprawdzenie skrajne);199.01;227.27;MPa;0.876;gdyby siatka i poprzeczki nic nie rozkładały
+[INFO] Ta sama rura, gdyby była z 6060-T6 (75 %) – NIE WOLNO;150.97;136.36;MPa;1.107;pokazuje, dlaczego rury jezdne muszą być 6082-T6 (PA4)
+Ugięcie w środku (charakterystyczne);10.48;12.5;mm;0.838;limit L/200
+Rura jezdna wewnętrzna – wspornik przy przyczepie 340 mm, całe koło na końcu;104.53;227.27;MPa;0.46;rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach
+Rura jezdna wewnętrzna – wspornik przy zawiasie (sekcja A) 420 mm, całe koło na końcu;129.12;227.27;MPa;0.568;rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach
+Rura jezdna wewnętrzna – wspornik przy zawiasie (sekcja B) 260 mm, całe koło na końcu;79.93;227.27;MPa;0.352;rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach
+Zawias środkowy: sworzeń M20 8.8 – ścinanie (2 płaszczyzny na rurę);10.96;120.64;kN;0.091;moment 2.96 kN·m / ramię 135 mm (styk góry rur ↔ sworzeń pod rurą)
+Zawias środkowy: sworzeń M20 – zginanie (płyty A i B przylegają);65.76;753.98;N·m;0.087;EN 1993-1-8 tab. 3.10
+Zawias środkowy: docisk sworznia w płycie Z 6 mm;10.96;41.14;kN;0.266;S235, odl. otworu od końca 30 mm
+Zawias środkowy: śruba M12 8.8 płyty Z – ścinanie;10.77;32.37;kN;0.333;mimośród 55 mm, rozstaw śrub 65 mm
+Zawias środkowy: tuleja Ø18 → ścianka rury Al 3 mm (docisk);10.77;25.39;kN;0.424;"tuleja stalowa Ø18×2,5 w otworze Ø18,5; 45 mm od końca rury"
+Zawias środkowy: docisk górnych krawędzi rur (styk);43.84;182.73;kN;0.24;"4 rury stykają się czołami; liczona ¼ obwodu ścianek"
+Zawias przy przyczepie: sworzeń M20 – zginanie (ramię do wspornika K);120.73;753.98;N·m;0.16;reakcja 4.7 kN na rurę, 2 płyty H
+Zawias przy przyczepie: docisk sworznia w płycie H 6 mm;2.37;34.29;kN;0.069;krawędź 25 mm
+Zawias przy przyczepie: śruba M12 płyty H → rura (docisk Al);3.32;22.57;kN;0.147;mimośród 105 mm, rozstaw 80 mm
+Wspornik K (kątownik 100×100×10) – zginanie ramienia;6.72;235.0;MPa;0.029;ramię 40 mm od ściany belki
+Poprzeczka 60×40×3 (6060) – stopa na samej krawędzi, cała na jednej poprzeczce;114.25;136.36;MPa;0.838;wspornik 450 mm od rury jezdnej
+Poprzeczka – przenosi nacisk rury wewnętrznej na zewnętrzne (koło na końcu przy przyczepie);60.83;136.36;MPa;0.446;reakcja rury wewn. 10.2 kN
+Śruba M8 8.8 na skrzyżowaniu – rozciąganie (poprzeczka wisi na rurze zewn.);6.94;21.08;kN;0.329;
+Przeciąganie łba / podkładki przez ściankę poprzeczki 3 mm;6.94;15.38;kN;0.451;podkładka Ø24 pod nakrętką
+Podłużnica chodnika 100×40×2 (6060) – wspornik przy zawiasie A 420 mm;71.67;136.36;MPa;0.526;stopa 105 kg ×1,5 ×1,5
+Podłużnica chodnika 100×40×2 (6060) – przęsło między poprzeczkami A 490 mm;20.9;136.36;MPa;0.153;stopa 105 kg ×1,5 ×1,5
+Podłużnica chodnika 100×40×2 (6060) – wspornik przy przyczepie 340 mm;58.01;136.36;MPa;0.425;stopa 105 kg ×1,5 ×1,5
+Podłużnica chodnika 100×40×2 (6060) – B: od poprzeczki do oparcia skosu na ziemi 474 mm;20.2;136.36;MPa;0.148;stopa 105 kg ×1,5 ×1,5
+Prowadnica – kątownik 40×40×4: zginanie półki pionowej od bocznego pchnięcia opony;79.09;136.36;MPa;0.58;0,3 × koło na wys. 35 mm, współpracuje ~300 mm półki
+Prowadnica – śruba M8 rozrywana (dźwignia 35/20 mm);3.16;10.54;kN;0.3;cała siła na jednej śrubie, liczona kl. 4.6
+Blokada w transporcie: sworzeń Ø12 – ścinanie;7.9;21.71;kN;0.364;trap w pionie 65 kg, hamowanie 0,8 g ×1,5, ramię 30 mm, 2 sworznie (sworzeń ze stali ≥ 400 MPa)
+Blokada: docisk sworznia Ø12 w płycie H 6 mm;7.9;33.23;kN;0.238;
+Oczko sprężyny: śruba M12 + tuleja Ø20×4 L18 – zginanie tulei;104.97;235.0;MPa;0.447;ramię 23 mm od blachy
+Płyta S 8 mm – śruby M12 w podłużnicy 100×40×2 (docisk Al 2 mm);3.81;8.82;kN;0.431;mimośród 72 mm, rozstaw 50 mm

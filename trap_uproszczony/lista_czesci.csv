@@ -1,0 +1,17 @@
+﻿nr;nazwa;szt.;materiał;wymiar;masa szt. [kg];otwory;wykonanie;gdzie
+L1;Rura jezdna ZEWNĘTRZNA sekcji A (z zawiasami H i Z);2;EN AW-6082-T6;RHS Al 100×40×3, L = 1250;2.71;18;profil cięty na długość, otwory wg tabeli;x = ±125
+L2;Rura jezdna WEWNĘTRZNA sekcji A;2;EN AW-6082-T6;RHS Al 100×40×3, L = 1250;2.71;4;profil cięty na długość, otwory wg tabeli;x = ±45
+L3;Rura jezdna ZEWNĘTRZNA sekcji B (zawias Z, skos przy ziemi);2;EN AW-6082-T6;RHS Al 100×40×3, L = 1250, skos 516;2.13;14;"profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku";x = ±125
+L4;Rura jezdna WEWNĘTRZNA sekcji B (skos przy ziemi);2;EN AW-6082-T6;RHS Al 100×40×3, L = 1250, skos 516;2.13;4;"profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku";x = ±45
+C1;Podłużnica chodnika sekcji A (z płytą sprężyny S);2;6060-T6;RHS Al 100×40×2, L = 1250;1.84;8;profil cięty na długość, otwory wg tabeli;x = ±345
+C2;Podłużnica krawędzi sekcji A;2;6060-T6;RHS Al 100×40×2, L = 1250;1.84;4;profil cięty na długość, otwory wg tabeli;x = ±575
+C3;Podłużnica chodnika / krawędzi sekcji B (skos);4;6060-T6;RHS Al 100×40×2, L = 1250, skos 516;1.45;4;"profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku";x = ±345, ±575
+P;Poprzeczka – rura na stojąco;3;6060-T6;RHS Al 60×40×3, L = 1190;1.81;16;8 otworów Ø12,5 przez górę i dół;A: s = [340.0, 830.0], B: s = [260.0]
+T;Listwa spinająca pod sekcją B (nitowana);1;6060;płaskownik Al 40×5, L = 1190;0.64;16;16 otworów Ø4,9 pod nity;B: s = 650
+G1;Prowadnica koła sekcji A – leży na siatce nad rurą zewnętrzną;2;6060;kątownik Al 40×40×4, L = 1095;0.9;5;"otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°";s = 150…1245
+G2;Prowadnica koła sekcji B – leży na siatce nad rurą zewnętrzną;2;6060;kątownik Al 40×40×4, L = 715;0.59;4;"otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°";s = 5…720
+H;Płyta zawiasu przy przyczepie;4;S235;płaskownik 80×6, L = 200;0.75;4;prostokąt, 4 otwory (wiercić 4 szt. w pakiecie);po 2 na rurę L1
+Z;Płyta zawiasu środkowego (A i B – ta sama);8;S235;płaskownik 100×6, L = 170;0.8;3;prostokąt, 3 otwory (wiercić 8 szt. w pakiecie);po 2 na rurę L1 i L3
+S;Płyta zaczepu sprężyny gazowej;2;S235;płaskownik 80×8, L = 150;0.75;3;prostokąt, 3 otwory;na C1, s = 219…299
+K;Wspornik na belce przyczepy (zawias / sprężyna);4;S235;kątownik 100×100×10, L = 130;1.94;5;odcinek kątownika, 5 otworów, BEZ gięcia;2 × zawias (x ±152…162), 2 × sprężyna (x ±369…379)
+SIATKA;Siatka cięto-ciągniona Al (pokład);2;Al;1190 × 1250 (LWD w poprzek);3.72;0;z 1 arkusza 1250×2500;cały pokład A i B
