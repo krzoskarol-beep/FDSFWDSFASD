@@ -149,3 +149,23 @@ Zmiany względem aluminium:
 - cynkowanie ogniowe po wierceniu albo farba.
 
 Szczegóły: `stal_warianty.csv`, `stal_obliczenia.csv`, `stal_lista_zakupow.csv`, `porownanie_kosztow.csv`.
+
+## Wariant stalowy S5 – optymalnie lekki, chodnik z lewej, 2,5 × 0,74 m (pełna dokumentacja)
+
+Katalog `stal_S5/` (generuje `python3 stal_s5.py`, strona: `python3 strona_s5.py`):
+
+| plik | co jest w środku |
+|---|---|
+| `rysunki_trap_S5.pdf` | opis, przekrój, widok z góry, widok z boku, zawiasy, karta każdej rury (L1L, L1P, L2, L3, L4, C1, C2, C3) z tabelą otworów, poprzeczka/listwa/prowadnice, płyty, obliczenia |
+| `szablony_1do1_S5.pdf`, `DXF/` | płyty H, Z, S, K w skali 1:1 (oczka sprężyn Ø17 pod M16) |
+| `lista_czesci.csv`, `lista_srub.csv`, `lista_zakupow.csv`, `obliczenia.csv` | części, śruby i tuleje, zakupy, sprawdzenia |
+| `trap_s5.glb`, `otwory_z_modelu.csv`, `podglad_*.png` | model 3D z otworami, śrubami i animacją składania; kontrola otworów |
+| `trap_s5_strona.html` | strona z modelem 3D, obliczeniami i tabelami |
+
+- Masa trapu ok. **90 kg** (A 52,5 kg, B 37,9 kg) + 3 wsporniki K ok. 5,8 kg.
+- Sprężyny 2 × 2800 N (Ø40, oczka M16): podnoszenie ok. **20 kg** (bez sprężyn 50 kg).
+- Najbardziej obciążona część: rura jezdna, całe koło na jednej rurze – **82 %**.
+- Kontrola modelu: 81 otworów, 78 złączy, każda śruba przechodzi przez otwory, 0 kolizji.
+- Lewa strona = patrząc od ziemi na przyczepę. Chodnik (2 podłużnice) po lewej, prawa rura jezdna **L1P** jest krawędzią trapu i ma płytę S prawej sprężyny (2 dodatkowe otwory Ø18,5 – nie myl z L1L).
+- Prawa sprężyna: dolne oczko na wsporniku K zawiasu, więc są 3 wsporniki K zamiast 4.
+- Rury jezdne tylko ze stali S355 (S355J2H / S355MH). Wszystko cynkuj ogniowo PO wierceniu.

@@ -62,6 +62,39 @@
    "koszt": 2533,
    "wyt": 0.82,
    "rysunki": "nowe rysunki (węższy trap)"
+  },
+  {
+   "klucz": "S4",
+   "nazwa": "stal optymalna, pełna szerokość 1190 mm",
+   "masa": 114.1,
+   "bez": 63.0,
+   "sprezyny": "2 × 3700 N (Ø40)",
+   "ze": 24.3,
+   "koszt": 2749,
+   "wyt": 0.83,
+   "rysunki": "bez zmian"
+  },
+  {
+   "klucz": "S5",
+   "nazwa": "stal optymalna, chodnik tylko z lewej (szer. 740 mm)",
+   "masa": 90.4,
+   "bez": 50.2,
+   "sprezyny": "2 × 2800 N (Ø40)",
+   "ze": 20.4,
+   "koszt": 2533,
+   "wyt": 0.82,
+   "rysunki": "bez zmian"
+  },
+  {
+   "klucz": "S6",
+   "nazwa": "stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm)",
+   "masa": 80.3,
+   "bez": 44.7,
+   "sprezyny": "2 × 2500 N (Ø28)",
+   "ze": 17.9,
+   "koszt": 2208,
+   "wyt": 0.816,
+   "rysunki": "bez zmian"
   }
  ],
  "obliczenia": [
@@ -167,7 +200,7 @@
    "nosnosc": 235.0,
    "jedn": "MPa",
    "wytezenie": 0.529,
-   "uwagi": "sprężyna 3700 N"
+   "uwagi": "sprężyna 3700 N, ramię 23 mm od blachy"
   },
   {
    "nazwa": "Płyta S – śruby M12 w ściance podłużnicy 1,5 mm (docisk)",

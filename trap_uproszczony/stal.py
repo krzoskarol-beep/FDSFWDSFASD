@@ -64,6 +64,15 @@ VARIANTS = {
                guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~30×12×2×1,5", 4.0, "siatka_st_lekka_m2"),
                n_walk=2, width=g.X_LANE_OUT + 20 + g.X_EDGE + 20),
 }
+# warianty ze ZMIENIONĄ konstrukcją (optymalizacja masy) – wymagają nowych rysunków
+_light = dict(lane=("RHS 100×40×2 S355J2H", rhs(40, 100, 2), 355, 470, "st_s355_kg"),
+              walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH", rhs(40, 60, 2), 235, 360),
+              guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~30×12×2×1,5", 4.0, "siatka_st_lekka_m2"))
+VARIANTS["S4"] = dict(nazwa="stal optymalna, pełna szerokość 1190 mm", n_walk=4, width=g.WIDTH, lane_mm=282, **_light)
+VARIANTS["S5"] = dict(nazwa="stal optymalna, chodnik tylko z lewej (szer. 740 mm)", n_walk=2, width=g.X_LANE_OUT + 20 + g.X_EDGE + 20,
+                      lane_mm=282, eye_lever=32.0, **_light)
+VARIANTS["S6"] = dict(nazwa="stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm)", n_walk=2, n_lane=3,
+                      width=120 + g.X_EDGE - g.X_WALK + g.X_WALK + 20, lane_mm=222, **_light)
 RECOMMENDED = "S2"
 FY_PL = 235.0
 
@@ -78,12 +87,13 @@ def masses(v):
     W = v["width"]
     plates = [(4 * 200 * 80 * 6 * RHO_ST, 50.0, 60.0), (4 * 170 * 100 * 6 * RHO_ST, L - 55.0, -10.0),
               (2 * 150 * 80 * 8 * RHO_ST, 259.0, 25.0), (3.2, L / 2, 50.0)]
-    A = [(4 * lane["kgm"] * L / 1000, L / 2, 50.0), (v["n_walk"] * walk["kgm"] * L / 1000, L / 2, 50.0)]
+    nl = v.get("n_lane", 4)
+    A = [(nl * lane["kgm"] * L / 1000, L / 2, 50.0), (v["n_walk"] * walk["kgm"] * L / 1000, L / 2, 50.0)]
     A += [(cross["kgm"] * W / 1000, s, -30.0) for s in g.CROSS_A]
     A += [(W * L * 1e-6 * v["mesh"][1], L / 2, 101.5), (2 * v["guide"][1] * (g.GUIDE_A[1] - g.GUIDE_A[0]) / 1000, sum(g.GUIDE_A) / 2, 115.0)]
     A += plates
     B = []
-    for p, n in ((lane, 4), (walk, v["n_walk"])):
+    for p, n in ((lane, nl), (walk, v["n_walk"])):
         full = p["kgm"] * L / 1000
         cut = (SK * 40 * p["t"] + SK * 100 * p["t"]) * RHO_ST
         B += [(n * full, L / 2, 50.0), (-n * cut, L - SK / 3, 25.0)]
@@ -151,7 +161,9 @@ def calcs(v, mA, mB, F1):
     add("Blokada: docisk sworznia Ø12 w płycie H 6 mm", Fpin, 2.5 * min(25 / 39, 1) * 360 * 12 * 6 / 1.25 / 1e3, "kN", "")
     Fs = F1 * 1.3 * 1.5 / 1000
     eye = (20, 12, "Ø20×4 + M12") if F1 <= 2500 else (25, 15, "Ø25×5 + M16")
-    add(f"Oczko sprężyny: tuleja {eye[2]} – zginanie", Fs * 1e3 * 23 / (math.pi * (eye[0] ** 4 - eye[1] ** 4) / (32 * eye[0])), FY_PL, "MPa", f"sprężyna {F1:.0f} N")
+    lev = v.get("eye_lever", 23.0)
+    add(f"Oczko sprężyny: tuleja {eye[2]} – zginanie", Fs * 1e3 * lev / (math.pi * (eye[0] ** 4 - eye[1] ** 4) / (32 * eye[0])), FY_PL, "MPa",
+        f"sprężyna {F1:.0f} N, ramię {lev:g} mm od blachy")
     add(f"Płyta S – śruby M12 w ściance podłużnicy {fmt(walk['t'])} mm (docisk)", Fs * 72 / 50 / 2 + Fs / 2,
         2.5 * min(40 / 55.5, 1) * wfu * 18 * walk["t"] / 1.25 / 1e3, "kN", "")
     return rows
@@ -171,7 +183,7 @@ def cost(v, mA, mB, spr):
     W = v["width"]
     mesh_m2 = 1.25 * 2.5
     gd = 2 * (g.GUIDE_A[1] - g.GUIDE_A[0]) + 2 * (g.GUIDE_B[1] - g.GUIDE_B[0])
-    nl, nw = sticks(8 * L), sticks(2 * v["n_walk"] * L)
+    nl, nw = sticks(2 * v.get("n_lane", 4) * L), sticks(2 * v["n_walk"] * L)
     out = [("Rury jezdne", nl * 6 * v["lane"][1]["kgm"] * c[v["lane"][4]], f"{nl} sztangi {v['lane'][0]}"),
            ("Podłużnice chodnika", nw * 6 * v["walk"][1]["kgm"] * c["st_s235_kg"], f"{nw} sztangi {v['walk'][0]}"),
            ("Poprzeczki", math.ceil(3 * W / 5970) * 6 * v["cross"][1]["kgm"] * c["st_s235_kg"], v["cross"][0]),

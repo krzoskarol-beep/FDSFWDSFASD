@@ -1,0 +1,16 @@
+﻿element;obciążenie;nośność;jedn.;wytężenie;uwagi
+Rura jezdna RHS 100×40×2 S355J2H – zginanie, rozpiętość 2,5 m (75 % koła);221.73;355;MPa;0.625;
+To samo – całe koło na jednej rurze;291.05;355;MPa;0.82;
+Ugięcie w środku (charakterystyczne);5.22;12.5;mm;0.417;
+Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm;186.33;355;MPa;0.525;
+Rura jezdna – ścianka górna 2 mm pod oponą (zginanie poprzeczne);160.06;355;MPa;0.451;pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami
+Poprzeczka RHS 60×40×2 S235JRH – stopa na samej krawędzi;161.99;235;MPa;0.689;
+Podłużnica chodnika RHS 100×40×1,5 S235JRH – wspornik 420 mm;93.73;235;MPa;0.399;
+Zawias środkowy: sworzeń M20 8.8 – ścinanie;11.15;120.64;kN;0.092;
+Zawias środkowy: śruba M12 8.8 – ścinanie;10.96;32.37;kN;0.339;
+Zawias środkowy: tuleja Ø18 → ścianka rury 2 mm (docisk);10.96;27.44;kN;0.4;
+Blokada do jazdy: sworzeń Ø12 8.8 / C45 – ścinanie;11.0;43.43;kN;0.253;trap w pionie 90 kg, hamowanie 0,8 g ×1,5
+Blokada: docisk sworznia Ø12 w płycie H 6 mm;11.0;33.23;kN;0.331;
+Oczko sprężyny: tuleja Ø25×5 + M16 – zginanie;130.86;235.0;MPa;0.557;sprężyna 2800 N, ramię 32 mm od blachy
+Płyta S – śruby M12 w ściance podłużnicy 1,5 mm (docisk);6.66;14.01;kN;0.475;
+Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk);6.66;24.39;kN;0.273;

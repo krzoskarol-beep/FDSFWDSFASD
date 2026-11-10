@@ -80,6 +80,7 @@ S_PL = dict(w=80.0, h=150.0, t=8.0, s0=219.0, z0=-50.0,
 K_PL = dict(a=100.0, t=10.0, L=130.0,
             holes_arm=[("pin", 40.0, -25.0, 21.0), ("blok", 70.0, -25.0, 13.0), ("sprez.", 30.0, -100.0, 13.0)],
             holes_beam=[("M12", 55.0, -30.0, 13.0), ("M12", 55.0, -60.0, 13.0)])
+TEMPL_NAME = "szablony_1do1_v2.pdf"
 SPRING = dict(F1=1600.0, L_ext=460.0, stroke=200.0, n=2, prog=0.30,
               eye_low=(30.0 - PIN_Y, -100.0 - PIN_Z),   # wzgledem osi zawiasu (y,z)
               eye_up_sz=(259.0, -22.0))                  # w ukladzie rury sekcji A
@@ -453,7 +454,7 @@ def plate_outline(kind):
         return p["w"], p["h"], holes, "S – płyta zaczepu sprężyny, S235 8 mm, 2 szt."
     if kind == "K_ramie":
         holes = [(n, y, K_PL["L"] + z, d) for (n, y, z, d) in K_PL["holes_arm"]]
-        return K_PL["a"], K_PL["L"], holes, "K – ramię odstające (płaszczyzna zawiasu), kątownik 100×100×10, 4 szt."
+        return K_PL["a"], K_PL["L"], holes, "K – ramię odstające (płaszczyzna zawiasu), kątownik 100×100×10, " + f"{K_PL.get('n', 4)} szt."
     if kind == "K_belka":
         holes = [(n, x, K_PL["L"] + z, d) for (n, x, z, d) in K_PL["holes_beam"]]
         return K_PL["a"], K_PL["L"], holes, "K – ramię na belce (2 × M12 do belki), x od grzbietu"
@@ -651,7 +652,7 @@ def page_side(pdf, lift):
         eu = tr(thx, SPRING["eye_up_sz"][0] + 25, SPRING["eye_up_sz"][1] - 75)
         el = (pin[0] + SPRING["eye_low"][0], pin[1] + SPRING["eye_low"][1])
         ax.plot([el[0], eu[0]], [el[1], eu[1]], color=col, lw=3, alpha=0.7)
-    ax.text(300, -260, "sprężyna gazowa 460/200 mm, 1600 N (×2)\noczko dolne na wsporniku K, górne na płycie S", fontsize=7, color="#c00000")
+    ax.text(300, -260, f"sprężyna gazowa 460/200 mm, {SPRING['F1']:.0f} N (×2)\noczko dolne na wsporniku K, górne na płycie S", fontsize=7, color="#c00000")
     ax.text(150, 1300, f"do jazdy: wys. ok. {H_FLOOR + 25 + L_SEC:.0f} nad ziemią,\nwystaje ok. 330 mm za belkę", fontsize=8)
     ax.text(1400, -300, f"kąt najazdu {ALPHA:.1f}°", fontsize=9)
     ax.set_xlim(-650, 2750)
@@ -733,7 +734,7 @@ def page_tube(pdf, pid, name, prof, mat, q, skos):
     ax.set_ylim(240, -20)
     ax.set_aspect("equal")
     ax.axis("off")
-    txt = "Otwory: s od końca " + ("przy przyczepie" if pid in ("L1", "L2", "C1", "C2") else "przy zawiasie środkowym") + \
+    txt = "Otwory: s od końca " + ("przy przyczepie" if pid in ("L1", "L1L", "L1P", "L2", "C1", "C2") else "przy zawiasie środkowym") + \
           ". „g/d” = przez górę i dół w osi ścianki (20/20). „bok” = przez oba boki, z od spodu rury."
     fig.text(0.04, 0.42, txt, fontsize=8)
     if skos:
@@ -783,7 +784,7 @@ def page_cross(pdf):
 
 def page_plates(pdf):
     fig = plt.figure(figsize=(11.69, 8.27))
-    fig.text(0.04, 0.95, "Płyty stalowe S235 – SAME PROSTOKĄTY (tylko proste cięcia). Pełna skala: szablony_1do1_v2.pdf / DXF",
+    fig.text(0.04, 0.95, f"Płyty stalowe S235 – SAME PROSTOKĄTY (tylko proste cięcia). Pełna skala: {TEMPL_NAME} / DXF",
              fontsize=11, weight="bold")
     ax = fig.add_axes([0.02, 0.02, 0.96, 0.88])
     draw_plate(ax, 0, 230, "H")
@@ -816,7 +817,7 @@ def page_calc(pdf, rows, lift, lift0):
     pdf.savefig(fig)
     plt.close(fig)
     fig, ax = plt.subplots(figsize=(11.69, 8.27))
-    ax.plot([r["deg"] for r in lift], [r["user_kg"] for r in lift], label="ze sprężynami 2 × 1600 N")
+    ax.plot([r["deg"] for r in lift], [r["user_kg"] for r in lift], label=f"ze sprężynami 2 × {SPRING['F1']:.0f} N")
     ax.plot([r["deg"] for r in lift0], [r["user_kg"] for r in lift0], label="bez sprężyn")
     ax.axhline(0, color="k", lw=0.5)
     ax.set_xlabel("kąt sekcji A [°] (ujemny = rozłożony na ziemi, 90 = pionowo)")
