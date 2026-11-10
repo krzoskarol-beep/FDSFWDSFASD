@@ -77,7 +77,7 @@ Do tego dochodzą rzeczy **konstrukcyjne do decyzji**. Nie są błędami modelu,
 | Luz nad oponą (pion) | 21 mm | **81 mm** |
 | Odblask boczny ↔ łby śrub | 0 mm (nachodzi) | 57 mm |
 | Oś (środek koła, X) | 2400 | 2250 |
-| Nacisk na hak, pusta | 31 kg | 17,5 kg |
+| Nacisk na hak, pusta | 31 kg | 17,6 kg |
 | Nacisk na hak, motocykl 150 kg | 52 kg (11,0%) | 30 kg (6,3%) |
 | Nacisk na hak, motocykl 200 kg | 64 kg (12,3%) | 40 kg (7,6%) |
 | Nacisk na hak, motocykl 250 kg | 76 kg (13,2%) | 49 kg (8,5%) |
@@ -134,7 +134,7 @@ więc ten luz warto obserwować na prototypie.
 Łapa KL ustawia przednie koło motocykla na X ≈ 1190. Środek ciężkości typowego motocykla (rozstaw osi 1400–1600 mm)
 wypada wtedy na X ≈ 1900–2050, czyli 350–500 mm przed osią przyczepy. Stąd nacisk 12–15%.
 Po przesunięciu osi o 150 mm do przodu nacisk wynosi 6–10% dla motocykli 150–300 kg, a pusta przyczepa
-nadal dociska hak (17,5 kg).
+nadal dociska hak (17,6 kg).
 
 Zmiany, które wymusiło przesunięcie osi: poprzeczka R5-5 kolidowała z przesuniętym wspornikiem W6, więc ją usunąłem
 razem z narożnikami K1#9/#10 i śrubami W5-5. Jej rolę przejmuje R4. Wkręty podłogi przy R5-5 też usunąłem, a te przy R4 przesunąłem.
