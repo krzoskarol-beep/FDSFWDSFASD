@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Moja pozycja GPS</string>
+    <string name="latitude">Szerokość geograficzna</string>
+    <string name="longitude">Długość geograficzna</string>
+    <string name="accuracy">Dokładność</string>
+    <string name="altitude">Wysokość</string>
+    <string name="speed">Prędkość</string>
+    <string name="bearing">Kierunek</string>
+    <string name="satellites">Satelity (używane / widoczne)</string>
+    <string name="source">Źródło</string>
+    <string name="fix_time">Czas pomiaru</string>
+    <string name="open_maps">Otwórz w mapach</string>
+    <string name="copy">Kopiuj</string>
+    <string name="share">Udostępnij</string>
+    <string name="grant_permission">Zezwól na lokalizację</string>
+    <string name="open_settings">Włącz lokalizację</string>
+
+    <string name="status_waiting">Szukam sygnału GPS…</string>
+    <string name="status_ok">Pozycja aktualna</string>
+    <string name="status_stale">Ostatnia znana pozycja (sprzed %1$s)</string>
+    <string name="status_no_permission">Aplikacja potrzebuje dostępu do lokalizacji, żeby pokazać Twoją pozycję.</string>
+    <string name="status_permission_denied_forever">Dostęp do lokalizacji jest zablokowany. Włącz go w ustawieniach aplikacji.</string>
+    <string name="status_disabled">Lokalizacja w telefonie jest wyłączona.</string>
+    <string name="status_coarse_only">Masz włączoną tylko przybliżoną lokalizację, więc dokładność będzie niska.</string>
+
+    <string name="copied">Skopiowano współrzędne</string>
+    <string name="no_maps_app">Brak aplikacji map w telefonie</string>
+    <string name="no_position_yet">Jeszcze nie ma pozycji</string>
+    <string name="share_text">Moja pozycja: %1$s\n%2$s</string>
+</resources>
