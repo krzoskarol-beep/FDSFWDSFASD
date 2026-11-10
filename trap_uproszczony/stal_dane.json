@@ -1,199 +1,261 @@
 {
  "podsumowanie": {
+  "polecany": "S2",
   "masa_al": 65.0,
-  "masa_stal": 150.5,
-  "masa_stal_A": 85.4,
-  "masa_stal_B": 65.1,
-  "wysilek_bez_sprezyn_stal": 82.4,
+  "masa_stal": 114.1,
+  "wysilek_bez_sprezyn_stal": 63.0,
   "sprezyny_stal": {
    "sztuk": 2,
-   "F1_N": 4900,
-   "max_wysilek_kg": 32.2,
-   "moment_rozlozony_Nm": -71.3,
-   "moment_pion_Nm": 39.9
+   "F1_N": 3700,
+   "max_wysilek_kg": 24.3,
+   "moment_rozlozony_Nm": -62.6,
+   "moment_pion_Nm": 28.2
   },
   "koszt_al": 3415,
-  "koszt_stal": 3093,
+  "koszt_stal": 2749,
   "najwieksze_wytezenie": {
    "element": "To samo – całe koło na jednej rurze",
-   "wartosc": 0.885
+   "wartosc": 0.83
   }
  },
+ "warianty": [
+  {
+   "klucz": "Al",
+   "nazwa": "aluminium V2",
+   "masa": 65.0,
+   "bez": 36.1,
+   "sprezyny": "2 × 1600 N (Ø28)",
+   "ze": 18.6,
+   "koszt": 3415,
+   "wyt": 0.88,
+   "rysunki": "bez zmian"
+  },
+  {
+   "klucz": "S1",
+   "nazwa": "stal ciężka (S235, ścianki 3/2/2 mm)",
+   "masa": 150.5,
+   "bez": 82.4,
+   "sprezyny": "2 × 4900 N (Ø40)",
+   "ze": 32.2,
+   "koszt": 3094,
+   "wyt": 0.885,
+   "rysunki": "bez zmian"
+  },
+  {
+   "klucz": "S2",
+   "nazwa": "stal LEKKA (rury jezdne S355 2 mm, podłużnice 1,5 mm, lżejsza siatka)",
+   "masa": 114.1,
+   "bez": 63.0,
+   "sprezyny": "2 × 3700 N (Ø40)",
+   "ze": 24.3,
+   "koszt": 2749,
+   "wyt": 0.83,
+   "rysunki": "bez zmian"
+  },
+  {
+   "klucz": "S3",
+   "nazwa": "stal lekka, chodnik tylko z lewej (szer. 740 mm)",
+   "masa": 90.4,
+   "bez": 50.2,
+   "sprezyny": "2 × 2800 N (Ø40)",
+   "ze": 20.4,
+   "koszt": 2533,
+   "wyt": 0.82,
+   "rysunki": "nowe rysunki (węższy trap)"
+  }
+ ],
  "obliczenia": [
   {
-   "nazwa": "Rura jezdna RHS 100×40×3 S235 – zginanie, rozpiętość 2,5 m (75 % koła)",
-   "obciazenie": 160.0,
-   "nosnosc": 235.0,
+   "nazwa": "Rura jezdna RHS 100×40×2 S355J2H – zginanie, rozpiętość 2,5 m (75 % koła)",
+   "obciazenie": 225.34,
+   "nosnosc": 355,
    "jedn": "MPa",
-   "wytezenie": 0.681,
-   "uwagi": "jak w wersji Al + większy ciężar własny"
+   "wytezenie": 0.635,
+   "uwagi": ""
   },
   {
    "nazwa": "To samo – całe koło na jednej rurze",
-   "obciazenie": 208.03,
-   "nosnosc": 235.0,
+   "obciazenie": 294.66,
+   "nosnosc": 355,
    "jedn": "MPa",
-   "wytezenie": 0.885,
+   "wytezenie": 0.83,
    "uwagi": ""
   },
   {
    "nazwa": "Ugięcie w środku (charakterystyczne)",
-   "obciazenie": 3.91,
+   "obciazenie": 5.38,
    "nosnosc": 12.5,
    "jedn": "mm",
-   "wytezenie": 0.313,
-   "uwagi": "stal jest 3× sztywniejsza od Al"
-  },
-  {
-   "nazwa": "Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm",
-   "obciazenie": 129.12,
-   "nosnosc": 235.0,
-   "jedn": "MPa",
-   "wytezenie": 0.549,
+   "wytezenie": 0.431,
    "uwagi": ""
   },
   {
-   "nazwa": "Poprzeczka RHS 60×40×2 S235 – stopa na samej krawędzi",
+   "nazwa": "Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm",
+   "obciazenie": 186.33,
+   "nosnosc": 355,
+   "jedn": "MPa",
+   "wytezenie": 0.525,
+   "uwagi": ""
+  },
+  {
+   "nazwa": "Rura jezdna – ścianka górna 2 mm pod oponą (zginanie poprzeczne)",
+   "obciazenie": 160.06,
+   "nosnosc": 355,
+   "jedn": "MPa",
+   "wytezenie": 0.451,
+   "uwagi": "pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami"
+  },
+  {
+   "nazwa": "Poprzeczka RHS 60×40×2 S235JRH – stopa na samej krawędzi",
    "obciazenie": 161.99,
-   "nosnosc": 235.0,
+   "nosnosc": 235,
    "jedn": "MPa",
    "wytezenie": 0.689,
    "uwagi": ""
   },
   {
-   "nazwa": "Podłużnica chodnika RHS 100×40×2 S235 – wspornik 420 mm",
-   "obciazenie": 71.67,
-   "nosnosc": 235.0,
+   "nazwa": "Podłużnica chodnika RHS 100×40×1,5 S235JRH – wspornik 420 mm",
+   "obciazenie": 93.73,
+   "nosnosc": 235,
    "jedn": "MPa",
-   "wytezenie": 0.305,
+   "wytezenie": 0.399,
    "uwagi": ""
   },
   {
    "nazwa": "Zawias środkowy: sworzeń M20 8.8 – ścinanie",
-   "obciazenie": 11.61,
+   "obciazenie": 11.34,
    "nosnosc": 120.64,
    "jedn": "kN",
-   "wytezenie": 0.096,
+   "wytezenie": 0.094,
    "uwagi": ""
   },
   {
    "nazwa": "Zawias środkowy: śruba M12 8.8 – ścinanie",
-   "obciazenie": 11.42,
+   "obciazenie": 11.14,
    "nosnosc": 32.37,
    "jedn": "kN",
-   "wytezenie": 0.353,
+   "wytezenie": 0.344,
    "uwagi": ""
   },
   {
-   "nazwa": "Zawias środkowy: tuleja Ø18 → ścianka stalowa 3 mm (docisk)",
-   "obciazenie": 11.42,
-   "nosnosc": 31.52,
+   "nazwa": "Zawias środkowy: tuleja Ø18 → ścianka rury 2 mm (docisk)",
+   "obciazenie": 11.14,
+   "nosnosc": 27.44,
    "jedn": "kN",
-   "wytezenie": 0.362,
+   "wytezenie": 0.406,
    "uwagi": ""
   },
   {
-   "nazwa": "Blokada do jazdy: sworzeń Ø12 – ścinanie (stal 8.8 / C45 ulepszana)",
-   "obciazenie": 18.3,
+   "nazwa": "Blokada do jazdy: sworzeń Ø12 8.8 / C45 – ścinanie",
+   "obciazenie": 13.88,
    "nosnosc": 43.43,
    "jedn": "kN",
-   "wytezenie": 0.421,
-   "uwagi": "trap w pionie 150 kg, hamowanie 0,8 g ×1,5 – zwykły sworzeń St (400 MPa) NIE wystarczy"
+   "wytezenie": 0.32,
+   "uwagi": "trap w pionie 114 kg, hamowanie 0,8 g ×1,5"
   },
   {
    "nazwa": "Blokada: docisk sworznia Ø12 w płycie H 6 mm",
-   "obciazenie": 18.3,
+   "obciazenie": 13.88,
    "nosnosc": 33.23,
    "jedn": "kN",
-   "wytezenie": 0.551,
-   "uwagi": "płyta H 6 mm – w wariancie stalowym płyty H z płaskownika 80×8"
+   "wytezenie": 0.418,
+   "uwagi": ""
   },
   {
-   "nazwa": "Oczko sprężyny: tuleja Ø25×5, śruba M16 (otwory oczek w K i S rozwierć do Ø17) – zginanie",
-   "obciazenie": 164.6,
+   "nazwa": "Oczko sprężyny: tuleja Ø25×5 + M16 – zginanie",
+   "obciazenie": 124.29,
    "nosnosc": 235.0,
    "jedn": "MPa",
-   "wytezenie": 0.7,
-   "uwagi": "sprężyna 4900 N, ramię 23 mm"
+   "wytezenie": 0.529,
+   "uwagi": "sprężyna 3700 N"
   },
   {
-   "nazwa": "Płyta S – śruby M12 w ściance stalowej 2 mm (docisk)",
-   "obciazenie": 11.66,
-   "nosnosc": 18.68,
+   "nazwa": "Płyta S – śruby M12 w ściance podłużnicy 1,5 mm (docisk)",
+   "obciazenie": 8.8,
+   "nosnosc": 14.01,
    "jedn": "kN",
-   "wytezenie": 0.624,
+   "wytezenie": 0.628,
    "uwagi": ""
   }
  ],
  "koszty": [
   [
-   "Rury jezdne (8 × 1250)",
+   "Rury jezdne",
    1042,
    492,
-   "2 sztangi 6 m: Al 100×40×3 6082 / stal 100×40×3"
+   384,
+   "2 sztangi RHS 100×40×2 S355J2H"
   ],
   [
-   "Podłużnice chodnika (8 × 1250)",
+   "Podłużnice chodnika",
    599,
    333,
-   "2 sztangi: 100×40×2"
+   252,
+   "2 sztangi RHS 100×40×1,5 S235JRH"
   ],
   [
-   "Poprzeczki (3 × 1190)",
+   "Poprzeczki",
    311,
    118,
-   "1 sztanga: Al 60×40×3 / stal 60×40×2"
+   118,
+   "RHS 60×40×2 S235JRH"
   ],
   [
    "Prowadnice + listwa T",
    189,
    83,
-   "kątownik 40×40×4 Al / 40×40×3 stal, płaskownik 40×5"
+   83,
+   "kątownik 40×40×3, płaskownik 40×5"
   ],
   [
-   "Siatka (arkusz 1250×2500)",
+   "Siatka",
    344,
    234,
-   "Al / stal ocynkowana"
+   203,
+   "siatka stal ocynk ~30×12×2×1,5"
   ],
   [
    "Ochrona przed korozją",
    0,
    583,
-   "stal: cynkowanie ogniowe ok. 130 kg (albo farba ~180 zł)"
+   460,
+   "cynkowanie ogniowe po wierceniu"
   ],
   [
    "Sprężyny gazowe",
    180,
    460,
-   "Al: 2 × 1600 N / stal: 2 × mocniejsze"
+   460,
+   "2 × 3700 N Ø40"
   ],
   [
    "Wspólne (płyty, wsporniki K, tuleje, śruby, sworznie, nity, zapięcia)",
    750,
    790,
-   "stal: sworznie blokady 8.8, oś oczek M16; bez pasty i podkładek izolujących"
+   790,
+   "sworznie blokady 8.8"
   ],
   [
    "RAZEM (netto, orientacyjnie)",
    3415,
-   3093,
-   "różnica +322 zł; z farbą zamiast cynku stal: 2690 zł"
+   3094,
+   2749,
+   "z farbą zamiast cynku: S2 ok. 2470 zł"
   ]
  ],
  "zakupy": [
   [
-   "Rura stalowa prostokątna 100×40×3, S235JRH",
+   "Rura stalowa prostokątna RHS 100×40×2 S355J2H",
    "8 × 1250 mm = 2 sztangi 6 m",
-   "rury jezdne L1–L4 (zamiast Al 6082)"
+   "rury jezdne L1–L4. MUSI być S355 (S355J2H / S355MH) – z S235 przy 2 mm za słaba. Zamiennik: 100×40×3 S235 (+20 kg)"
   ],
   [
-   "Rura stalowa prostokątna 100×40×2, S235JRH",
+   "Rura stalowa prostokątna RHS 100×40×1,5 S235JRH",
    "8 × 1250 mm = 2 sztangi 6 m",
    "podłużnice chodnika C1–C3"
   ],
   [
-   "Rura stalowa prostokątna 60×40×2, S235JRH",
+   "Rura stalowa prostokątna RHS 60×40×2 S235JRH",
    "3 × 1190 mm (1 sztanga)",
    "poprzeczki P"
   ],
@@ -208,14 +270,14 @@
    "listwa T"
   ],
   [
-   "Siatka cięto-ciągniona STALOWA ocynkowana ~43×13×3×2 (~7 kg/m²)",
+   "siatka stal ocynk ~30×12×2×1,5 (~4 kg/m²)",
    "1 arkusz 1250×2500",
-   "pokład"
+   "pokład – niesie tylko stopy; dostawca ma potwierdzić 160 kg w punkcie na przęśle 190 mm"
   ],
   [
-   "Sprężyna gazowa 460 mm / skok 200 / 4900 N, oczka M12 (Ø40)",
+   "Sprężyna gazowa 460 mm / skok 200 / 3700 N Ø40",
    "2",
-   "dobrana do masy stalowego trapu"
+   "dobrana do masy; oś oczek M16 + tuleja Ø25×5, otwory oczek w K i S rozwierć do Ø17"
   ],
   [
    "Sworzeń blokady Ø12×40 ze stali 8.8 / C45 ulepszanej",
@@ -223,1010 +285,517 @@
    "zwykła stal automatowa za słaba przy tej masie"
   ],
   [
-   "Oś oczek sprężyn: śruba M16×70 8.8 + tuleja Ø25×5 dł. 18 / 12 (zamiast M12 i Ø20×4)",
-   "4",
-   "otwór oczka w K i S rozwierć z Ø13 do Ø17 – reszta otworów bez zmian"
-  ],
-  [
-   "Cynkowanie ogniowe wszystkich części stalowych PO wierceniu (albo podkład epoksydowy + farba)",
+   "Cynkowanie ogniowe części stalowych PO wierceniu (albo podkład epoksydowy + farba)",
    "",
-   "bez tego stal szybko rdzewieje"
+   "bez tego stal rdzewieje"
   ],
   [
-   "Pozostałe: płyty Z i S, wsporniki K, tuleje, śruby, nity, wkręty, zapięcia, guma",
+   "Pozostałe: płyty H, Z, S, wsporniki K, tuleje, śruby, nity, wkręty, zapięcia, guma",
    "jak lista_zakupow.csv",
-   "bez pasty / podkładek izolujących – stal na stali nie koroduje galwanicznie"
+   "bez pasty i podkładek izolujących – stal na stali nie koroduje galwanicznie"
   ]
  ],
  "ceny": {
   "al_6082_kg": 40.0,
   "al_6060_kg": 34.0,
-  "st_profil_kg": 6.5,
+  "st_s235_kg": 6.5,
+  "st_s355_kg": 7.5,
   "cynk_ogniowy_kg": 4.5,
   "farba_kpl": 180.0,
   "siatka_al_m2": 110.0,
   "siatka_st_m2": 75.0,
-  "sprezyna_1600": 90.0,
-  "sprezyna_mocna": 230.0,
+  "siatka_st_lekka_m2": 65.0,
+  "sprezyna_28": 90.0,
+  "sprezyna_40": 230.0,
   "wspolne": 750.0
  },
  "podnoszenie": [
   {
    "deg": -10.9,
    "L": 280.4,
-   "Tg": -1004.0,
-   "Ts": 932.7,
-   "user_kg": 5.7,
+   "Tg": -766.9,
+   "Ts": 704.3,
+   "user_kg": 5.0,
    "hang": false
   },
   {
    "deg": -9.3,
    "L": 282.6,
-   "Tg": -1010.4,
-   "Ts": 933.7,
-   "user_kg": 6.1,
+   "Tg": -772.0,
+   "Ts": 705.0,
+   "user_kg": 5.4,
    "hang": false
   },
   {
    "deg": -7.6,
    "L": 284.8,
-   "Tg": -1016.0,
-   "Ts": 933.7,
-   "user_kg": 6.6,
+   "Tg": -776.4,
+   "Ts": 705.1,
+   "user_kg": 5.7,
    "hang": false
   },
   {
    "deg": -5.9,
    "L": 287.0,
-   "Tg": -1020.6,
-   "Ts": 932.9,
-   "user_kg": 7.0,
+   "Tg": -780.0,
+   "Ts": 704.5,
+   "user_kg": 6.0,
    "hang": false
   },
   {
    "deg": -4.2,
    "L": 289.3,
-   "Tg": -1024.4,
-   "Ts": 931.3,
-   "user_kg": 7.4,
+   "Tg": -783.0,
+   "Ts": 703.2,
+   "user_kg": 6.4,
    "hang": false
   },
   {
    "deg": -2.5,
    "L": 291.5,
-   "Tg": -1027.2,
-   "Ts": 928.9,
-   "user_kg": 7.9,
+   "Tg": -785.3,
+   "Ts": 701.4,
+   "user_kg": 6.7,
    "hang": false
   },
   {
    "deg": -0.9,
    "L": 293.7,
-   "Tg": -1029.2,
-   "Ts": 925.6,
-   "user_kg": 8.3,
+   "Tg": -786.9,
+   "Ts": 698.9,
+   "user_kg": 7.0,
    "hang": false
   },
   {
    "deg": 0.8,
    "L": 295.9,
-   "Tg": -1030.2,
-   "Ts": 921.6,
-   "user_kg": 8.7,
+   "Tg": -787.8,
+   "Ts": 695.9,
+   "user_kg": 7.3,
    "hang": false
   },
   {
    "deg": 2.5,
    "L": 298.1,
-   "Tg": -1030.3,
-   "Ts": 916.9,
-   "user_kg": 9.1,
+   "Tg": -788.0,
+   "Ts": 692.3,
+   "user_kg": 7.7,
    "hang": false
   },
   {
    "deg": 4.2,
    "L": 300.3,
-   "Tg": -1029.4,
-   "Ts": 911.4,
-   "user_kg": 9.4,
+   "Tg": -787.5,
+   "Ts": 688.2,
+   "user_kg": 7.9,
    "hang": false
   },
   {
    "deg": 5.9,
    "L": 302.5,
-   "Tg": -1027.7,
-   "Ts": 905.3,
-   "user_kg": 9.8,
+   "Tg": -786.3,
+   "Ts": 683.6,
+   "user_kg": 8.2,
    "hang": false
   },
   {
    "deg": 7.6,
    "L": 304.7,
-   "Tg": -1025.0,
-   "Ts": 898.5,
-   "user_kg": 10.1,
+   "Tg": -784.4,
+   "Ts": 678.4,
+   "user_kg": 8.5,
    "hang": false
   },
   {
    "deg": 9.2,
    "L": 306.9,
-   "Tg": -1021.5,
-   "Ts": 891.1,
-   "user_kg": 10.4,
+   "Tg": -781.8,
+   "Ts": 672.8,
+   "user_kg": 8.7,
    "hang": false
   },
   {
    "deg": 10.9,
    "L": 309.1,
-   "Tg": -1016.9,
-   "Ts": 883.0,
-   "user_kg": 10.7,
+   "Tg": -778.5,
+   "Ts": 666.8,
+   "user_kg": 8.9,
    "hang": false
   },
   {
    "deg": 12.6,
    "L": 311.2,
-   "Tg": -1011.5,
-   "Ts": 874.4,
-   "user_kg": 11.0,
+   "Tg": -774.5,
+   "Ts": 660.2,
+   "user_kg": 9.1,
    "hang": false
   },
   {
    "deg": 14.3,
    "L": 313.3,
-   "Tg": -1005.1,
-   "Ts": 865.2,
-   "user_kg": 11.2,
+   "Tg": -769.7,
+   "Ts": 653.3,
+   "user_kg": 9.3,
    "hang": false
   },
   {
    "deg": 16.0,
    "L": 315.5,
-   "Tg": -997.9,
-   "Ts": 855.4,
-   "user_kg": 11.4,
+   "Tg": -764.3,
+   "Ts": 646.0,
+   "user_kg": 9.5,
    "hang": false
   },
   {
    "deg": 17.7,
    "L": 317.6,
-   "Tg": -989.6,
-   "Ts": 845.2,
-   "user_kg": 11.5,
+   "Tg": -758.2,
+   "Ts": 638.2,
+   "user_kg": 9.6,
    "hang": false
   },
   {
    "deg": 19.3,
    "L": 319.6,
-   "Tg": -980.5,
-   "Ts": 834.4,
-   "user_kg": 11.7,
+   "Tg": -751.3,
+   "Ts": 630.1,
+   "user_kg": 9.7,
    "hang": false
   },
   {
    "deg": 21.0,
    "L": 321.7,
-   "Tg": -970.4,
-   "Ts": 823.2,
-   "user_kg": 11.8,
+   "Tg": -743.8,
+   "Ts": 621.6,
+   "user_kg": 9.8,
    "hang": false
   },
   {
    "deg": 22.7,
    "L": 323.7,
-   "Tg": -959.4,
-   "Ts": 811.5,
-   "user_kg": 11.8,
+   "Tg": -735.5,
+   "Ts": 612.8,
+   "user_kg": 9.8,
    "hang": false
   },
   {
    "deg": 24.4,
    "L": 325.7,
-   "Tg": -947.4,
-   "Ts": 799.3,
-   "user_kg": 11.8,
+   "Tg": -726.5,
+   "Ts": 603.6,
+   "user_kg": 9.8,
    "hang": false
   },
   {
    "deg": 26.1,
    "L": 327.7,
-   "Tg": -934.4,
-   "Ts": 786.8,
-   "user_kg": 11.8,
+   "Tg": -716.8,
+   "Ts": 594.1,
+   "user_kg": 9.8,
    "hang": false
   },
   {
    "deg": 27.7,
    "L": 329.7,
-   "Tg": -920.5,
-   "Ts": 773.8,
-   "user_kg": 11.7,
+   "Tg": -706.3,
+   "Ts": 584.3,
+   "user_kg": 9.8,
    "hang": false
   },
   {
    "deg": 29.4,
    "L": 331.6,
-   "Tg": -905.5,
-   "Ts": 760.5,
-   "user_kg": 11.6,
+   "Tg": -695.0,
+   "Ts": 574.2,
+   "user_kg": 9.7,
    "hang": false
   },
   {
    "deg": 31.1,
    "L": 333.5,
-   "Tg": -889.3,
-   "Ts": 746.8,
-   "user_kg": 11.4,
+   "Tg": -682.9,
+   "Ts": 563.9,
+   "user_kg": 9.5,
    "hang": false
   },
   {
    "deg": 32.8,
    "L": 335.3,
-   "Tg": -872.0,
-   "Ts": 732.7,
-   "user_kg": 11.1,
+   "Tg": -669.9,
+   "Ts": 553.2,
+   "user_kg": 9.3,
    "hang": false
   },
   {
    "deg": 34.5,
    "L": 337.2,
-   "Tg": -853.3,
-   "Ts": 718.3,
-   "user_kg": 10.8,
+   "Tg": -655.9,
+   "Ts": 542.4,
+   "user_kg": 9.1,
    "hang": false
   },
   {
    "deg": 36.2,
    "L": 339.0,
-   "Tg": -832.8,
-   "Ts": 703.5,
-   "user_kg": 10.3,
+   "Tg": -640.6,
+   "Ts": 531.2,
+   "user_kg": 8.7,
    "hang": false
   },
   {
    "deg": 37.8,
    "L": 340.8,
-   "Tg": -810.0,
-   "Ts": 688.5,
-   "user_kg": 9.7,
+   "Tg": -623.6,
+   "Ts": 519.9,
+   "user_kg": 8.3,
    "hang": false
   },
   {
    "deg": 39.5,
    "L": 342.5,
-   "Tg": -783.3,
-   "Ts": 673.2,
-   "user_kg": 8.8,
+   "Tg": -603.9,
+   "Ts": 508.3,
+   "user_kg": 7.6,
    "hang": false
   },
   {
    "deg": 41.2,
    "L": 344.2,
-   "Tg": -748.3,
-   "Ts": 657.6,
-   "user_kg": 7.3,
+   "Tg": -578.3,
+   "Ts": 496.5,
+   "user_kg": 6.5,
    "hang": false
   },
   {
    "deg": 42.9,
    "L": 345.8,
-   "Tg": -676.1,
-   "Ts": 641.7,
-   "user_kg": 2.8,
+   "Tg": -526.8,
+   "Ts": 484.5,
+   "user_kg": 3.4,
    "hang": false
   },
   {
    "deg": 44.6,
    "L": 347.5,
-   "Tg": -1028.4,
-   "Ts": 625.6,
-   "user_kg": 32.2,
+   "Tg": -776.9,
+   "Ts": 472.4,
+   "user_kg": 24.3,
    "hang": true
   },
   {
    "deg": 46.3,
    "L": 349.0,
-   "Tg": -1001.9,
-   "Ts": 609.2,
-   "user_kg": 31.4,
+   "Tg": -757.0,
+   "Ts": 460.0,
+   "user_kg": 23.7,
    "hang": true
   },
   {
    "deg": 47.9,
    "L": 350.6,
-   "Tg": -974.6,
-   "Ts": 592.6,
-   "user_kg": 30.5,
+   "Tg": -736.4,
+   "Ts": 447.5,
+   "user_kg": 23.1,
    "hang": true
   },
   {
    "deg": 49.6,
    "L": 352.1,
-   "Tg": -946.5,
-   "Ts": 575.8,
-   "user_kg": 29.6,
+   "Tg": -715.2,
+   "Ts": 434.8,
+   "user_kg": 22.4,
    "hang": true
   },
   {
    "deg": 51.3,
    "L": 353.6,
-   "Tg": -917.5,
-   "Ts": 558.8,
-   "user_kg": 28.7,
+   "Tg": -693.4,
+   "Ts": 421.9,
+   "user_kg": 21.7,
    "hang": true
   },
   {
    "deg": 53.0,
    "L": 355.0,
-   "Tg": -887.8,
-   "Ts": 541.6,
-   "user_kg": 27.7,
+   "Tg": -671.0,
+   "Ts": 409.0,
+   "user_kg": 21.0,
    "hang": true
   },
   {
    "deg": 54.7,
    "L": 356.4,
-   "Tg": -857.3,
-   "Ts": 524.2,
-   "user_kg": 26.6,
+   "Tg": -648.0,
+   "Ts": 395.8,
+   "user_kg": 20.2,
    "hang": true
   },
   {
    "deg": 56.4,
    "L": 357.7,
-   "Tg": -826.0,
-   "Ts": 506.6,
-   "user_kg": 25.5,
+   "Tg": -624.5,
+   "Ts": 382.6,
+   "user_kg": 19.3,
    "hang": true
   },
   {
    "deg": 58.0,
    "L": 359.0,
-   "Tg": -794.0,
-   "Ts": 488.9,
-   "user_kg": 24.4,
+   "Tg": -600.4,
+   "Ts": 369.2,
+   "user_kg": 18.5,
    "hang": true
   },
   {
    "deg": 59.7,
    "L": 360.2,
-   "Tg": -761.4,
-   "Ts": 471.0,
-   "user_kg": 23.2,
+   "Tg": -575.8,
+   "Ts": 355.7,
+   "user_kg": 17.6,
    "hang": true
   },
   {
    "deg": 61.4,
    "L": 361.5,
-   "Tg": -728.1,
-   "Ts": 453.0,
-   "user_kg": 22.0,
+   "Tg": -550.7,
+   "Ts": 342.0,
+   "user_kg": 16.7,
    "hang": true
   },
   {
    "deg": 63.1,
    "L": 362.6,
-   "Tg": -694.1,
-   "Ts": 434.8,
-   "user_kg": 20.7,
+   "Tg": -525.2,
+   "Ts": 328.3,
+   "user_kg": 15.7,
    "hang": true
   },
   {
    "deg": 64.8,
    "L": 363.7,
-   "Tg": -659.6,
-   "Ts": 416.5,
-   "user_kg": 19.4,
+   "Tg": -499.2,
+   "Ts": 314.5,
+   "user_kg": 14.8,
    "hang": true
   },
   {
    "deg": 66.4,
    "L": 364.8,
-   "Tg": -624.5,
-   "Ts": 398.0,
-   "user_kg": 18.1,
+   "Tg": -472.7,
+   "Ts": 300.6,
+   "user_kg": 13.8,
    "hang": true
   },
   {
    "deg": 68.1,
    "L": 365.8,
-   "Tg": -588.8,
-   "Ts": 379.5,
-   "user_kg": 16.7,
+   "Tg": -445.9,
+   "Ts": 286.6,
+   "user_kg": 12.7,
    "hang": true
   },
   {
    "deg": 69.8,
    "L": 366.8,
-   "Tg": -552.7,
-   "Ts": 360.8,
-   "user_kg": 15.3,
+   "Tg": -418.6,
+   "Ts": 272.5,
+   "user_kg": 11.7,
    "hang": true
   },
   {
    "deg": 71.5,
    "L": 367.7,
-   "Tg": -516.1,
-   "Ts": 342.1,
-   "user_kg": 13.9,
+   "Tg": -391.0,
+   "Ts": 258.3,
+   "user_kg": 10.6,
    "hang": true
   },
   {
    "deg": 73.2,
    "L": 368.6,
-   "Tg": -479.0,
-   "Ts": 323.2,
-   "user_kg": 12.5,
+   "Tg": -363.1,
+   "Ts": 244.1,
+   "user_kg": 9.5,
    "hang": true
   },
   {
    "deg": 74.9,
    "L": 369.4,
-   "Tg": -441.5,
-   "Ts": 304.3,
-   "user_kg": 11.0,
+   "Tg": -334.8,
+   "Ts": 229.8,
+   "user_kg": 8.4,
    "hang": true
   },
   {
    "deg": 76.5,
    "L": 370.2,
-   "Tg": -403.6,
-   "Ts": 285.3,
-   "user_kg": 9.5,
+   "Tg": -306.3,
+   "Ts": 215.4,
+   "user_kg": 7.3,
    "hang": true
   },
   {
    "deg": 78.2,
    "L": 370.9,
-   "Tg": -365.4,
-   "Ts": 266.2,
-   "user_kg": 7.9,
+   "Tg": -277.5,
+   "Ts": 201.0,
+   "user_kg": 6.1,
    "hang": true
   },
   {
    "deg": 79.9,
    "L": 371.6,
-   "Tg": -326.9,
-   "Ts": 247.0,
-   "user_kg": 6.4,
+   "Tg": -248.4,
+   "Ts": 186.5,
+   "user_kg": 4.9,
    "hang": true
   },
   {
    "deg": 81.6,
    "L": 372.2,
-   "Tg": -288.1,
-   "Ts": 227.8,
-   "user_kg": 4.8,
+   "Tg": -219.2,
+   "Ts": 172.0,
+   "user_kg": 3.8,
    "hang": true
   },
   {
    "deg": 83.3,
    "L": 372.8,
-   "Tg": -249.0,
-   "Ts": 208.5,
-   "user_kg": 3.2,
+   "Tg": -189.7,
+   "Ts": 157.4,
+   "user_kg": 2.6,
    "hang": true
   },
   {
    "deg": 85.0,
    "L": 373.3,
-   "Tg": -209.7,
-   "Ts": 189.2,
-   "user_kg": 1.6,
+   "Tg": -160.1,
+   "Ts": 142.8,
+   "user_kg": 1.4,
    "hang": true
   },
   {
    "deg": 86.6,
    "L": 373.8,
-   "Tg": -170.3,
-   "Ts": 169.8,
-   "user_kg": 0.0,
+   "Tg": -130.4,
+   "Ts": 128.2,
+   "user_kg": 0.2,
    "hang": true
   },
   {
    "deg": 88.3,
    "L": 374.2,
-   "Tg": -130.7,
-   "Ts": 150.3,
-   "user_kg": -1.6,
+   "Tg": -100.5,
+   "Ts": 113.5,
+   "user_kg": -1.0,
    "hang": true
   },
   {
    "deg": 90.0,
    "L": 374.6,
-   "Tg": -91.0,
-   "Ts": 130.9,
-   "user_kg": -3.2,
-   "hang": true
-  }
- ],
- "podnoszenie_bez_sprezyn": [
-  {
-   "deg": -10.9,
-   "L": 0.0,
-   "Tg": -1004.0,
-   "Ts": 0.0,
-   "user_kg": 80.3,
-   "hang": false
-  },
-  {
-   "deg": -9.3,
-   "L": 0.0,
-   "Tg": -1010.4,
-   "Ts": 0.0,
-   "user_kg": 80.8,
-   "hang": false
-  },
-  {
-   "deg": -7.6,
-   "L": 0.0,
-   "Tg": -1016.0,
-   "Ts": 0.0,
-   "user_kg": 81.2,
-   "hang": false
-  },
-  {
-   "deg": -5.9,
-   "L": 0.0,
-   "Tg": -1020.6,
-   "Ts": 0.0,
-   "user_kg": 81.6,
-   "hang": false
-  },
-  {
-   "deg": -4.2,
-   "L": 0.0,
-   "Tg": -1024.4,
-   "Ts": 0.0,
-   "user_kg": 81.9,
-   "hang": false
-  },
-  {
-   "deg": -2.5,
-   "L": 0.0,
-   "Tg": -1027.2,
-   "Ts": 0.0,
-   "user_kg": 82.1,
-   "hang": false
-  },
-  {
-   "deg": -0.9,
-   "L": 0.0,
-   "Tg": -1029.2,
-   "Ts": 0.0,
-   "user_kg": 82.3,
-   "hang": false
-  },
-  {
-   "deg": 0.8,
-   "L": 0.0,
-   "Tg": -1030.2,
-   "Ts": 0.0,
-   "user_kg": 82.4,
-   "hang": false
-  },
-  {
-   "deg": 2.5,
-   "L": 0.0,
-   "Tg": -1030.3,
-   "Ts": 0.0,
-   "user_kg": 82.4,
-   "hang": false
-  },
-  {
-   "deg": 4.2,
-   "L": 0.0,
-   "Tg": -1029.4,
-   "Ts": 0.0,
-   "user_kg": 82.3,
-   "hang": false
-  },
-  {
-   "deg": 5.9,
-   "L": 0.0,
-   "Tg": -1027.7,
-   "Ts": 0.0,
-   "user_kg": 82.2,
-   "hang": false
-  },
-  {
-   "deg": 7.6,
-   "L": 0.0,
-   "Tg": -1025.0,
-   "Ts": 0.0,
-   "user_kg": 82.0,
-   "hang": false
-  },
-  {
-   "deg": 9.2,
-   "L": 0.0,
-   "Tg": -1021.5,
-   "Ts": 0.0,
-   "user_kg": 81.7,
-   "hang": false
-  },
-  {
-   "deg": 10.9,
-   "L": 0.0,
-   "Tg": -1016.9,
-   "Ts": 0.0,
-   "user_kg": 81.3,
-   "hang": false
-  },
-  {
-   "deg": 12.6,
-   "L": 0.0,
-   "Tg": -1011.5,
-   "Ts": 0.0,
-   "user_kg": 80.9,
-   "hang": false
-  },
-  {
-   "deg": 14.3,
-   "L": 0.0,
-   "Tg": -1005.1,
-   "Ts": 0.0,
-   "user_kg": 80.4,
-   "hang": false
-  },
-  {
-   "deg": 16.0,
-   "L": 0.0,
-   "Tg": -997.9,
-   "Ts": 0.0,
-   "user_kg": 79.8,
-   "hang": false
-  },
-  {
-   "deg": 17.7,
-   "L": 0.0,
-   "Tg": -989.6,
-   "Ts": 0.0,
-   "user_kg": 79.1,
-   "hang": false
-  },
-  {
-   "deg": 19.3,
-   "L": 0.0,
-   "Tg": -980.5,
-   "Ts": 0.0,
-   "user_kg": 78.4,
-   "hang": false
-  },
-  {
-   "deg": 21.0,
-   "L": 0.0,
-   "Tg": -970.4,
-   "Ts": 0.0,
-   "user_kg": 77.6,
-   "hang": false
-  },
-  {
-   "deg": 22.7,
-   "L": 0.0,
-   "Tg": -959.4,
-   "Ts": 0.0,
-   "user_kg": 76.7,
-   "hang": false
-  },
-  {
-   "deg": 24.4,
-   "L": 0.0,
-   "Tg": -947.4,
-   "Ts": 0.0,
-   "user_kg": 75.7,
-   "hang": false
-  },
-  {
-   "deg": 26.1,
-   "L": 0.0,
-   "Tg": -934.4,
-   "Ts": 0.0,
-   "user_kg": 74.7,
-   "hang": false
-  },
-  {
-   "deg": 27.7,
-   "L": 0.0,
-   "Tg": -920.5,
-   "Ts": 0.0,
-   "user_kg": 73.6,
-   "hang": false
-  },
-  {
-   "deg": 29.4,
-   "L": 0.0,
-   "Tg": -905.5,
-   "Ts": 0.0,
-   "user_kg": 72.4,
-   "hang": false
-  },
-  {
-   "deg": 31.1,
-   "L": 0.0,
-   "Tg": -889.3,
-   "Ts": 0.0,
-   "user_kg": 71.1,
-   "hang": false
-  },
-  {
-   "deg": 32.8,
-   "L": 0.0,
-   "Tg": -872.0,
-   "Ts": 0.0,
-   "user_kg": 69.7,
-   "hang": false
-  },
-  {
-   "deg": 34.5,
-   "L": 0.0,
-   "Tg": -853.3,
-   "Ts": 0.0,
-   "user_kg": 68.2,
-   "hang": false
-  },
-  {
-   "deg": 36.2,
-   "L": 0.0,
-   "Tg": -832.8,
-   "Ts": 0.0,
-   "user_kg": 66.6,
-   "hang": false
-  },
-  {
-   "deg": 37.8,
-   "L": 0.0,
-   "Tg": -810.0,
-   "Ts": 0.0,
-   "user_kg": 64.8,
-   "hang": false
-  },
-  {
-   "deg": 39.5,
-   "L": 0.0,
-   "Tg": -783.3,
-   "Ts": 0.0,
-   "user_kg": 62.6,
-   "hang": false
-  },
-  {
-   "deg": 41.2,
-   "L": 0.0,
-   "Tg": -748.3,
-   "Ts": 0.0,
-   "user_kg": 59.8,
-   "hang": false
-  },
-  {
-   "deg": 42.9,
-   "L": 0.0,
-   "Tg": -676.1,
-   "Ts": 0.0,
-   "user_kg": 54.1,
-   "hang": false
-  },
-  {
-   "deg": 44.6,
-   "L": 0.0,
-   "Tg": -1028.4,
-   "Ts": 0.0,
-   "user_kg": 82.2,
-   "hang": true
-  },
-  {
-   "deg": 46.3,
-   "L": 0.0,
-   "Tg": -1001.9,
-   "Ts": 0.0,
-   "user_kg": 80.1,
-   "hang": true
-  },
-  {
-   "deg": 47.9,
-   "L": 0.0,
-   "Tg": -974.6,
-   "Ts": 0.0,
-   "user_kg": 77.9,
-   "hang": true
-  },
-  {
-   "deg": 49.6,
-   "L": 0.0,
-   "Tg": -946.5,
-   "Ts": 0.0,
-   "user_kg": 75.7,
-   "hang": true
-  },
-  {
-   "deg": 51.3,
-   "L": 0.0,
-   "Tg": -917.5,
-   "Ts": 0.0,
-   "user_kg": 73.4,
-   "hang": true
-  },
-  {
-   "deg": 53.0,
-   "L": 0.0,
-   "Tg": -887.8,
-   "Ts": 0.0,
-   "user_kg": 71.0,
-   "hang": true
-  },
-  {
-   "deg": 54.7,
-   "L": 0.0,
-   "Tg": -857.3,
-   "Ts": 0.0,
-   "user_kg": 68.5,
-   "hang": true
-  },
-  {
-   "deg": 56.4,
-   "L": 0.0,
-   "Tg": -826.0,
-   "Ts": 0.0,
-   "user_kg": 66.0,
-   "hang": true
-  },
-  {
-   "deg": 58.0,
-   "L": 0.0,
-   "Tg": -794.0,
-   "Ts": 0.0,
-   "user_kg": 63.5,
-   "hang": true
-  },
-  {
-   "deg": 59.7,
-   "L": 0.0,
-   "Tg": -761.4,
-   "Ts": 0.0,
-   "user_kg": 60.9,
-   "hang": true
-  },
-  {
-   "deg": 61.4,
-   "L": 0.0,
-   "Tg": -728.1,
-   "Ts": 0.0,
-   "user_kg": 58.2,
-   "hang": true
-  },
-  {
-   "deg": 63.1,
-   "L": 0.0,
-   "Tg": -694.1,
-   "Ts": 0.0,
-   "user_kg": 55.5,
-   "hang": true
-  },
-  {
-   "deg": 64.8,
-   "L": 0.0,
-   "Tg": -659.6,
-   "Ts": 0.0,
-   "user_kg": 52.7,
-   "hang": true
-  },
-  {
-   "deg": 66.4,
-   "L": 0.0,
-   "Tg": -624.5,
-   "Ts": 0.0,
-   "user_kg": 49.9,
-   "hang": true
-  },
-  {
-   "deg": 68.1,
-   "L": 0.0,
-   "Tg": -588.8,
-   "Ts": 0.0,
-   "user_kg": 47.1,
-   "hang": true
-  },
-  {
-   "deg": 69.8,
-   "L": 0.0,
-   "Tg": -552.7,
-   "Ts": 0.0,
-   "user_kg": 44.2,
-   "hang": true
-  },
-  {
-   "deg": 71.5,
-   "L": 0.0,
-   "Tg": -516.1,
-   "Ts": 0.0,
-   "user_kg": 41.3,
-   "hang": true
-  },
-  {
-   "deg": 73.2,
-   "L": 0.0,
-   "Tg": -479.0,
-   "Ts": 0.0,
-   "user_kg": 38.3,
-   "hang": true
-  },
-  {
-   "deg": 74.9,
-   "L": 0.0,
-   "Tg": -441.5,
-   "Ts": 0.0,
-   "user_kg": 35.3,
-   "hang": true
-  },
-  {
-   "deg": 76.5,
-   "L": 0.0,
-   "Tg": -403.6,
-   "Ts": 0.0,
-   "user_kg": 32.3,
-   "hang": true
-  },
-  {
-   "deg": 78.2,
-   "L": 0.0,
-   "Tg": -365.4,
-   "Ts": 0.0,
-   "user_kg": 29.2,
-   "hang": true
-  },
-  {
-   "deg": 79.9,
-   "L": 0.0,
-   "Tg": -326.9,
-   "Ts": 0.0,
-   "user_kg": 26.1,
-   "hang": true
-  },
-  {
-   "deg": 81.6,
-   "L": 0.0,
-   "Tg": -288.1,
-   "Ts": 0.0,
-   "user_kg": 23.0,
-   "hang": true
-  },
-  {
-   "deg": 83.3,
-   "L": 0.0,
-   "Tg": -249.0,
-   "Ts": 0.0,
-   "user_kg": 19.9,
-   "hang": true
-  },
-  {
-   "deg": 85.0,
-   "L": 0.0,
-   "Tg": -209.7,
-   "Ts": 0.0,
-   "user_kg": 16.8,
-   "hang": true
-  },
-  {
-   "deg": 86.6,
-   "L": 0.0,
-   "Tg": -170.3,
-   "Ts": 0.0,
-   "user_kg": 13.6,
-   "hang": true
-  },
-  {
-   "deg": 88.3,
-   "L": 0.0,
-   "Tg": -130.7,
-   "Ts": 0.0,
-   "user_kg": 10.4,
-   "hang": true
-  },
-  {
-   "deg": 90.0,
-   "L": 0.0,
-   "Tg": -91.0,
-   "Ts": 0.0,
-   "user_kg": 7.3,
+   "Tg": -70.6,
+   "Ts": 98.8,
+   "user_kg": -2.3,
    "hang": true
   }
  ]

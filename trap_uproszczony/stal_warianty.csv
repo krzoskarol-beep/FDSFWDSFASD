@@ -1,0 +1,5 @@
+﻿wariant;masa [kg];podnoszenie bez sprężyn [kg];sprężyny;podnoszenie ze sprężynami [kg];koszt materiału z cynkiem [zł];najbardziej obciążona część
+Al V2 – aluminium;65;36;2 × 1600 N;19;3415;88%
+S1 – stal ciężka (S235, ścianki 3/2/2 mm);150;82;2 × 4900 N;32;3094;88% – To samo – całe koło na jednej rurze
+S2 – stal LEKKA (rury jezdne S355 2 mm, podłużnice 1,5 mm, lżejsza siatka);114;63;2 × 3700 N;24;2749;83% – To samo – całe koło na jednej rurze
+S3 – stal lekka, chodnik tylko z lewej (szer. 740 mm);90;50;2 × 2800 N;20;2533;82% – To samo – całe koło na jednej rurze

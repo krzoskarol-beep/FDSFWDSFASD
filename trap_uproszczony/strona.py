@@ -122,13 +122,19 @@ def main():
     al_l0, al_l = max(r["user_kg"] for r in lift0), max(r["user_kg"] for r in lift)
     vs_rows = [["masa trapu", f"{mA + mB:.0f} kg", f"{st['masa_stal']:.0f} kg"],
                ["siła przy podnoszeniu bez sprężyn", f"{al_l0:.0f} kg", f"{st['wysilek_bez_sprezyn_stal']:.0f} kg"],
-               ["sprężyny gazowe", "2 × 1600 N (Ø28)", f"{sp['sztuk']} × {sp['F1_N']} N (Ø40, oś M16)"],
+               ["sprężyny gazowe", "2 × 1600 N (Ø28)", f"{sp['sztuk']} × {sp['F1_N']} N" + (" (Ø40, oś M16)" if sp["F1_N"] > 2500 else " (Ø28)")],
                ["siła przy podnoszeniu ze sprężynami", f"{al_l:.0f} kg", f"{sp['max_wysilek_kg']:.0f} kg"],
                ["korozja", "nie rdzewieje, bez malowania", "cynkowanie ogniowe po wierceniu albo farba"],
                ["koszt materiału (orientacyjnie, netto)", f"{st['koszt_al']} zł", f"{st['koszt_stal']} zł z cynkiem · "
-                f"{st['koszt_stal'] - sd['koszty'][5][2] + stal.CENY['farba_kpl']:.0f} zł z farbą"],
+                f"{st['koszt_stal'] - sd['koszty'][5][3] + stal.CENY['farba_kpl']:.0f} zł z farbą"],
+               ["rysunki, szablony, otwory, model 3D", "–", "bez zmian (inne tylko grubości ścianek)"],
                ["najbardziej obciążona część", f"{worst['wytezenie'] * 100:.0f}%", f"{st['najwieksze_wytezenie']['wartosc'] * 100:.0f}%"]]
-    cost_rows = [[E(r[0]) + (f'<span class="note">{E(r[3])}</span>' if r[3] else ""), f"{r[1]} zł", f"{r[2]} zł"] for r in sd["koszty"]]
+    cost_rows = [[E(r[0]) + (f'<span class="note">S2: {E(r[4])}</span>' if r[4] else ""), f"{r[1]} zł", f"{r[2]} zł", f"<b>{r[3]} zł</b>"]
+                 for r in sd["koszty"]]
+    var_rows = [[f"<b>{E(x['klucz'])}</b> {E(x['nazwa'])}" + (" <span class='pill ok'>polecana stalowa</span>" if x["klucz"] == sd["podsumowanie"]["polecany"] else "")
+                 + f"<span class='note'>rysunki: {E(x['rysunki'])}</span>",
+                 f"{x['masa']:.0f} kg", f"{x['bez']:.0f} kg", f"{x['ze']:.0f} kg<span class='note'>{E(x['sprezyny'])}</span>", f"{x['koszt']} zł",
+                 pill(x["wyt"])] for x in sd["warianty"]]
     st_calc = [[f'{E(r["nazwa"])}<span class="note">{E(r["uwagi"])}</span>', f'{r["obciazenie"]:g} / {r["nosnosc"]:g} {E(r["jedn"])}',
                 pill(r["wytezenie"])] for r in sd["obliczenia"]]
     st_buy = [[E(a), E(b), E(c)] for a, b, c in sd["zakupy"]]
@@ -140,8 +146,9 @@ def main():
                  "%BOLTS%": table(["Rozmiar", "Rodzaj / gdzie", "Szt."], bolt_rows, (2,)),
                  "%HOLES%": table(["Nr", "Ø", "Złącze", "Miejsce wiercenia w każdej części, przez którą przechodzi"], hole_rows, (0, 1)),
                  "%BUY%": table(["Pozycja", "Ilość", "Uwagi"], buy_rows), "%NHOLES%": str(n_holes),
-                 "%VS%": table(["", "aluminium (V2)", "stal (budżet)"], vs_rows, (1, 2)),
-                 "%STCOST%": table(["Pozycja", "aluminium", "stal"], cost_rows, (1, 2)),
+                 "%VS%": table(["", "aluminium (V2)", "stal lekka (S2)"], vs_rows, (1, 2)),
+                 "%STCOST%": table(["Pozycja", "aluminium", "stal ciężka S1", "stal lekka S2"], cost_rows, (1, 2, 3)),
+                 "%STVAR%": table(["Wariant", "Masa", "Podnoszenie bez sprężyn", "Ze sprężynami", "Koszt (z cynkiem)", "Wytężenie max"], var_rows, (1, 2, 3, 4, 5)),
                  "%STCALC%": table(["Sprawdzenie", "Obciążenie / nośność", "Wytężenie"], st_calc, (1, 2)),
                  "%STBUY%": table(["Pozycja", "Ilość", "Uwagi"], st_buy), "%CENY%": ceny,
                  "%MST%": f"{st['masa_stal']:.0f}", "%MAL%": f"{mA + mB:.0f}",
@@ -228,16 +235,20 @@ pchaniu motocykla łatwo zjedzie na siatkę obok, a tam siatka leży na przęsł
 <h2>Otwory – miejsca wiercenia (%NHOLES%)</h2><div class="card" id="holes">%HOLES%
 <p class="note">s – od końca sekcji (A: przy przyczepie, B: przy zawiasie środkowym), x – od osi trapu, z – od spodu rury. Otwór przechodzący przez kilka części wierć razem albo przez płytę jako szablon. Model sprawdza, że każda śruba przechodzi przez otwory we wszystkich częściach, bez kolizji z materiałem.</p></div>
 <h2>Zakupy</h2><div class="card">%BUY%</div>
-<h2>Wariant budżetowy ze stali</h2>
-<div class="card"><p style="margin:0 0 10px">Ten sam trap: identyczny układ, wymiary zewnętrzne profili, otwory, rysunki, szablony i model 3D. Zmienia się materiał: rury 100×40×3 i 100×40×2
-oraz poprzeczki 60×40×2 ze stali S235, siatka stalowa ocynkowana, mocniejsze sprężyny. Wytrzymałościowo stal wychodzi dobrze, ale trap waży %MST% kg zamiast %MAL% kg.</p>
+<h2>Wariant stalowy – lekki (S2)</h2>
+<div class="card"><p style="margin:0 0 10px">Ten sam trap: identyczny układ, wymiary zewnętrzne profili, otwory, rysunki, szablony i model 3D. Zmieniają się tylko materiał i grubości:
+rury jezdne 100×40×<b>2</b> ze stali <b>S355</b> (mocniejszej, więc może być cieńsza), podłużnice chodnika 100×40×<b>1,5</b>, poprzeczki 60×40×2, lżejsza siatka stalowa ocynkowana
+i mocniejsze sprężyny. Trap waży %MST% kg zamiast %MAL% kg (pierwsza wersja stalowa z grubymi ściankami miała 150 kg).</p>
 %VS%
-<p class="note">Wniosek: stal oszczędza kilkaset złotych, ale trap jest ponad 2 razy cięższy. Nawet z mocnymi sprężynami trzeba go podnosić siłą ok. 32 kg, a słabsze sprężyny
-nie pomogą bardziej, bo wtedy rozłożony trap przestałby leżeć na ziemi. Do tego +85 kg na przyczepie i na haku oraz cynkowanie. Jako klapa do podnoszenia w jedną osobę polecam wersję aluminiową.</p></div>
+<p class="note">Rury jezdne muszą być ze stali S355 (S355J2H lub S355MH) – z S235 przy ściance 2 mm są za słabe. Jeśli hurtownia nie ma S355, weź 100×40×3 S235 (+20 kg, jak w wariancie S1).
+Oś oczek sprężyn: śruba M16 z tuleją Ø25×5, otwór oczka w K i S rozwierć z Ø13 do Ø17. Sworznie blokady ze stali 8.8. Wszystkie części stalowe cynkuj ogniowo PO wierceniu albo pomaluj.</p></div>
+<h3 style="font-size:15px;margin:16px 0 8px">Porównanie wariantów</h3><div class="card">%STVAR%
+<p class="note">Lżej niż S2 w stali da się zejść tylko zmniejszając trap: S3 ma chodnik tylko z lewej strony (motocykl pchasz z lewej, od strony stopki) i szerokość 740 mm – wymaga nowych rysunków.
+Sprężyny dobrane tak, żeby rozłożony trap zawsze leżał na ziemi, a w pionie nie pchał do przyczepy.</p></div>
 <h3 style="font-size:15px;margin:16px 0 8px">Porównanie kosztów materiału</h3><div class="card">%STCOST%
 <p class="note">Ceny to założenia (netto, PLN) – sprawdź w swojej hurtowni i wpisz w stal.py (CENY): %CENY%. Profile liczone w całych sztangach 6 m.</p></div>
-<h3 style="font-size:15px;margin:16px 0 8px">Obliczenia wariantu stalowego</h3><div class="card">%STCALC%</div>
-<h3 style="font-size:15px;margin:16px 0 8px">Zakupy – co zmienia się w wariancie stalowym</h3><div class="card">%STBUY%</div>
+<h3 style="font-size:15px;margin:16px 0 8px">Obliczenia wariantu stalowego lekkiego (S2)</h3><div class="card">%STCALC%</div>
+<h3 style="font-size:15px;margin:16px 0 8px">Zakupy – wariant stalowy lekki (S2)</h3><div class="card">%STBUY%</div>
 <h2>Pliki</h2><div class="card"><p>Rysunki z tabelami otworów, szablony 1:1, DXF, listy CSV, model glTF i skrypty (generuj.py, podglad3d.py, strona.py) są w katalogu trap_uproszczony w repozytorium.</p></div>
 </main>
 <script type="application/octet-stream" id="glb">%GLB%</script>

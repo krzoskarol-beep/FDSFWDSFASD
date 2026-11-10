@@ -19,7 +19,7 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 | `www/index.html` | **Strona z podglądem** – wczytuje `trap_v2.glb`. Kliknij element, otwór albo śrubę, a w rogu pojawi się pełny opis: Ø, s, x, z i części, przez które przechodzi. Ma przycisk „Tylko otwory (miejsca wiercenia)”, przekrój, przezroczyste profile i przybliżenia na zawiasy. Uruchamiasz ją przez `python3 podglad3d.py --www` |
 | `otwory_z_modelu.csv` | Lista wszystkich 96 otworów z modelu 3D. Przy każdym otworze jest jego miejsce w każdej części, przez którą przechodzi |
 | `podglad_*.png` | Zrzuty z podglądu w Pythonie: całość, zawias przy przyczepie, zawias środkowy, skrzyżowanie (profile przezroczyste) i same otwory przy zawiasie |
-| `stal.py`, `stal_*.csv`, `porownanie_kosztow.csv` | **Wariant budżetowy ze stali**: ten sam układ i te same otwory, profile ze stali S235. Liczy obliczenia, dobiera sprężyny, robi listę zakupów i porównanie kosztów. Ceny są założeniami: wpisz swoje w `CENY` i uruchom ponownie |
+| `stal.py`, `stal_*.csv`, `porownanie_kosztow.csv` | **Warianty stalowe** (S1 ciężki, S2 lekki – polecany, S3 z jednym chodnikiem): ten sam układ i te same otwory. Liczy obliczenia, dobiera sprężyny, robi listę zakupów i porównanie kosztów. Ceny są założeniami: wpisz swoje w `CENY` i uruchom ponownie |
 | `generuj.py` | Skrypt, który to wszystko liczy i rysuje. Na górze są parametry: wysokość podłogi, rozstawy, obciążenia. Uruchomienie: `pip install matplotlib ezdxf` i `python3 generuj.py` |
 
 ## Co było nie tak / za trudne w poprzedniej wersji
@@ -130,15 +130,22 @@ Obecny wynik: 96 otworów i 90 złączy. Żaden otwór nie zostaje bez śruby, �
 
 78 otworów przechodzi przez kilka części naraz, na przykład rurę i płytę albo rurę i poprzeczkę. Takie otwory wierć razem albo zaznacz przez płytę jako szablon (patrz „Kolejność budowy”).
 
-## Wariant budżetowy ze stali – w skrócie
+## Warianty stalowe – w skrócie
 
-| | aluminium (V2) | stal |
-|---|---|---|
-| masa trapu | 65 kg | 150 kg |
-| siła przy podnoszeniu bez sprężyn | 36 kg | 82 kg |
-| siła przy podnoszeniu ze sprężynami | 19 kg (2 × 1600 N) | 32 kg (2 × 4900 N, Ø40) |
-| koszt materiału (założone ceny, netto) | ok. 3400 zł | ok. 3100 zł z cynkowaniem, ok. 2700 zł z farbą |
+| | aluminium (V2) | stal lekka **S2** (polecana stalowa) | stal ciężka S1 | stal lekka, 1 chodnik S3 |
+|---|---|---|---|---|
+| masa trapu | 65 kg | **114 kg** | 150 kg | 90 kg |
+| podnoszenie bez sprężyn | 36 kg | 63 kg | 82 kg | 50 kg |
+| podnoszenie ze sprężynami | 19 kg (2 × 1600 N) | **24 kg** (2 × 3700 N, Ø40) | 32 kg (2 × 4900 N) | 20 kg (2 × 2800 N) |
+| koszt materiału (założone ceny, netto) | ok. 3400 zł | **ok. 2750 zł z cynkiem, ok. 2470 zł z farbą** | ok. 3100 zł | ok. 2550 zł |
+| rysunki, otwory, model 3D | – | bez zmian | bez zmian | nowe (szer. 740 mm) |
 
-Wytrzymałościowo stal wychodzi dobrze. Trzeba tylko zmienić oś oczek sprężyn na śrubę M16 z tuleją Ø25×5 i dać sworznie blokady ze stali 8.8.
+S2 ma rury jezdne 100×40×2 ze stali S355 (z S235 przy 2 mm za słabe; zamiennik 100×40×3 S235 = +20 kg), podłużnice 100×40×1,5, poprzeczki 60×40×2 i lżejszą siatkę stalową.
+Najbardziej obciążona część ma 83 %.
 
-Mocniejszymi sprężynami nie da się zejść niżej niż ok. 32 kg, bo rozłożony trap przestałby leżeć na ziemi. Przy klapie podnoszonej przez jedną osobę polecam aluminium.
+Zmiany względem aluminium:
+- oś oczek sprężyn: śruba M16 z tuleją Ø25×5, otwór oczka w K i S rozwierć do Ø17,
+- sworznie blokady ze stali 8.8,
+- cynkowanie ogniowe po wierceniu albo farba.
+
+Szczegóły: `stal_warianty.csv`, `stal_obliczenia.csv`, `stal_lista_zakupow.csv`, `porownanie_kosztow.csv`.
