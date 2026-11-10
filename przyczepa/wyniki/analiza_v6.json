@@ -1,0 +1,72 @@
+{
+ "wersja": "v6",
+ "kolizje_statyczne": [],
+ "kinematyka": {
+  "sworzen": [
+   3345.0,
+   318.0
+  ],
+  "zawias_srodkowy": [
+   4195.93,
+   96.65
+  ],
+  "kat_podnoszenia": 101.67
+ },
+ "kolizje_ruch": {
+  "skladanie": [],
+  "podnoszenie": []
+ },
+ "os_x": 2250.0,
+ "luz_opona_blotnik_pion": 81.0,
+ "luz_opona_blotnik_min": 42.6,
+ "luz_opona_wspornik_B1": 36.0,
+ "odblask_sruby": 57.0,
+ "masa_wlasna": 321.6,
+ "masa_grupy": {
+  "rama": 158.2,
+  "sklejka": 29.5,
+  "sruby": 20.0,
+  "rampa": 45.5,
+  "kupne": 68.3
+ },
+ "srodek_ciezkosci": [
+  2123.0,
+  377.0,
+  -3.0
+ ],
+ "nacisk_pusta": 17.6,
+ "nacisk_z_motocyklem": [
+  {
+   "moto_kg": 150,
+   "moto_cg_x": 2060,
+   "dmc": 472,
+   "hak_kg": 29.9,
+   "procent": 6.3,
+   "os_kg": 442
+  },
+  {
+   "moto_kg": 200,
+   "moto_cg_x": 1990,
+   "dmc": 522,
+   "hak_kg": 40.0,
+   "procent": 7.7,
+   "os_kg": 482
+  },
+  {
+   "moto_kg": 250,
+   "moto_cg_x": 1960,
+   "dmc": 572,
+   "hak_kg": 48.8,
+   "procent": 8.5,
+   "os_kg": 523
+  },
+  {
+   "moto_kg": 300,
+   "moto_cg_x": 1890,
+   "dmc": 622,
+   "hak_kg": 64.1,
+   "procent": 10.3,
+   "os_kg": 558
+  }
+ ]
+}

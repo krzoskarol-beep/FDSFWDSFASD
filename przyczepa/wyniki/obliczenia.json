@@ -1,0 +1,72 @@
+{
+ "profile_W_mm3": {
+  "D1 100x40x4 płasko (v5/v6)": 14106,
+  "D1 100x40x4 na sztorc": 25137,
+  "D1 80x80x4": 29346,
+  "R5 80x40x2": 9743,
+  "R4/R2 120x50x2": 20276,
+  "R2 120x50x3": 29461,
+  "D2 60x60x4": 15690
+ },
+ "zalozenia": "Szacunkowe obliczenia wytrzymałościowe dyszla i ramy (belkowo, ręcznie) dla v5 i v6.\n\nZałożenia (świadomie proste - to NIE zastępuje MES):\n  * nacisk statyczny na hak z analiza_v*.json (motocykl 250 kg i 300 kg),\n  * współczynnik dynamiczny pionowy 2,5 (nierówności drogi),\n  * siła pozioma na zaczepie D = g*T*R/(T+R), T = 1500 kg (samochód), R = DMC przyczepy;\n    działa na mimośrodzie e = 392 - 232 = 160 mm (kula wyżej niż oś dyszla D1) -> moment M_e,\n  * dyszel D1 jako wspornik od kuli do pierwszej podpory (poprzeczka R5-1, X = 950),\n    reakcje podpór liczone dla układu dwupodporowego: R5-1 i ostatnia podpora dyszla\n    (v5: R5-4, X = 1806;  v6: poprzeczka osi R4, X = 2100),\n  * poprzeczka jako belka swobodnie podparta na podłużnicach (rozpiętość 900 mm), siła w środku.\n    python3 obliczenia.py wyniki/analiza_v5.json wyniki/analiza_v6.json wyniki/obliczenia.json\n",
+ "v5_moto250": {
+  "hak_kg": 75.6,
+  "dmc": 572,
+  "T_dyn_N": 1854,
+  "D_N": 4062,
+  "M_e_Nm": 650,
+  "M_D1_Nm": 2550,
+  "sigma_D1_plasko_MPa": 181.0,
+  "sigma_D1_sztorc_MPa": 101.0,
+  "sigma_D1_80x80x4_MPa": 87.0,
+  "R_R51_N": 4834,
+  "sigma_R51_MPa": 112.0,
+  "R_ostatnia_N": 2979,
+  "D2_sigma_MPa": 27.0
+ },
+ "v5_moto300": {
+  "hak_kg": 93.0,
+  "dmc": 622,
+  "T_dyn_N": 2281,
+  "D_N": 4313,
+  "M_e_Nm": 690,
+  "M_D1_Nm": 3028,
+  "sigma_D1_plasko_MPa": 215.0,
+  "sigma_D1_sztorc_MPa": 120.0,
+  "sigma_D1_80x80x4_MPa": 103.0,
+  "R_R51_N": 5818,
+  "sigma_R51_MPa": 134.0,
+  "R_ostatnia_N": 3537,
+  "D2_sigma_MPa": 33.0
+ },
+ "v6_moto250": {
+  "hak_kg": 48.8,
+  "dmc": 572,
+  "T_dyn_N": 1197,
+  "D_N": 4062,
+  "M_e_Nm": 650,
+  "M_D1_Nm": 1877,
+  "sigma_D1_plasko_MPa": 133.0,
+  "sigma_D1_sztorc_MPa": 75.0,
+  "sigma_D1_80x80x4_MPa": 64.0,
+  "R_R51_N": 2829,
+  "sigma_R51_MPa": 65.0,
+  "R_ostatnia_N": 1632,
+  "D2_sigma_MPa": 17.0
+ },
+ "v6_moto300": {
+  "hak_kg": 64.1,
+  "dmc": 622,
+  "T_dyn_N": 1572,
+  "D_N": 4313,
+  "M_e_Nm": 690,
+  "M_D1_Nm": 2301,
+  "sigma_D1_plasko_MPa": 163.0,
+  "sigma_D1_sztorc_MPa": 92.0,
+  "sigma_D1_80x80x4_MPa": 78.0,
+  "R_R51_N": 3573,
+  "sigma_R51_MPa": 83.0,
+  "R_ostatnia_N": 2001,
+  "D2_sigma_MPa": 23.0
+ }
+}

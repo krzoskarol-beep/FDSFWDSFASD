@@ -1,0 +1,16 @@
+[
+ "Oś (półosie, koła, R4, wsporniki W6, B1/B2, obrysówki) przesunięta o -150 mm w X (środek koła 2400 -> 2250 mm).",
+ "Usunięta poprzeczka R5-5 (X 2008-2048) z narożnikami K1#9/K1#10 i śrubami W5-5 - w jej miejscu stoi teraz poprzeczka osi R4.",
+ "Dyszel D1 100x40x4 przedłużony z X=1830 do X=2100 (dosunięty do poprzeczki osi R4), dodane kątowniki K2-P#5/K2-L#5 łączące D1 z R4 - siła z zaczepu idzie prosto do belki osi, a nie tylko przez cztery cienkie poprzeczki 80x40x2.",
+ "Błotniki podniesione o 60 mm (wsporniki B1 wydłużone w górę o 60 mm) - luz nad oponą ok. 80 mm zamiast 21-36 mm, miejsce na ugięcie półosi gumowych.",
+ "Odblaski boczne (pomarańczowe) przesunięte do X=1827-1897 mm - w v5 nachodziły na łby śrub W5-5.",
+ "TRAP_zal_T2#13: szczebel przy zawiasie środkowym podzielony na 3 odcinki (szczeliny Z +/-98..114, usunięto 8000 mm3) - w v5 przy składaniu rampy zahaczał o blachy zawiasu T3/T4, a w położeniu transportowym przenikał się z nimi.",
+ "TRAP_zal_T2#21: szczebel przy zawiasie środkowym podzielony na 3 odcinki (szczeliny Z +/-98..114, usunięto 8000 mm3) - w v5 przy składaniu rampy zahaczał o blachy zawiasu T3/T4, a w położeniu transportowym przenikał się z nimi.",
+ "TRAP_zal_T6#11: wycięcie pod szczebel TRAP_zal_T2#11 (było przenikanie 600 mm3).",
+ "TRAP_zal_T6#12: wycięcie pod szczebel TRAP_zal_T2#11 (było przenikanie 600 mm3).",
+ "TRAP_zal_T4P#21: przekładka leżała w płaszczyźnie blachy TRAP_zal_T3#11 - wycięta strefa ruchu T3 przy składaniu (usunięto 21594 mm3, luz 2 mm).",
+ "TRAP_zal_T4P#22: przekładka leżała w płaszczyźnie blachy TRAP_zal_T3#12 - wycięta strefa ruchu T3 przy składaniu (usunięto 21594 mm3, luz 2 mm).",
+ "TRAP_zal_T7#11 (płyta najazdowa): przycięta po obwiedni ruchu - w v5 przy podnoszeniu rampy (18-96 st.) wchodziła w podłogę P1 i poprzeczkę R3, czyli rampy nie dało się złożyć. Usunięto 94318 mm3, przód płyty teraz X=3330.",
+ "Dodane tuleje dystansowe T8-P/T8-L (fi30/fi21 x 43) na sworzniu zawiasu rampy - w v5 rampa mogła się przesuwać na sworzniu o 43 mm na boki.",
+ "TRAP_zal_SIATKA#1: siatka przycięta pod płytą T7 (przenikanie 18421 mm3 w v5)."
+]
