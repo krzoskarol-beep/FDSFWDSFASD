@@ -13,10 +13,11 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 | `DXF/` | Te same płyty w DXF, gdybyś jednak zamawiał cięcie laserem |
 | `lista_czesci.csv`, `lista_srub.csv`, `lista_zakupow.csv` | Listy części, śrub i tulei oraz zakupów |
 | `obliczenia.csv`, `trap_v2_dane.json` | Wszystkie kontrole wytrzymałości, masy i tabela podnoszenia |
-| `podglad3d.py` | **Podgląd 3D w Pythonie.** `python3 podglad3d.py` otwiera okno 3D z suwakiem rozłożony ↔ do jazdy; `--png` zapisuje zrzuty; `--gltf` eksportuje model; `--www` eksportuje model i otwiera stronę w przeglądarce (http://localhost:8000). Wymiary bierze z `generuj.py`, potrzebuje tylko matplotlib i numpy |
-| `www/trap_v2.glb` | **Model glTF 2.0** (Windows 3D Viewer, Blender, telefon). Ma węzły `przyczepa`, `sekcja_A`, `sekcja_B`, sprężyny i animację `skladanie` (0 s rozłożony → 6 s do jazdy) |
-| `www/index.html` | **Strona z podglądem** – wczytuje `trap_v2.glb` (three.js + GLTFLoader, lokalnie w `www/lib`). Suwak i „▶ Składanie” przewijają animację z pliku glTF, po najechaniu widać nazwę elementu. Otwieraj przez `python3 podglad3d.py --www` (przeglądarka nie wczyta modelu z pliku otwartego bezpośrednio) |
-| `podglad_*.png` | Zrzuty z podglądu w Pythonie |
+| `podglad3d.py` | **Podgląd 3D w Pythonie – model warsztatowy.** Profile mają prawdziwe ścianki i otwory, są wszystkie śruby, podkładki, nakrętki, tuleje, sworznie, nity i wkręty. Wszystko liczy się z tych samych tabel otworów co rysunki. `python3 podglad3d.py` otwiera okno (widoki: całość, zawiasy, skrzyżowanie, sprężyna; warstwy śruby / tuleje / siatka / przezroczyste profile; suwak składania). Opcje: `--png` zapisuje zrzuty, `--gltf` eksportuje model i listę otworów, `--www` uruchamia stronę, `--sprawdz` robi kontrolę otworów. Potrzebuje matplotlib, numpy i mapbox-earcut |
+| `www/trap_v2.glb` | **Model glTF 2.0** z animacją `skladanie` (0 s rozłożony → 6 s do jazdy). Każdy element, otwór i śruba ma opis z wymiarami (pole `extras.nazwa`) |
+| `www/index.html` | **Strona z podglądem** – wczytuje `trap_v2.glb`. Kliknij element, otwór albo śrubę, a w rogu pojawi się pełny opis: Ø, s, x, z i części, przez które przechodzi. Ma przycisk „Tylko otwory (miejsca wiercenia)”, przekrój, przezroczyste profile i przybliżenia na zawiasy. Uruchamiasz ją przez `python3 podglad3d.py --www` |
+| `otwory_z_modelu.csv` | Lista wszystkich 96 otworów z modelu 3D. Przy każdym otworze jest jego miejsce w każdej części, przez którą przechodzi |
+| `podglad_*.png` | Zrzuty z podglądu w Pythonie: całość, zawias przy przyczepie, zawias środkowy, skrzyżowanie (profile przezroczyste) i same otwory przy zawiasie |
 | `generuj.py` | Skrypt, który to wszystko liczy i rysuje. Na górze są parametry: wysokość podłogi, rozstawy, obciążenia. Uruchomienie: `pip install matplotlib ezdxf` i `python3 generuj.py` |
 
 ## Co było nie tak / za trudne w poprzedniej wersji
@@ -115,3 +116,14 @@ Sprężyny gazowe są te same co w starym projekcie: 2 × 460 mm, skok 200 mm, 1
 4. Zapnij zapięcia (albo pas z grzechotką) między sekcjami.
 
 Rozkładasz w odwrotnej kolejności. Nie trzymaj palców między sekcjami przy zawiasie środkowym.
+
+## Kontrola otworów w modelu 3D
+
+`python3 podglad3d.py --sprawdz` sprawdza trzy rzeczy:
+- czy każdy otwór ma swoją śrubę, nit albo sworzeń,
+- czy każda śruba ma otwór,
+- czy trzpień żadnej śruby nie przechodzi przez materiał, czyli czy otwory w rurze, płycie i poprzeczce leżą w jednej osi. Kontrola wyłapuje przesunięcie już o 2 mm.
+
+Obecny wynik: 96 otworów i 90 złączy. Żaden otwór nie zostaje bez śruby, żadna śruba nie zostaje bez otworu i żadna nie przechodzi przez materiał.
+
+78 otworów przechodzi przez kilka części naraz, na przykład rurę i płytę albo rurę i poprzeczkę. Takie otwory wierć razem albo zaznacz przez płytę jako szablon (patrz „Kolejność budowy”).
