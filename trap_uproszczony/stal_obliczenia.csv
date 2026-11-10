@@ -1,0 +1,14 @@
+﻿element;obciążenie;nośność;jedn.;wytężenie;uwagi
+Rura jezdna RHS 100×40×3 S235 – zginanie, rozpiętość 2,5 m (75 % koła);160.0;235.0;MPa;0.681;jak w wersji Al + większy ciężar własny
+To samo – całe koło na jednej rurze;208.03;235.0;MPa;0.885;
+Ugięcie w środku (charakterystyczne);3.91;12.5;mm;0.313;stal jest 3× sztywniejsza od Al
+Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm;129.12;235.0;MPa;0.549;
+Poprzeczka RHS 60×40×2 S235 – stopa na samej krawędzi;161.99;235.0;MPa;0.689;
+Podłużnica chodnika RHS 100×40×2 S235 – wspornik 420 mm;71.67;235.0;MPa;0.305;
+Zawias środkowy: sworzeń M20 8.8 – ścinanie;11.61;120.64;kN;0.096;
+Zawias środkowy: śruba M12 8.8 – ścinanie;11.42;32.37;kN;0.353;
+Zawias środkowy: tuleja Ø18 → ścianka stalowa 3 mm (docisk);11.42;31.52;kN;0.362;
+Blokada do jazdy: sworzeń Ø12 – ścinanie (stal 8.8 / C45 ulepszana);18.3;43.43;kN;0.421;trap w pionie 150 kg, hamowanie 0,8 g ×1,5 – zwykły sworzeń St (400 MPa) NIE wystarczy
+Blokada: docisk sworznia Ø12 w płycie H 6 mm;18.3;33.23;kN;0.551;płyta H 6 mm – w wariancie stalowym płyty H z płaskownika 80×8
+Oczko sprężyny: tuleja Ø25×5, śruba M16 (otwory oczek w K i S rozwierć do Ø17) – zginanie;164.6;235.0;MPa;0.7;sprężyna 4900 N, ramię 23 mm
+Płyta S – śruby M12 w ściance stalowej 2 mm (docisk);11.66;18.68;kN;0.624;

@@ -19,6 +19,7 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 | `www/index.html` | **Strona z podglądem** – wczytuje `trap_v2.glb`. Kliknij element, otwór albo śrubę, a w rogu pojawi się pełny opis: Ø, s, x, z i części, przez które przechodzi. Ma przycisk „Tylko otwory (miejsca wiercenia)”, przekrój, przezroczyste profile i przybliżenia na zawiasy. Uruchamiasz ją przez `python3 podglad3d.py --www` |
 | `otwory_z_modelu.csv` | Lista wszystkich 96 otworów z modelu 3D. Przy każdym otworze jest jego miejsce w każdej części, przez którą przechodzi |
 | `podglad_*.png` | Zrzuty z podglądu w Pythonie: całość, zawias przy przyczepie, zawias środkowy, skrzyżowanie (profile przezroczyste) i same otwory przy zawiasie |
+| `stal.py`, `stal_*.csv`, `porownanie_kosztow.csv` | **Wariant budżetowy ze stali**: ten sam układ i te same otwory, profile ze stali S235. Liczy obliczenia, dobiera sprężyny, robi listę zakupów i porównanie kosztów. Ceny są założeniami: wpisz swoje w `CENY` i uruchom ponownie |
 | `generuj.py` | Skrypt, który to wszystko liczy i rysuje. Na górze są parametry: wysokość podłogi, rozstawy, obciążenia. Uruchomienie: `pip install matplotlib ezdxf` i `python3 generuj.py` |
 
 ## Co było nie tak / za trudne w poprzedniej wersji
@@ -128,3 +129,16 @@ Rozkładasz w odwrotnej kolejności. Nie trzymaj palców między sekcjami przy z
 Obecny wynik: 96 otworów i 90 złączy. Żaden otwór nie zostaje bez śruby, żadna śruba nie zostaje bez otworu i żadna nie przechodzi przez materiał.
 
 78 otworów przechodzi przez kilka części naraz, na przykład rurę i płytę albo rurę i poprzeczkę. Takie otwory wierć razem albo zaznacz przez płytę jako szablon (patrz „Kolejność budowy”).
+
+## Wariant budżetowy ze stali – w skrócie
+
+| | aluminium (V2) | stal |
+|---|---|---|
+| masa trapu | 65 kg | 150 kg |
+| siła przy podnoszeniu bez sprężyn | 36 kg | 82 kg |
+| siła przy podnoszeniu ze sprężynami | 19 kg (2 × 1600 N) | 32 kg (2 × 4900 N, Ø40) |
+| koszt materiału (założone ceny, netto) | ok. 3400 zł | ok. 3100 zł z cynkowaniem, ok. 2700 zł z farbą |
+
+Wytrzymałościowo stal wychodzi dobrze. Trzeba tylko zmienić oś oczek sprężyn na śrubę M16 z tuleją Ø25×5 i dać sworznie blokady ze stali 8.8.
+
+Mocniejszymi sprężynami nie da się zejść niżej niż ok. 32 kg, bo rozłożony trap przestałby leżeć na ziemi. Przy klapie podnoszonej przez jedną osobę polecam aluminium.

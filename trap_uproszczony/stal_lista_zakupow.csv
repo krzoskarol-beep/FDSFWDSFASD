@@ -1,0 +1,12 @@
+﻿pozycja;ilość;uwagi
+Rura stalowa prostokątna 100×40×3, S235JRH;8 × 1250 mm = 2 sztangi 6 m;rury jezdne L1–L4 (zamiast Al 6082)
+Rura stalowa prostokątna 100×40×2, S235JRH;8 × 1250 mm = 2 sztangi 6 m;podłużnice chodnika C1–C3
+Rura stalowa prostokątna 60×40×2, S235JRH;3 × 1190 mm (1 sztanga);poprzeczki P
+Kątownik stalowy 40×40×3;2 × 1095 + 2 × 715 mm (1 sztanga);prowadnice G1/G2
+Płaskownik stalowy 40×5;1190 mm;listwa T
+Siatka cięto-ciągniona STALOWA ocynkowana ~43×13×3×2 (~7 kg/m²);1 arkusz 1250×2500;pokład
+Sprężyna gazowa 460 mm / skok 200 / 4900 N, oczka M12 (Ø40);2;dobrana do masy stalowego trapu
+Sworzeń blokady Ø12×40 ze stali 8.8 / C45 ulepszanej;2;zwykła stal automatowa za słaba przy tej masie
+Oś oczek sprężyn: śruba M16×70 8.8 + tuleja Ø25×5 dł. 18 / 12 (zamiast M12 i Ø20×4);4;otwór oczka w K i S rozwierć z Ø13 do Ø17 – reszta otworów bez zmian
+Cynkowanie ogniowe wszystkich części stalowych PO wierceniu (albo podkład epoksydowy + farba);;bez tego stal szybko rdzewieje
+Pozostałe: płyty Z i S, wsporniki K, tuleje, śruby, nity, wkręty, zapięcia, guma;jak lista_zakupow.csv;bez pasty / podkładek izolujących – stal na stali nie koroduje galwanicznie

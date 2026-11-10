@@ -1,0 +1,12 @@
+﻿pozycja;aluminium V2 [zł];stal (budżet) [zł];uwagi
+Rury jezdne (8 × 1250);1042;492;2 sztangi 6 m: Al 100×40×3 6082 / stal 100×40×3
+Podłużnice chodnika (8 × 1250);599;333;2 sztangi: 100×40×2
+Poprzeczki (3 × 1190);311;118;1 sztanga: Al 60×40×3 / stal 60×40×2
+Prowadnice + listwa T;189;83;kątownik 40×40×4 Al / 40×40×3 stal, płaskownik 40×5
+Siatka (arkusz 1250×2500);344;234;Al / stal ocynkowana
+Ochrona przed korozją;0;583;stal: cynkowanie ogniowe ok. 130 kg (albo farba ~180 zł)
+Sprężyny gazowe;180;460;Al: 2 × 1600 N / stal: 2 × mocniejsze
+Wspólne (płyty, wsporniki K, tuleje, śruby, sworznie, nity, zapięcia);750;790;"stal: sworznie blokady 8.8, oś oczek M16; bez pasty i podkładek izolujących"
+RAZEM (netto, orientacyjnie);3415;3093;"różnica +322 zł; z farbą zamiast cynku stal: 2690 zł"
+
+założone ceny netto (zmień w stal.py → CENY);al_6082_kg=40;al_6060_kg=34;st_profil_kg=6.5;cynk_ogniowy_kg=4.5;farba_kpl=180;siatka_al_m2=110;siatka_st_m2=75;sprezyna_1600=90;sprezyna_mocna=230;wspolne=750
