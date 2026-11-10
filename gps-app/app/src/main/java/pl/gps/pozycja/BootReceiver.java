@@ -14,6 +14,8 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String a = intent.getAction();
         if (Intent.ACTION_BOOT_COMPLETED.equals(a) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(a)) {
+            EventLog.log(context, Intent.ACTION_BOOT_COMPLETED.equals(a)
+                    ? "Restart telefonu" : "Aktualizacja aplikacji");
             AutoParking.reRegisterIfEnabled(context);
         }
     }

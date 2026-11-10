@@ -361,5 +361,14 @@
                 style="@style/SmallValue"
                 android:text="—" />
         </LinearLayout>
+        <Button
+            android:id="@+id/btnDiagnostics"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/diag_title"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 </ScrollView>

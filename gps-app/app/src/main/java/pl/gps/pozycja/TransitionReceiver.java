@@ -35,12 +35,18 @@ public class TransitionReceiver extends BroadcastReceiver {
         boolean started = latest.getTransitionType() == ActivityTransition.ACTIVITY_TRANSITION_ENTER;
         long ageMs = (SystemClock.elapsedRealtimeNanos() - latest.getElapsedRealTimeNanos()) / 1_000_000L;
 
+        EventLog.log(context, "Usługi Google: " + (started ? "POCZĄTEK" : "KONIEC")
+                + " jazdy (zdarzenie sprzed " + ageMs / 1000 + " s)");
+
         if (started) {
-            if (ageMs <= MAX_ENTER_EVENT_AGE_MS) {
-                DrivingService.start(context, DrivingService.ACTION_DRIVING_STARTED);
+            if (ageMs > MAX_ENTER_EVENT_AGE_MS) {
+                EventLog.log(context, "Pominięto zbyt stare zdarzenie początku jazdy");
+            } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_STARTED)) {
+                EventLog.log(context, "BŁĄD: system nie pozwolił uruchomić usługi jazdy");
             }
         } else if (!DrivingService.start(context, DrivingService.ACTION_DRIVING_ENDED)) {
             // System nie pozwolił uruchomić usługi: zapisz ostatnią znaną pozycję.
+            EventLog.log(context, "BŁĄD: system nie pozwolił uruchomić usługi, zapis awaryjny");
             DrivingService.saveLastKnown(context);
         }
     }

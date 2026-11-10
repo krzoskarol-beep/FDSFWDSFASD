@@ -97,4 +97,13 @@
     <string name="notif_parked_text">Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
     <string name="notif_parked_text_approx">Pozycja może być przybliżona. Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
     <string name="notif_parked_failed">Wykryto koniec jazdy, ale nie udało się ustalić pozycji (brak sygnału GPS). Zapisz miejsce ręcznie.</string>
+
+    <!-- Diagnostyka -->
+    <string name="diag_title">Diagnostyka</string>
+    <string name="diag_status">Stan</string>
+    <string name="diag_log">Dziennik zdarzeń (najnowsze na górze)</string>
+    <string name="diag_log_empty">Brak wpisów. Zdarzenia pojawią się po włączeniu automatycznego zapisywania i pierwszej jeździe.</string>
+    <string name="diag_refresh">Odśwież</string>
+    <string name="diag_clear">Wyczyść</string>
+    <string name="diag_clear_confirm">Wyczyścić dziennik zdarzeń?</string>
 </resources>

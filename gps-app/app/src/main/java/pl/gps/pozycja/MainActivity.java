@@ -140,6 +140,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.btnMaps).setOnClickListener(v -> openInMaps());
         findViewById(R.id.btnCopy).setOnClickListener(v -> copyCoordinates());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareCoordinates());
+        findViewById(R.id.btnDiagnostics).setOnClickListener(
+                v -> startActivity(new Intent(this, DiagnosticsActivity.class)));
 
         parkingEmpty = findViewById(R.id.parkingEmpty);
         parkingSaved = findViewById(R.id.parkingSaved);
@@ -187,10 +189,21 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState == null) {
             handleIntent(getIntent());
+        } else {
+            pendingSave = savedInstanceState.getBoolean(STATE_PENDING_SAVE, false);
         }
         if (!hasAnyLocationPermission()) {
             requestLocationPermission();
         }
+    }
+
+    private static final String STATE_PENDING_SAVE = "pendingSave";
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Zapis ze skrótu czeka na pozycję: nie zgub go przy obrocie ekranu.
+        outState.putBoolean(STATE_PENDING_SAVE, pendingSave);
     }
 
     @Override
@@ -639,6 +652,7 @@ public class MainActivity extends Activity {
         spot = new ParkingStore.Spot(best.getLatitude(), best.getLongitude(),
                 best.hasAccuracy() ? best.getAccuracy() : 0f, System.currentTimeMillis(), note);
         parkingStore.save(spot);
+        EventLog.log(this, String.format(Locale.US, "Ręczny zapis parkingu, ±%.0f m", spot.accuracy));
         Toast.makeText(this, R.string.parking_saved_toast, Toast.LENGTH_SHORT).show();
         showParking();
     }
@@ -648,6 +662,7 @@ public class MainActivity extends Activity {
                 .setTitle(R.string.parking_delete_title)
                 .setPositiveButton(R.string.parking_delete, (d, w) -> {
                     parkingStore.clear();
+                    EventLog.log(this, "Usunięto zapisane miejsce parkowania");
                     spot = null;
                     compassAzimuth = null;
                     showParking();
@@ -877,7 +892,7 @@ public class MainActivity extends Activity {
     // ------------------------------------------------------------------ układ ekranu
 
     /** Od Androida 15 aplikacja rysuje pod paskami systemowymi, więc dodajemy odpowiedni margines. */
-    private static void applySystemBarInsets(View root) {
+    static void applySystemBarInsets(View root) {
         final int l = root.getPaddingLeft(), t = root.getPaddingTop();
         final int r = root.getPaddingRight(), b = root.getPaddingBottom();
         root.setOnApplyWindowInsetsListener((v, insets) -> {

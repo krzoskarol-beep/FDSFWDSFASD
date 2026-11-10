@@ -82,6 +82,13 @@ final class ParkingDetector {
      * Najlepsze przybliżenie miejsca parkowania: pierwszy postój po ostatniej jeździe,
      * a gdy go brak, ostatni punkt jazdy, a gdy i tego brak, ostatni pomiar.
      */
+    /** Skąd pochodzi {@link #parkingFix()}: do dziennika diagnostycznego. */
+    String parkingFixSource() {
+        if (stopCandidate != null) return "postój po jeździe";
+        if (lastDriving != null) return "ostatni punkt jazdy";
+        return last != null ? "ostatni pomiar" : "brak";
+    }
+
     Fix parkingFix() {
         if (stopCandidate != null) return stopCandidate;
         if (lastDriving != null) return lastDriving;

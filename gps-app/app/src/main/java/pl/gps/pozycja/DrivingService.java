@@ -48,6 +48,7 @@ public class DrivingService extends Service {
     private LocationManager locationManager;
     private boolean updatesRunning;
     private boolean waitingForFix;
+    private boolean loggedDriving;
     private long startedAtMs;
 
     // ------------------------------------------------------------------ start z zewnątrz
@@ -94,6 +95,7 @@ public class DrivingService extends Service {
         String action = intent == null ? null : intent.getAction();
 
         if (ACTION_CANCEL.equals(action)) {
+            EventLog.log(this, "Użytkownik: „To nie moje auto”, anulowano bez zapisu");
             finishService();
             return START_NOT_STICKY;
         }
@@ -107,17 +109,23 @@ public class DrivingService extends Service {
         running = true;
 
         if (ACTION_DRIVING_STARTED.equals(action)) {
-            if (!driving) detector.reset();
+            EventLog.log(this, "Usługa: start śledzenia jazdy");
+            if (!driving) {
+                detector.reset();
+                loggedDriving = false;
+            }
             driving = true;
             waitingForFix = false;
             startGps();
             handler.removeCallbacks(watchdog);
             handler.postDelayed(watchdog, 60_000);
         } else if (ACTION_DRIVING_ENDED.equals(action)) {
+            EventLog.log(this, "Usługa: koniec jazdy, ustalam miejsce parkowania");
             driving = false;
             onDrivingEnded();
         } else {
             // Restart przez system bez polecenia: nie ma czego robić.
+            EventLog.log(this, "Usługa uruchomiona bez polecenia (restart przez system), kończę");
             finishService();
         }
         return START_NOT_STICKY;
@@ -148,6 +156,7 @@ public class DrivingService extends Service {
             return true;
         } catch (RuntimeException e) {
             // brak uprawnień do lokalizacji albo system nie pozwolił na usługę w tle
+            EventLog.log(this, "BŁĄD startForeground: " + e.getClass().getSimpleName() + ": " + e.getMessage());
             return false;
         }
     }
@@ -167,13 +176,18 @@ public class DrivingService extends Service {
     private void startGps() {
         if (updatesRunning) return;
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) return;
+                != PackageManager.PERMISSION_GRANTED) {
+            EventLog.log(this, "BŁĄD: brak uprawnienia do dokładnej lokalizacji");
+            return;
+        }
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     GPS_INTERVAL_MS, 0f, gpsListener, Looper.getMainLooper());
             updatesRunning = true;
+            EventLog.log(this, "GPS włączony");
         } catch (SecurityException | IllegalArgumentException e) {
             // brak GPS w urządzeniu albo odebrane uprawnienie
+            EventLog.log(this, "BŁĄD włączania GPS: " + e);
         }
     }
 
@@ -187,9 +201,16 @@ public class DrivingService extends Service {
         @Override
         public void onLocationChanged(Location l) {
             detector.add(toFix(l));
+            if (!loggedDriving && detector.hasDriven()) {
+                loggedDriving = true;
+                EventLog.log(DrivingService.this, String.format(java.util.Locale.US,
+                        "GPS potwierdza jazdę (%.0f km/h)", l.getSpeed() * 3.6f));
+            }
             if (waitingForFix && l.hasAccuracy() && l.getAccuracy() <= MAX_SAVE_ACCURACY_M) {
                 waitingForFix = false;
                 handler.removeCallbacks(waitTimeout);
+                EventLog.log(DrivingService.this, String.format(java.util.Locale.US,
+                        "Miejsce: nowy pomiar GPS po końcu jazdy, ±%.0f m", l.getAccuracy()));
                 save(toFix(l), true);
             }
         }
@@ -216,15 +237,24 @@ public class DrivingService extends Service {
     private void onDrivingEnded() {
         handler.removeCallbacks(watchdog);
         if (detector.hasDriven()) {
-            save(detector.parkingFix(), false);
+            ParkingDetector.Fix p = detector.parkingFix(), last = detector.lastFix();
+            double walked = Geo.distanceMeters(p.latitude, p.longitude, last.latitude, last.longitude);
+            EventLog.log(this, String.format(java.util.Locale.US,
+                    "Miejsce: %s, ±%.0f m; od tego miejsca do końca jazdy przesunięcie %.0f m",
+                    detector.parkingFixSource(), p.accuracy, walked));
+            save(p, false);
             return;
         }
+        EventLog.log(this, "Brak danych z jazdy (usługa nie śledziła jazdy)");
         // Brak danych z jazdy (np. usługa nie działała w trakcie jazdy): weź świeżą pozycję.
         ParkingDetector.Fix recent = freshLastKnown();
         if (recent != null) {
+            EventLog.log(this, String.format(java.util.Locale.US,
+                    "Miejsce: ostatnia znana pozycja systemu, ±%.0f m", recent.accuracy));
             save(recent, true);
             return;
         }
+        EventLog.log(this, "Czekam na aktualną pozycję GPS (do " + WAIT_FOR_FIX_MS / 1000 + " s)");
         waitingForFix = true;
         startGps();
         handler.postDelayed(waitTimeout, WAIT_FOR_FIX_MS);
@@ -234,8 +264,10 @@ public class DrivingService extends Service {
         waitingForFix = false;
         ParkingDetector.Fix last = detector.lastFix();
         if (last != null && last.accuracy <= MAX_SAVE_ACCURACY_M) {
+            EventLog.log(this, "Miejsce: ostatni (słaby) pomiar GPS po czasie oczekiwania");
             save(last, true);
         } else {
+            EventLog.log(this, "BŁĄD: brak sygnału GPS, nie zapisano miejsca");
             Notifications.showParked(this, getString(R.string.notif_parked_failed));
             finishService();
         }
@@ -248,12 +280,14 @@ public class DrivingService extends Service {
             long now = SystemClock.elapsedRealtime();
             long lastDriving = detector.lastDrivingTimeMs();
             if (lastDriving >= 0 && now - lastDriving > NO_DRIVING_TIMEOUT_MS) {
+                EventLog.log(DrivingService.this, "Brak jazdy od 20 min, a system nie zgłosił końca: zapisuję");
                 driving = false;
                 onDrivingEnded();
                 return;
             }
             if (lastDriving < 0 && now - startedAtMs > NO_DRIVING_TIMEOUT_MS) {
                 // Fałszywy alarm (np. chodzenie po mieście): nic nie zapisujemy.
+                EventLog.log(DrivingService.this, "Fałszywy alarm: przez 20 min GPS nie wykrył jazdy, kończę bez zapisu");
                 finishService();
                 return;
             }
@@ -293,6 +327,8 @@ public class DrivingService extends Service {
         String note = c.getString(approximate ? R.string.auto_note_approx : R.string.auto_note);
         new ParkingStore(c).save(new ParkingStore.Spot(fix.latitude, fix.longitude,
                 fix.accuracy, wallTime, note));
+        EventLog.log(c, String.format(java.util.Locale.US, "ZAPISANO parking: %.6f, %.6f%s",
+                fix.latitude, fix.longitude, approximate ? " (przybliżony)" : ""));
         Notifications.showParked(c, c.getString(approximate
                 ? R.string.notif_parked_text_approx : R.string.notif_parked_text));
     }
@@ -315,9 +351,17 @@ public class DrivingService extends Service {
                 // pomijamy to źródło
             }
         }
-        if (best == null) return;
+        if (best == null) {
+            EventLog.log(c, "Zapis awaryjny: system nie zna żadnej pozycji");
+            return;
+        }
         long ageMs = (SystemClock.elapsedRealtimeNanos() - best.getElapsedRealtimeNanos()) / 1_000_000L;
-        if (ageMs > 10 * 60_000L) return;
+        if (ageMs > 10 * 60_000L) {
+            EventLog.log(c, "Zapis awaryjny: ostatnia pozycja jest za stara (" + ageMs / 60_000 + " min)");
+            return;
+        }
+        EventLog.log(c, String.format(java.util.Locale.US, "Zapis awaryjny: pozycja sprzed %d s, ±%.0f m",
+                ageMs / 1000, best.hasAccuracy() ? best.getAccuracy() : -1f));
         saveParking(c, new ParkingDetector.Fix(best.getLatitude(), best.getLongitude(),
                 best.hasAccuracy() ? best.getAccuracy() : 0f, Float.NaN,
                 best.getElapsedRealtimeNanos() / 1_000_000L), true);

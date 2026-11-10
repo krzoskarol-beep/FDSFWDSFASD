@@ -78,6 +78,7 @@ final class AutoParking {
     static void enable(Context context, Runnable onSuccess, Consumer<Exception> onFailure) {
         Context c = context.getApplicationContext();
         if (!hasRequiredPermissions(c)) {
+            EventLog.log(c, "Nie można włączyć wykrywania jazdy: brak uprawnień");
             onFailure.accept(new SecurityException("missing permissions"));
             return;
         }
@@ -95,9 +96,11 @@ final class AutoParking {
                     .requestActivityTransitionUpdates(request, transitionsIntent(c))
                     .addOnSuccessListener(v -> {
                         prefs(c).edit().putBoolean(K_ENABLED, true).apply();
+                        EventLog.log(c, "Wykrywanie jazdy zarejestrowane w usługach Google");
                         if (onSuccess != null) onSuccess.run();
                     })
                     .addOnFailureListener(e -> {
+                        EventLog.log(c, "BŁĄD rejestracji wykrywania jazdy: " + e);
                         if (onFailure != null) onFailure.accept(e);
                     });
         } catch (SecurityException e) {
@@ -107,7 +110,12 @@ final class AutoParking {
 
     /** Ponowna rejestracja, np. po restarcie telefonu albo aktualizacji aplikacji. */
     static void reRegisterIfEnabled(Context c) {
-        if (isEnabled(c) && hasRequiredPermissions(c) && isPlayServicesAvailable(c)) {
+        if (!isEnabled(c)) return;
+        if (!hasRequiredPermissions(c)) {
+            EventLog.log(c, "UWAGA: automatyczne zapisywanie włączone, ale brakuje uprawnień");
+        } else if (!isPlayServicesAvailable(c)) {
+            EventLog.log(c, "UWAGA: usługi Google Play niedostępne");
+        } else {
             enable(c, null, e -> { });
         }
     }
@@ -116,6 +124,7 @@ final class AutoParking {
     static void disable(Context context) {
         Context c = context.getApplicationContext();
         prefs(c).edit().putBoolean(K_ENABLED, false).apply();
+        EventLog.log(c, "Automatyczne zapisywanie wyłączone przez użytkownika");
         try {
             ActivityRecognition.getClient(c).removeActivityTransitionUpdates(transitionsIntent(c));
         } catch (SecurityException e) {

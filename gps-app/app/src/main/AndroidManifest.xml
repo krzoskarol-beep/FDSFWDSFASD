@@ -38,6 +38,11 @@
                 android:resource="@xml/shortcuts" />
         </activity>
 
+        <activity
+            android:name=".DiagnosticsActivity"
+            android:exported="false"
+            android:label="@string/diag_title" />
+
         <service
             android:name=".DrivingService"
             android:exported="false"
