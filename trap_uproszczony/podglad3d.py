@@ -215,7 +215,8 @@ def build(layout=None):
             rv = [(s, xc + dx, d, f"{grp}r:{s:g}:{xc + dx:+.0f}",
                    f"{pid} (x={xc:+.0f}): Ø{fmt(d)} w dnie pod nit, s={fmt(s)}, {dx:+.0f} mm od osi ścianki")
                   for (s, w, z, d, n) in table if w == "dół" for dx in (-10, 10)]
-            sh = [(s, z, d, f"{grp}h:{s:g}:{z:g}:{sg}",
+            skey = Ly.get("side_key", lambda grp, s, z, sg, xc: f"{grp}h:{s:g}:{z:g}:{sg}")
+            sh = [(s, z, d, skey(grp, s, z, sg, xc),
                    f"{pid} (x={xc:+.0f}): Ø{fmt(d)} przez oba boki, s={fmt(s)} {SFROM[grp]}, z={fmt(z)} od spodu")
                   for (s, w, z, d, n) in table if w == "bok"]
             slab(M, grp, "sx", [(0, xc - 20 + t), (L, xc - 20 + t), (L, xc + 20 - t), (0, xc + 20 - t)], vh, 100 - t, 100, body)
@@ -229,9 +230,9 @@ def build(layout=None):
     for grp in "AB":
         for sc in cross[grp]:
             info = f"P – poprzeczka {Ly['cross_txt']}, L = {fmt(WID)}\nsekcja {grp}, s = {fmt(sc)} {SFROM[grp]}\n" + \
-                   "otwory Ø12,5 przez górę i dół: " + ", ".join(f"{x - X0:.0f}" for x in XS) + " od lewego końca"
+                   "otwory Ø13 przez górę i dół: " + ", ".join(f"{x - X0:.0f}" for x in XS) + " od lewego końca"
             body = M.mesh(f"{grp}:P:{sc:g}", grp, c_cross, "profil", info)
-            hv = [(sc, x, 12.5, f"{grp}v:{sc:g}:{x:+.0f}", f"poprzeczka P (s={fmt(sc)}): Ø12,5 przez górę i dół, "
+            hv = [(sc, x, g.D_M8SL, f"{grp}v:{sc:g}:{x:+.0f}", f"poprzeczka P (s={fmt(sc)}): Ø13 przez górę i dół, "
                    f"{x - X0:.0f} mm od lewego końca") for x in XS]
             ct = float(re.search(r"60×40×(\d+(?:,\d+)?)", Ly["cross_txt"]).group(1).replace(",", "."))   # grubość ścianki
             ch, cw = g.CROSS_H, 30.0                        # na płasko: 40 wysokości, 60 wzdłuż trapu
@@ -352,8 +353,8 @@ def build(layout=None):
               "otwory od lewego dolnego rogu: " + "; ".join(f"{n} Ø{fmt(d)} ({fmt(pa)}; {fmt(pb)})" for (n, pa, pb, d) in shol), f"A:S:{sg}")
 
     # ---------------------------------------------------------- śruby M12 poziome (płyty H, Z, S) + tuleje Ø18
-    def m12_through_tube(grp, s, z, sg, face_in, grip, Lb, txt, hkey):
-        b = M.mesh(f"{grp}:M12:{s:g}:{z:g}:{sg}", grp, C_BOLT, "śruba", txt)
+    def m12_through_tube(grp, s, z, sg, face_in, grip, Lb, txt, hkey, mkey=None):
+        b = M.mesh(mkey or f"{grp}:M12:{s:g}:{z:g}:{sg}", grp, C_BOLT, "śruba", txt)
         bolt(b, "x", s, z, sg * face_in, sg, Lb, 12, grip)
         M.bolt_axes.append((hkey, "M12"))
 
@@ -399,6 +400,15 @@ def build(layout=None):
                 m12_through_tube("A", s, z, sg, sp["inner"], sp["face"] + 8 - sp["inner"], 80 if sp["face"] - sp["inner"] <= 40 else 90,
                                  f"śruba M12×80 8.8 + 2 podkładki + nakrętka samohamowna\n{sp['tube']} – płyta S, s={fmt(s)}, z={fmt(z)}\n"
                                  "tuleja Ø18×2,5 dł. 40", f"Ah:{s:g}:{z:g}:{sg}")
+                cyl("x", s, z, sg * sp["inner"], sg * sp["face"], 9.0, M.mesh("A:tul40", "A", C_SLEEVE, "tuleja", ""), 14)
+    for sp in Ly.get("s_dummy", []):
+        sg = sp["sg"]
+        for (n, s, z, d) in g.S_PL["holes"]:
+            if n == "M12":
+                key = sp["key"](s, z)
+                m12_through_tube("A", s, z, sg, sp["inner"], sp["face"] - sp["inner"], 60,
+                                 f"śruba M12×60 8.8 + 2 podkładki + nakrętka samohamowna – ZAŚLEPKA\n{sp['tube']}: nieużywany otwór płyty S "
+                                 f"(rury L1 są identyczne), s={fmt(s)}, z={fmt(z)}\ntuleja Ø18×2,5 dł. 40 – wypełnia otwór, ścianka nie jest osłabiona", key)
                 cyl("x", s, z, sg * sp["inner"], sg * sp["face"], 9.0, M.mesh("A:tul40", "A", C_SLEEVE, "tuleja", ""), 14)
     # sprężyny: oczko górne na płycie S, dolne na wsporniku K
     for spr in Ly["springs"]:

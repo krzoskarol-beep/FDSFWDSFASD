@@ -3,6 +3,7 @@ M8×160;zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna;18;skrzyżo
 M8×130;zamkowa DIN 603 + podkładka + nakrętka samohamowna;12;prowadnice
 M12×80;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;12;płyty H (4), Z sekcji A (4), S (4)
 M12×90;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;4;płyty Z sekcji B
+M12×60;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;2;ZAŚLEPKI: nieużywane otwory płyty S w lewej rurze L1
 M12×80;sześciokątna 8.8 (DOPASUJ do belki);6;3 wsporniki K → belka przyczepy
 M16×70;sześciokątna 8.8 + podkładka + nakrętka samohamowna;4;osie oczek sprężyn (2 na płytach S, 2 na wspornikach K)
 M20×110;sześciokątna 8.8 (gładki trzpień ≥ 64 mm) = SWORZEŃ, nakrętka NIEDOKRĘCONA;4;zawiasy
@@ -12,7 +13,8 @@ nit 4,8;nit zrywalny stalowy 4,8, szeroki kołnierz;20;listwa T (12) + zapięcia
 wkręt 4,8×19;wkręt samowiercący z podkładką EPDM;70;siatka, co ~250 mm
 tuleja Ø12×1,5 dł. 139,5;rura stal bezszwowa ocynk;18;skrzyżowania
 tuleja Ø12×1,5 dł. 99,5;rura stal bezszwowa ocynk;12;prowadnice
-tuleja Ø18×2,5 dł. 40;rura stal bezszwowa ocynk;16;płyty H, Z, S
+tuleja Ø18×2,5 dł. 40;rura stal bezszwowa ocynk;18;płyty H, Z, S + 2 zaślepki
 tuleja Ø18×2,5 dł. 50;rura stal bezszwowa ocynk (DOPASUJ do belki);6;belka przyczepy
 tuleja Ø25×5 dł. 22 / 25 / 16 / 16;rura stal;4;dystanse oczek: S lewa 22, S prawa 25, K 16 i 16
-sprężyna gazowa 460/200 2800 N;Ø40, oczka Ø16 (M16);2;"lewa: C1 ↔ K sprężyny; prawa: L1P ↔ K zawiasu"
+sprężyna gazowa 460/200 2800 N;Ø40, oczka Ø16 (M16);2;"lewa: C1 ↔ K sprężyny; prawa: prawa L1 ↔ K zawiasu"
+pas z grzechotką 25 mm, LC ≥ 400 daN, 2 haki;DRUGA blokada do jazdy, niezależna od sworzni Ø12;1;opasuje złożony trap na poprzeczce P (s = 830), haki do uch z przodu przyczepy

@@ -16,4 +16,6 @@ Płyta S – śruby M12 w ściance podłużnicy 1,5 mm (docisk);6.66;14.01;kN;0.
 Prowadnica – kątownik 40×40×3 S235: zginanie półki pionowej od bocznego pchnięcia opony;148.6;235.0;MPa;0.632;0,3 × koło obl. na wys. 37 mm, współpracuje ~300 mm półki
 Prowadnica – śruba M8 8.8 rozrywana (dźwignia 37/20 mm);3.34;21.08;kN;0.159;cała siła boczna na jednej śrubie
 [INFO] Siatka – koło zamiast stopy (dlaczego są prowadnice);6.03;2.32;kN;2.6;"siatka liczona na stopę 105 kg; koło to 2,6 × więcej"
+Rura L1 w miejscu 2 otworów Ø18,5 płyty S (całe koło na jednej rurze, s = 259);130.4;355.0;MPa;0.367;"przekrój netto 86 % pełnego; w lewej rurze otwory zaślepione tuleją i śrubą"
+Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12;0.82;4.0;kN;0.206;"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
 Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk);6.66;24.39;kN;0.273;

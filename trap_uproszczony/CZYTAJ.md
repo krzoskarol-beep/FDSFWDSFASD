@@ -85,7 +85,7 @@ Sprężyny gazowe są te same co w starym projekcie: 2 × 460 mm, skok 200 mm, 1
 2. **Wytnij płyty z płaskownika.** Płyty H i Z wierć **w pakiecie** (4 i 8 sztuk naraz, w imadle, na wiertarce stołowej), wtedy wszystkie będą identyczne.
 3. **Wierć otwory w rurach według kart w PDF.**
    - Otwory pionowe przez rurę i poprzeczkę wierć na wiertarce stołowej albo z prowadnikiem, inaczej się rozjadą.
-   - Otwory pod tuleje mają średnicę tulei + 0,5 mm (Ø12,5 i Ø18,5).
+   - Otwory pod tuleje: Ø13 dla tulei Ø12 (luz 1 mm, wiercone w pakiecie) i Ø18,5 dla tulei Ø18.
 4. **Zawias środkowy.**
    - Połóż L1 i L3 czołami na równej podłodze, tak żeby górne krawędzie się stykały.
    - Przyłóż płyty Z, włóż sworzeń M20 i dopiero wtedy wierć otwory w rurach przez płyty jako szablon.
@@ -156,17 +156,18 @@ Katalog `stal_S5/` (generuje `python3 stal_s5.py`, strona: `python3 strona_s5.py
 
 | plik | co jest w środku |
 |---|---|
-| `rysunki_trap_S5.pdf` | opis, przekrój, widok z góry, widok z boku, zawiasy, karta każdej rury (L1L, L1P, L2, L3, L4, C1, C2, C3) z tabelą otworów, poprzeczka/listwa/prowadnice, płyty, obliczenia |
+| `rysunki_trap_S5.pdf` | opis, przekrój, widok z góry, widok z boku, zawiasy, instrukcja krok po kroku z tolerancjami, karta każdej rury (L1, L2, L3, L4, C1, C2, C3) z tabelą otworów, poprzeczka/listwa/prowadnice, płyty, obliczenia |
 | `szablony_1do1_S5.pdf`, `DXF/` | płyty H, Z, S, K w skali 1:1 (oczka sprężyn Ø17 pod M16) |
 | `lista_czesci.csv`, `lista_srub.csv`, `lista_zakupow.csv`, `obliczenia.csv` | części, śruby i tuleje, zakupy, sprawdzenia |
 | `trap_s5.glb`, `otwory_z_modelu.csv`, `podglad_*.png` | model 3D z otworami, śrubami i animacją składania; kontrola otworów |
+| `lista_kontrolna_S5.pdf` | jedna strona do zalaminowania: przed wjazdem i przed jazdą |
 | `trap_s5_strona.html` | strona z modelem 3D, obliczeniami i tabelami |
 
 - Masa trapu ok. **90 kg** (A 52,5 kg, B 37,9 kg) + 3 wsporniki K ok. 5,8 kg.
 - Sprężyny 2 × 2800 N (Ø40, oczka M16): podnoszenie ok. **20 kg** (bez sprężyn 50 kg).
 - Najbardziej obciążona część: rura jezdna, całe koło na jednej rurze – **82 %**.
 - Kontrola modelu: 81 otworów, 78 złączy, każda śruba przechodzi przez otwory, 0 kolizji.
-- Lewa strona = patrząc od ziemi na przyczepę. Chodnik (2 podłużnice) po lewej, prawa rura jezdna **L1P** jest krawędzią trapu i ma płytę S prawej sprężyny (2 dodatkowe otwory Ø18,5 – nie myl z L1L).
+- Lewa strona = patrząc od ziemi na przyczepę. Chodnik (2 podłużnice) po lewej, prawa rura jezdna L1 jest krawędzią trapu i niesie płytę S prawej sprężyny. Obie rury L1 są identyczne; w lewej 2 otwory płyty S zaślepia śruba M12×60 z tuleją.
 - Prawa sprężyna: dolne oczko na wsporniku K zawiasu, więc są 3 wsporniki K zamiast 4.
 - Rury jezdne tylko ze stali S355 (S355J2H / S355MH). Wszystko cynkuj ogniowo PO wierceniu.
 
@@ -184,3 +185,15 @@ Poprawka (V2 i S5):
 - V2 (aluminium): na płasko 60×40×3 miałaby 107 % → **60×40×4** (86 %); S5 (stal): 60×40×2 na płasko 87 %.
 
 `podglad3d.py --sprawdz` sprawdza teraz także pozycję do jazdy: żadna część sekcji A nie może zachodzić na część sekcji B.
+
+## Poprawki „odporności na pomyłki” (S5)
+
+| było | jest | po co |
+|---|---|---|
+| otwory skrzyżowań Ø12,5 (luz 0,5 mm) | **Ø13** (luz 1 mm), wiercone w pakiecie rura + poprzeczka | łatwiej trafić, zapas na cynk; nośność bez zmian (tuleja nie pracuje na docisk) |
+| rury L1L i L1P różne | **jedna rura L1 × 2** | nie da się pomylić; w lewej 2 otwory zaślepione M12×60 + tuleja; rura z otworami: 37 % |
+| tylko sworznie Ø12 do jazdy | + **pas z grzechotką 25 mm** na poprzeczce P | druga, niezależna blokada; trzyma trap bez sworzni (21 %) |
+| brak instrukcji wiercenia | **strona „Wykonanie krok po kroku” + tabela tolerancji** w rysunkach | kolejność, pakiety, próbny montaż przed cynkowaniem |
+| – | **pręt Ø20** jako przyrząd przy przykręcaniu wsporników K | osie zawiasu przy przyczepie współosiowe |
+| – | **lista kontrolna** `lista_kontrolna_S5.pdf` | podpięta przyczepa, sworznie, pas, motocykl |
+| – | rury jezdne: atest 3.1 + żółte końce | nie pomylisz S355 z S235 |

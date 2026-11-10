@@ -6,7 +6,7 @@ L4;Rura jezdna WEWNĘTRZNA sekcji B (skos przy ziemi);2;EN AW-6082-T6;RHS Al 100
 C1;Podłużnica chodnika sekcji A (z płytą sprężyny S);2;6060-T6;RHS Al 100×40×2, L = 1250;1.84;8;profil cięty na długość, otwory wg tabeli;x = ±345
 C2;Podłużnica krawędzi sekcji A;2;6060-T6;RHS Al 100×40×2, L = 1250;1.84;4;profil cięty na długość, otwory wg tabeli;x = ±575
 C3;Podłużnica chodnika / krawędzi sekcji B (skos);4;6060-T6;RHS Al 100×40×2, L = 1250, skos 516;1.45;4;"profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku";x = ±345, ±575
-P;Poprzeczka – rura NA PŁASKO (40 mm wysokości);3;6060-T6;RHS Al 60×40×4, L = 1190;2.36;16;8 otworów Ø12,5 przez górę i dół;A: s = [340.0, 830.0], B: s = [260.0]
+P;Poprzeczka – rura NA PŁASKO (40 mm wysokości);3;6060-T6;RHS Al 60×40×4, L = 1190;2.36;16;8 otworów Ø13 przez górę i dół;A: s = [340.0, 830.0], B: s = [260.0]
 T;Listwa spinająca pod sekcją B (nitowana);1;6060;płaskownik Al 40×5, L = 1190;0.64;16;16 otworów Ø4,9 pod nity;B: s = 650
 G1;Prowadnica koła sekcji A – leży na siatce nad rurą zewnętrzną;2;6060;kątownik Al 40×40×4, L = 1095;0.9;5;"otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°";s = 150…1245
 G2;Prowadnica koła sekcji B – leży na siatce nad rurą zewnętrzną;2;6060;kątownik Al 40×40×4, L = 715;0.59;4;"otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°";s = 5…720

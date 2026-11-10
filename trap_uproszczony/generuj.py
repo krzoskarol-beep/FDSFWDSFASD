@@ -96,6 +96,7 @@ def rhs(b, h, t):
 P_LANE = rhs(40, 100, 3)       # RHS 100x40x3 EN AW-6082-T6
 P_WALK = rhs(40, 100, 2)       # RHS 100x40x2 6060
 P_CROSS = rhs(60, 40, 4)       # RHS 60x40x4 6060 NA PLASKO (40 mm wysokosci) - miejsce na nakretki po zlozeniu
+D_M8SL = 13.0                  # otwor pod tuleje Ø12 (M8): luz 1 mm - latwiej trafic, zapas na cynk
 CROSS_H = 40.0                 # wysokosc poprzeczki pod podluznicami [mm]
 ANGLE_KGM = (40 + 36) * 4 * RHO_AL * 1000
 MESH_KGM2 = 2.5
@@ -106,21 +107,21 @@ def holes_long(kind):
     h = []
     if kind in ("L1", "L2", "C1", "C2"):          # sekcja A
         for s in CROSS_A:
-            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 140"))
+            h.append((s, "g/d", None, D_M8SL, "poprzeczka – M8 + tuleja 140"))
     else:                                         # sekcja B
         for s in CROSS_B:
-            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 140"))
+            h.append((s, "g/d", None, D_M8SL, "poprzeczka – M8 + tuleja 140"))
         h.append((TIE_B, "dół", None, 4.9, "2 nity listwy T (x ±10)"))
     if kind == "L1":
         for s in GUIDE_BOLTS_A:
-            h.append((s, "g/d", None, 12.5, "prowadnica – M8 + tuleja 100"))
+            h.append((s, "g/d", None, D_M8SL, "prowadnica – M8 + tuleja 100"))
         for (_, s, z, _) in [hh for hh in H_PL["holes"] if hh[0] == "M12"]:
             h.append((s, "bok", z, 18.5, "płyta H – M12 + tuleja Ø18"))
         for (_, d, z, _) in [hh for hh in Z_PL["holes"] if hh[0] == "M12"]:
             h.append((L_SEC - d, "bok", z, 18.5, "płyta Z – M12 + tuleja Ø18"))
     if kind == "L3":
         for s in GUIDE_BOLTS_B:
-            h.append((s, "g/d", None, 12.5, "prowadnica – M8 + tuleja 100"))
+            h.append((s, "g/d", None, D_M8SL, "prowadnica – M8 + tuleja 100"))
         for (_, d, z, _) in [hh for hh in Z_PL["holes"] if hh[0] == "M12"]:
             h.append((d, "bok", z, 18.5, "płyta Z – M12 + tuleja Ø18"))
     if kind == "C1":
@@ -161,7 +162,7 @@ def build_bom():
     n_cross = len(CROSS_A) + len(CROSS_B)
     bom.append(dict(pid="P", name="Poprzeczka – rura NA PŁASKO (40 mm wysokości)", qty=n_cross, material="6060-T6",
                     size=f"RHS Al 60×40×4, L = {WIDTH:.0f}", mass=round(P_CROSS["kgm"] * WIDTH / 1000, 2), holes=16,
-                    how="8 otworów Ø12,5 przez górę i dół", where=f"A: s = {CROSS_A}, B: s = {CROSS_B}"))
+                    how="8 otworów Ø13 przez górę i dół", where=f"A: s = {CROSS_A}, B: s = {CROSS_B}"))
     bom.append(dict(pid="T", name="Listwa spinająca pod sekcją B (nitowana)", qty=1, material="6060",
                     size=f"płaskownik Al 40×5, L = {WIDTH:.0f}", mass=round(40 * 5 * WIDTH * RHO_AL, 2), holes=16,
                     how="16 otworów Ø4,9 pod nity", where=f"B: s = {TIE_B:.0f}"))
@@ -767,7 +768,7 @@ def page_cross(pdf):
     ax.set_ylim(90, -20)
     ax.set_aspect("equal")
     ax.axis("off")
-    fig.text(0.05, 0.52, "P: 8 otworów Ø12,5 przez górę i dół, w osi szerokiej ścianki 60 mm (rura leży NA PŁASKO). Wymiary od lewego końca. "
+    fig.text(0.05, 0.52, "P: 8 otworów Ø13 przez górę i dół, w osi szerokiej ścianki 60 mm (rura leży NA PŁASKO). Wymiary od lewego końca. "
                          "Tuleja Ø12×1,5 dł. 139,5 przechodzi przez podłużnicę (100) i poprzeczkę (40, na płasko).", fontsize=8)
     fig.text(0.05, 0.49, "T: te same położenia, w każdym miejscu 2 otwory Ø4,9 (±10 mm w poprzek listwy... wzdłuż listwy) – nity 4,8 w dno podłużnic B.",
              fontsize=8)
@@ -930,7 +931,7 @@ def main():
             "",
             "ZASADY WYKONANIA:",
             "  1. Rury jezdne L1–L4 MUSZĄ być z EN AW-6082-T6 (PA4). Z 6060 trap jest za słaby (patrz obliczenia).",
-            "  2. Otwory pod tuleje: Ø tulei + 0,5 mm (Ø12,5 dla Ø12, Ø18,5 dla Ø18). Tuleja = wysokość/szerokość profilu – nie zgniata aluminium.",
+            "  2. Otwory pod tuleje: Ø13 dla tulei Ø12 (luz 1 mm), Ø18,5 dla tulei Ø18. Tuleja = wysokość/szerokość profilu – nie zgniata aluminium.",
             "  3. Płyty H i Z wierć w pakiecie (ścisk + wiertarka stołowa). Otwory w rurach pod płyty: zaznacz PRZEZ płytę jako szablon.",
             "  4. Zawias środkowy: ułóż L1 i L3 czołami na płaskiej podłodze (górne krawędzie stykają się), włóż sworzeń, dopiero wtedy wierć rury.",
             "  5. Stal ↔ aluminium: pasta cynkowa / Duralac i podkładki izolujące. Płyty stalowe ocynkuj (spray lub ogniowo).",

@@ -55,8 +55,8 @@ Pas koła (282 mm między prowadnicami) jest w osi przyczepy, tak jak w wersji a
 <h2>Do czego są prowadnice (niebieskie kątowniki)</h2>
 <div class="card"><p style="margin:0 0 8px">Pokład ma dwie strefy o różnej nośności: <b>pas koła</b> (4 rury S355, 282 mm między prowadnicami) i <b>siatkę</b> poza nim,
 liczoną tylko na stopę (105 kg). Koło obliczeniowo daje 6,0 kN, stopa 2,3 kN – 2,6 raza mniej. Prowadnice to <b>krawężniki</b>, które fizycznie trzymają koło na pasie, który je udźwignie:</p>
-<ul><li><b>Prawa</b> stoi na krawędzi trapu (nad L1P). Bez niej koło zsuwa się z trapu nawet z wysokości 455 mm – motocykl przewraca się.</li>
-<li><b>Lewa</b> oddziela koło od siatki chodnika (przęsło 180 mm między L1L a C1) i od Twoich stóp.</li>
+<ul><li><b>Prawa</b> stoi na krawędzi trapu (nad prawą rurą L1). Bez niej koło zsuwa się z trapu nawet z wysokości 455 mm – motocykl przewraca się.</li>
+<li><b>Lewa</b> oddziela koło od siatki chodnika (przęsło 180 mm między lewą rurą L1 a C1) i od Twoich stóp.</li>
 <li>Pchasz 350 kg pod górę z boku i nie widzisz koła – prowadnice korygują tor bez Twojej siły.</li>
 <li>Przy okazji dociskają siatkę do rur jezdnych (śruby M8 przez rurę z tuleją).</li></ul>
 <p class="note">Wysokość 37 mm nad siatką łapie bok opony (opona 120–190 mm, luz 45–80 mm na stronę), a jest za niska, żeby zaczepić podnóżek lub stopkę i da się ją przekroczyć.
@@ -69,7 +69,14 @@ zawsze leżał na ziemi (nie podnosi się sam), a w pionie nie pchał w stronę 
 <div class="card">%CALC%
 <p class="note">Koło 273 kg ×1,5 (dynamika) ×1,5; stopa 105 kg ×1,5 ×1,5; ciężar własny ×1,35. Ręczne obliczenia w stylu EN 1993 / EN 1999, nie MES. Najbardziej wytężone: %WORST%.
 Rury jezdne MUSZĄ być ze stali S355 (S355J2H / S355MH) – z S235 przy ściance 2 mm nie przechodzą. Zamiennik: 100×40×3 S235 (ok. +20 kg).</p></div>
-<h2>Montaż i użytkowanie</h2><div class="card"><ol>%STEPS%</ol></div>
+<h2>Montaż i użytkowanie</h2><div class="card"><ul style="list-style:none;padding-left:0">%STEPS%</ul></div>
+<h2>Ile wolno się pomylić (tolerancje)</h2><div class="card">%TOL%
+<p class="note">Wytrzymałość ma zapas ok. 2,5 × rzeczywistego ciężaru do granicy plastyczności. Najgroźniejsza pomyłka materiałowa: rury jezdne z S235 zamiast S355 (wytężenie 82 % → ok. 124 %) – dlatego atest i żółte końce.
+Obie rury L1 są identyczne – nie da się ich zamienić.</p></div>
+<h2>Lista kontrolna</h2><div class="card"><p style="margin:0 0 6px"><b>Przed wjazdem / zjazdem</b></p><ul>%CHK1%</ul>
+<p style="margin:10px 0 6px"><b>Przed jazdą</b></p><ul>%CHK2%</ul>
+<p class="note">Druga blokada do jazdy: pas z grzechotką 25 mm (LC 400 daN) opasujący złożony trap na poprzeczce P, haki do uch z przodu przyczepy. Trzyma trap także wtedy,
+gdy sworznie Ø12 zostaną w kieszeni (wytężenie 21 %). Do wydruku: stal_S5/lista_kontrolna_S5.pdf.</p></div>
 <h2>Części</h2><div class="card">%BOM%</div>
 <h2>Śruby, sworznie, tuleje</h2><div class="card">%BOLTS%
 <p class="note">8.8 ocynk z podkładkami, nakrętki samohamowne. M8 20 N·m, M12 40 N·m, M16 60 N·m. Sworzni M20 nie dokręcaj na sztywno – mają się obracać.</p></div>
@@ -79,7 +86,7 @@ Otwór przechodzący przez kilka części wierć razem albo przez płytę jako s
 <h2>Zakupy</h2><div class="card">%BUY%
 <p class="note">Orientacyjny koszt materiału z cynkowaniem: ok. %COST% zł netto (ceny-założenia w stal.py, sprawdź w swojej hurtowni).</p></div>
 <h2>Pliki</h2><div class="card"><p>W repozytorium, katalog trap_uproszczony/stal_S5: rysunki_trap_S5.pdf (karty każdej rury z tabelą otworów, przekrój, widok z góry, zawiasy, płyty, obliczenia),
-szablony_1do1_S5.pdf, DXF płyt, lista_czesci.csv, lista_srub.csv, lista_zakupow.csv, obliczenia.csv, otwory_z_modelu.csv, trap_s5.glb. Wszystko generuje skrypt stal_s5.py.</p></div>
+szablony_1do1_S5.pdf, DXF płyt, lista_czesci.csv, lista_srub.csv, lista_zakupow.csv, obliczenia.csv, otwory_z_modelu.csv, trap_s5.glb. lista_kontrolna_S5.pdf. Wszystko generuje skrypt stal_s5.py.</p></div>
 </main>
 """
 
@@ -107,28 +114,10 @@ def main():
                 ["podłużnice chodnika", "4 na sekcję, 100×40×2 Al", "2 na sekcję, 100×40×1,5 stal S235"],
                 ["poprzeczki / prowadnice", "60×40×4 Al (na płasko) / kątownik 40×40×4 Al", "60×40×2 stal / kątownik 40×40×3 stal"],
                 ["siatka", "Al, 1190 × 2500", "stal ocynk ~4 kg/m², 740 × 2500 (1 arkusz)"],
-                ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M16; prawa na rurze jezdnej L1P"],
+                ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M16; prawa na prawej rurze jezdnej L1"],
                 ["wsporniki K na belce", "4", "3 (prawy zawiasowy trzyma też sprężynę)"],
                 ["masa", "~72 kg", f"~{mA + mB:.0f} kg (stal z pełną szerokością: 150 kg grube ścianki / ~118 kg cienkie)"]]
-    steps = [
-        ("Zmierz przyczepę", ["Wysokość podłogi (liczona 480 mm), przekrój tylnej belki (w modelu 50×75×3) i gdzie ma stać trap – pas koła w osi przyczepy, chodnik w lewo.",
-                              "Podeślij wymiary belki przed wierceniem wsporników K."]),
-        ("Kup materiał", ["Według tabeli „Zakupy”. Rury jezdne tylko S355 – sprawdź atest/oznaczenie na sztandze."]),
-        ("Przetnij", ["8 rur jezdnych i 4 podłużnice po 1250 mm, 3 poprzeczki 740 mm, listwa T 740 mm, kątowniki 1095 i 715 mm (po 2).",
-                      f"W 6 podłużnicach sekcji B (L3, L4, C3) skos przy ziemi {g.SKOS:.0f} mm: dno krótsze, boki ukośnie."]),
-        ("Płyty stalowe", ["Same prostokąty. H (4) i Z (8) wierć w pakiecie. Płyty S i wsporniki K: oczko sprężyny Ø17 (śruba M16).",
-                           "Szablony 1:1: szablony_1do1_S5.pdf – drukuj 100 %, sprawdź kwadrat 50 mm."]),
-        ("Otwory w rurach", ["Wg kart w rysunki_trap_S5.pdf. Uwaga: L1L (lewa) i L1P (prawa) różnią się – L1P ma 2 dodatkowe otwory Ø18,5 pod płytę S prawej sprężyny.",
-                             "Otwór pod tuleję = Ø tulei + 0,5 mm (Ø12,5 / Ø18,5). Wiertarka stołowa albo prowadnik."]),
-        ("Zawias środkowy", ["L1L/L1P i L3 czołami na równej podłodze, górne krawędzie stykają się. Płyty Z, sworzeń M20, dopiero wtedy wierć rury przez płyty."]),
-        ("Cynkowanie", ["Wszystkie części stalowe cynkuj ogniowo PO wierceniu (albo podkład epoksydowy + farba). Potem przetrzyj otwory, tuleje wejdą luźno."]),
-        ("Ruszt i siatka", ["Do góry nogami: podłużnice, poprzeczki, tuleje Ø12×1,5 dł. 139,5, M8×160 (20 N·m). Listwa T nitami pod sekcją B.",
-                            "Odwróć, siatka na wkręty 4,8×19 co ~250 mm, prowadnice na siatce M8×130 nad rurami ±125."]),
-        ("Na przyczepie", ["3 wsporniki K do belki. Sworznie M20 niedokręcone. Sprężyny: lewa C1 ↔ K sprężyny (x +369), prawa L1P ↔ K zawiasu (x −152).",
-                           "Sprężyny zakładaj przy trapie w pionie (zablokowanym sworzniami)."]),
-        ("Przed pierwszym użyciem", ["Próba 400 kg przy zawiasie środkowym nad każdą rurą jezdną – nic nie może zostać wygięte. Pierwszy wjazd bez kierowcy, przyczepa podpięta do auta.",
-                                     "Po 3–5 wjazdach dokręć śruby."]),
-    ]
+    steps = s5.STEPS
     steps_html = "".join(f"<li><b>{E(t)}</b><ul>" + "".join(f"<li>{E(x)}</li>" for x in xs) + "</ul></li>" for t, xs in steps)
     calc_rows = [[f'{E(r["nazwa"].replace("[INFO] ", ""))}<span class="note">{E(r["uwagi"])}</span>', f'{r["obciazenie"]:g} / {r["nosnosc"]:g} {E(r["jedn"])}',
                   pill(r["wytezenie"], r["nazwa"].startswith("[INFO]"))]
@@ -144,7 +133,8 @@ def main():
                  "%STEPS%": steps_html, "%BOM%": table(["Część", "Szt.", "Wymiar [mm]", "kg/szt."], bom_rows, (1, 3)),
                  "%BOLTS%": table(["Rozmiar", "Rodzaj / gdzie", "Szt."], bolt_rows, (2,)),
                  "%HOLES%": table(["Nr", "Ø", "Złącze", "Miejsce wiercenia w każdej części, przez którą przechodzi"], hole_rows, (0, 1)),
-                 "%NHOLES%": str(n_holes), "%BUY%": table(["Pozycja", "Ilość", "Uwagi"], buy_rows), "%COST%": str(cost), "%GLB%": glb}.items():
+                 "%NHOLES%": str(n_holes), "%TOL%": table(["Co", "Tolerancja", "Jak to osiągnąć"], [[E(a), f"<b>{E(b)}</b>", E(c)] for a, b, c in s5.TOL]),
+                 "%CHK1%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_LOAD), "%CHK2%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_DRIVE), "%BUY%": table(["Pozycja", "Ilość", "Uwagi"], buy_rows), "%COST%": str(cost), "%GLB%": glb}.items():
         page = page.replace(k, v)
     out = os.path.join(s5.OUT, "trap_s5_strona.html")
     with open(out, "w", encoding="utf-8") as f:

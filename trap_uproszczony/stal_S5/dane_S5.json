@@ -16,8 +16,8 @@
    "element": "Poprzeczka RHS 60×40×2 S235JRH (na płasko) – stopa na samej krawędzi",
    "wartosc": 0.868
   },
-  "otwory": 81,
-  "zlacza": 78,
+  "otwory": 83,
+  "zlacza": 80,
   "kontrola_ok": true
  },
  "obliczenia": [
@@ -156,6 +156,22 @@
    "jedn": "kN",
    "wytezenie": 2.6,
    "uwagi": "siatka liczona na stopę 105 kg; koło to 2,6 × więcej"
+  },
+  {
+   "nazwa": "Rura L1 w miejscu 2 otworów Ø18,5 płyty S (całe koło na jednej rurze, s = 259)",
+   "obciazenie": 130.4,
+   "nosnosc": 355.0,
+   "jedn": "MPa",
+   "wytezenie": 0.367,
+   "uwagi": "przekrój netto 86 % pełnego; w lewej rurze otwory zaślepione tuleją i śrubą"
+  },
+  {
+   "nazwa": "Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12",
+   "obciazenie": 0.82,
+   "nosnosc": 4.0,
+   "jedn": "kN",
+   "wytezenie": 0.206,
+   "uwagi": "przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
   },
   {
    "nazwa": "Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk)",
