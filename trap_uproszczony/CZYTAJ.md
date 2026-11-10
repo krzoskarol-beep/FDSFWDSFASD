@@ -13,10 +13,10 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 | `DXF/` | Te same płyty w DXF, gdybyś jednak zamawiał cięcie laserem |
 | `lista_czesci.csv`, `lista_srub.csv`, `lista_zakupow.csv` | Listy części, śrub i tulei oraz zakupów |
 | `obliczenia.csv`, `trap_v2_dane.json` | Wszystkie kontrole wytrzymałości, masy i tabela podnoszenia |
-| `podglad_3d.html` | **Podgląd 3D.** Otwórz w przeglądarce (działa bez internetu). Suwak i przycisk „▶ Składanie” pokazują, jak trap składa się do jazdy. Po najechaniu na element widać jego nazwę |
-| `trap_v2_rozlozony.glb`, `trap_v2_do_jazdy.glb` | Model 3D do innych programów (Windows 3D Viewer, Blender, telefon) |
-| `podglad_*.png` | Zrzuty ekranu z podglądu 3D |
-| `podglad3d.py` | Skrypt podglądu 3D. Bierze wymiary z `generuj.py` (`pip install trimesh`, `python3 podglad3d.py`) |
+| `podglad3d.py` | **Podgląd 3D w Pythonie.** `python3 podglad3d.py` otwiera okno 3D z suwakiem rozłożony ↔ do jazdy; `--png` zapisuje zrzuty; `--gltf` eksportuje model; `--www` eksportuje model i otwiera stronę w przeglądarce (http://localhost:8000). Wymiary bierze z `generuj.py`, potrzebuje tylko matplotlib i numpy |
+| `www/trap_v2.glb` | **Model glTF 2.0** (Windows 3D Viewer, Blender, telefon). Ma węzły `przyczepa`, `sekcja_A`, `sekcja_B`, sprężyny i animację `skladanie` (0 s rozłożony → 6 s do jazdy) |
+| `www/index.html` | **Strona z podglądem** – wczytuje `trap_v2.glb` (three.js + GLTFLoader, lokalnie w `www/lib`). Suwak i „▶ Składanie” przewijają animację z pliku glTF, po najechaniu widać nazwę elementu. Otwieraj przez `python3 podglad3d.py --www` (przeglądarka nie wczyta modelu z pliku otwartego bezpośrednio) |
+| `podglad_*.png` | Zrzuty z podglądu w Pythonie |
 | `generuj.py` | Skrypt, który to wszystko liczy i rysuje. Na górze są parametry: wysokość podłogi, rozstawy, obciążenia. Uruchomienie: `pip install matplotlib ezdxf` i `python3 generuj.py` |
 
 ## Co było nie tak / za trudne w poprzedniej wersji
