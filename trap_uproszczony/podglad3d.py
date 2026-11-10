@@ -13,7 +13,7 @@ Wymaga: pip install matplotlib numpy mapbox-earcut
 Podgląd w Pythonie rysuje własny renderer (numpy, bufor głębokości) – widać śruby, tuleje i otwory.
 Układy: część (x w poprzek, s wzdłuż sekcji, z od spodu rur) – jak na rysunkach; glTF: metry, Y w górę.
 """
-import json, math, os, struct, sys
+import json, math, os, re, struct, sys
 from collections import defaultdict
 
 import numpy as np
@@ -167,7 +167,7 @@ def layout_v2():
     longs = [(sg * x, LONG_ID[("A", x)], LONG_ID[("B", x)]) for x in (g.X_LANE_IN, g.X_LANE_OUT, g.X_WALK, g.X_EDGE) for sg in (-1, 1)]
     return dict(
         key="V2", longs=sorted(longs), xmin=-g.WIDTH / 2, xmax=g.WIDTH / 2, holes_long=g.holes_long, long_info=LONG_INFO,
-        cross_txt="RHS 60×40×3 (6060)", tie_txt="płaskownik Al 40×5", mesh_txt="siatka Al cięto-ciągniona 43×13×3×2, LWD w poprzek",
+        cross_txt="RHS 60×40×4 (6060) na płasko", tie_txt="płaskownik Al 40×5", mesh_txt="siatka Al cięto-ciągniona 43×13×3×2, LWD w poprzek",
         guide=(40.0, 4.0, "kątownik Al 40×40×4"), steel_note="",
         s_plates=[dict(sg=sg, face=g.X_WALK + 20, inner=g.X_WALK - 20, tube="C1") for sg in (-1, 1)],
         springs=[dict(sg=sg, s_face=g.X_WALK + 20, s_sp=18.0, k_xa=369.0, k_nm="sprężyna", k_sp=12.0) for sg in (-1, 1)],
@@ -225,7 +225,7 @@ def build(layout=None):
             slab(M, grp, "sz", side, sh, xc - 20, xc - 20 + t, body)
             slab(M, grp, "sz", side, sh, xc + 20 - t, xc + 20, body)
 
-    # ---------------------------------------------------------- poprzeczki (na stojąco)
+    # ---------------------------------------------------------- poprzeczki (na płasko, 40 mm wysokości)
     for grp in "AB":
         for sc in cross[grp]:
             info = f"P – poprzeczka {Ly['cross_txt']}, L = {fmt(WID)}\nsekcja {grp}, s = {fmt(sc)} {SFROM[grp]}\n" + \
@@ -233,11 +233,12 @@ def build(layout=None):
             body = M.mesh(f"{grp}:P:{sc:g}", grp, c_cross, "profil", info)
             hv = [(sc, x, 12.5, f"{grp}v:{sc:g}:{x:+.0f}", f"poprzeczka P (s={fmt(sc)}): Ø12,5 przez górę i dół, "
                    f"{x - X0:.0f} mm od lewego końca") for x in XS]
-            ct = 3.0 if "×3" in Ly["cross_txt"] else 2.0
-            for z0, z1 in ((-ct, 0), (-60, -60 + ct)):
-                slab(M, grp, "sx", [(sc - 20 + ct, X0), (sc + 20 - ct, X0), (sc + 20 - ct, X1), (sc - 20 + ct, X1)], hv, z0, z1, body)
-            for w0, w1 in ((sc - 20, sc - 20 + ct), (sc + 20 - ct, sc + 20)):
-                solid("xz", [(X0, -60), (X1, -60), (X1, 0), (X0, 0)], w0, w1, body)
+            ct = float(re.search(r"60×40×(\d+(?:,\d+)?)", Ly["cross_txt"]).group(1).replace(",", "."))   # grubość ścianki
+            ch, cw = g.CROSS_H, 30.0                        # na płasko: 40 wysokości, 60 wzdłuż trapu
+            for z0, z1 in ((-ct, 0), (-ch, -ch + ct)):
+                slab(M, grp, "sx", [(sc - cw + ct, X0), (sc + cw - ct, X0), (sc + cw - ct, X1), (sc - cw + ct, X1)], hv, z0, z1, body)
+            for w0, w1 in ((sc - cw, sc - cw + ct), (sc + cw - ct, sc + cw)):
+                solid("xz", [(X0, -ch), (X1, -ch), (X1, 0), (X0, 0)], w0, w1, body)
 
     # ---------------------------------------------------------- listwa T pod sekcją B (nity)
     body = M.mesh("B:T", "B", c_walk, "profil", f"T – listwa spinająca, {Ly['tie_txt']}, L = {fmt(WID)}\n"
@@ -293,17 +294,17 @@ def build(layout=None):
                 cyl("z", s, xh, 0.25, 99.75, 6.0, M.mesh(f"{grp}:tul100", grp, C_SLEEVE, "tuleja", "tuleje Ø12×1,5 dł. 99,5 (prowadnice)"), 12)
                 M.bolt_axes.append((f"{grp}v:{s:g}:{xh:+.0f}", "M8"))
 
-    # ---------------------------------------------------------- skrzyżowania: M8×200 + tuleja 159,5
+    # ---------------------------------------------------------- skrzyżowania: M8×160 + tuleja 139,5
     for grp in "AB":
         for sc in cross[grp]:
             for x in XS:
                 top = 103 + gt_ if x in lane_outer else 103
                 pid = pid_at[(grp, x)]
                 b = M.mesh(f"{grp}:M8x:{sc:g}:{x:+.0f}", grp, C_BOLT, "śruba",
-                           f"śruba zamkowa M8×200 DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna\n"
-                           f"{pid} (x={x:+.0f}) + poprzeczka P, s={fmt(sc)} {SFROM[grp]}\ntuleja Ø12×1,5 dł. 159,5 na wylot (rura 100 + poprzeczka 60)")
-                bolt(b, "z", sc, x, top, -1, 200, 8, top + 60)
-                cyl("z", sc, x, 99.75, -59.75, 6.0, M.mesh(f"{grp}:tul160", grp, C_SLEEVE, "tuleja", "tuleje Ø12×1,5 dł. 159,5 (skrzyżowania)"), 12)
+                           f"śruba zamkowa M8×160 DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna\n"
+                           f"{pid} (x={x:+.0f}) + poprzeczka P, s={fmt(sc)} {SFROM[grp]}\ntuleja Ø12×1,5 dł. 139,5 na wylot (rura 100 + poprzeczka 40 na płasko)")
+                bolt(b, "z", sc, x, top, -1, 160, 8, top + g.CROSS_H)
+                cyl("z", sc, x, 99.75, -g.CROSS_H + 0.25, 6.0, M.mesh(f"{grp}:tul140", grp, C_SLEEVE, "tuleja", "tuleje Ø12×1,5 dł. 139,5 (skrzyżowania)"), 12)
                 M.bolt_axes.append((f"{grp}v:{sc:g}:{x:+.0f}", "M8"))
 
     # ---------------------------------------------------------- płyty stalowe z otworami
@@ -752,7 +753,34 @@ def check(M=None):
                 bad.append(key)
                 break
     print("śruby przechodzące przez materiał (zły otwór):", sorted(set(bad)) or "brak")
-    return not free and not missing and not bad
+    fold = check_fold(M)
+    print("kolizje po złożeniu do jazdy (sekcja A ↔ B):", [f"{a} ↔ {b}" for a, b, _ in fold] or "brak")
+    return not free and not missing and not bad and not fold
+
+
+def check_fold(M, t=1.0):
+    """pozycja do jazdy: prostopadłościany obrysu części sekcji A i B (w układzie sekcji A) nie mogą na siebie
+    zachodzić; pomijane: siatka, tuleje (siedzą w otworach), sworzeń zawiasu środkowego w płytach Z (tak ma być)"""
+    th, _ = pose(t)
+    oA = np.array((0.0, g.PIN_Z, -g.PIN_Y))
+    box = {}
+    for (T, _c, _o, kind, key) in world_tris(M, t):
+        if key[:2] not in ("A:", "B:") or kind in ("siatka", "tuleja") or key.startswith("otw"):
+            continue
+        loc = rot_x(T.reshape(-1, 3) - oA, -th)
+        P = np.stack([loc[:, 0], -loc[:, 2] - 25.0, loc[:, 1] + 75.0], -1)
+        box[key] = (P.min(0), P.max(0))
+    hits = []
+    for a, (amin, amax) in box.items():
+        if not a.startswith("A:"):
+            continue
+        for b, (bmin, bmax) in box.items():
+            if not b.startswith("B:") or ("pinMid" in a and ":Z:" in b):
+                continue
+            ov = np.minimum(amax, bmax) - np.maximum(amin, bmin)
+            if (ov > 0.5).all():
+                hits.append((a, b, ov))
+    return hits
 
 
 # ================================================================== PODGLĄD W PYTHONIE (matplotlib)
@@ -881,7 +909,7 @@ def render(M, t=0.0, view="3d", W=1280, H=860, fov=40.0, hide=(), transparent=Fa
 
 
 def _legend(fig):
-    items = [(C_LANE, "rury jezdne 100×40×3 6082-T6"), (C_WALK, "podłużnice 100×40×2"), (C_CROSS, "poprzeczki 60×40×3"),
+    items = [(C_LANE, "rury jezdne 100×40×3 6082-T6"), (C_WALK, "podłużnice 100×40×2"), (C_CROSS, "poprzeczki 60×40×4 na płasko"),
              (C_GUIDE, "prowadnice"), (C_STEEL, "płyty H/Z/S"), (C_TRAILER, "wsporniki K"), (C_HOLE, "otwory"),
              (C_BOLT, "śruby, podkładki, nakrętki"), (C_SLEEVE, "tuleje")]
     from matplotlib.patches import Patch

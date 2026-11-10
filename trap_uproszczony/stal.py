@@ -50,23 +50,23 @@ def angle_kgm(a, t):
 
 VARIANTS = {
     "S1": dict(nazwa="stal ciężka (S235, ścianki 3/2/2 mm)", lane=("RHS 100×40×3 S235JRH", rhs(40, 100, 3), 235, 360, "st_s235_kg"),
-               walk=("RHS 100×40×2 S235JRH", rhs(40, 100, 2), 235, 360), cross=("RHS 60×40×2 S235JRH", rhs(40, 60, 2), 235, 360),
+               walk=("RHS 100×40×2 S235JRH", rhs(40, 100, 2), 235, 360), cross=("RHS 60×40×2 S235JRH (na płasko)", rhs(60, 40, 2), 235, 360),
                guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~43×13×3×2", 7.0, "siatka_st_m2"),
                n_walk=4, width=g.WIDTH),
     "S2": dict(nazwa="stal LEKKA (rury jezdne S355 2 mm, podłużnice 1,5 mm, lżejsza siatka)",
                lane=("RHS 100×40×2 S355J2H", rhs(40, 100, 2), 355, 470, "st_s355_kg"),
-               walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH", rhs(40, 60, 2), 235, 360),
+               walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH (na płasko)", rhs(60, 40, 2), 235, 360),
                guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~30×12×2×1,5", 4.0, "siatka_st_lekka_m2"),
                n_walk=4, width=g.WIDTH),
     "S3": dict(nazwa="stal lekka, chodnik tylko z lewej (szer. 740 mm)",
                lane=("RHS 100×40×2 S355J2H", rhs(40, 100, 2), 355, 470, "st_s355_kg"),
-               walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH", rhs(40, 60, 2), 235, 360),
+               walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH (na płasko)", rhs(60, 40, 2), 235, 360),
                guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~30×12×2×1,5", 4.0, "siatka_st_lekka_m2"),
                n_walk=2, width=g.X_LANE_OUT + 20 + g.X_EDGE + 20),
 }
 # warianty ze ZMIENIONĄ konstrukcją (optymalizacja masy) – wymagają nowych rysunków
 _light = dict(lane=("RHS 100×40×2 S355J2H", rhs(40, 100, 2), 355, 470, "st_s355_kg"),
-              walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH", rhs(40, 60, 2), 235, 360),
+              walk=("RHS 100×40×1,5 S235JRH", rhs(40, 100, 1.5), 235, 360), cross=("RHS 60×40×2 S235JRH (na płasko)", rhs(60, 40, 2), 235, 360),
               guide=("kątownik 40×40×3", angle_kgm(40, 3)), mesh=("siatka stal ocynk ~30×12×2×1,5", 4.0, "siatka_st_lekka_m2"))
 VARIANTS["S4"] = dict(nazwa="stal optymalna, pełna szerokość 1190 mm", n_walk=4, width=g.WIDTH, lane_mm=282, **_light)
 VARIANTS["S5"] = dict(nazwa="stal optymalna, chodnik tylko z lewej (szer. 740 mm)", n_walk=2, width=g.X_LANE_OUT + 20 + g.X_EDGE + 20,
@@ -89,7 +89,7 @@ def masses(v):
               (2 * 150 * 80 * 8 * RHO_ST, 259.0, 25.0), (3.2, L / 2, 50.0)]
     nl = v.get("n_lane", 4)
     A = [(nl * lane["kgm"] * L / 1000, L / 2, 50.0), (v["n_walk"] * walk["kgm"] * L / 1000, L / 2, 50.0)]
-    A += [(cross["kgm"] * W / 1000, s, -30.0) for s in g.CROSS_A]
+    A += [(cross["kgm"] * W / 1000, s, -g.CROSS_H / 2) for s in g.CROSS_A]
     A += [(W * L * 1e-6 * v["mesh"][1], L / 2, 101.5), (2 * v["guide"][1] * (g.GUIDE_A[1] - g.GUIDE_A[0]) / 1000, sum(g.GUIDE_A) / 2, 115.0)]
     A += plates
     B = []
@@ -97,7 +97,7 @@ def masses(v):
         full = p["kgm"] * L / 1000
         cut = (SK * 40 * p["t"] + SK * 100 * p["t"]) * RHO_ST
         B += [(n * full, L / 2, 50.0), (-n * cut, L - SK / 3, 25.0)]
-    B += [(cross["kgm"] * W / 1000, s, -30.0) for s in g.CROSS_B]
+    B += [(cross["kgm"] * W / 1000, s, -g.CROSS_H / 2) for s in g.CROSS_B]
     B += [(40 * 5 * W * RHO_ST, g.TIE_B, -2.5), (W * L * 1e-6 * v["mesh"][1], L / 2, 101.5),
           (2 * v["guide"][1] * (g.GUIDE_B[1] - g.GUIDE_B[0]) / 1000, sum(g.GUIDE_B) / 2, 115.0),
           (4 * 170 * 100 * 6 * RHO_ST + 0.26, 55.0, -10.0), (1.6, 500.0, 50.0)]
@@ -202,7 +202,7 @@ def cost_al(mA, mB):
     gd = 2 * (g.GUIDE_A[1] - g.GUIDE_A[0]) + 2 * (g.GUIDE_B[1] - g.GUIDE_B[0])
     return [("Rury jezdne", sticks(8 * L) * 6 * g.P_LANE["kgm"] * c["al_6082_kg"], "Al 100×40×3 6082-T6"),
             ("Podłużnice chodnika", sticks(8 * L) * 6 * g.P_WALK["kgm"] * c["al_6060_kg"], "Al 100×40×2"),
-            ("Poprzeczki", 6 * g.P_CROSS["kgm"] * c["al_6060_kg"], "Al 60×40×3"),
+            ("Poprzeczki", 6 * g.P_CROSS["kgm"] * c["al_6060_kg"], "Al 60×40×4"),
             ("Prowadnice + listwa T", (math.ceil(gd / 5970) * 6 * g.ANGLE_KGM + 1.2 * 0.54) * c["al_6060_kg"], "Al 40×40×4, 40×5"),
             ("Siatka", 1.25 * 2.5 * c["siatka_al_m2"], "Al 43×13×3×2"),
             ("Ochrona przed korozją", 0.0, "niepotrzebna"),

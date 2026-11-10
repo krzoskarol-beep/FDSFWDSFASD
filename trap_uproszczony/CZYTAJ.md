@@ -34,8 +34,8 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 ## Co zmieniłem
 
 - **Koło jedzie zawsze po rurach.** Pod kołem leżą 4 rury 100×40×3 z **EN AW-6082-T6**, rozstawione na x = ±45 i ±125. Pas między prowadnicami ma 282 mm, a szczeliny między rurami 40–50 mm. Siatka niesie tylko stopy, a jej przęsła mają najwyżej 190 mm.
-- **Wszystkie podłużnice mają 100 mm wysokości.** Leżą wprost na poprzeczkach 60×40×3, więc nie ma tulejek dystansowych.
-- **Każde skrzyżowanie jest takie samo.** To śruba zamkowa M8×200 przez siatkę i **jedna** tuleja Ø12×1,5 dł. 159,5 na wylot przez podłużnicę i poprzeczkę.
+- **Wszystkie podłużnice mają 100 mm wysokości.** Leżą wprost na poprzeczkach 60×40×4 położonych NA PŁASKO (40 mm wysokości), więc nie ma tulejek dystansowych.
+- **Każde skrzyżowanie jest takie samo.** To śruba zamkowa M8×160 przez siatkę i **jedna** tuleja Ø12×1,5 dł. 139,5 na wylot przez podłużnicę i poprzeczkę.
 - **Zawias środkowy to 8 identycznych prostokątów Z** (płaskownik 100×6, dł. 170) i sworzeń w postaci śruby M20×110 8.8.
   - Sworzeń jest 35 mm pod rurami. Po rozłożeniu górne krawędzie rur stykają się, więc zawias przenosi zginanie sam, bez żadnej blokady, której można by zapomnieć.
   - Sekcja B składa się w dół, pod sekcję A.
@@ -169,3 +169,18 @@ Katalog `stal_S5/` (generuje `python3 stal_s5.py`, strona: `python3 strona_s5.py
 - Lewa strona = patrząc od ziemi na przyczepę. Chodnik (2 podłużnice) po lewej, prawa rura jezdna **L1P** jest krawędzią trapu i ma płytę S prawej sprężyny (2 dodatkowe otwory Ø18,5 – nie myl z L1L).
 - Prawa sprężyna: dolne oczko na wsporniku K zawiasu, więc są 3 wsporniki K zamiast 4.
 - Rury jezdne tylko ze stali S355 (S355J2H / S355MH). Wszystko cynkuj ogniowo PO wierceniu.
+
+## Poprawka: poprzeczki na płasko (kolizja po złożeniu)
+
+Po złożeniu do jazdy sekcja B wisi pod A spodem do spodu, a między spodami rur jest tylko **70 mm**
+(2 × 35 mm – sworzeń zawiasu środkowego jest 35 mm pod rurami). Poprzeczka na stojąco (60 mm) + nakrętka i koniec śruby M8×200
+(ok. 32 mm) wchodziły ok. **25 mm w rury drugiej sekcji** – złożony trap by się nie domknął, a zapięcia gniotłyby ścianki 2 mm.
+
+Poprawka (V2 i S5):
+- poprzeczka leży **na płasko**: 40 mm wysokości, 60 mm wzdłuż trapu; otwory w szerokiej ściance, te same położenia,
+- śruby skrzyżowań **M8×160** (zamiast ×200), tuleje **Ø12×1,5 dł. 139,5** (zamiast 159,5),
+- poprzeczka A i poprzeczka B mijają się (A: s = 340, 830 od przyczepy; B: s = 260 od zawiasu → 990 w układzie A); zostaje **13 mm** luzu,
+- śruba prowadnicy sekcji A przesunięta z s = 1000 na **s = 1040** (jej nakrętka mijała się na 0 mm z nakrętką śruby poprzeczki B),
+- V2 (aluminium): na płasko 60×40×3 miałaby 107 % → **60×40×4** (86 %); S5 (stal): 60×40×2 na płasko 87 %.
+
+`podglad3d.py --sprawdz` sprawdza teraz także pozycję do jazdy: żadna część sekcji A nie może zachodzić na część sekcji B.

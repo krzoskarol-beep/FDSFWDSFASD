@@ -1,32 +1,32 @@
 {
  "podsumowanie": {
   "polecany": "S2",
-  "masa_al": 65.0,
+  "masa_al": 66.6,
   "masa_stal": 114.1,
   "wysilek_bez_sprezyn_stal": 63.0,
   "sprezyny_stal": {
    "sztuk": 2,
    "F1_N": 3700,
    "max_wysilek_kg": 24.3,
-   "moment_rozlozony_Nm": -62.6,
-   "moment_pion_Nm": 28.2
+   "moment_rozlozony_Nm": -62.7,
+   "moment_pion_Nm": 28.9
   },
-  "koszt_al": 3415,
+  "koszt_al": 3510,
   "koszt_stal": 2749,
   "najwieksze_wytezenie": {
-   "element": "To samo – całe koło na jednej rurze",
-   "wartosc": 0.83
+   "element": "Poprzeczka RHS 60×40×2 S235JRH (na płasko) – stopa na samej krawędzi",
+   "wartosc": 0.868
   }
  },
  "warianty": [
   {
    "klucz": "Al",
    "nazwa": "aluminium V2",
-   "masa": 65.0,
-   "bez": 36.1,
+   "masa": 66.6,
+   "bez": 37.1,
    "sprezyny": "2 × 1600 N (Ø28)",
-   "ze": 18.6,
-   "koszt": 3415,
+   "ze": 19.4,
+   "koszt": 3510,
    "wyt": 0.88,
    "rysunki": "bez zmian"
   },
@@ -49,7 +49,7 @@
    "sprezyny": "2 × 3700 N (Ø40)",
    "ze": 24.3,
    "koszt": 2749,
-   "wyt": 0.83,
+   "wyt": 0.868,
    "rysunki": "bez zmian"
   },
   {
@@ -58,9 +58,9 @@
    "masa": 90.4,
    "bez": 50.2,
    "sprezyny": "2 × 2800 N (Ø40)",
-   "ze": 20.4,
+   "ze": 20.3,
    "koszt": 2533,
-   "wyt": 0.82,
+   "wyt": 0.868,
    "rysunki": "nowe rysunki (węższy trap)"
   },
   {
@@ -71,7 +71,7 @@
    "sprezyny": "2 × 3700 N (Ø40)",
    "ze": 24.3,
    "koszt": 2749,
-   "wyt": 0.83,
+   "wyt": 0.868,
    "rysunki": "bez zmian"
   },
   {
@@ -80,9 +80,9 @@
    "masa": 90.4,
    "bez": 50.2,
    "sprezyny": "2 × 2800 N (Ø40)",
-   "ze": 20.4,
+   "ze": 20.3,
    "koszt": 2533,
-   "wyt": 0.82,
+   "wyt": 0.868,
    "rysunki": "bez zmian"
   },
   {
@@ -93,7 +93,7 @@
    "sprezyny": "2 × 2500 N (Ø28)",
    "ze": 17.9,
    "koszt": 2208,
-   "wyt": 0.816,
+   "wyt": 0.868,
    "rysunki": "bez zmian"
   }
  ],
@@ -139,11 +139,11 @@
    "uwagi": "pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami"
   },
   {
-   "nazwa": "Poprzeczka RHS 60×40×2 S235JRH – stopa na samej krawędzi",
-   "obciazenie": 161.99,
+   "nazwa": "Poprzeczka RHS 60×40×2 S235JRH (na płasko) – stopa na samej krawędzi",
+   "obciazenie": 203.95,
    "nosnosc": 235,
    "jedn": "MPa",
-   "wytezenie": 0.689,
+   "wytezenie": 0.868,
    "uwagi": ""
   },
   {
@@ -228,10 +228,10 @@
   ],
   [
    "Poprzeczki",
-   311,
+   405,
    118,
    118,
-   "RHS 60×40×2 S235JRH"
+   "RHS 60×40×2 S235JRH (na płasko)"
   ],
   [
    "Prowadnice + listwa T",
@@ -270,7 +270,7 @@
   ],
   [
    "RAZEM (netto, orientacyjnie)",
-   3415,
+   3510,
    3094,
    2749,
    "z farbą zamiast cynku: S2 ok. 2470 zł"
@@ -288,7 +288,7 @@
    "podłużnice chodnika C1–C3"
   ],
   [
-   "Rura stalowa prostokątna RHS 60×40×2 S235JRH",
+   "Rura stalowa prostokątna RHS 60×40×2 S235JRH (na płasko)",
    "3 × 1190 mm (1 sztanga)",
    "poprzeczki P"
   ],
@@ -346,7 +346,7 @@
   {
    "deg": -10.9,
    "L": 280.4,
-   "Tg": -766.9,
+   "Tg": -767.0,
    "Ts": 704.3,
    "user_kg": 5.0,
    "hang": false
@@ -386,7 +386,7 @@
   {
    "deg": -2.5,
    "L": 291.5,
-   "Tg": -785.3,
+   "Tg": -785.2,
    "Ts": 701.4,
    "user_kg": 6.7,
    "hang": false
@@ -394,7 +394,7 @@
   {
    "deg": -0.9,
    "L": 293.7,
-   "Tg": -786.9,
+   "Tg": -786.8,
    "Ts": 698.9,
    "user_kg": 7.0,
    "hang": false
@@ -402,7 +402,7 @@
   {
    "deg": 0.8,
    "L": 295.9,
-   "Tg": -787.8,
+   "Tg": -787.7,
    "Ts": 695.9,
    "user_kg": 7.3,
    "hang": false
@@ -410,15 +410,15 @@
   {
    "deg": 2.5,
    "L": 298.1,
-   "Tg": -788.0,
+   "Tg": -787.8,
    "Ts": 692.3,
-   "user_kg": 7.7,
+   "user_kg": 7.6,
    "hang": false
   },
   {
    "deg": 4.2,
    "L": 300.3,
-   "Tg": -787.5,
+   "Tg": -787.3,
    "Ts": 688.2,
    "user_kg": 7.9,
    "hang": false
@@ -426,7 +426,7 @@
   {
    "deg": 5.9,
    "L": 302.5,
-   "Tg": -786.3,
+   "Tg": -786.1,
    "Ts": 683.6,
    "user_kg": 8.2,
    "hang": false
@@ -434,15 +434,15 @@
   {
    "deg": 7.6,
    "L": 304.7,
-   "Tg": -784.4,
+   "Tg": -784.1,
    "Ts": 678.4,
-   "user_kg": 8.5,
+   "user_kg": 8.4,
    "hang": false
   },
   {
    "deg": 9.2,
    "L": 306.9,
-   "Tg": -781.8,
+   "Tg": -781.5,
    "Ts": 672.8,
    "user_kg": 8.7,
    "hang": false
@@ -450,7 +450,7 @@
   {
    "deg": 10.9,
    "L": 309.1,
-   "Tg": -778.5,
+   "Tg": -778.1,
    "Ts": 666.8,
    "user_kg": 8.9,
    "hang": false
@@ -458,7 +458,7 @@
   {
    "deg": 12.6,
    "L": 311.2,
-   "Tg": -774.5,
+   "Tg": -774.1,
    "Ts": 660.2,
    "user_kg": 9.1,
    "hang": false
@@ -466,7 +466,7 @@
   {
    "deg": 14.3,
    "L": 313.3,
-   "Tg": -769.7,
+   "Tg": -769.3,
    "Ts": 653.3,
    "user_kg": 9.3,
    "hang": false
@@ -474,15 +474,15 @@
   {
    "deg": 16.0,
    "L": 315.5,
-   "Tg": -764.3,
+   "Tg": -763.8,
    "Ts": 646.0,
-   "user_kg": 9.5,
+   "user_kg": 9.4,
    "hang": false
   },
   {
    "deg": 17.7,
    "L": 317.6,
-   "Tg": -758.2,
+   "Tg": -757.7,
    "Ts": 638.2,
    "user_kg": 9.6,
    "hang": false
@@ -490,7 +490,7 @@
   {
    "deg": 19.3,
    "L": 319.6,
-   "Tg": -751.3,
+   "Tg": -750.8,
    "Ts": 630.1,
    "user_kg": 9.7,
    "hang": false
@@ -498,15 +498,15 @@
   {
    "deg": 21.0,
    "L": 321.7,
-   "Tg": -743.8,
+   "Tg": -743.2,
    "Ts": 621.6,
-   "user_kg": 9.8,
+   "user_kg": 9.7,
    "hang": false
   },
   {
    "deg": 22.7,
    "L": 323.7,
-   "Tg": -735.5,
+   "Tg": -734.9,
    "Ts": 612.8,
    "user_kg": 9.8,
    "hang": false
@@ -514,7 +514,7 @@
   {
    "deg": 24.4,
    "L": 325.7,
-   "Tg": -726.5,
+   "Tg": -725.9,
    "Ts": 603.6,
    "user_kg": 9.8,
    "hang": false
@@ -522,7 +522,7 @@
   {
    "deg": 26.1,
    "L": 327.7,
-   "Tg": -716.8,
+   "Tg": -716.1,
    "Ts": 594.1,
    "user_kg": 9.8,
    "hang": false
@@ -530,23 +530,23 @@
   {
    "deg": 27.7,
    "L": 329.7,
-   "Tg": -706.3,
+   "Tg": -705.5,
    "Ts": 584.3,
-   "user_kg": 9.8,
+   "user_kg": 9.7,
    "hang": false
   },
   {
    "deg": 29.4,
    "L": 331.6,
-   "Tg": -695.0,
+   "Tg": -694.2,
    "Ts": 574.2,
-   "user_kg": 9.7,
+   "user_kg": 9.6,
    "hang": false
   },
   {
    "deg": 31.1,
    "L": 333.5,
-   "Tg": -682.9,
+   "Tg": -682.1,
    "Ts": 563.9,
    "user_kg": 9.5,
    "hang": false
@@ -554,7 +554,7 @@
   {
    "deg": 32.8,
    "L": 335.3,
-   "Tg": -669.9,
+   "Tg": -669.0,
    "Ts": 553.2,
    "user_kg": 9.3,
    "hang": false
@@ -562,15 +562,15 @@
   {
    "deg": 34.5,
    "L": 337.2,
-   "Tg": -655.9,
+   "Tg": -654.9,
    "Ts": 542.4,
-   "user_kg": 9.1,
+   "user_kg": 9.0,
    "hang": false
   },
   {
    "deg": 36.2,
    "L": 339.0,
-   "Tg": -640.6,
+   "Tg": -639.6,
    "Ts": 531.2,
    "user_kg": 8.7,
    "hang": false
@@ -578,39 +578,39 @@
   {
    "deg": 37.8,
    "L": 340.8,
-   "Tg": -623.6,
+   "Tg": -622.5,
    "Ts": 519.9,
-   "user_kg": 8.3,
+   "user_kg": 8.2,
    "hang": false
   },
   {
    "deg": 39.5,
    "L": 342.5,
-   "Tg": -603.9,
+   "Tg": -602.6,
    "Ts": 508.3,
-   "user_kg": 7.6,
+   "user_kg": 7.5,
    "hang": false
   },
   {
    "deg": 41.2,
    "L": 344.2,
-   "Tg": -578.3,
+   "Tg": -576.8,
    "Ts": 496.5,
-   "user_kg": 6.5,
+   "user_kg": 6.4,
    "hang": false
   },
   {
    "deg": 42.9,
    "L": 345.8,
-   "Tg": -526.8,
+   "Tg": -524.5,
    "Ts": 484.5,
-   "user_kg": 3.4,
+   "user_kg": 3.2,
    "hang": false
   },
   {
    "deg": 44.6,
    "L": 347.5,
-   "Tg": -776.9,
+   "Tg": -776.4,
    "Ts": 472.4,
    "user_kg": 24.3,
    "hang": true
@@ -618,7 +618,7 @@
   {
    "deg": 46.3,
    "L": 349.0,
-   "Tg": -757.0,
+   "Tg": -756.5,
    "Ts": 460.0,
    "user_kg": 23.7,
    "hang": true
@@ -626,7 +626,7 @@
   {
    "deg": 47.9,
    "L": 350.6,
-   "Tg": -736.4,
+   "Tg": -735.9,
    "Ts": 447.5,
    "user_kg": 23.1,
    "hang": true
@@ -634,7 +634,7 @@
   {
    "deg": 49.6,
    "L": 352.1,
-   "Tg": -715.2,
+   "Tg": -714.7,
    "Ts": 434.8,
    "user_kg": 22.4,
    "hang": true
@@ -642,7 +642,7 @@
   {
    "deg": 51.3,
    "L": 353.6,
-   "Tg": -693.4,
+   "Tg": -692.9,
    "Ts": 421.9,
    "user_kg": 21.7,
    "hang": true
@@ -650,23 +650,23 @@
   {
    "deg": 53.0,
    "L": 355.0,
-   "Tg": -671.0,
+   "Tg": -670.5,
    "Ts": 409.0,
-   "user_kg": 21.0,
+   "user_kg": 20.9,
    "hang": true
   },
   {
    "deg": 54.7,
    "L": 356.4,
-   "Tg": -648.0,
+   "Tg": -647.5,
    "Ts": 395.8,
-   "user_kg": 20.2,
+   "user_kg": 20.1,
    "hang": true
   },
   {
    "deg": 56.4,
    "L": 357.7,
-   "Tg": -624.5,
+   "Tg": -623.9,
    "Ts": 382.6,
    "user_kg": 19.3,
    "hang": true
@@ -674,15 +674,15 @@
   {
    "deg": 58.0,
    "L": 359.0,
-   "Tg": -600.4,
+   "Tg": -599.8,
    "Ts": 369.2,
-   "user_kg": 18.5,
+   "user_kg": 18.4,
    "hang": true
   },
   {
    "deg": 59.7,
    "L": 360.2,
-   "Tg": -575.8,
+   "Tg": -575.2,
    "Ts": 355.7,
    "user_kg": 17.6,
    "hang": true
@@ -690,15 +690,15 @@
   {
    "deg": 61.4,
    "L": 361.5,
-   "Tg": -550.7,
+   "Tg": -550.1,
    "Ts": 342.0,
-   "user_kg": 16.7,
+   "user_kg": 16.6,
    "hang": true
   },
   {
    "deg": 63.1,
    "L": 362.6,
-   "Tg": -525.2,
+   "Tg": -524.6,
    "Ts": 328.3,
    "user_kg": 15.7,
    "hang": true
@@ -706,23 +706,23 @@
   {
    "deg": 64.8,
    "L": 363.7,
-   "Tg": -499.2,
+   "Tg": -498.5,
    "Ts": 314.5,
-   "user_kg": 14.8,
+   "user_kg": 14.7,
    "hang": true
   },
   {
    "deg": 66.4,
    "L": 364.8,
-   "Tg": -472.7,
+   "Tg": -472.1,
    "Ts": 300.6,
-   "user_kg": 13.8,
+   "user_kg": 13.7,
    "hang": true
   },
   {
    "deg": 68.1,
    "L": 365.8,
-   "Tg": -445.9,
+   "Tg": -445.2,
    "Ts": 286.6,
    "user_kg": 12.7,
    "hang": true
@@ -730,15 +730,15 @@
   {
    "deg": 69.8,
    "L": 366.8,
-   "Tg": -418.6,
+   "Tg": -418.0,
    "Ts": 272.5,
-   "user_kg": 11.7,
+   "user_kg": 11.6,
    "hang": true
   },
   {
    "deg": 71.5,
    "L": 367.7,
-   "Tg": -391.0,
+   "Tg": -390.3,
    "Ts": 258.3,
    "user_kg": 10.6,
    "hang": true
@@ -746,7 +746,7 @@
   {
    "deg": 73.2,
    "L": 368.6,
-   "Tg": -363.1,
+   "Tg": -362.4,
    "Ts": 244.1,
    "user_kg": 9.5,
    "hang": true
@@ -754,23 +754,23 @@
   {
    "deg": 74.9,
    "L": 369.4,
-   "Tg": -334.8,
+   "Tg": -334.1,
    "Ts": 229.8,
-   "user_kg": 8.4,
+   "user_kg": 8.3,
    "hang": true
   },
   {
    "deg": 76.5,
    "L": 370.2,
-   "Tg": -306.3,
+   "Tg": -305.6,
    "Ts": 215.4,
-   "user_kg": 7.3,
+   "user_kg": 7.2,
    "hang": true
   },
   {
    "deg": 78.2,
    "L": 370.9,
-   "Tg": -277.5,
+   "Tg": -276.8,
    "Ts": 201.0,
    "user_kg": 6.1,
    "hang": true
@@ -778,7 +778,7 @@
   {
    "deg": 79.9,
    "L": 371.6,
-   "Tg": -248.4,
+   "Tg": -247.7,
    "Ts": 186.5,
    "user_kg": 4.9,
    "hang": true
@@ -786,47 +786,47 @@
   {
    "deg": 81.6,
    "L": 372.2,
-   "Tg": -219.2,
+   "Tg": -218.5,
    "Ts": 172.0,
-   "user_kg": 3.8,
+   "user_kg": 3.7,
    "hang": true
   },
   {
    "deg": 83.3,
    "L": 372.8,
-   "Tg": -189.7,
+   "Tg": -189.0,
    "Ts": 157.4,
-   "user_kg": 2.6,
+   "user_kg": 2.5,
    "hang": true
   },
   {
    "deg": 85.0,
    "L": 373.3,
-   "Tg": -160.1,
+   "Tg": -159.4,
    "Ts": 142.8,
-   "user_kg": 1.4,
+   "user_kg": 1.3,
    "hang": true
   },
   {
    "deg": 86.6,
    "L": 373.8,
-   "Tg": -130.4,
+   "Tg": -129.7,
    "Ts": 128.2,
-   "user_kg": 0.2,
+   "user_kg": 0.1,
    "hang": true
   },
   {
    "deg": 88.3,
    "L": 374.2,
-   "Tg": -100.5,
+   "Tg": -99.8,
    "Ts": 113.5,
-   "user_kg": -1.0,
+   "user_kg": -1.1,
    "hang": true
   },
   {
    "deg": 90.0,
    "L": 374.6,
-   "Tg": -70.6,
+   "Tg": -69.9,
    "Ts": 98.8,
    "user_kg": -2.3,
    "hang": true

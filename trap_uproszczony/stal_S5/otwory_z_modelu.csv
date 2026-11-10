@@ -17,8 +17,8 @@
 16;18,5;M12;"L1L (x=+125): Ø18,5 przez oba boki, s=40 od końca przy przyczepie, z=60 od spodu | płyta H wewn. (x +): Ø13 (M12), (90; 40) od lewego dolnego rogu | płyta H zewn. (x +): Ø13 (M12), (90; 40) od lewego dolnego rogu"
 17;21;M20;"płyta H wewn. (x −): Ø21 (pin), (25; 55) od lewego dolnego rogu | płyta H zewn. (x −): Ø21 (pin), (25; 55) od lewego dolnego rogu"
 18;21;M20;"płyta H wewn. (x +): Ø21 (pin), (25; 55) od lewego dolnego rogu | płyta H zewn. (x +): Ø21 (pin), (25; 55) od lewego dolnego rogu"
-19;12,5;M8;L1L (x=+125): Ø12,5 przez górę i dół, s=1000 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 850 mm od jej końca, 20 mm od grzbietu
-20;12,5;M8;L1P (x=-125): Ø12,5 przez górę i dół, s=1000 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 850 mm od jej końca, 20 mm od grzbietu
+19;12,5;M8;L1L (x=+125): Ø12,5 przez górę i dół, s=1040 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 890 mm od jej końca, 20 mm od grzbietu
+20;12,5;M8;L1P (x=-125): Ø12,5 przez górę i dół, s=1040 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 890 mm od jej końca, 20 mm od grzbietu
 21;12,5;M8;L1L (x=+125): Ø12,5 przez górę i dół, s=200 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 50 mm od jej końca, 20 mm od grzbietu
 22;12,5;M8;L1P (x=-125): Ø12,5 przez górę i dół, s=200 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 50 mm od jej końca, 20 mm od grzbietu
 23;12,5;M8;L1L (x=+125): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 270 mm od lewego końca | prowadnica G1: Ø9, 190 mm od jej końca, 20 mm od grzbietu

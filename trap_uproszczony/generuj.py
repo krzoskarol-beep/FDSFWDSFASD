@@ -52,12 +52,12 @@ X_LANE_IN, X_LANE_OUT = 45.0, 125.0      # rury jezdne 100x40x3 (6082)
 X_WALK, X_EDGE = 345.0, 575.0            # podluznice chodnika / krawedzi 100x40x2 (6060)
 LONG_X = [-X_EDGE, -X_WALK, -X_LANE_OUT, -X_LANE_IN, X_LANE_IN, X_LANE_OUT, X_WALK, X_EDGE]
 
-CROSS_A = [340.0, 830.0]                 # poprzeczki 60x40x3 w sekcji A (s od przyczepy)
+CROSS_A = [340.0, 830.0]                 # poprzeczki 60x40x4 w sekcji A (s od przyczepy)
 CROSS_B = [260.0]                        # poprzeczka w sekcji B (s od zawiasu)
 TIE_B = 650.0                            # plaskownik spinajacy pod sekcja B (nitowany)
 GUIDE_A = (150.0, 1245.0)                # prowadnice (katownik 40x40x4 na siatce)
 GUIDE_B = (5.0, 720.0)
-GUIDE_BOLTS_A = [200.0, 580.0, 1000.0]
+GUIDE_BOLTS_A = [200.0, 580.0, 1040.0]    # 1040 (nie 1000): po zlozeniu nakretka mija nakretke sruby poprzeczki B
 GUIDE_BOLTS_B = [180.0, 450.0, 680.0]
 
 ALPHA = math.degrees(math.asin((H_FLOOR + PIN_Z + 25.0) / (2 * L_SEC + 25.0)))
@@ -95,7 +95,8 @@ def rhs(b, h, t):
 
 P_LANE = rhs(40, 100, 3)       # RHS 100x40x3 EN AW-6082-T6
 P_WALK = rhs(40, 100, 2)       # RHS 100x40x2 6060
-P_CROSS = rhs(40, 60, 3)       # RHS 60x40x3 6060 (na stojaco)
+P_CROSS = rhs(60, 40, 4)       # RHS 60x40x4 6060 NA PLASKO (40 mm wysokosci) - miejsce na nakretki po zlozeniu
+CROSS_H = 40.0                 # wysokosc poprzeczki pod podluznicami [mm]
 ANGLE_KGM = (40 + 36) * 4 * RHO_AL * 1000
 MESH_KGM2 = 2.5
 
@@ -105,10 +106,10 @@ def holes_long(kind):
     h = []
     if kind in ("L1", "L2", "C1", "C2"):          # sekcja A
         for s in CROSS_A:
-            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 160"))
+            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 140"))
     else:                                         # sekcja B
         for s in CROSS_B:
-            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 160"))
+            h.append((s, "g/d", None, 12.5, "poprzeczka – M8 + tuleja 140"))
         h.append((TIE_B, "dół", None, 4.9, "2 nity listwy T (x ±10)"))
     if kind == "L1":
         for s in GUIDE_BOLTS_A:
@@ -158,8 +159,8 @@ def build_bom():
                         how="profil cięty na długość, otwory wg tabeli" + ("; skos przy ziemi wg rysunku" if skos else ""),
                         where=f"x = {xs}"))
     n_cross = len(CROSS_A) + len(CROSS_B)
-    bom.append(dict(pid="P", name="Poprzeczka – rura na stojąco", qty=n_cross, material="6060-T6",
-                    size=f"RHS Al 60×40×3, L = {WIDTH:.0f}", mass=round(P_CROSS["kgm"] * WIDTH / 1000, 2), holes=16,
+    bom.append(dict(pid="P", name="Poprzeczka – rura NA PŁASKO (40 mm wysokości)", qty=n_cross, material="6060-T6",
+                    size=f"RHS Al 60×40×4, L = {WIDTH:.0f}", mass=round(P_CROSS["kgm"] * WIDTH / 1000, 2), holes=16,
                     how="8 otworów Ø12,5 przez górę i dół", where=f"A: s = {CROSS_A}, B: s = {CROSS_B}"))
     bom.append(dict(pid="T", name="Listwa spinająca pod sekcją B (nitowana)", qty=1, material="6060",
                     size=f"płaskownik Al 40×5, L = {WIDTH:.0f}", mass=round(40 * 5 * WIDTH * RHO_AL, 2), holes=16,
@@ -193,7 +194,7 @@ def build_bolts():
     n_cross = 8 * (nA + nB)
     n_guide = 2 * (len(GUIDE_BOLTS_A) + len(GUIDE_BOLTS_B))
     bolts = [
-        ("M8×200", "zamkowa DIN 603 kl. 8.8 (łbem do góry, przez siatkę) + podkładka + nakrętka samohamowna", n_cross, "skrzyżowania podłużnic z poprzeczkami"),
+        ("M8×160", "zamkowa DIN 603 kl. 8.8 (łbem do góry, przez siatkę) + podkładka + nakrętka samohamowna", n_cross, "skrzyżowania podłużnic z poprzeczkami"),
         ("M8×130", "zamkowa DIN 603 (łbem do góry, przez prowadnicę i siatkę) + podkładka + nakr. samoham.", n_guide, "prowadnice"),
         ("M12×80", "sześciokątna ISO 4014/4017 8.8 + 2 podkł. + nakr. samoham.", 4 + 4 + 4, "płyty H (4), płyty Z sekcji A (4), płyty S (4)"),
         ("M12×90", "sześciokątna ISO 4014 8.8 + 2 podkł. + nakr. samoham.", 4, "płyty Z sekcji B (z podkładkami dystansowymi)"),
@@ -206,7 +207,7 @@ def build_bolts():
         ("wkręt 4,8×19", "wkręt samowiercący nierdzewny z podkładką EPDM Ø16", 100, "mocowanie siatki co ~250 mm do każdej podłużnicy"),
     ]
     sleeves = [
-        ("Ø12×1,5", 159.5, n_cross, "M8 – przez rurę 100 + poprzeczkę 60 (jedna tuleja na wylot)"),
+        ("Ø12×1,5", 139.5, n_cross, "M8 – przez rurę 100 + poprzeczkę 40 (jedna tuleja na wylot)"),
         ("Ø12×1,5", 99.5, n_guide, "M8 – prowadnice, przez rurę 100"),
         ("Ø18×2,5", 40.0, 4 + 8 + 4, "M12 – płyty H, Z, S (przez rurę 40 mm)"),
         ("Ø18×2,5", 50.0, 8, "M12 – przez belkę przyczepy 50×75 (DOPASUJ do belki)"),
@@ -231,7 +232,7 @@ def masses():
 
     A = []
     A += [(4 * P_LANE["kgm"] * L_SEC / 1000, L_SEC / 2, 50.0), (4 * P_WALK["kgm"] * L_SEC / 1000, L_SEC / 2, 50.0)]
-    A += [(P_CROSS["kgm"] * WIDTH / 1000, s, -30.0) for s in CROSS_A]
+    A += [(P_CROSS["kgm"] * WIDTH / 1000, s, -CROSS_H / 2) for s in CROSS_A]
     A += [(WIDTH * L_SEC * 1e-6 * MESH_KGM2, L_SEC / 2, 101.5)]
     A += [(2 * ANGLE_KGM * (GUIDE_A[1] - GUIDE_A[0]) / 1000, sum(GUIDE_A) / 2, 115.0)]
     A += [(4 * 200 * 80 * 6 * RHO_ST, 50.0, 60.0), (4 * 170 * 100 * 6 * RHO_ST, L_SEC - 55.0, -10.0),
@@ -239,7 +240,7 @@ def masses():
     B = []
     for kgm, t, n in ((P_LANE["kgm"], 3, 4), (P_WALK["kgm"], 2, 4)):
         B += [(n * m, s, z) for (m, s, z) in skos_tube(kgm, t)]
-    B += [(P_CROSS["kgm"] * WIDTH / 1000, s, -30.0) for s in CROSS_B]
+    B += [(P_CROSS["kgm"] * WIDTH / 1000, s, -CROSS_H / 2) for s in CROSS_B]
     B += [(40 * 5 * WIDTH * RHO_AL, TIE_B, -2.5), (WIDTH * L_SEC * 1e-6 * MESH_KGM2, L_SEC / 2, 101.5)]
     B += [(2 * ANGLE_KGM * (GUIDE_B[1] - GUIDE_B[0]) / 1000, sum(GUIDE_B) / 2, 115.0)]
     B += [(4 * 170 * 100 * 6 * RHO_ST + 8 * 0.033, 55.0, -10.0), (1.6, 500.0, 50.0)]
@@ -321,7 +322,7 @@ def calcs(mA, mB):
         "ramię 40 mm od ściany belki")
     # 5 poprzeczka
     Mc = Fd * (X_EDGE + 20 - (X_LANE_OUT + 20))
-    add("Poprzeczka 60×40×3 (6060) – stopa na samej krawędzi, cała na jednej poprzeczce", Mc * 1e3 / P_CROSS["W"], fA60, "MPa",
+    add("Poprzeczka 60×40×4 (6060) na płasko – stopa na samej krawędzi, cała na jednej poprzeczce", Mc * 1e3 / P_CROSS["W"], fA60, "MPa",
         f"wspornik {X_EDGE + 20 - X_LANE_OUT - 20:.0f} mm od rury jezdnej")
     Rin = Pd * CROSS_A[1] / (CROSS_A[1] - CROSS_A[0])
     Mt = Rin * (X_LANE_OUT - X_LANE_IN) * (X_LANE_OUT - X_LANE_IN) / (2 * X_LANE_OUT) * (X_LANE_OUT + X_LANE_IN) / (X_LANE_OUT - X_LANE_IN)
@@ -331,7 +332,7 @@ def calcs(mA, mB):
     T = Rin * (X_LANE_OUT + X_LANE_IN) / (2 * X_LANE_OUT)
     add("Śruba M8 8.8 na skrzyżowaniu – rozciąganie (poprzeczka wisi na rurze zewn.)", T,
         0.9 * B88["fub"] * 36.6 / GM2 / 1e3, "kN", "")
-    add("Przeciąganie łba / podkładki przez ściankę poprzeczki 3 mm", T, 0.6 * math.pi * 20 * 3 * AL6060["fu"] / GM2 / 1e3, "kN",
+    add("Przeciąganie łba / podkładki przez ściankę poprzeczki 4 mm", T, 0.6 * math.pi * 20 * 4 * AL6060["fu"] / GM2 / 1e3, "kN",
         "podkładka Ø24 pod nakrętką")
     # 6 podluznice chodnika
     for nm, a, kind in (("wspornik przy zawiasie A", L_SEC - CROSS_A[-1], "c"),
@@ -531,10 +532,10 @@ def page_section(pdf):
         ax.add_patch(Rectangle((x - 20, 0), 40, 100, fc="#cfd8e3" if lane else "#e6e9ee", ec="k", lw=0.8))
         ax.add_patch(Rectangle((x - 20 + (3 if lane else 2), (3 if lane else 2)), 40 - 2 * (3 if lane else 2),
                                100 - 2 * (3 if lane else 2), fc="white", ec="k", lw=0.4))
-        ax.plot([x, x], [-60, 103], "k:", lw=0.4)
+        ax.plot([x, x], [-CROSS_H, 103], "k:", lw=0.4)
         ax.text(x, -75, f"{x:+.0f}", ha="center", fontsize=7)
-    ax.add_patch(Rectangle((-WIDTH / 2, -60), WIDTH, 60, fc="#f3e2c7", ec="k", lw=0.8))
-    ax.text(0, -45, "poprzeczka RHS 60×40×3 (6060), dł. 1190", ha="center", fontsize=8)
+    ax.add_patch(Rectangle((-WIDTH / 2, -CROSS_H), WIDTH, CROSS_H, fc="#f3e2c7", ec="k", lw=0.8))
+    ax.text(0, -28, "poprzeczka RHS 60×40×4 (6060) na płasko, dł. 1190", ha="center", fontsize=8)
     ax.plot([-WIDTH / 2, WIDTH / 2], [101.5, 101.5], color="#6a6a6a", lw=2.5)
     ax.text(-590, 108, "siatka Al na całej szerokości (1 arkusz / sekcję)", fontsize=7)
     for sg in (1, -1):
@@ -547,7 +548,7 @@ def page_section(pdf):
     ax.text(0, 40, "4 × RHS 100×40×3\nEN AW-6082-T6", ha="center", fontsize=7)
     ax.text(X_WALK + 30, 40, "RHS 100×40×2\n6060", fontsize=7)
     ax.plot([0, 0], [-60, 103], "r-", lw=0.6)
-    ax.text(-600, 200, "Śruba na każdym skrzyżowaniu: M8×200 zamkowa (łeb na siatce) + JEDNA tuleja Ø12×1,5 dł. 159,5 przez rurę 100 i poprzeczkę 60.",
+    ax.text(-600, 200, "Śruba na każdym skrzyżowaniu: M8×160 zamkowa (łeb na siatce) + JEDNA tuleja Ø12×1,5 dł. 139,5 przez rurę 100 i poprzeczkę 40 (na płasko).",
             fontsize=8)
     ax.text(-600, 185, "Szczeliny między rurami jezdnymi 40–50 mm (pod siatką). Siatka oparta co ≤ 190 mm.", fontsize=8)
     ax.set_xlim(-640, 640)
@@ -569,7 +570,7 @@ def page_plan(pdf):
             if sec == "B":
                 ax.add_patch(Rectangle((x - 20, L_SEC - SKOS), 40, SKOS, fc="none", ec="#c00000", lw=0.6, hatch="///"))
         for s in (CROSS_A if sec == "A" else CROSS_B):
-            ax.add_patch(Rectangle((-WIDTH / 2, s - 20), WIDTH, 40, fc="#f3e2c7", ec="k", lw=0.6, alpha=0.9))
+            ax.add_patch(Rectangle((-WIDTH / 2, s - 30), WIDTH, 60, fc="#f3e2c7", ec="k", lw=0.6, alpha=0.9))
             ax.text(WIDTH / 2 + 10, s, f"P s={s:.0f}", fontsize=7, va="center")
         if sec == "B":
             ax.add_patch(Rectangle((-WIDTH / 2, TIE_B - 20), WIDTH, 40, fc="#ddd", ec="k", lw=0.6, ls="--"))
@@ -754,20 +755,20 @@ def page_tube(pdf, pid, name, prof, mat, q, skos):
 
 def page_cross(pdf):
     fig = plt.figure(figsize=(11.69, 8.27))
-    fig.text(0.04, 0.94, "P – poprzeczka RHS 60×40×3 (6060), L = 1190, 3 szt.  |  T – listwa Al 40×5, L = 1190, 1 szt.  |  G1/G2 – prowadnice",
+    fig.text(0.04, 0.94, "P – poprzeczka RHS 60×40×4 (6060) na płasko, L = 1190, 3 szt.  |  T – listwa Al 40×5, L = 1190, 1 szt.  |  G1/G2 – prowadnice",
              fontsize=11, weight="bold")
     ax = fig.add_axes([0.05, 0.55, 0.9, 0.3])
-    ax.add_patch(Rectangle((0, 0), WIDTH, 40, fc="#f3e2c7", ec="k"))
-    ax.text(-40, 20, "góra/dół", fontsize=8, va="center")
+    ax.add_patch(Rectangle((0, 0), WIDTH, 60, fc="#f3e2c7", ec="k"))
+    ax.text(-40, 30, "góra/dół", fontsize=8, va="center")
     for x in LONG_X:
-        ax.add_patch(Circle((x + WIDTH / 2, 20), 6.25, fill=False, ec="#c00000"))
-        ax.text(x + WIDTH / 2, 50, f"{x + WIDTH / 2:.0f}", ha="center", fontsize=7)
+        ax.add_patch(Circle((x + WIDTH / 2, 30), 6.25, fill=False, ec="#c00000"))
+        ax.text(x + WIDTH / 2, 72, f"{x + WIDTH / 2:.0f}", ha="center", fontsize=7)
     ax.set_xlim(-60, WIDTH + 20)
-    ax.set_ylim(70, -20)
+    ax.set_ylim(90, -20)
     ax.set_aspect("equal")
     ax.axis("off")
-    fig.text(0.05, 0.52, "P: 8 otworów Ø12,5 przez górę i dół, w osi ścianki 40 mm. Wymiary od lewego końca. "
-                         "Tuleja Ø12×1,5 dł. 159,5 przechodzi przez podłużnicę (100) i poprzeczkę (60).", fontsize=8)
+    fig.text(0.05, 0.52, "P: 8 otworów Ø12,5 przez górę i dół, w osi szerokiej ścianki 60 mm (rura leży NA PŁASKO). Wymiary od lewego końca. "
+                         "Tuleja Ø12×1,5 dł. 139,5 przechodzi przez podłużnicę (100) i poprzeczkę (40, na płasko).", fontsize=8)
     fig.text(0.05, 0.49, "T: te same położenia, w każdym miejscu 2 otwory Ø4,9 (±10 mm w poprzek listwy... wzdłuż listwy) – nity 4,8 w dno podłużnic B.",
              fontsize=8)
     ga = [s - GUIDE_A[0] for s in sorted(GUIDE_BOLTS_A + CROSS_A)]
@@ -861,7 +862,7 @@ def main():
         ("Rura Al prostokątna 100×40×3, EN AW-6082-T6 (PA4) – NIE 6060", "8 × 1250 mm = 2 sztangi 6 m",
          "rury jezdne L1–L4 (z 1 sztangi 4 kawałki)"),
         ("Rura Al prostokątna 100×40×2, 6060-T6", "8 × 1250 mm = 2 sztangi 6 m", "podłużnice chodnika i krawędzi C1–C3"),
-        ("Rura Al prostokątna 60×40×3, 6060-T6", f"3 × {WIDTH:.0f} mm (3,6 m)", "poprzeczki P"),
+        ("Rura Al prostokątna 60×40×4, 6060-T6", f"3 × {WIDTH:.0f} mm (3,6 m)", "poprzeczki P"),
         ("Kątownik Al 40×40×4, 6060", f"2 × {GUIDE_A[1] - GUIDE_A[0]:.0f} + 2 × {GUIDE_B[1] - GUIDE_B[0]:.0f} mm (3,7 m)", "prowadnice G1/G2"),
         ("Płaskownik Al 40×5", f"1 × {WIDTH:.0f} mm", "listwa T"),
         ("Siatka cięto-ciągniona ALUMINIOWA ok. 43×13×3×2 (~2,5 kg/m²), arkusz 1250×2500, LWD wzdłuż boku 1250",
@@ -870,7 +871,7 @@ def main():
         ("Płaskownik stal S235 100×6", "8 × 170 mm (1,4 m)", "płyty Z"),
         ("Płaskownik stal S235 80×8", "2 × 150 mm (0,3 m)", "płyty S"),
         ("Kątownik stal 100×100×10", "4 × 130 mm (0,55 m)", "wsporniki K na belce przyczepy"),
-        ("Rura stal bezszwowa Ø12×1,5", f"{tube_m(24 * 162.5 + 12 * 102.5)} m", "tuleje M8 (160 i 100)"),
+        ("Rura stal bezszwowa Ø12×1,5", f"{tube_m(24 * 142.5 + 12 * 102.5)} m", "tuleje M8 (140 i 100)"),
         ("Rura stal bezszwowa Ø18×2,5", f"{tube_m(16 * 43 + 8 * 53)} m", "tuleje M12 (40 i 50)"),
         ("Rura stal Ø20×4", "0,1 m", "dystanse oczek sprężyn (12 i 18 mm)"),
         ("Sprężyna gazowa 460 mm / skok 200 mm / 1600 N, oczka Ø12 (M12)", "2", "zalecane – bez nich ok. 35–40 kg na końcu trapu"),
@@ -915,7 +916,7 @@ def main():
             "",
             "CO JEST PROSTSZE niż w poprzedniej wersji:",
             "  • 5 profili Al zamiast 7; wszystkie podłużnice mają tę samą wysokość 100 mm – leżą wprost na poprzeczkach (nie ma 30 tulejek dystansowych D1).",
-            "  • Na każdym skrzyżowaniu ta sama śruba M8×200 i JEDNA tuleja dł. 159,5 (zamiast 9 rodzajów tulei – teraz 4).",
+            "  • Na każdym skrzyżowaniu ta sama śruba M8×160 i JEDNA tuleja dł. 139,5 (zamiast 9 rodzajów tulei – teraz 4).",
             "  • Płyty stalowe: 4 rodzaje i wszystkie to PROSTOKĄTY z płaskownika/kątownika – zero gięcia (stary M2), zero ośmiokątów.",
             "  • Zawias środkowy: 8 IDENTYCZNYCH płyt Z (wierć w pakiecie), sworzeń = śruba M20×110 8.8. Zawias przy przyczepie: płyty H + odcinek kątownika K.",
             "  • Te same 4 wsporniki K służą do zawiasu i do sprężyn. Sworzeń wszystkich zawiasów – ta sama śruba M20.",

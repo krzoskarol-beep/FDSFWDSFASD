@@ -44,7 +44,7 @@ poprzeczki i siatka 740 mm. Model pokazuje każdy otwór, śrubę, tuleję i swo
   <button id="b-x" aria-pressed="false">Profile przezroczyste</button><button id="b-drill" aria-pressed="false">Tylko otwory</button>
 </div>
 <div class="legend"><span><i style="background:#8a96a3"></i>rury jezdne S355 100×40×2</span><span><i style="background:#b9c0c8"></i>podłużnice chodnika 100×40×1,5</span>
-<span><i style="background:#c9a77a"></i>poprzeczki 60×40×2</span><span><i style="background:#3f6fb0"></i>prowadnice 40×40×3</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
+<span><i style="background:#c9a77a"></i>poprzeczki 60×40×2 (na płasko)</span><span><i style="background:#3f6fb0"></i>prowadnice 40×40×3</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
 <span><i style="background:#b04a3a"></i>wsporniki K</span><span><i style="background:#e01b1b"></i>otwory</span><span><i style="background:#a9afb6"></i>śruby</span><span><i style="background:#d4b030"></i>tuleje</span></div>
 <h2>W liczbach</h2>
 <div class="kv">%KV%</div>
@@ -105,7 +105,7 @@ def main():
     cmp_rows = [["szerokość", "1190 mm, chodnik po obu stronach", "740 mm, chodnik tylko z lewej"],
                 ["rury jezdne (4 szt.)", "100×40×3 Al 6082-T6", "100×40×2 stal S355J2H"],
                 ["podłużnice chodnika", "4 na sekcję, 100×40×2 Al", "2 na sekcję, 100×40×1,5 stal S235"],
-                ["poprzeczki / prowadnice", "60×40×3 Al / kątownik 40×40×4 Al", "60×40×2 stal / kątownik 40×40×3 stal"],
+                ["poprzeczki / prowadnice", "60×40×4 Al (na płasko) / kątownik 40×40×4 Al", "60×40×2 stal / kątownik 40×40×3 stal"],
                 ["siatka", "Al, 1190 × 2500", "stal ocynk ~4 kg/m², 740 × 2500 (1 arkusz)"],
                 ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M16; prawa na rurze jezdnej L1P"],
                 ["wsporniki K na belce", "4", "3 (prawy zawiasowy trzyma też sprężynę)"],
@@ -122,7 +122,7 @@ def main():
                              "Otwór pod tuleję = Ø tulei + 0,5 mm (Ø12,5 / Ø18,5). Wiertarka stołowa albo prowadnik."]),
         ("Zawias środkowy", ["L1L/L1P i L3 czołami na równej podłodze, górne krawędzie stykają się. Płyty Z, sworzeń M20, dopiero wtedy wierć rury przez płyty."]),
         ("Cynkowanie", ["Wszystkie części stalowe cynkuj ogniowo PO wierceniu (albo podkład epoksydowy + farba). Potem przetrzyj otwory, tuleje wejdą luźno."]),
-        ("Ruszt i siatka", ["Do góry nogami: podłużnice, poprzeczki, tuleje Ø12×1,5 dł. 159,5, M8×200 (20 N·m). Listwa T nitami pod sekcją B.",
+        ("Ruszt i siatka", ["Do góry nogami: podłużnice, poprzeczki, tuleje Ø12×1,5 dł. 139,5, M8×160 (20 N·m). Listwa T nitami pod sekcją B.",
                             "Odwróć, siatka na wkręty 4,8×19 co ~250 mm, prowadnice na siatce M8×130 nad rurami ±125."]),
         ("Na przyczepie", ["3 wsporniki K do belki. Sworznie M20 niedokręcone. Sprężyny: lewa C1 ↔ K sprężyny (x +369), prawa L1P ↔ K zawiasu (x −152).",
                            "Sprężyny zakładaj przy trapie w pionie (zablokowanym sworzniami)."]),

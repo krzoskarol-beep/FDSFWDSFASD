@@ -58,7 +58,7 @@ def holes_long(pid):
 def layout():
     return dict(
         key="S5", longs=LONGS, xmin=X0, xmax=X1, holes_long=holes_long, long_info=LONG_INFO,
-        cross_txt="RHS 60×40×2 S235JRH", tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
+        cross_txt="RHS 60×40×2 S235JRH na płasko", tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
         guide=(40.0, 3.0, "kątownik stal 40×40×3"),
         s_plates=[dict(sg=1, face=g.X_WALK + 20, inner=g.X_WALK - 20, tube="C1"),
                   dict(sg=-1, face=g.X_LANE_OUT + 20, inner=g.X_LANE_OUT - 20, tube="L1P")],
@@ -119,8 +119,8 @@ def page_section(pdf):
         ax.add_patch(Rectangle((x - 20, 0), 40, 100, fc="#b8c3cf" if lane else "#dde1e6", ec="k", lw=0.8))
         ax.add_patch(Rectangle((x - 20 + 3 * t, 3 * t), 40 - 6 * t, 100 - 6 * t, fc="white", ec="k", lw=0.3))
         ax.text(x, -78, f"{x:+.0f}", ha="center", fontsize=8)
-    ax.add_patch(Rectangle((X0, -60), WID, 60, fc="#efdcbc", ec="k", lw=0.8))
-    ax.text((X0 + X1) / 2, -40, f"poprzeczka {CROSS_P}, dł. {WID:.0f}", ha="center", fontsize=8)
+    ax.add_patch(Rectangle((X0, -g.CROSS_H), WID, g.CROSS_H, fc="#efdcbc", ec="k", lw=0.8))
+    ax.text((X0 + X1) / 2, -25, f"poprzeczka {CROSS_P}, dł. {WID:.0f}", ha="center", fontsize=8)
     ax.plot([X0, X1], [101.5, 101.5], color="#6a6a6a", lw=2.5)
     ax.text(160, 125, f"siatka stalowa ocynk, {WID:.0f} × 1250 (1 arkusz 1250×2500 → 2 kawałki)", fontsize=8)
     for sg in (1, -1):
@@ -133,7 +133,7 @@ def page_section(pdf):
     ax.text(460, -100, f"chodnik: 2 × {WALK_P}", ha="center", fontsize=7)
     ax.text(X1 - 5, 200, "LEWA – chodnik", ha="right", fontsize=10, weight="bold")
     ax.text(X0 + 5, 200, "PRAWA – krawędź", fontsize=10, weight="bold")
-    ax.text(X0, 240, "Każde skrzyżowanie: M8×200 zamkowa + tuleja Ø12×1,5 dł. 159,5.\nPrawa sprężyna: płyta S na zewnętrznej ściance prawej rury jezdnej (L1P),"
+    ax.text(X0, 240, "Każde skrzyżowanie: M8×160 zamkowa + tuleja Ø12×1,5 dł. 139,5 (poprzeczka NA PŁASKO – 40 mm, żeby po złożeniu nakrętki nie uderzały w drugą sekcję).\nPrawa sprężyna: płyta S na zewnętrznej ściance prawej rury jezdnej (L1P),"
             " dolne oczko na wsporniku K zawiasu.", fontsize=8)
     ax.set_xlim(-260, 700)
     ax.set_ylim(-120, 270)
@@ -152,7 +152,7 @@ def page_plan(pdf):
             if sec == "B":
                 ax.add_patch(Rectangle((x - 20, L - g.SKOS), 40, g.SKOS, fc="none", ec="#c00000", lw=0.6, hatch="///"))
         for s in (g.CROSS_A if sec == "A" else g.CROSS_B):
-            ax.add_patch(Rectangle((X0, s - 20), WID, 40, fc="#efdcbc", ec="k", lw=0.6, alpha=0.9))
+            ax.add_patch(Rectangle((X0, s - 30), WID, 60, fc="#efdcbc", ec="k", lw=0.6, alpha=0.9))
             ax.text(X1 + 10, s, f"P s={s:.0f}", fontsize=7, va="center")
         if sec == "B":
             ax.add_patch(Rectangle((X0, g.TIE_B - 20), WID, 40, fc="#ddd", ec="k", lw=0.6, ls="--"))
@@ -180,17 +180,17 @@ def page_cross(pdf):
     fig.text(0.04, 0.94, f"P – poprzeczka {CROSS_P}, L = {WID:.0f}, 3 szt.  |  T – płaskownik stal 40×5, L = {WID:.0f}  |  G1/G2 – kątownik 40×40×3",
              fontsize=11, weight="bold")
     ax = fig.add_axes([0.05, 0.55, 0.9, 0.3])
-    ax.add_patch(Rectangle((0, 0), WID, 40, fc="#efdcbc", ec="k"))
+    ax.add_patch(Rectangle((0, 0), WID, 60, fc="#efdcbc", ec="k"))
     for x in XS:
-        ax.add_patch(Circle((x - X0, 20), 6.25, fill=False, ec="#c00000"))
-        ax.text(x - X0, 52, f"{x - X0:.0f}", ha="center", fontsize=8)
+        ax.add_patch(Circle((x - X0, 30), 6.25, fill=False, ec="#c00000"))
+        ax.text(x - X0, 74, f"{x - X0:.0f}", ha="center", fontsize=8)
     ax.text(0, -10, "← PRAWY koniec (równo z rurą L1P)", fontsize=7)
     ax.text(WID, -10, "LEWY koniec (krawędź chodnika) →", fontsize=7, ha="right")
     ax.set_xlim(-30, WID + 30)
-    ax.set_ylim(70, -30)
+    ax.set_ylim(95, -30)
     ax.set_aspect("equal")
     ax.axis("off")
-    fig.text(0.05, 0.50, "P: 6 otworów Ø12,5 przez górę i dół, w osi ścianki. Wymiary od PRAWEGO końca. Tuleja Ø12×1,5 dł. 159,5 przez podłużnicę i poprzeczkę.",
+    fig.text(0.05, 0.50, "P: 6 otworów Ø12,5 przez górę i dół, w osi szerokiej ścianki 60 (rura leży NA PŁASKO). Wymiary od PRAWEGO końca. Tuleja Ø12×1,5 dł. 139,5 przez podłużnicę i poprzeczkę.",
              fontsize=8)
     fig.text(0.05, 0.47, "T: w tych samych miejscach po 2 otwory Ø4,9 (±10 mm od osi podłużnicy, wzdłuż listwy) – 12 nitów 4,8 w dno podłużnic B.", fontsize=8)
     ga = [s - g.GUIDE_A[0] for s in sorted(g.GUIDE_BOLTS_A + g.CROSS_A)]
@@ -214,7 +214,7 @@ def bom():
         m = kg(p) * L / 1000 - ((g.SKOS * 40 * p["t"] + g.SKOS * 100 * p["t"]) * stal.RHO_ST if skos else 0)
         nh = 2 * len(holes_long(pid))
         out.append([pid, name, q, mat, f"{prof}, L = {L:.0f}" + (f", skos {g.SKOS:.0f}" if skos else ""), round(m, 2), nh, f"x = {xs}"])
-    out += [["P", "Poprzeczka – rura na stojąco", 3, "S235JRH", f"{CROSS_P}, L = {WID:.0f}", round(kg(cross) * WID / 1000, 2), 12,
+    out += [["P", "Poprzeczka – rura NA PŁASKO (40 mm wysokości)", 3, "S235JRH", f"{CROSS_P}, L = {WID:.0f}", round(kg(cross) * WID / 1000, 2), 12,
              f"A: s = {g.CROSS_A}, B: s = {g.CROSS_B}"],
             ["T", "Listwa spinająca pod sekcją B (nity)", 1, "S235", f"płaskownik 40×5, L = {WID:.0f}", round(40 * 5 * WID * stal.RHO_ST, 2), 12,
              f"B: s = {g.TIE_B:.0f}"],
@@ -235,7 +235,7 @@ def bom():
 def bolts():
     F = SPR["F1_N"]
     return [
-        ("M8×200", "zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna", 18, "skrzyżowania (6 podłużnic × 3 poprzeczki)"),
+        ("M8×160", "zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna", 18, "skrzyżowania (6 podłużnic × 3 poprzeczki)"),
         ("M8×130", "zamkowa DIN 603 + podkładka + nakrętka samohamowna", 12, "prowadnice"),
         ("M12×80", "sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna", 12, "płyty H (4), Z sekcji A (4), S (4)"),
         ("M12×90", "sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna", 4, "płyty Z sekcji B"),
@@ -246,7 +246,7 @@ def bolts():
         ("podkładka M12 gr. 6", "DIN 7349 (13×30×6)", 8, "dystans płyt Z sekcji B"),
         ("nit 4,8", "nit zrywalny stalowy 4,8, szeroki kołnierz", 12 + 8, "listwa T (12) + zapięcia (8)"),
         ("wkręt 4,8×19", "wkręt samowiercący z podkładką EPDM", 70, "siatka, co ~250 mm"),
-        ("tuleja Ø12×1,5 dł. 159,5", "rura stal bezszwowa ocynk", 18, "skrzyżowania"),
+        ("tuleja Ø12×1,5 dł. 139,5", "rura stal bezszwowa ocynk", 18, "skrzyżowania"),
         ("tuleja Ø12×1,5 dł. 99,5", "rura stal bezszwowa ocynk", 12, "prowadnice"),
         ("tuleja Ø18×2,5 dł. 40", "rura stal bezszwowa ocynk", 16, "płyty H, Z, S"),
         ("tuleja Ø18×2,5 dł. 50", "rura stal bezszwowa ocynk (DOPASUJ do belki)", 6, "belka przyczepy"),
@@ -268,7 +268,7 @@ def buy():
          "pokład; dostawca ma potwierdzić 160 kg w punkcie na przęśle 190 mm"),
         ("Płaskownik stal 80×6 / 100×6 / 80×8", "0,85 m / 1,4 m / 0,3 m", "płyty H / Z / S"),
         ("Kątownik stal 100×100×10", "3 × 130 mm (0,4 m)", "wsporniki K"),
-        ("Rura stal bezszwowa Ø12×1,5 / Ø18×2,5 / Ø25×5", "4,2 m / 1,0 m / 0,1 m", "tuleje"),
+        ("Rura stal bezszwowa Ø12×1,5 / Ø18×2,5 / Ø25×5", "3,8 m / 1,0 m / 0,1 m", "tuleje"),
         (f"Sprężyna gazowa 460 mm / skok 200 / {SPR['F1_N']} N, Ø40, oczka Ø16", "2", "dobrana do masy trapu"),
         ("Zapięcie dźwigniowe z regulowanym kabłąkiem, zasięg ≥ 180 mm, ≥ 200 daN (lub pas z grzechotką)", "2", "spina złożone sekcje"),
         ("Pasek gumy EPDM 3–5 mm × 40 mm", "ok. 3 m", "pod skosy przy ziemi (6 × 0,5 m)"),
@@ -313,7 +313,7 @@ def main():
                 "LEWA strona = patrząc od ziemi na przyczepę (od tej strony pchasz motocykl, od strony stopki). Na rysunkach x > 0.",
                 "",
                 "CO INNE NIŻ W WERSJI ALUMINIOWEJ V2:",
-                "  • Materiał: rury jezdne RHS 100×40×2 S355J2H, podłużnice 100×40×1,5 S235, poprzeczki 60×40×2, kątowniki 40×40×3, siatka stalowa.",
+                "  • Materiał: rury jezdne RHS 100×40×2 S355J2H, podłużnice 100×40×1,5 S235, poprzeczki 60×40×2 (na płasko), kątowniki 40×40×3, siatka stalowa.",
                 "  • Chodnik tylko z lewej: 2 podłużnice chodnika zamiast 4, poprzeczki i siatka 740 mm, prawa rura jezdna L1P = prawa krawędź.",
                 "  • Rury L1L (lewa) i L1P (prawa) różnią się 2 otworami: L1P ma płytę S prawej sprężyny.",
                 "  • Prawa sprężyna: górne oczko na płycie S na L1P, dolne na wsporniku K zawiasu (otwór „sprężyna” w K). Wsporniki K: 3 zamiast 4.",

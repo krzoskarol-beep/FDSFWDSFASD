@@ -90,7 +90,7 @@ def main():
                              "Otwór pod tuleję = Ø tulei + 0,5 mm (Ø12,5 / Ø18,5). Tuleja ma długość profilu – nie zgniata aluminium."]),
         ("Zawias środkowy", ["L1 i L3 czołami na równej podłodze, górne krawędzie stykają się. Przyłóż płyty Z, włóż sworzeń M20, dopiero wtedy wierć rury przez płyty.",
                              "Płyty sekcji B na zewnątrz płyt A, na podkładkach 6 mm."]),
-        ("Ruszt i siatka", ["Do góry nogami: podłużnice, poprzeczki, tuleje Ø12×1,5 dł. 159,5, śruby M8×200 (20 N·m).",
+        ("Ruszt i siatka", ["Do góry nogami: podłużnice, poprzeczki, tuleje Ø12×1,5 dł. 139,5, śruby M8×160 (20 N·m).",
                             "Odwróć, siatka (LWD w poprzek) na wkręty 4,8×19 co ~250 mm, prowadnice na siatce śrubami M8×130."]),
         ("Na przyczepie", ["Wsporniki K do belki (M12×80 + tuleje w belce). Sworznie M20 nie dokręcaj na sztywno – mają się obracać.",
                            "Sprężyny 460/200 mm 1600 N: dolne oczko na K, górne na płycie S. Stal ↔ aluminium: pasta cynkowa i podkładki izolujące."]),
@@ -212,7 +212,7 @@ ol li { margin-bottom:8px; } ul { margin:4px 0; padding-left:18px; }
   <button id="b-x" aria-pressed="false">Profile przezroczyste</button><button id="b-drill" aria-pressed="false">Tylko otwory</button>
 </div>
 <div class="legend"><span><i style="background:#8fa9c9"></i>rury jezdne 6082-T6</span><span><i style="background:#c9cfd6"></i>podłużnice 100×40×2</span>
-<span><i style="background:#d8b98a"></i>poprzeczki 60×40×3</span><span><i style="background:#3f6fb0"></i>prowadnice</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
+<span><i style="background:#d8b98a"></i>poprzeczki 60×40×4 (na płasko)</span><span><i style="background:#3f6fb0"></i>prowadnice</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
 <span><i style="background:#b04a3a"></i>wsporniki K</span><span><i style="background:#e01b1b"></i>otwory</span><span><i style="background:#a9afb6"></i>śruby</span><span><i style="background:#d4b030"></i>tuleje</span></div>
 <h2>Do czego są prowadnice i listwa T</h2>
 <div class="card"><p style="margin:0 0 8px"><b>Prowadnice koła</b> to dwa niebieskie kątowniki 40×40×4 leżące na siatce, wzdłuż całego trapu. Ich pionowe ścianki
