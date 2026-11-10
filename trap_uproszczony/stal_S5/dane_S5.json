@@ -134,6 +134,30 @@
    "uwagi": ""
   },
   {
+   "nazwa": "Prowadnica – kątownik 40×40×3 S235: zginanie półki pionowej od bocznego pchnięcia opony",
+   "obciazenie": 148.6,
+   "nosnosc": 235.0,
+   "jedn": "MPa",
+   "wytezenie": 0.632,
+   "uwagi": "0,3 × koło obl. na wys. 37 mm, współpracuje ~300 mm półki"
+  },
+  {
+   "nazwa": "Prowadnica – śruba M8 8.8 rozrywana (dźwignia 37/20 mm)",
+   "obciazenie": 3.34,
+   "nosnosc": 21.08,
+   "jedn": "kN",
+   "wytezenie": 0.159,
+   "uwagi": "cała siła boczna na jednej śrubie"
+  },
+  {
+   "nazwa": "[INFO] Siatka – koło zamiast stopy (dlaczego są prowadnice)",
+   "obciazenie": 6.03,
+   "nosnosc": 2.32,
+   "jedn": "kN",
+   "wytezenie": 2.6,
+   "uwagi": "siatka liczona na stopę 105 kg; koło to 2,6 × więcej"
+  },
+  {
    "nazwa": "Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk)",
    "obciazenie": 6.66,
    "nosnosc": 24.39,

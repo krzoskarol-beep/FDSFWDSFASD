@@ -52,6 +52,16 @@ poprzeczki i siatka 740 mm. Model pokazuje każdy otwór, śrubę, tuleję i swo
 <div class="card">%CMP%
 <p class="note">Lewa strona = patrząc od ziemi na przyczepę. Prawa rura jezdna jest krawędzią trapu – prowadnica nad nią trzyma koło, a przy prowadzeniu stoisz po lewej, na chodniku.
 Pas koła (282 mm między prowadnicami) jest w osi przyczepy, tak jak w wersji aluminiowej.</p></div>
+<h2>Do czego są prowadnice (niebieskie kątowniki)</h2>
+<div class="card"><p style="margin:0 0 8px">Pokład ma dwie strefy o różnej nośności: <b>pas koła</b> (4 rury S355, 282 mm między prowadnicami) i <b>siatkę</b> poza nim,
+liczoną tylko na stopę (105 kg). Koło obliczeniowo daje 6,0 kN, stopa 2,3 kN – 2,6 raza mniej. Prowadnice to <b>krawężniki</b>, które fizycznie trzymają koło na pasie, który je udźwignie:</p>
+<ul><li><b>Prawa</b> stoi na krawędzi trapu (nad L1P). Bez niej koło zsuwa się z trapu nawet z wysokości 455 mm – motocykl przewraca się.</li>
+<li><b>Lewa</b> oddziela koło od siatki chodnika (przęsło 180 mm między L1L a C1) i od Twoich stóp.</li>
+<li>Pchasz 350 kg pod górę z boku i nie widzisz koła – prowadnice korygują tor bez Twojej siły.</li>
+<li>Przy okazji dociskają siatkę do rur jezdnych (śruby M8 przez rurę z tuleją).</li></ul>
+<p class="note">Wysokość 37 mm nad siatką łapie bok opony (opona 120–190 mm, luz 45–80 mm na stronę), a jest za niska, żeby zaczepić podnóżek lub stopkę i da się ją przekroczyć.
+G1 zaczyna się 150 mm od przyczepy: w pozycji do jazdy pokład stoi 15 mm za krawędzią podłogi, a góra prowadnicy wchodzi 28 mm nad podłogę – przy s = 0 zahaczałaby o krawędź podłogi.
+G2 kończy się 530 mm przed ziemią, gdzie trap jest już tylko ~100 mm nad ziemią: to strefa wjazdu – koło ustawiasz swobodnie, zanim wejdzie między prowadnice.</p></div>
 <h2>Siła przy podnoszeniu i opuszczaniu</h2><div class="card">%CHART%
 <p class="note">Siła prostopadle do trapu na końcu sekcji A (przy zawiasie środkowym). Ujemny kąt = trap leży na ziemi, 90° = pion. Sprężyny %SPR% dobrane tak, żeby rozłożony trap
 zawsze leżał na ziemi (nie podnosi się sam), a w pionie nie pchał w stronę przyczepy.</p></div>
@@ -78,7 +88,7 @@ def main():
     M, summ = s5.main()
     glb = base64.b64encode(open(os.path.join(s5.OUT, "trap_s5.glb"), "rb").read()).decode()
     mA, mB, spr, lift, lift0, rows = s5.mA, s5.mB, s5.SPR, s5.LIFT, s5.LIFT0, s5.ROWS
-    worst = max(rows, key=lambda r: r["wytezenie"])
+    worst = max((r for r in rows if not r["nazwa"].startswith("[INFO]")), key=lambda r: r["wytezenie"])
     kinds = dict(M.bolt_axes)
     n_holes, n_join = len(M.hole_dia), len(M.bolt_axes)
     cost = next(x for x in json.load(open(os.path.join(s5.HERE, "stal_dane.json"), encoding="utf-8"))["warianty"]
@@ -120,7 +130,8 @@ def main():
                                      "Po 3–5 wjazdach dokręć śruby."]),
     ]
     steps_html = "".join(f"<li><b>{E(t)}</b><ul>" + "".join(f"<li>{E(x)}</li>" for x in xs) + "</ul></li>" for t, xs in steps)
-    calc_rows = [[f'{E(r["nazwa"])}<span class="note">{E(r["uwagi"])}</span>', f'{r["obciazenie"]:g} / {r["nosnosc"]:g} {E(r["jedn"])}', pill(r["wytezenie"])]
+    calc_rows = [[f'{E(r["nazwa"].replace("[INFO] ", ""))}<span class="note">{E(r["uwagi"])}</span>', f'{r["obciazenie"]:g} / {r["nosnosc"]:g} {E(r["jedn"])}',
+                  pill(r["wytezenie"], r["nazwa"].startswith("[INFO]"))]
                  for r in rows]
     bom_rows = [[f"<b>{E(b[0])}</b> {E(b[1])}<span class='note'>{E(b[3])} · {E(b[7])}</span>", b[2], E(b[4]), b[5]] for b in rd("lista_czesci.csv")]
     bolt_rows = [[E(a), E(b) + f'<span class="note">{E(d)}</span>', c] for a, b, c, d in rd("lista_srub.csv")]

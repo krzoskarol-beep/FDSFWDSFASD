@@ -79,6 +79,19 @@ ROWS = stal.calcs(V, mA, mB, SPR["F1_N"])
 
 def s5_extra_rows():
     rows = []
+    Pd = g.WHEEL_KG * g.G / 1000 * g.PHI * g.GAMMA_F             # kN, koło obliczeniowo
+    Fl = 0.3 * Pd                                                 # boczne pchnięcie opony
+    hg, tg, beff = 37.0, 3.0, 300.0                               # wys. półki nad siatką, grubość, współpracująca długość
+    sg_ = Fl * 1e3 * hg / (beff * tg ** 2 / 6)
+    rows.append(dict(nazwa="Prowadnica – kątownik 40×40×3 S235: zginanie półki pionowej od bocznego pchnięcia opony", obciazenie=round(sg_, 1),
+                     nosnosc=235.0, jedn="MPa", wytezenie=round(sg_ / 235, 3), uwagi="0,3 × koło obl. na wys. 37 mm, współpracuje ~300 mm półki"))
+    Ft = Fl * hg / 20.0
+    FtR = 0.9 * 800 * 36.6 / g.GM2 / 1e3
+    rows.append(dict(nazwa="Prowadnica – śruba M8 8.8 rozrywana (dźwignia 37/20 mm)", obciazenie=round(Ft, 2), nosnosc=round(FtR, 2), jedn="kN",
+                     wytezenie=round(Ft / FtR, 3), uwagi="cała siła boczna na jednej śrubie"))
+    rows.append(dict(nazwa="[INFO] Siatka – koło zamiast stopy (dlaczego są prowadnice)", obciazenie=round(Pd, 2),
+                     nosnosc=round(g.FOOT_KG * g.G / 1000 * g.PHI * g.GAMMA_F, 2), jedn="kN",
+                     wytezenie=round(Pd / (g.FOOT_KG * g.G / 1000 * g.PHI * g.GAMMA_F), 3), uwagi="siatka liczona na stopę 105 kg; koło to 2,6 × więcej"))
     Fs = SPR["F1_N"] * 1.3 * 1.5 / 1000
     cap = 2.5 * min(40 / 55.5, 1) * 470 * 18 * 2 / 1.25 / 1e3
     rows.append(dict(nazwa="Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk)", obciazenie=round(Fs * 72 / 50 / 2 + Fs / 2, 2),
@@ -290,7 +303,7 @@ def main():
                   [[r["nazwa"], r["obciazenie"], r["nosnosc"], r["jedn"], r["wytezenie"], r["uwagi"]] for r in ROWS])
         g.write_dxf()
         g.templates_pdf(os.path.join(OUT, "szablony_1do1_S5.pdf"))
-        worst = max(ROWS, key=lambda r: r["wytezenie"])
+        worst = max((r for r in ROWS if not r["nazwa"].startswith("[INFO]")), key=lambda r: r["wytezenie"])
         with PdfPages(os.path.join(OUT, "rysunki_trap_S5.pdf")) as pdf:
             g.page_text(pdf, "Trap STALOWY S5 – optymalnie lekki, chodnik z lewej, 2,5 × 0,74 m (bez spawania)", [
                 f"Masa trapu ok. {mA + mB:.0f} kg (A {mA:.0f} kg, B {mB:.0f} kg) + 3 wsporniki K ok. 5,8 kg. Podłoga {g.H_FLOOR:.0f} mm, kąt {g.ALPHA:.1f}°.",
