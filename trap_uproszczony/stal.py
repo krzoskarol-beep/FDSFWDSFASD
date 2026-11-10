@@ -71,7 +71,12 @@ _light = dict(lane=("RHS 100×40×2 S355J2H", rhs(40, 100, 2), 355, 470, "st_s35
 VARIANTS["S4"] = dict(nazwa="stal optymalna, pełna szerokość 1190 mm", n_walk=4, width=g.WIDTH, lane_mm=282, **_light)
 VARIANTS["S5"] = dict(nazwa="stal optymalna, chodnik tylko z lewej (szer. 740 mm)", n_walk=2, width=g.X_LANE_OUT + 20 + g.X_EDGE + 20,
                       lane_mm=282, eye_lever=32.0, **_light)
-VARIANTS["S6"] = dict(nazwa="stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm)", n_walk=2, n_lane=3,
+# S5 po odchudzeniu: chodnik 340 mm (C1 x=305, C2 x=465), pojedyncze płyty H/Z, tanie sprężyny Ø28 z osią M12 i tuleją Ø22×5
+S5_WALK, S5_EDGE = 305.0, 465.0
+VARIANTS["S5L"] = dict(nazwa="S5 lekki i tani: chodnik 340 mm, pojedyncze płyty zawiasów, sprężyny Ø28", n_walk=2,
+                       width=g.X_LANE_OUT + 20 + S5_EDGE + 20, edge_x=S5_EDGE, lane_mm=282, single_plates=True, spring_max=2500,
+                       eye_lever=34.0, eye_tube=(22, 12, "Ø22×5 + M12"), wspolne_delta=-60.0, **_light)
+VARIANTS["S6"] = dict(nazwa="stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm) – tylko opony do ~180 mm, NIE dla tylnej opony 240", n_walk=2, n_lane=3,
                       width=120 + g.X_EDGE - g.X_WALK + g.X_WALK + 20, lane_mm=222, **_light)
 RECOMMENDED = "S2"
 FY_PL = 235.0
@@ -85,7 +90,8 @@ def masses(v):
         return m, sum(i[0] * i[1] for i in items) / m, sum(i[0] * i[2] for i in items) / m
     lane, walk, cross = v["lane"][1], v["walk"][1], v["cross"][1]
     W = v["width"]
-    plates = [(4 * 200 * 80 * 6 * RHO_ST, 50.0, 60.0), (4 * 170 * 100 * 6 * RHO_ST, L - 55.0, -10.0),
+    npl = 2 if v.get("single_plates") else 4            # płyty H i Z: po 1 albo po 2 na rurę zewnętrzną
+    plates = [(npl * 200 * 80 * 6 * RHO_ST, 50.0, 60.0), (npl * 170 * 100 * 6 * RHO_ST, L - 55.0, -10.0),
               (2 * 150 * 80 * 8 * RHO_ST, 259.0, 25.0), (3.2, L / 2, 50.0)]
     nl = v.get("n_lane", 4)
     A = [(nl * lane["kgm"] * L / 1000, L / 2, 50.0), (v["n_walk"] * walk["kgm"] * L / 1000, L / 2, 50.0)]
@@ -100,7 +106,7 @@ def masses(v):
     B += [(cross["kgm"] * W / 1000, s, -g.CROSS_H / 2) for s in g.CROSS_B]
     B += [(40 * 5 * W * RHO_ST, g.TIE_B, -2.5), (W * L * 1e-6 * v["mesh"][1], L / 2, 101.5),
           (2 * v["guide"][1] * (g.GUIDE_B[1] - g.GUIDE_B[0]) / 1000, sum(g.GUIDE_B) / 2, 115.0),
-          (4 * 170 * 100 * 6 * RHO_ST + 0.26, 55.0, -10.0), (1.6, 500.0, 50.0)]
+          (npl * 170 * 100 * 6 * RHO_ST + (0.13 if npl == 2 else 0.26), 55.0, -10.0), (1.6, 500.0, 50.0)]
     return acc(A), acc(B)
 
 
@@ -114,10 +120,11 @@ def lift(mA, cA, mB, cB, F1, n):
         g.SPRING.update(old)
 
 
-def pick_springs(mA, cA, mB, cB):
-    """najmniejszy wysiłek przy: rozłożony leży na ziemi (moment w dół ≥ 60 N·m), w pionie nie pcha (< 60 N·m)"""
+def pick_springs(mA, cA, mB, cB, fmax_all=5000):
+    """najmniejszy wysiłek przy: rozłożony leży na ziemi (moment w dół ≥ 60 N·m), w pionie nie pcha (< 60 N·m);
+    fmax_all = 2500 -> tylko tanie sprężyny Ø28"""
     cands = []
-    for n, fmax in ((2, 5000), (4, 2500)):
+    for n, fmax in ((2, min(5000, fmax_all)), (4, 2500)):
         for F1 in range(1600, fmax + 1, 100):
             lt = lift(mA, cA, mB, cB, F1, n)
             mx, down, top = max(r["user_kg"] for r in lt), lt[0]["Tg"] + lt[0]["Ts"], lt[-1]["Tg"] + lt[-1]["Ts"]
@@ -149,18 +156,31 @@ def calcs(v, mA, mB, F1):
     t = lane["t"]
     add(f"Rura jezdna – ścianka górna {fmt(t)} mm pod oponą (zginanie poprzeczne)", Pd * 1e3 / 2 * 34 / 8 / (120 * t ** 2 / 6), lfy, "MPa",
         "pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami")
-    add(f"Poprzeczka {cn} – stopa na samej krawędzi", Fd * (g.X_EDGE - g.X_LANE_OUT) * 1e3 / cross["W"], cfy, "MPa", "")
+    add(f"Poprzeczka {cn} – stopa na samej krawędzi", Fd * (v.get("edge_x", g.X_EDGE) - g.X_LANE_OUT) * 1e3 / cross["W"], cfy, "MPa", "")
     add(f"Podłużnica chodnika {wn} – wspornik {g.L_SEC - g.CROSS_A[-1]:.0f} mm", Fd * (g.L_SEC - g.CROSS_A[-1]) * 1e3 / walk["W"], wfy, "MPa", "")
     F = M75 / 135.0
     Rb = math.hypot(F / 2 * 55 / 65, F / 4)
-    add("Zawias środkowy: sworzeń M20 8.8 – ścinanie", F / 2, 0.6 * 800 * math.pi * 100 / 1.25 / 1e3, "kN", "")
-    add("Zawias środkowy: śruba M12 8.8 – ścinanie", Rb, 0.6 * 800 * 84.3 / 1.25 / 1e3, "kN", "")
-    add(f"Zawias środkowy: tuleja Ø18 → ścianka rury {fmt(t)} mm (docisk)", Rb, 2.5 * min(45 / 55.5, 1) * lfu * 18 * t / 1.25 / 1e3, "kN", "")
+    if v.get("single_plates"):
+        # jedna płyta Z na zewnątrz rury: sworzeń jednocięty + zginanie, śruby M12 jednocięte, skręcanie rury od mimośrodu
+        add("Zawias środkowy: sworzeń Ø20 C45 – ścinanie (jedna płaszczyzna)", F / 2, 0.6 * 600 * math.pi * 100 / 1.25 / 1e3, "kN",
+            "jedna płyta Z na rurę, płyty A i B stykają się")
+        Mp = F / 2 * 1e3 * 6.0
+        add("Zawias środkowy: sworzeń Ø20 C45 – zginanie (ramię 6 mm)", Mp / (math.pi * 20 ** 3 / 32), 355.0, "MPa", "C45 ulepszana ≥ 355 MPa")
+        add("Zawias środkowy: śruba M12 8.8 – ścinanie (jednocięta)", 2 * Rb, 0.6 * 800 * 84.3 / 1.25 / 1e3, "kN", "jedna płyta Z")
+        add(f"Zawias środkowy: tuleja Ø18 → ścianka rury {fmt(t)} mm (docisk, 75 % na ściankę zewn.)", 1.5 * Rb,
+            2.5 * min(45 / 55.5, 1) * lfu * 18 * t / 1.25 / 1e3, "kN", "")
+        Tt = F / 2 * 1e3 * 23.0
+        add("Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (23 mm)", Tt / (2 * (100 - t) * (40 - t) * t) * math.sqrt(3), lfy, "MPa",
+            "naprężenie zastępcze od ścinania przy skręcaniu")
+    else:
+        add("Zawias środkowy: sworzeń M20 8.8 – ścinanie", F / 2, 0.6 * 800 * math.pi * 100 / 1.25 / 1e3, "kN", "")
+        add("Zawias środkowy: śruba M12 8.8 – ścinanie", Rb, 0.6 * 800 * 84.3 / 1.25 / 1e3, "kN", "")
+        add(f"Zawias środkowy: tuleja Ø18 → ścianka rury {fmt(t)} mm (docisk)", Rb, 2.5 * min(45 / 55.5, 1) * lfu * 18 * t / 1.25 / 1e3, "kN", "")
     Fpin = (mA + mB) * G * 0.8 * 1.5 / 1000 * 620.0 / 30.0 / 2
     add("Blokada do jazdy: sworzeń Ø12 8.8 / C45 – ścinanie", Fpin, 0.6 * 800 * math.pi * 36 / 1.25 / 1e3, "kN", f"trap w pionie {mA + mB:.0f} kg, hamowanie 0,8 g ×1,5")
     add("Blokada: docisk sworznia Ø12 w płycie H 6 mm", Fpin, 2.5 * min(25 / 39, 1) * 360 * 12 * 6 / 1.25 / 1e3, "kN", "")
     Fs = F1 * 1.3 * 1.5 / 1000
-    eye = (20, 12, "Ø20×4 + M12") if F1 <= 2500 else (25, 15, "Ø25×5 + M16")
+    eye = v.get("eye_tube") or ((20, 12, "Ø20×4 + M12") if F1 <= 2500 else (25, 15, "Ø25×5 + M16"))
     lev = v.get("eye_lever", 23.0)
     add(f"Oczko sprężyny: tuleja {eye[2]} – zginanie", Fs * 1e3 * lev / (math.pi * (eye[0] ** 4 - eye[1] ** 4) / (32 * eye[0])), FY_PL, "MPa",
         f"sprężyna {F1:.0f} N, ramię {lev:g} mm od blachy")
@@ -192,7 +212,8 @@ def cost(v, mA, mB, spr):
            ("Ochrona przed korozją", (mA + mB - 2 * W * L * 1e-6 * v["mesh"][1]) * c["cynk_ogniowy_kg"], "cynkowanie ogniowe po wierceniu"),
            ("Sprężyny gazowe", spr["sztuk"] * (c["sprezyna_40"] if spr["F1_N"] > 2500 else c["sprezyna_28"]),
             f"{spr['sztuk']} × {spr['F1_N']} N" + (" Ø40" if spr["F1_N"] > 2500 else " Ø28")),
-           ("Wspólne (płyty, wsporniki K, tuleje, śruby, sworznie, nity, zapięcia)", c["wspolne"] + 40, "sworznie blokady 8.8")]
+           ("Wspólne (płyty, wsporniki K, tuleje, śruby, sworznie, nity, zapięcia)", c["wspolne"] + 40 + v.get("wspolne_delta", 0.0),
+            "sworznie blokady 8.8" + ("; 6 płyt H/Z mniej, sworznie Ø20 z zawleczką" if v.get("single_plates") else ""))]
     return out
 
 
@@ -219,7 +240,7 @@ def main():
     for key, v in VARIANTS.items():
         (mA, cAs, cAz), (mB, cBs, cBz) = masses(v)
         l0 = lift(mA, (cAs, cAz), mB, (cBs, cBz), 0, 0)
-        spr, lt = pick_springs(mA, (cAs, cAz), mB, (cBs, cBz))
+        spr, lt = pick_springs(mA, (cAs, cAz), mB, (cBs, cBz), v.get("spring_max", 5000))
         rows = calcs(v, mA, mB, spr["F1_N"])
         cst = cost(v, mA, mB, spr)
         res[key] = dict(v=v, mA=mA, mB=mB, l0=max(r["user_kg"] for r in l0), spr=spr, lt=lt, rows=rows, cost=cst,

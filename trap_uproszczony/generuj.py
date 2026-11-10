@@ -81,6 +81,7 @@ K_PL = dict(a=100.0, t=10.0, L=130.0,
             holes_arm=[("pin", 40.0, -25.0, 21.0), ("blok", 70.0, -25.0, 13.0), ("sprez.", 30.0, -100.0, 13.0)],
             holes_beam=[("M12", 55.0, -30.0, 13.0), ("M12", 55.0, -60.0, 13.0)])
 TEMPL_NAME = "szablony_1do1_v2.pdf"
+SINGLE_PLATES = False          # True: płyty H i Z tylko po zewnętrznej stronie rury (wariant stalowy S5)
 SPRING = dict(F1=1600.0, L_ext=460.0, stroke=200.0, n=2, prog=0.30,
               eye_low=(30.0 - PIN_Y, -100.0 - PIN_Z),   # wzgledem osi zawiasu (y,z)
               eye_up_sz=(259.0, -22.0))                  # w ukladzie rury sekcji A
@@ -445,11 +446,11 @@ def plate_outline(kind):
     if kind == "H":
         p = H_PL
         holes = [(n, s - p["s0"], z - p["z0"], d) for (n, s, z, d) in p["holes"]]
-        return p["w"], p["h"], holes, "H – płyta zawiasu przy przyczepie, S235 6 mm, 4 szt."
+        return p["w"], p["h"], holes, f"H – płyta zawiasu przy przyczepie, S235 6 mm, {2 if SINGLE_PLATES else 4} szt."
     if kind == "Z":
         p = Z_PL
         holes = [(n, d - p["d0"], z - p["z0"], dd) for (n, d, z, dd) in p["holes"]]
-        return p["w"], p["h"], holes, "Z – płyta zawiasu środkowego, S235 6 mm, 8 szt."
+        return p["w"], p["h"], holes, f"Z – płyta zawiasu środkowego, S235 6 mm, {4 if SINGLE_PLATES else 8} szt."
     if kind == "S":
         p = S_PL
         holes = [(n, s - p["s0"], z - p["z0"], d) for (n, s, z, d) in p["holes"]]
@@ -674,9 +675,12 @@ def page_hinges(pdf):
     for (n, s, z, d) in H_PL["holes"]:
         ax.add_patch(Circle((s, z), d / 2, fill=False, ec="#c00000"))
         ax.text(s + d / 2 + 2, z - 4, f"{n} Ø{d:g}\ns={s:g}, z={z:g}", fontsize=6)
-    ax.text(-110, -75, "Na rurze L1: płyta H po OBU stronach (wewn. i zewn.), 2 × M12 + tuleje Ø18×2,5 dł. 40.\n"
-            "Sworzeń M20 (25 mm pod pokładem, 25 mm przed końcem rury) przechodzi:\nH wewn. – (pusto) – H zewn. – wspornik K.\n"
-            "Blokada Ø12 do jazdy: przez K i H zewn. (otwór „blok”).", fontsize=7, va="top")
+    ax.text(-110, -75, ("Na rurze L1: JEDNA płyta H po stronie zewnętrznej, 2 × M12×70 + tuleje Ø18×2,5 dł. 40.\n"
+             "Sworzeń Ø20×40 ISO 2341-B (25 mm pod pokładem, 25 mm przed końcem rury):\nH – wspornik K, podkładka + zawleczka.\n")
+            if SINGLE_PLATES else
+            ("Na rurze L1: płyta H po OBU stronach (wewn. i zewn.), 2 × M12 + tuleje Ø18×2,5 dł. 40.\n"
+             "Sworzeń M20 (25 mm pod pokładem, 25 mm przed końcem rury) przechodzi:\nH wewn. – (pusto) – H zewn. – wspornik K.\n")
+            + "Blokada Ø12 do jazdy: przez K i H zewn. (otwór „blok”).", fontsize=7, va="top")
     ax.set_xlim(-120, 320)
     ax.set_ylim(-170, 130)
     ax.set_aspect("equal")
@@ -694,10 +698,13 @@ def page_hinges(pdf):
             ax.add_patch(Circle((sg * d, z), dd / 2, fill=False, ec="#c00000"))
     for (n, d, z, dd) in Z_PL["holes"][1:]:
         ax.text(d - 10, z + 14, f"d={d:g}\nz={z:g}", fontsize=6)
-    ax.text(12, -40, "sworzeń M20\nd=0, z=−35", fontsize=6)
-    ax.text(-300, -75, "Płyty Z sekcji A: na ściankach rury L1 (wewn. + zewn.).\n"
+    ax.text(12, -40, "sworzeń Ø20\nd=0, z=−35", fontsize=6)
+    ax.text(-300, -75, ("Płyta Z sekcji A: JEDNA, na zewnętrznej ściance rury L1.\n"
+                        "Płyta Z sekcji B: na rurze L3 przez podkładkę 6 mm → leży NA ZEWNĄTRZ płyty A.\n"
+                        "Sworzeń Ø20×35 ISO 2341-B + podkładka + zawleczka (35 mm pod rurami), przez 2 płyty.\n") if SINGLE_PLATES else
+            ("Płyty Z sekcji A: na ściankach rury L1 (wewn. + zewn.).\n"
             "Płyty Z sekcji B: na rurze L3 przez podkładkę 6 mm → leżą NA ZEWNĄTRZ płyt A.\n"
-            "Sworzeń M20 (35 mm pod rurami) przechodzi przez 4 płyty.\n"
+            "Sworzeń M20 (35 mm pod rurami) przechodzi przez 4 płyty.\n") +
             "Rozłożony: górne krawędzie rur A i B STYKAJĄ SIĘ (przenoszą ściskanie).\n"
             "Składanie: B obraca się w dół, pod sekcję A.", fontsize=7, va="top")
     ax.set_xlim(-320, 320)

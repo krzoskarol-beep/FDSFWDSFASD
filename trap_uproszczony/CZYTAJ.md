@@ -197,3 +197,18 @@ Poprawka (V2 i S5):
 | – | **pręt Ø20** jako przyrząd przy przykręcaniu wsporników K | osie zawiasu przy przyczepie współosiowe |
 | – | **lista kontrolna** `lista_kontrolna_S5.pdf` | podpięta przyczepa, sworznie, pas, motocykl |
 | – | rury jezdne: atest 3.1 + żółte końce | nie pomylisz S355 z S235 |
+
+## S5 lekki i tani (aktualna wersja w `stal_S5/`)
+
+| | było | jest |
+|---|---|---|
+| szerokość / chodnik | 740 / 450 mm | **630 / 340 mm** (C1 x +305, C2 x +465) |
+| płyty zawiasów H i Z | po 2 na rurę (12 szt.) | **po 1 na rurę**, po stronie zewnętrznej (6 szt.) |
+| sworznie zawiasów | M20×110, nakrętka niedokręcona | **Ø20 ISO 2341-B + zawleczka** |
+| sprężyny gazowe | 2 × 2800 N Ø40, oś M16 | **2 × 2500 N Ø28**, oś M12 + tuleja Ø22×5 |
+| masa trapu | 90,4 kg | **83,3 kg** |
+| podnoszenie ze sprężynami | 20 kg | 20 kg |
+| koszt materiału z cynkiem | ok. 2530 zł | **ok. 2160 zł** |
+| największe wytężenie | 87 % (poprzeczka) | 82 % (rura jezdna, całe koło na jednej rurze) |
+
+Rury jezdne 100×40×2 S355 zostają – to one decydują o nośności. Wariant S6 (3 rury pod koło, pas 222 mm) jest lżejszy, ale NIE mieści tylnej opony 240 mm.

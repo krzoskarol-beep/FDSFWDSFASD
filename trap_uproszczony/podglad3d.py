@@ -312,9 +312,10 @@ def build(layout=None):
     def plate(grp, rect_, holes, xs, info, body_key):
         slab(M, grp, "sz", rect_, holes, xs[0], xs[1], M.mesh(body_key, grp, C_STEEL, "płyta", info))
 
+    SINGLE = Ly.get("single_plates", False)          # płyty H i Z tylko po zewnętrznej stronie rury (lżej, mniej części)
     w, h, phol, _ = g.plate_outline("H")
     for sg in (-1, 1):
-        for lay, (a, b) in (("wewn.", (XO - 46, XO - 40)), ("zewn.", (XO, XO + 6))):
+        for lay, (a, b) in ((("zewn.", (XO, XO + 6)),) if SINGLE else (("wewn.", (XO - 46, XO - 40)), ("zewn.", (XO, XO + 6)))):
             holes = []
             for (n, s, z, d), (_, pa, pb, _) in zip(g.H_PL["holes"], phol):
                 key = {"pin": f"Apin:tr:{sg}", "blok": f"Ablok:{sg}"}.get(n, f"Ah:{s:g}:{z:g}:{sg}")
@@ -328,6 +329,8 @@ def build(layout=None):
     for grp, s_of in (("A", lambda d: L - d), ("B", lambda d: d)):
         lays = (("wewn.", (XO - 46, XO - 40)), ("zewn.", (XO, XO + 6))) if grp == "A" else \
                (("wewn.", (XO - 52, XO - 46)), ("zewn.", (XO + 6, XO + 12)))
+        if SINGLE:
+            lays = lays[1:]
         for sg in (-1, 1):
             for lay, (a, b) in lays:
                 holes = []
@@ -361,8 +364,9 @@ def build(layout=None):
     for sg in (-1, 1):
         for (n, s, z, d) in g.H_PL["holes"]:
             if n == "M12":
-                m12_through_tube("A", s, z, sg, XO - 46, 52, 80, f"śruba M12×80 8.8 + 2 podkładki + nakrętka samohamowna\n"
-                                 f"płyta H – rura {pid_at[('A', sg * g.X_LANE_OUT)]} – płyta H, s={fmt(s)} od przyczepy, z={fmt(z)}\n"
+                m12_through_tube("A", s, z, sg, XO - (40 if SINGLE else 46), 46 if SINGLE else 52, 70 if SINGLE else 80,
+                                 f"śruba M12×{70 if SINGLE else 80} 8.8 + 2 podkładki + nakrętka samohamowna\n"
+                                 f"{'' if SINGLE else 'płyta H – '}rura {pid_at[('A', sg * g.X_LANE_OUT)]} – płyta H, s={fmt(s)} od przyczepy, z={fmt(z)}\n"
                                  "tuleja Ø18×2,5 dł. 40", f"Ah:{s:g}:{z:g}:{sg}")
                 cyl("x", s, z, sg * (XO - 40), sg * XO, 9.0, M.mesh("A:tul40", "A", C_SLEEVE, "tuleja", "tuleje Ø18×2,5 dł. 40 (M12)"), 14)
         for grp, s_of in (("A", lambda d: L - d), ("B", lambda d: d)):
@@ -371,26 +375,40 @@ def build(layout=None):
                     continue
                 s = s_of(d_)
                 if grp == "A":
-                    m12_through_tube("A", s, z, sg, XO - 46, 52, 80, f"śruba M12×80 8.8 + 2 podkładki + nakrętka samohamowna\n"
-                                     f"płyta Z – rura {pid_at[('A', sg * g.X_LANE_OUT)]} – płyta Z, s={fmt(s)} od przyczepy, z={fmt(z)}\n"
+                    m12_through_tube("A", s, z, sg, XO - (40 if SINGLE else 46), 46 if SINGLE else 52, 70 if SINGLE else 80,
+                                     f"śruba M12×{70 if SINGLE else 80} 8.8 + 2 podkładki + nakrętka samohamowna\n"
+                                     f"{'' if SINGLE else 'płyta Z – '}rura {pid_at[('A', sg * g.X_LANE_OUT)]} – płyta Z, s={fmt(s)} od przyczepy, z={fmt(z)}\n"
                                      "tuleja Ø18×2,5 dł. 40", f"Ah:{s:g}:{z:g}:{sg}")
                 else:
-                    m12_through_tube("B", s, z, sg, XO - 52, 64, 90, f"śruba M12×90 8.8 + 2 podkładki + nakrętka samohamowna\n"
-                                     f"płyta Z – podkładka 6 mm – rura L3 – podkładka 6 mm – płyta Z, s={fmt(s)} od zawiasu, z={fmt(z)}\n"
+                    m12_through_tube("B", s, z, sg, XO - (40 if SINGLE else 52), 52 if SINGLE else 64, 80 if SINGLE else 90,
+                                     f"śruba M12×{80 if SINGLE else 90} 8.8 + 2 podkładki + nakrętka samohamowna\n"
+                                     + ("rura L3 – podkładka 6 mm – płyta Z" if SINGLE else "płyta Z – podkładka 6 mm – rura L3 – podkładka 6 mm – płyta Z")
+                                     + f", s={fmt(s)} od zawiasu, z={fmt(z)}\n"
                                      f"tuleja Ø18×2,5 dł. 40", f"Bh:{s:g}:{z:g}:{sg}")
                     wsh = M.mesh(f"B:pk6:{s:g}:{sg}", "B", C_BOLT, "śruba", "podkładka dystansowa DIN 7349 M12 (13×30×6)")
-                    cyl("x", s, z, sg * (XO - 46), sg * (XO - 40), 15.0, wsh, 18)
+                    if not SINGLE:
+                        cyl("x", s, z, sg * (XO - 46), sg * (XO - 40), 15.0, wsh, 18)
                     cyl("x", s, z, sg * XO, sg * (XO + 6), 15.0, wsh, 18)
                 cyl("x", s, z, sg * (XO - 40), sg * XO, 9.0, M.mesh(f"{grp}:tul40", grp, C_SLEEVE, "tuleja", "tuleje Ø18×2,5 dł. 40 (M12)"), 14)
         # sworzeń zawiasu przy przyczepie
-        b = M.mesh(f"A:pinTr:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu przy przyczepie: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
-                   "H wewn. – (pusto) – H zewn. – wspornik K; podkładki + nakrętka samohamowna NIEDOKRĘCONA (ma się obracać)\n"
-                   "25 mm przed końcem rury, 25 mm pod pokładem")
-        bolt(b, "x", -25.0, 75.0, sg * (XO - 46), sg, 110, 20, 63)
+        if SINGLE:
+            b = M.mesh(f"A:pinTr:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu przy przyczepie: ISO 2341-B Ø20×40 (stal C45 / 8.8)\n"
+                       "płyta H – wspornik K; podkładka + ZAWLECZKA (nic nie dokręcasz)\n25 mm przed końcem rury, 25 mm pod pokładem")
+            bolt(b, "x", -25.0, 75.0, sg * XO, sg, 40, 20, 17)
+        else:
+            b = M.mesh(f"A:pinTr:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu przy przyczepie: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
+                       "H wewn. – (pusto) – H zewn. – wspornik K; podkładki + nakrętka samohamowna NIEDOKRĘCONA (ma się obracać)\n"
+                       "25 mm przed końcem rury, 25 mm pod pokładem")
+            bolt(b, "x", -25.0, 75.0, sg * (XO - 46), sg, 110, 20, 63)
         M.bolt_axes += [(f"Apin:tr:{sg}", "M20"), (f"Tpin:zawias:{sg}", "M20")]
-        b = M.mesh(f"A:pinMid:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu środkowego: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
-                   "Z(B) – Z(A) – (pod rurą) – Z(A) – Z(B); nakrętka samohamowna NIEDOKRĘCONA\n35 mm pod spodem rur, na styku rur")
-        bolt(b, "x", L, -35.0, sg * (XO - 52), sg, 110, 20, 64)
+        if SINGLE:
+            b = M.mesh(f"A:pinMid:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu środkowego: ISO 2341-B Ø20×35 (stal C45 / 8.8)\n"
+                       "płyta Z(A) – płyta Z(B); podkładka + ZAWLECZKA\n35 mm pod spodem rur, na styku rur")
+            bolt(b, "x", L, -35.0, sg * XO, sg, 35, 20, 12)
+        else:
+            b = M.mesh(f"A:pinMid:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu środkowego: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
+                       "Z(B) – Z(A) – (pod rurą) – Z(A) – Z(B); nakrętka samohamowna NIEDOKRĘCONA\n35 mm pod spodem rur, na styku rur")
+            bolt(b, "x", L, -35.0, sg * (XO - 52), sg, 110, 20, 64)
         M.bolt_axes.append((f"pin:mid:{sg}", "M20"))
     eye = Ly["eye"]
     for sp in Ly["s_plates"]:

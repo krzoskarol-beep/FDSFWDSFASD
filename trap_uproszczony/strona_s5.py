@@ -25,9 +25,9 @@ def rd(name):
         return list(csv.reader(f, delimiter=";"))[1:]
 
 
-BODY = r"""<h1>Trap stalowy 2,5 × 0,74 m – optymalnie lekki, chodnik z lewej (S5)</h1>
+BODY = r"""<h1>Trap stalowy 2,5 × 0,63 m – lekki i tani, chodnik z lewej (S5)</h1>
 <p class="lede">Wszystko skręcane, bez spawania. 4 rury pod koło 100×40×2 ze stali S355, chodnik tylko po lewej stronie (od strony stopki – stąd pchasz motocykl),
-poprzeczki i siatka 740 mm. Model pokazuje każdy otwór, śrubę, tuleję i sworzeń dokładnie w miejscu z tabel otworów. Kliknij element, otwór albo śrubę, żeby zobaczyć wymiary.</p>
+chodnik 340 mm, poprzeczki i siatka 630 mm. Model pokazuje każdy otwór, śrubę, tuleję i sworzeń dokładnie w miejscu z tabel otworów. Kliknij element, otwór albo śrubę, żeby zobaczyć wymiary.</p>
 <div id="stage"><div class="hint" id="hint">Wczytuję model…</div><div id="tip"></div>
   <div id="info" role="dialog" aria-live="polite"><button class="x" id="ix" aria-label="Zamknij opis">✕</button><b id="it"></b><span id="ib"></span></div></div>
 <div class="bar">
@@ -48,6 +48,10 @@ poprzeczki i siatka 740 mm. Model pokazuje każdy otwór, śrubę, tuleję i swo
 <span><i style="background:#b04a3a"></i>wsporniki K</span><span><i style="background:#e01b1b"></i>otwory</span><span><i style="background:#a9afb6"></i>śruby</span><span><i style="background:#d4b030"></i>tuleje</span></div>
 <h2>W liczbach</h2>
 <div class="kv">%KV%</div>
+<h2>Odchudzenie i tańsze części</h2>
+<div class="card">%OPT%
+<p class="note">Rury jezdne zostają 100×40×2 S355 – pod oponą o śladzie ~100 mm całe tylne koło może stanąć na jednej rurze (82 %), więc tu nie da się ująć bez utraty zapasu.
+Poprzeczka przy węższym chodniku pracuje lżej (66 % zamiast 87 %). Pojedyncza płyta zawiasu: śruba M12 jednocięta 67 %, skręcanie rury 8 %.</p></div>
 <h2>Co zmieniłem, żeby stal była lekka</h2>
 <div class="card">%CMP%
 <p class="note">Lewa strona = patrząc od ziemi na przyczepę. Prawa rura jezdna jest krawędzią trapu – prowadnica nad nią trzyma koło, a przy prowadzeniu stoisz po lewej, na chodniku.
@@ -56,10 +60,10 @@ Pas koła (282 mm między prowadnicami) jest w osi przyczepy, tak jak w wersji a
 <div class="card"><p style="margin:0 0 8px">Pokład ma dwie strefy o różnej nośności: <b>pas koła</b> (4 rury S355, 282 mm między prowadnicami) i <b>siatkę</b> poza nim,
 liczoną tylko na stopę (105 kg). Koło obliczeniowo daje 6,0 kN, stopa 2,3 kN – 2,6 raza mniej. Prowadnice to <b>krawężniki</b>, które fizycznie trzymają koło na pasie, który je udźwignie:</p>
 <ul><li><b>Prawa</b> stoi na krawędzi trapu (nad prawą rurą L1). Bez niej koło zsuwa się z trapu nawet z wysokości 455 mm – motocykl przewraca się.</li>
-<li><b>Lewa</b> oddziela koło od siatki chodnika (przęsło 180 mm między lewą rurą L1 a C1) i od Twoich stóp.</li>
+<li><b>Lewa</b> oddziela koło od siatki chodnika (przęsło 140 mm między lewą rurą L1 a C1) i od Twoich stóp.</li>
 <li>Pchasz 350 kg pod górę z boku i nie widzisz koła – prowadnice korygują tor bez Twojej siły.</li>
 <li>Przy okazji dociskają siatkę do rur jezdnych (śruby M8 przez rurę z tuleją).</li></ul>
-<p class="note">Wysokość 37 mm nad siatką łapie bok opony (opona 120–190 mm, luz 45–80 mm na stronę), a jest za niska, żeby zaczepić podnóżek lub stopkę i da się ją przekroczyć.
+<p class="note">Wysokość 37 mm nad siatką łapie bok opony (opona do 240 mm – np. tylna Fat Boya – luz min. 21 mm na stronę), a jest za niska, żeby zaczepić podnóżek lub stopkę i da się ją przekroczyć.
 G1 zaczyna się 150 mm od przyczepy: w pozycji do jazdy pokład stoi 15 mm za krawędzią podłogi, a góra prowadnicy wchodzi 28 mm nad podłogę – przy s = 0 zahaczałaby o krawędź podłogi.
 G2 kończy się 530 mm przed ziemią, gdzie trap jest już tylko ~100 mm nad ziemią: to strefa wjazdu – koło ustawiasz swobodnie, zanim wejdzie między prowadnice.</p></div>
 <h2>Siła przy podnoszeniu i opuszczaniu</h2><div class="card">%CHART%
@@ -79,7 +83,7 @@ Obie rury L1 są identyczne – nie da się ich zamienić.</p></div>
 gdy sworznie Ø12 zostaną w kieszeni (wytężenie 21 %). Do wydruku: stal_S5/lista_kontrolna_S5.pdf.</p></div>
 <h2>Części</h2><div class="card">%BOM%</div>
 <h2>Śruby, sworznie, tuleje</h2><div class="card">%BOLTS%
-<p class="note">8.8 ocynk z podkładkami, nakrętki samohamowne. M8 20 N·m, M12 40 N·m, M16 60 N·m. Sworzni M20 nie dokręcaj na sztywno – mają się obracać.</p></div>
+<p class="note">8.8 ocynk z podkładkami, nakrętki samohamowne. M8 20 N·m, M12 40 N·m. Sworznie zawiasów Ø20 z podkładką i zawleczką – nic nie dokręcasz.</p></div>
 <h2>Otwory – miejsca wiercenia (%NHOLES%)</h2><div class="card" id="holes">%HOLES%
 <p class="note">s – od końca sekcji (A: przy przyczepie, B: przy zawiasie środkowym), x – od osi pasa koła (x &gt; 0 = lewa, chodnik), z – od spodu rury.
 Otwór przechodzący przez kilka części wierć razem albo przez płytę jako szablon. Model sprawdza, że każda śruba przechodzi przez otwory we wszystkich częściach, bez kolizji z materiałem.</p></div>
@@ -98,25 +102,36 @@ def main():
     worst = max((r for r in rows if not r["nazwa"].startswith("[INFO]")), key=lambda r: r["wytezenie"])
     kinds = dict(M.bolt_axes)
     n_holes, n_join = len(M.hole_dia), len(M.bolt_axes)
-    cost = next(x for x in json.load(open(os.path.join(s5.HERE, "stal_dane.json"), encoding="utf-8"))["warianty"]
-                if x["klucz"] == "S5")["koszt"]
-    sp_txt = f"2 × {spr['F1_N']} N (Ø40)"
-    kv = [("2,5 × 0,74 m", "trap rozłożony, 2 sekcje po 1,25 m"),
-          (f"~{mA + mB:.0f} kg", f"trap (A {mA:.0f} kg, B {mB:.0f} kg) + 3 wsporniki K 5,8 kg"),
+    cost = round(sum(c[1] for c in stal.cost(s5.V, mA, mB, spr)))
+    v_old = stal.VARIANTS["S5"]
+    (oA, oAs, oAz), (oB, oBs, oBz) = stal.masses(v_old)
+    o_spr, _ = stal.pick_springs(oA, (oAs, oAz), oB, (oBs, oBz))
+    o_cost = round(sum(c[1] for c in stal.cost(v_old, oA, oB, o_spr)))
+    sp_txt = f"2 × {spr['F1_N']} N (Ø28)"
+    kv = [(f"2,5 × {s5.WID / 1000:.2f} m".replace(".", ","), "trap rozłożony, 2 sekcje po 1,25 m"),
+          (f"~{mA + mB:.0f} kg", f"trap (A {mA:.0f} kg, B {mB:.0f} kg); było {oA + oB:.0f} kg"),
           (f"~{max(r['user_kg'] for r in lift0):.0f} kg", f"podnoszenie bez sprężyn; ze sprężynami {spr['max_wysilek_kg']:.0f} kg"),
           (f"{g.ALPHA:.1f}°".replace(".", ","), f"kąt przy podłodze {g.H_FLOOR / 10:.0f} cm"),
           (f"{worst['wytezenie'] * 100:.0f}%", "najbardziej obciążona część"),
           (f"{n_holes} / {n_join}", "otwory / złącza w modelu, 0 kolizji"),
-          (f"~{cost} zł", "materiał z cynkowaniem")]
+          (f"~{cost} zł", f"materiał z cynkowaniem; było {o_cost} zł")]
     kv_html = "".join(f"<div><b>{E(a)}</b><span>{E(b)}</span></div>" for a, b in kv)
-    cmp_rows = [["szerokość", "1190 mm, chodnik po obu stronach", "740 mm, chodnik tylko z lewej"],
+    opt_rows = [["szerokość / chodnik", "740 mm / 450 mm", f"{s5.WID:.0f} mm / 340 mm (C1 x +{s5.XW:.0f}, C2 x +{s5.XE:.0f})"],
+                ["płyty zawiasów H i Z", "po 2 na rurę (12 szt.)", "po 1 na rurę, z zewnątrz (6 szt.)"],
+                ["sworznie zawiasów", "M20×110, nakrętka niedokręcona", "Ø20 ISO 2341-B + zawleczka (krótsze, nic nie regulujesz)"],
+                ["sprężyny gazowe", f"2 × {o_spr['F1_N']} N Ø40, oś M16 (ok. 460 zł)", f"{sp_txt}, oś M12 (ok. 180 zł)"],
+                ["masa trapu", f"{oA + oB:.1f} kg".replace(".", ","), f"{mA + mB:.1f} kg".replace(".", ",")],
+                ["podnoszenie ze sprężynami", f"{o_spr['max_wysilek_kg']:.0f} kg", f"{spr['max_wysilek_kg']:.0f} kg"],
+                ["koszt materiału z cynkiem", f"{o_cost} zł", f"{cost} zł"],
+                ["najbardziej obciążona część", "87 % (poprzeczka)", f"{worst['wytezenie'] * 100:.0f} % (rura jezdna, całe koło na jednej rurze)"]]
+    cmp_rows = [["szerokość", "1190 mm, chodnik po obu stronach", f"{s5.WID:.0f} mm, chodnik 340 mm tylko z lewej"],
                 ["rury jezdne (4 szt.)", "100×40×3 Al 6082-T6", "100×40×2 stal S355J2H"],
                 ["podłużnice chodnika", "4 na sekcję, 100×40×2 Al", "2 na sekcję, 100×40×1,5 stal S235"],
                 ["poprzeczki / prowadnice", "60×40×4 Al (na płasko) / kątownik 40×40×4 Al", "60×40×2 stal / kątownik 40×40×3 stal"],
-                ["siatka", "Al, 1190 × 2500", "stal ocynk ~4 kg/m², 740 × 2500 (1 arkusz)"],
-                ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M16; prawa na prawej rurze jezdnej L1"],
+                ["siatka", "Al, 1190 × 2500", f"stal ocynk ~4 kg/m², {s5.WID:.0f} × 2500 (1 arkusz)"],
+                ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M12; prawa na prawej rurze jezdnej L1"],
                 ["wsporniki K na belce", "4", "3 (prawy zawiasowy trzyma też sprężynę)"],
-                ["masa", "~72 kg", f"~{mA + mB:.0f} kg (stal z pełną szerokością: 150 kg grube ścianki / ~118 kg cienkie)"]]
+                ["masa", "~67 kg", f"~{mA + mB:.0f} kg (stal na pełną szerokość: 150 kg grube ścianki / 114 kg cienkie)"]]
     steps = s5.STEPS
     steps_html = "".join(f"<li><b>{E(t)}</b><ul>" + "".join(f"<li>{E(x)}</li>" for x in xs) + "</ul></li>" for t, xs in steps)
     calc_rows = [[f'{E(r["nazwa"].replace("[INFO] ", ""))}<span class="note">{E(r["uwagi"])}</span>', f'{r["obciazenie"]:g} / {r["nosnosc"]:g} {E(r["jedn"])}',
@@ -128,7 +143,7 @@ def main():
                  for i, k in enumerate(sorted(M.hole_dia, key=lambda k: (M.hole_txt[k][0])), 1)]
     buy_rows = [[E(a), E(b), E(c)] for a, b, c in rd("lista_zakupow.csv") if a]
     page = HEAD + BODY + TAIL
-    for k, v in {"%KV%": kv_html, "%CMP%": table(["", "aluminium V2", "stal S5"], cmp_rows), "%CHART%": chart(lift, lift0), "%SPR%": E(sp_txt),
+    for k, v in {"%KV%": kv_html, "%CMP%": table(["", "aluminium V2", "stal S5"], cmp_rows), "%CHART%": chart(lift, lift0), "%OPT%": table(["", "było (S5)", "jest (S5 lekki i tani)"], opt_rows), "%SPR%": E(sp_txt),
                  "%CALC%": table(["Sprawdzenie", "Obciążenie / nośność", "Wytężenie"], calc_rows, (1, 2)), "%WORST%": E(worst["nazwa"]),
                  "%STEPS%": steps_html, "%BOM%": table(["Część", "Szt.", "Wymiar [mm]", "kg/szt."], bom_rows, (1, 3)),
                  "%BOLTS%": table(["Rozmiar", "Rodzaj / gdzie", "Szt."], bolt_rows, (2,)),

@@ -86,8 +86,19 @@
    "rysunki": "bez zmian"
   },
   {
+   "klucz": "S5L",
+   "nazwa": "S5 lekki i tani: chodnik 340 mm, pojedyncze płyty zawiasów, sprężyny Ø28",
+   "masa": 83.3,
+   "bez": 45.7,
+   "sprezyny": "2 × 2500 N (Ø28)",
+   "ze": 19.6,
+   "koszt": 2164,
+   "wyt": 0.817,
+   "rysunki": "bez zmian"
+  },
+  {
    "klucz": "S6",
-   "nazwa": "stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm)",
+   "nazwa": "stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm) – tylko opony do ~180 mm, NIE dla tylnej opony 240",
    "masa": 80.3,
    "bez": 44.7,
    "sprezyny": "2 × 2500 N (Ø28)",
