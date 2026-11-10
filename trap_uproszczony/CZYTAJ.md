@@ -13,6 +13,10 @@ To nadal trap pod motocykl do 350 kg z kierowcą (koło 273 kg). Ma dwie sekcje 
 | `DXF/` | Te same płyty w DXF, gdybyś jednak zamawiał cięcie laserem |
 | `lista_czesci.csv`, `lista_srub.csv`, `lista_zakupow.csv` | Listy części, śrub i tulei oraz zakupów |
 | `obliczenia.csv`, `trap_v2_dane.json` | Wszystkie kontrole wytrzymałości, masy i tabela podnoszenia |
+| `podglad_3d.html` | **Podgląd 3D.** Otwórz w przeglądarce (działa bez internetu). Suwak i przycisk „▶ Składanie” pokazują, jak trap składa się do jazdy. Po najechaniu na element widać jego nazwę |
+| `trap_v2_rozlozony.glb`, `trap_v2_do_jazdy.glb` | Model 3D do innych programów (Windows 3D Viewer, Blender, telefon) |
+| `podglad_*.png` | Zrzuty ekranu z podglądu 3D |
+| `podglad3d.py` | Skrypt podglądu 3D. Bierze wymiary z `generuj.py` (`pip install trimesh`, `python3 podglad3d.py`) |
 | `generuj.py` | Skrypt, który to wszystko liczy i rysuje. Na górze są parametry: wysokość podłogi, rozstawy, obciążenia. Uruchomienie: `pip install matplotlib ezdxf` i `python3 generuj.py` |
 
 ## Co było nie tak / za trudne w poprzedniej wersji
