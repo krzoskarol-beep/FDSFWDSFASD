@@ -2,6 +2,7 @@ package pl.gps.pozycja;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Insets;
+import android.hardware.GeomagneticField;
 import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -22,9 +24,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.text.InputType;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +65,31 @@ public class MainActivity extends Activity {
     private TextView accuracy, altitude, speed, bearing, satellites, provider, fixTime;
     private Button actionButton;
 
+    // --- Gdzie zaparkowałem?
+    /** Akcja skrótu na ikonie aplikacji (res/xml/shortcuts.xml). */
+    static final String ACTION_SAVE_PARKING = "pl.gps.pozycja.SAVE_PARKING";
+    /** Pozycja starsza niż tyle jest przy zapisie oznaczana jako nieaktualna. */
+    private static final long SAVE_STALE_MS = 30_000;
+    /** Powyżej tej niedokładności ostrzegamy przy zapisie. */
+    private static final float SAVE_LOW_ACCURACY_M = 50f;
+
+    private ParkingStore parkingStore;
+    private ParkingStore.Spot spot;
+    private Compass compass;
+    /** Azymut z kompasu względem północy magnetycznej; null, dopóki brak odczytu. */
+    private Float compassAzimuth;
+    private boolean compassNeedsCalibration;
+    /** Deklinacja magnetyczna: różnica między północą magnetyczną a geograficzną. */
+    private float declination;
+    /** Zapis zlecony (np. ze skrótu), zanim była aktualna pozycja. */
+    private boolean pendingSave;
+    private AlertDialog openDialog;
+
+    private View parkingEmpty, parkingSaved;
+    private ArrowView parkingArrow;
+    private TextView parkingDistance, parkingDirection, parkingCompassHint;
+    private TextView parkingNote, parkingSavedAt, parkingSavedAccuracy;
+
     // ------------------------------------------------------------------ cykl życia
 
     @Override
@@ -85,11 +116,66 @@ public class MainActivity extends Activity {
         findViewById(R.id.btnCopy).setOnClickListener(v -> copyCoordinates());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareCoordinates());
 
+        parkingEmpty = findViewById(R.id.parkingEmpty);
+        parkingSaved = findViewById(R.id.parkingSaved);
+        parkingArrow = findViewById(R.id.parkingArrow);
+        parkingDistance = findViewById(R.id.parkingDistance);
+        parkingDirection = findViewById(R.id.parkingDirection);
+        parkingCompassHint = findViewById(R.id.parkingCompassHint);
+        parkingNote = findViewById(R.id.parkingNote);
+        parkingSavedAt = findViewById(R.id.parkingSavedAt);
+        parkingSavedAccuracy = findViewById(R.id.parkingSavedAccuracy);
+
+        findViewById(R.id.btnSaveParking).setOnClickListener(v -> showSaveParkingDialog());
+        findViewById(R.id.btnSaveHere).setOnClickListener(v -> showSaveParkingDialog());
+        findViewById(R.id.btnNavigate).setOnClickListener(v -> navigateToCar());
+        findViewById(R.id.btnDeleteParking).setOnClickListener(v -> confirmDeleteParking());
+
+        parkingStore = new ParkingStore(this);
+        spot = parkingStore.load();
+        compass = new Compass(this, new Compass.Listener() {
+            @Override
+            public void onAzimuthChanged(float azimuthDegrees) {
+                compassAzimuth = azimuthDegrees;
+                updateParkingDirection();
+            }
+
+            @Override
+            public void onCalibrationChanged(boolean needsCalibration) {
+                compassNeedsCalibration = needsCalibration;
+                updateParkingDirection();
+            }
+        });
+
         applySystemBarInsets(findViewById(R.id.root));
 
+        if (savedInstanceState == null) {
+            handleIntent(getIntent());
+        }
         if (!hasAnyLocationPermission()) {
             requestLocationPermission();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent != null && ACTION_SAVE_PARKING.equals(intent.getAction())) {
+            // Ze skrótu: zapisz, gdy tylko będzie aktualna pozycja.
+            pendingSave = true;
+            Toast.makeText(this, R.string.parking_waiting_for_fix, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (openDialog != null) openDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override
@@ -102,6 +188,7 @@ public class MainActivity extends Activity {
             registerReceiver(providersChanged, filter);
         }
         refreshState();
+        showParking();
         handler.post(ticker);
     }
 
@@ -111,6 +198,7 @@ public class MainActivity extends Activity {
         unregisterReceiver(providersChanged);
         handler.removeCallbacks(ticker);
         stopUpdates();
+        compass.stop();
     }
 
     // ------------------------------------------------------------------ uprawnienia
@@ -275,6 +363,7 @@ public class MainActivity extends Activity {
                 updateStatus();
                 updateFixTime();
             }
+            updateParkingSavedAt();
             handler.postDelayed(this, 1000);
         }
     };
@@ -350,6 +439,11 @@ public class MainActivity extends Activity {
         if (satellitesVisible < 0) satellites.setText("—");
         provider.setText(providerName(l.getProvider()));
         updateFixTime();
+
+        declination = new GeomagneticField((float) l.getLatitude(), (float) l.getLongitude(),
+                (float) l.getAltitude(), System.currentTimeMillis()).getDeclination();
+        updateParkingDirection();
+        checkPendingSave();
     }
 
     private void updateFixTime() {
@@ -363,6 +457,171 @@ public class MainActivity extends Activity {
         if (LocationManager.NETWORK_PROVIDER.equals(p)) return "Sieć (Wi‑Fi / BTS)";
         if ("fused".equals(p)) return "Połączone (GPS + sieć)";
         return p == null ? "—" : p;
+    }
+
+    // ------------------------------------------------------------------ gdzie zaparkowałem?
+
+    /** Pokazuje kartę „Mój samochód” zgodnie z tym, czy miejsce jest zapisane. */
+    private void showParking() {
+        boolean saved = spot != null;
+        parkingEmpty.setVisibility(saved ? View.GONE : View.VISIBLE);
+        parkingSaved.setVisibility(saved ? View.VISIBLE : View.GONE);
+        if (!saved) {
+            compass.stop();
+            return;
+        }
+        compass.start();
+
+        parkingNote.setText(spot.note);
+        parkingNote.setVisibility(spot.note.isEmpty() ? View.GONE : View.VISIBLE);
+        parkingSavedAccuracy.setText(spot.accuracy > 0
+                ? getString(R.string.parking_saved_accuracy, Math.round(spot.accuracy)) : "");
+        updateParkingSavedAt();
+        updateParkingDirection();
+    }
+
+    private void updateParkingSavedAt() {
+        if (spot == null) return;
+        Date when = new Date(spot.savedAt);
+        String clock = DateUtils.isToday(spot.savedAt)
+                ? "o " + DateFormat.getTimeInstance(DateFormat.SHORT).format(when)
+                : DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(when);
+        long age = System.currentTimeMillis() - spot.savedAt;
+        parkingSavedAt.setText(getString(R.string.parking_saved_at, clock, Formatters.formatAge(age)));
+    }
+
+    /** Odległość, kierunek i strzałka do auta. Wołane przy każdej nowej pozycji i odczycie kompasu. */
+    private void updateParkingDirection() {
+        if (spot == null) return;
+
+        if (!compass.isAvailable()) {
+            parkingCompassHint.setText(R.string.parking_hint_no_compass);
+            parkingCompassHint.setTextColor(getColor(R.color.text_secondary));
+        } else if (compassNeedsCalibration) {
+            parkingCompassHint.setText(R.string.parking_hint_calibrate);
+            parkingCompassHint.setTextColor(getColor(R.color.warn));
+        } else {
+            parkingCompassHint.setText(R.string.parking_hint_compass);
+            parkingCompassHint.setTextColor(getColor(R.color.text_secondary));
+        }
+
+        if (best == null) {
+            parkingDistance.setText("—");
+            parkingDirection.setText(R.string.parking_waiting_position);
+            parkingArrow.setArrived(false);
+            parkingArrow.hideArrow();
+            return;
+        }
+
+        double lat = best.getLatitude(), lon = best.getLongitude();
+        double distance = Geo.distanceMeters(lat, lon, spot.latitude, spot.longitude);
+        double bearingToCar = Geo.bearingDegrees(lat, lon, spot.latitude, spot.longitude);
+        parkingDistance.setText(Formatters.formatDistance(distance));
+
+        // „Na miejscu”, gdy auto jest bliżej niż dokładność GPS (ale 10–30 m).
+        float arriveRadius = Math.max(10f, Math.min(30f, best.hasAccuracy() ? best.getAccuracy() : 30f));
+        if (distance <= arriveRadius) {
+            parkingDirection.setText(R.string.parking_arrived);
+            parkingArrow.setArrived(true);
+            return;
+        }
+        parkingArrow.setArrived(false);
+        parkingDirection.setText(getString(R.string.parking_direction,
+                Formatters.compassDirection((float) bearingToCar), Math.round(bearingToCar) % 360));
+
+        if (compassAzimuth != null) {
+            // Kompas wskazuje północ magnetyczną, a kierunek do auta liczymy od geograficznej.
+            float heading = compassAzimuth + declination;
+            parkingArrow.setAngle((float) Geo.normalizeDegrees(bearingToCar - heading));
+        } else {
+            parkingArrow.setAngle((float) bearingToCar); // góra ekranu = północ
+        }
+    }
+
+    private void checkPendingSave() {
+        if (pendingSave && best != null && ageMs(best) <= FRESH_MS
+                && (openDialog == null || !openDialog.isShowing())) {
+            pendingSave = false;
+            showSaveParkingDialog();
+        }
+    }
+
+    private void showSaveParkingDialog() {
+        if (best == null) {
+            pendingSave = true;
+            Toast.makeText(this, R.string.parking_waiting_for_fix, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        StringBuilder msg = new StringBuilder();
+        if (spot != null) msg.append(getString(R.string.parking_dialog_replace));
+        long age = ageMs(best);
+        if (age > SAVE_STALE_MS) {
+            if (msg.length() > 0) msg.append("\n\n");
+            msg.append(getString(R.string.parking_dialog_stale, Formatters.formatAge(age)));
+        }
+        if (best.hasAccuracy() && best.getAccuracy() > SAVE_LOW_ACCURACY_M) {
+            if (msg.length() > 0) msg.append("\n\n");
+            msg.append(getString(R.string.parking_dialog_low_accuracy, Math.round(best.getAccuracy())));
+        }
+
+        EditText note = new EditText(this);
+        note.setHint(R.string.parking_dialog_note_hint);
+        note.setSingleLine(true);
+        note.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        FrameLayout box = new FrameLayout(this);
+        int pad = Math.round(24 * getResources().getDisplayMetrics().density);
+        box.setPadding(pad, pad / 3, pad, 0);
+        box.addView(note);
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this)
+                .setTitle(R.string.parking_dialog_title)
+                .setView(box)
+                .setPositiveButton(R.string.parking_dialog_save,
+                        (d, w) -> saveParking(note.getText().toString().trim()))
+                .setNegativeButton(R.string.parking_dialog_cancel, null);
+        if (msg.length() > 0) b.setMessage(msg);
+        openDialog = b.show();
+    }
+
+    private void saveParking(String note) {
+        if (best == null) return;
+        // Zapisujemy najnowszą pozycję z chwili naciśnięcia „Zapisz”.
+        spot = new ParkingStore.Spot(best.getLatitude(), best.getLongitude(),
+                best.hasAccuracy() ? best.getAccuracy() : 0f, System.currentTimeMillis(), note);
+        parkingStore.save(spot);
+        Toast.makeText(this, R.string.parking_saved_toast, Toast.LENGTH_SHORT).show();
+        showParking();
+    }
+
+    private void confirmDeleteParking() {
+        openDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.parking_delete_title)
+                .setPositiveButton(R.string.parking_delete, (d, w) -> {
+                    parkingStore.clear();
+                    spot = null;
+                    compassAzimuth = null;
+                    showParking();
+                })
+                .setNegativeButton(R.string.parking_dialog_cancel, null)
+                .show();
+    }
+
+    /** Nawigacja piesza do auta: Mapy Google, potem dowolna aplikacja map, potem przeglądarka. */
+    private void navigateToCar() {
+        if (spot == null) return;
+        String c = String.format(Locale.US, "%.6f,%.6f", spot.latitude, spot.longitude);
+        Intent nav = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + c + "&mode=w"))
+                .setPackage("com.google.android.apps.maps");
+        if (startActivitySafe(nav)) return;
+
+        Uri geo = Uri.parse("geo:" + c + "?q=" + c + "(" + Uri.encode(getString(R.string.parking_label)) + ")");
+        if (startActivitySafe(new Intent(Intent.ACTION_VIEW, geo))) return;
+
+        Uri web = Uri.parse("https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=" + c);
+        if (!startActivitySafe(new Intent(Intent.ACTION_VIEW, web))) {
+            Toast.makeText(this, R.string.no_maps_app, Toast.LENGTH_SHORT).show();
+        }
     }
 
     // ------------------------------------------------------------------ akcje

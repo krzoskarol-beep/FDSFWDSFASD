@@ -33,4 +33,13 @@ final class Formatters {
         String[] dirs = {"Pn", "Pn-Wsch", "Wsch", "Pd-Wsch", "Pd", "Pd-Zach", "Zach", "Pn-Zach"};
         return dirs[(int) Math.floor(((degrees % 360) + 360 + 22.5) % 360 / 45)];
     }
+
+    private static final Locale POLISH = Locale.forLanguageTag("pl-PL");
+
+    /** „8 m”, „350 m”, „1,2 km”, „15 km”. */
+    static String formatDistance(double meters) {
+        if (meters < 1000) return Math.round(meters) + " m";
+        if (meters < 10_000) return String.format(POLISH, "%.1f km", meters / 1000);
+        return Math.round(meters / 1000) + " km";
+    }
 }

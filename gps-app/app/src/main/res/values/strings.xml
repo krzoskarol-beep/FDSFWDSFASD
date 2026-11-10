@@ -28,4 +28,35 @@
     <string name="no_maps_app">Brak aplikacji map w telefonie</string>
     <string name="no_position_yet">Jeszcze nie ma pozycji</string>
     <string name="share_text">Moja pozycja: %1$s\n%2$s</string>
+
+    <!-- Gdzie zaparkowałem? -->
+    <string name="parking_title">Mój samochód</string>
+    <string name="parking_empty">Nie masz zapisanego miejsca. Po zaparkowaniu naciśnij przycisk poniżej, a aplikacja zaprowadzi Cię z powrotem do auta.</string>
+    <string name="parking_save">Zapisz miejsce parkowania</string>
+    <string name="parking_navigate">Prowadź</string>
+    <string name="parking_save_here">Zapisz tutaj</string>
+    <string name="parking_delete">Usuń</string>
+    <string name="parking_direction">na %1$s (%2$d°)</string>
+    <string name="parking_arrived">Jesteś przy aucie</string>
+    <string name="parking_waiting_position">Czekam na Twoją pozycję…</string>
+    <string name="parking_saved_at">Zaparkowano %1$s (%2$s temu)</string>
+    <string name="parking_saved_accuracy">Dokładność zapisu: ± %1$d m</string>
+    <string name="parking_hint_compass">Trzymaj telefon poziomo, strzałka wskazuje auto.</string>
+    <string name="parking_hint_no_compass">Brak kompasu: strzałka pokazuje kierunek względem północy (góra = północ).</string>
+    <string name="parking_hint_calibrate">Kompas jest niedokładny: porusz telefonem kilka razy w kształcie ósemki.</string>
+
+    <string name="parking_dialog_title">Zapisać miejsce parkowania?</string>
+    <string name="parking_dialog_note_hint">Notatka, np. poziom -2, sektor B</string>
+    <string name="parking_dialog_replace">Poprzednie miejsce zostanie zastąpione.</string>
+    <string name="parking_dialog_low_accuracy">Uwaga: pozycja jest niedokładna (± %1$d m). Jeśli możesz, poczekaj chwilę, aż GPS złapie lepszy sygnał.</string>
+    <string name="parking_dialog_stale">Uwaga: to pozycja sprzed %1$s, a nie z tej chwili.</string>
+    <string name="parking_dialog_save">Zapisz</string>
+    <string name="parking_dialog_cancel">Anuluj</string>
+    <string name="parking_saved_toast">Zapisano miejsce parkowania</string>
+    <string name="parking_delete_title">Usunąć zapisane miejsce parkowania?</string>
+    <string name="parking_waiting_for_fix">Czekam na dokładną pozycję, zaraz zapiszę miejsce…</string>
+    <string name="parking_label">Mój samochód</string>
+
+    <string name="shortcut_save_short">Zapisz parking</string>
+    <string name="shortcut_save_long">Zapisz miejsce parkowania</string>
 </resources>
