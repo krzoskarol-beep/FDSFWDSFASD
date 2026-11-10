@@ -53,6 +53,15 @@ final class ParkingStore {
                 .apply();
     }
 
+    /** Powiadamia o zmianie zapisanego miejsca (np. gdy zapisze je usługa w tle). */
+    void addListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
+        prefs.registerOnSharedPreferenceChangeListener(l);
+    }
+
+    void removeListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
+        prefs.unregisterOnSharedPreferenceChangeListener(l);
+    }
+
     void clear() {
         prefs.edit().clear().apply();
     }

@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Insets;
 import android.hardware.GeomagneticField;
@@ -22,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.InputType;
@@ -31,6 +33,7 @@ import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +93,28 @@ public class MainActivity extends Activity {
     private TextView parkingDistance, parkingDirection, parkingCompassHint;
     private TextView parkingNote, parkingSavedAt, parkingSavedAccuracy;
 
+    // --- Automatyczne zapisywanie parkowania
+    /** Akcja z powiadomienia „Zapisano miejsce parkowania” → „Prowadź”. */
+    static final String ACTION_NAVIGATE_TO_CAR = "pl.gps.pozycja.NAVIGATE_TO_CAR";
+    private static final int REQ_AUTO_LOCATION = 2;
+    private static final int REQ_AUTO_FOREGROUND = 3;
+    private static final int REQ_AUTO_BACKGROUND = 4;
+
+    private Switch autoSwitch;
+    private TextView autoStatus, autoBatteryHint;
+    private Button autoBatteryButton;
+    /** Zapobiega reakcji na programowe przestawienie przełącznika. */
+    private boolean suppressSwitch;
+    private boolean notificationsAsked;
+    /** Konfiguracja trwa od włączenia przełącznika do zapisania ustawienia (okna uprawnień). */
+    private boolean autoSetupInProgress;
+
+    /** Usługa w tle zapisała nowe miejsce: odśwież kartę „Mój samochód”. */
+    private final SharedPreferences.OnSharedPreferenceChangeListener parkingChanged = (p, key) -> {
+        spot = parkingStore.load();
+        showParking();
+    };
+
     // ------------------------------------------------------------------ cykl życia
 
     @Override
@@ -147,6 +172,17 @@ public class MainActivity extends Activity {
             }
         });
 
+        autoSwitch = findViewById(R.id.autoSwitch);
+        autoStatus = findViewById(R.id.autoStatus);
+        autoBatteryHint = findViewById(R.id.autoBatteryHint);
+        autoBatteryButton = findViewById(R.id.autoBatteryButton);
+        autoSwitch.setOnCheckedChangeListener((b, checked) -> {
+            if (!suppressSwitch) onAutoSwitchChanged(checked);
+        });
+        autoBatteryButton.setOnClickListener(v -> requestIgnoreBatteryOptimizations());
+        Notifications.createChannels(this);
+        AutoParking.reRegisterIfEnabled(this);
+
         applySystemBarInsets(findViewById(R.id.root));
 
         if (savedInstanceState == null) {
@@ -169,6 +205,9 @@ public class MainActivity extends Activity {
             // Ze skrótu: zapisz, gdy tylko będzie aktualna pozycja.
             pendingSave = true;
             Toast.makeText(this, R.string.parking_waiting_for_fix, Toast.LENGTH_SHORT).show();
+        } else if (intent != null && ACTION_NAVIGATE_TO_CAR.equals(intent.getAction())) {
+            spot = parkingStore.load();
+            navigateToCar();
         }
     }
 
@@ -188,7 +227,10 @@ public class MainActivity extends Activity {
             registerReceiver(providersChanged, filter);
         }
         refreshState();
+        spot = parkingStore.load();
+        parkingStore.addListener(parkingChanged);
         showParking();
+        updateAutoUi();
         handler.post(ticker);
     }
 
@@ -199,6 +241,7 @@ public class MainActivity extends Activity {
         handler.removeCallbacks(ticker);
         stopUpdates();
         compass.stop();
+        parkingStore.removeListener(parkingChanged);
     }
 
     // ------------------------------------------------------------------ uprawnienia
@@ -224,6 +267,11 @@ public class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode == REQ_AUTO_LOCATION || requestCode == REQ_AUTO_FOREGROUND
+                || requestCode == REQ_AUTO_BACKGROUND) {
+            onAutoPermissionResult(requestCode);
+            return;
+        }
         if (requestCode != REQ_LOCATION) return;
         // Jeśli użytkownik odmówił, a system nie pozwala już pokazać okna, to odmowa jest trwała.
         permissionDeniedForever = !hasAnyLocationPermission()
@@ -364,6 +412,7 @@ public class MainActivity extends Activity {
                 updateFixTime();
             }
             updateParkingSavedAt();
+            updateAutoUi();
             handler.postDelayed(this, 1000);
         }
     };
@@ -621,6 +670,145 @@ public class MainActivity extends Activity {
         Uri web = Uri.parse("https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=" + c);
         if (!startActivitySafe(new Intent(Intent.ACTION_VIEW, web))) {
             Toast.makeText(this, R.string.no_maps_app, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // ------------------------------------------------------------------ automatyczne zapisywanie
+
+    private void onAutoSwitchChanged(boolean checked) {
+        if (!checked) {
+            AutoParking.disable(this);
+            updateAutoUi();
+            return;
+        }
+        if (!AutoParking.isPlayServicesAvailable(this)) {
+            Toast.makeText(this, R.string.auto_status_no_play_services, Toast.LENGTH_LONG).show();
+            setAutoSwitch(false);
+            return;
+        }
+        notificationsAsked = false;
+        autoSetupInProgress = true;
+        continueAutoSetup();
+    }
+
+    /**
+     * Prosi o uprawnienia po kolei (Android wymaga, żeby lokalizację w tle
+     * zażądać osobno, po zwykłej lokalizacji), a na końcu włącza wykrywanie jazdy.
+     */
+    private void continueAutoSetup() {
+        if (!hasFinePermission()) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, REQ_AUTO_LOCATION);
+            return;
+        }
+
+        java.util.List<String> needed = new java.util.ArrayList<>();
+        if (!AutoParking.hasActivityRecognitionPermission(this)) {
+            needed.add(Manifest.permission.ACTIVITY_RECOGNITION);
+        }
+        if (Build.VERSION.SDK_INT >= 33 && !notificationsAsked && !Notifications.canPost(this)) {
+            needed.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        if (!needed.isEmpty()) {
+            notificationsAsked = true;
+            requestPermissions(needed.toArray(new String[0]), REQ_AUTO_FOREGROUND);
+            return;
+        }
+
+        if (!AutoParking.hasBackgroundLocationPermission(this)) {
+            openDialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.auto_bg_title)
+                    .setMessage(R.string.auto_bg_message)
+                    .setPositiveButton(R.string.auto_bg_continue, (d, w) -> requestPermissions(
+                            new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                            REQ_AUTO_BACKGROUND))
+                    .setNegativeButton(R.string.parking_dialog_cancel, (d, w) -> setAutoSwitch(false))
+                    .setOnCancelListener(d -> setAutoSwitch(false))
+                    .show();
+            return;
+        }
+
+        AutoParking.enable(this, () -> {
+            autoSetupInProgress = false;
+            Toast.makeText(this, R.string.auto_enabled_toast, Toast.LENGTH_SHORT).show();
+            updateAutoUi();
+        }, e -> {
+            Toast.makeText(this, getString(R.string.auto_enable_failed, e.getLocalizedMessage()),
+                    Toast.LENGTH_LONG).show();
+            setAutoSwitch(false);
+        });
+    }
+
+    private void onAutoPermissionResult(int requestCode) {
+        if (requestCode == REQ_AUTO_LOCATION && !hasFinePermission()) {
+            autoSetupFailed(R.string.auto_permission_denied_location);
+        } else if (requestCode == REQ_AUTO_FOREGROUND && !AutoParking.hasActivityRecognitionPermission(this)) {
+            autoSetupFailed(R.string.auto_permission_denied_activity);
+        } else if (requestCode == REQ_AUTO_BACKGROUND && !AutoParking.hasBackgroundLocationPermission(this)) {
+            autoSetupFailed(R.string.auto_permission_denied_bg);
+        } else {
+            refreshState();
+            continueAutoSetup();
+        }
+    }
+
+    private void autoSetupFailed(int messageRes) {
+        setAutoSwitch(false);
+        openDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.auto_permission_denied_title)
+                .setMessage(messageRes)
+                .setPositiveButton(R.string.auto_open_settings, (d, w) -> openAppSettings())
+                .setNegativeButton(R.string.parking_dialog_cancel, null)
+                .show();
+    }
+
+    private void setAutoSwitch(boolean checked) {
+        if (!checked) autoSetupInProgress = false;
+        if (autoSwitch.isChecked() == checked) return;
+        suppressSwitch = true;
+        autoSwitch.setChecked(checked);
+        suppressSwitch = false;
+    }
+
+    private void updateAutoUi() {
+        boolean enabled = AutoParking.isEnabled(this);
+        // W trakcie konfiguracji (okna uprawnień) przełącznik jest już włączony, choć ustawienie jeszcze nie.
+        if (!autoSetupInProgress) setAutoSwitch(enabled);
+
+        int color = R.color.text_secondary;
+        String text;
+        if (!enabled) {
+            text = getString(R.string.auto_desc);
+        } else if (!AutoParking.hasRequiredPermissions(this)) {
+            text = getString(R.string.auto_status_missing_permissions);
+            color = R.color.error;
+        } else if (DrivingService.driving) {
+            text = getString(R.string.auto_status_driving);
+            color = R.color.ok;
+        } else {
+            text = getString(R.string.auto_status_on);
+            color = R.color.ok;
+            if (!Notifications.canPost(this)) text += "\n\n" + getString(R.string.auto_status_no_notifications);
+        }
+        autoStatus.setText(text);
+        autoStatus.setTextColor(getColor(color));
+
+        boolean showBattery = enabled && !isIgnoringBatteryOptimizations();
+        autoBatteryHint.setVisibility(showBattery ? View.VISIBLE : View.GONE);
+        autoBatteryButton.setVisibility(showBattery ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean isIgnoringBatteryOptimizations() {
+        PowerManager pm = getSystemService(PowerManager.class);
+        return pm != null && pm.isIgnoringBatteryOptimizations(getPackageName());
+    }
+
+    @android.annotation.SuppressLint("BatteryLife") // aplikacja instalowana z pliku, nie z Google Play
+    private void requestIgnoreBatteryOptimizations() {
+        Intent i = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:" + getPackageName()));
+        if (!startActivitySafe(i)) {
+            startActivitySafe(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
         }
     }
 

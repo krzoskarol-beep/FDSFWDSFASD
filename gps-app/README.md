@@ -20,8 +20,28 @@ Prosta aplikacja na Androida, która pokazuje aktualną pozycję telefonu.
   Aplikacja poczeka na aktualną pozycję i od razu zaproponuje zapis (Android 7.1+).
 - Ostrzega, gdy zapisywana pozycja jest niedokładna albo nieaktualna.
 
-Korzysta tylko z systemowego `LocationManager`, bez Google Play Services, więc działa
-także na telefonach bez usług Google. Nie ma żadnych zewnętrznych bibliotek.
+### Automatyczne zapisywanie parkowania (w tle)
+
+Włącz przełącznik **„Zapisuj parking automatycznie”**. Od tej pory:
+
+1. Rozpoznawanie aktywności z usług Google Play wykrywa, że jedziesz samochodem
+   (działa w tle bez GPS, więc prawie nie zużywa baterii).
+2. W trakcie jazdy działa usługa z powiadomieniem „Jedziesz”, która śledzi GPS.
+3. Po zakończeniu jazdy aplikacja zapisuje **miejsce, w którym auto stanęło**
+   (a nie to, do którego zdążyłeś dojść, zanim system zgłosił koniec jazdy)
+   i pokazuje powiadomienie z przyciskiem **Prowadź**.
+
+Jak wybierany jest punkt postoju (`ParkingDetector`): pierwszy pomiar z prędkością poniżej
+ok. 3,6 km/h po ostatnim odcinku jazdy powyżej ok. 15 km/h. Postój na światłach kasuje się,
+gdy auto znów rusza. Gdy GPS zniknie (garaż podziemny), zapisywany jest ostatni punkt jazdy.
+
+Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Aktywność fizyczna” i (opcjonalnie)
+powiadomienia. Wymaga usług Google Play. Jazda autobusem czy pociągiem też jest rozpoznawana
+jako jazda, więc w powiadomieniu „Jedziesz” jest przycisk **„To nie moje auto”**.
+
+Pozycję odczytuje z systemowego `LocationManager`, więc podstawowe funkcje działają także
+na telefonach bez usług Google. Tylko automatyczne zapisywanie parkowania korzysta
+z biblioteki `play-services-location` (rozpoznawanie aktywności).
 Działa na Androidzie 7.0 lub nowszym (minSdk 24, targetSdk 36).
 
 ## Budowanie
