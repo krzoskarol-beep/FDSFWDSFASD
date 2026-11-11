@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Jeden przewijany ekran z kartami. Ponad 80 widoków (TooManyViews) to świadomy wybór:
+  wszystko jest statyczne i lekkie, a podział na fragmenty tylko skomplikowałby kod.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
+    tools:ignore="TooManyViews"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -9,46 +15,75 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingStart="20dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp">
 
-        <TextView
+        <!-- Nagłówek: znak P i nazwa -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/primary_dark"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <!-- Status -->
-        <LinearLayout style="@style/Card">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/status_waiting"
-                android:textColor="@color/warn"
-                android:textSize="16sp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/p_badge"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:text="P"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/actionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:visibility="gone" />
+            <TextView
+                style="@style/Text"
+                android:layout_width="0dp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/header_title"
+                android:textSize="24sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Gdzie zaparkowałem? -->
-        <LinearLayout style="@style/Card">
+        <!-- Stan GPS -->
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pill"
+            android:drawableStart="@drawable/status_dot"
+            android:drawablePadding="10dp"
+            android:paddingStart="14dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/status_waiting"
+            android:textColor="@color/warn"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/actionButton"
+            style="@style/Btn.Filled"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
+
+        <!-- Twoje auto: jedyny mocny element ekranu -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/hero"
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Text.OnAsphalt.Soft"
                 android:text="@string/parking_title"
-                android:textColor="@color/primary_dark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="15sp" />
 
             <!-- Brak zapisanego miejsca -->
             <LinearLayout
@@ -58,21 +93,18 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    style="@style/Text.OnAsphalt"
+                    android:layout_marginTop="10dp"
                     android:text="@string/parking_empty"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="17sp" />
 
                 <Button
                     android:id="@+id/btnSaveParking"
+                    style="@style/Btn.Lane"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="18dp"
                     android:minHeight="56dp"
-                    android:text="@string/parking_save"
-                    android:textSize="16sp" />
+                    android:text="@string/parking_save" />
             </LinearLayout>
 
             <!-- Zapisane miejsce -->
@@ -83,363 +115,407 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <pl.gps.pozycja.ArrowView
-                        android:id="@+id/parkingArrow"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/parkingDistance"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="—"
-                            android:textColor="@color/text_primary"
-                            android:textSize="34sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/parkingDirection"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </LinearLayout>
+                <pl.gps.pozycja.ArrowView
+                    android:id="@+id/parkingArrow"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp" />
 
                 <TextView
-                    android:id="@+id/parkingAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/text_primary"
-                    android:textIsSelectable="true"
-                    android:textSize="16sp"
-                    android:visibility="gone" />
+                    android:id="@+id/parkingDistance"
+                    style="@style/Text.OnAsphalt"
+                    android:layout_marginTop="14dp"
+                    android:fontFeatureSettings="tnum"
+                    android:gravity="center"
+                    android:text="—"
+                    android:textSize="46sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/parkingDirection"
+                    style="@style/Text.OnAsphalt"
+                    android:gravity="center"
+                    android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/parkingCompassHint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/text_secondary"
+                    style="@style/Text.OnAsphalt.Soft"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:id="@+id/parkingNote"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textColor="@color/text_primary"
-                    android:textSize="17sp"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/lane_line"
+                    android:layerType="software" />
+
+                <TextView
+                    android:id="@+id/parkingAddress"
+                    style="@style/Text.OnAsphalt"
+                    android:textIsSelectable="true"
+                    android:textSize="19sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/parkingNote"
+                    style="@style/Text.OnAsphalt"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/lane_yellow"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/parkingSavedAt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    style="@style/Text.OnAsphalt.Soft"
+                    android:layout_marginTop="8dp" />
 
                 <TextView
                     android:id="@+id/parkingSavedAccuracy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
+                    style="@style/Text.OnAsphalt.Soft"
                     android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnNavigate"
+                    style="@style/Btn.Lane"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="18dp"
+                    android:minHeight="56dp"
+                    android:text="@string/parking_navigate" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/btnNavigate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/parking_navigate" />
-
-                    <Button
                         android:id="@+id/btnSaveHere"
+                        style="@style/Btn.OnAsphalt"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.2"
+                        android:layout_weight="1"
                         android:text="@string/parking_save_here" />
 
                     <Button
                         android:id="@+id/btnDeleteParking"
+                        style="@style/Btn.OnAsphalt"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:text="@string/parking_delete" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Automatyczne zapisywanie parkowania -->
-        <LinearLayout style="@style/Card">
+        <!-- Twoja pozycja -->
+        <TextView
+            style="@style/Text.Title"
+            android:text="@string/position_title" />
+
+        <LinearLayout style="@style/Surface">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_title"
-                android:textColor="@color/primary_dark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/autoSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:minHeight="48dp"
-                android:text="@string/auto_switch"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/autoStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/auto_desc"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/autoBatteryHint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/auto_battery_hint"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/autoBatteryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_battery_button"
-                android:visibility="gone" />
-        </LinearLayout>
-
-        <!-- Współrzędne -->
-        <LinearLayout style="@style/Card">
-
-            <TextView
-                style="@style/Label"
-                android:layout_marginTop="0dp"
+                style="@style/Text.Label"
                 android:text="@string/latitude" />
 
             <TextView
                 android:id="@+id/latitude"
-                style="@style/BigValue"
+                style="@style/Text.Coordinate"
                 android:text="—" />
 
             <TextView
                 android:id="@+id/latitudeDms"
-                style="@style/SmallValue"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                style="@style/Text.Secondary" />
 
             <TextView
-                style="@style/Label"
+                style="@style/Text.Label"
+                android:layout_marginTop="14dp"
                 android:text="@string/longitude" />
 
             <TextView
                 android:id="@+id/longitude"
-                style="@style/BigValue"
+                style="@style/Text.Coordinate"
                 android:text="—" />
 
             <TextView
                 android:id="@+id/longitudeDms"
-                style="@style/SmallValue"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                style="@style/Text.Secondary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="18dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnMaps"
+                    style="@style/Btn.Tonal"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.3"
-                    android:text="@string/open_maps" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_map" />
 
                 <Button
                     android:id="@+id/btnCopy"
+                    style="@style/Btn.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:text="@string/copy" />
 
                 <Button
                     android:id="@+id/btnShare"
+                    style="@style/Btn.Outlined"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.1"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1.25"
                     android:text="@string/share" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Szczegóły -->
-        <LinearLayout style="@style/Card">
+        <!-- Szczegóły pomiaru: kafelki w dwóch kolumnach -->
+        <LinearLayout
+            style="@style/Surface"
+            android:layout_marginTop="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
-            <TextView
-                style="@style/Label"
-                android:layout_marginTop="0dp"
-                android:text="@string/accuracy" />
-
-            <TextView
-                android:id="@+id/accuracy"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/altitude" />
-
-            <TextView
-                android:id="@+id/altitude"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/speed" />
-
-            <TextView
-                android:id="@+id/speed"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/bearing" />
-
-            <TextView
-                android:id="@+id/bearing"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/satellites" />
-
-            <TextView
-                android:id="@+id/satellites"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/source" />
-
-            <TextView
-                android:id="@+id/provider"
-                style="@style/SmallValue"
-                android:text="—" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/fix_time" />
-
-            <TextView
-                android:id="@+id/fixTime"
-                style="@style/SmallValue"
-                android:text="—" />
-        </LinearLayout>
-        <!-- Wygląd -->
-        <LinearLayout style="@style/Card">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/theme_title"
-                android:textColor="@color/primary_dark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:id="@+id/themeGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/themeSystem"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="@string/theme_system"
-                    android:textColor="@color/text_primary" />
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
-                <RadioButton
-                    android:id="@+id/themeLight"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="@string/theme_light"
-                    android:textColor="@color/text_primary" />
+                    <TextView style="@style/Text.Label" android:text="@string/accuracy" />
+                    <TextView android:id="@+id/accuracy" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
 
-                <RadioButton
-                    android:id="@+id/themeDark"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:minHeight="48dp"
-                    android:text="@string/theme_dark"
-                    android:textColor="@color/text_primary" />
-            </RadioGroup>
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView style="@style/Text.Label" android:text="@string/altitude" />
+                    <TextView android:id="@+id/altitude" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView style="@style/Text.Label" android:text="@string/speed" />
+                    <TextView android:id="@+id/speed" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView style="@style/Text.Label" android:text="@string/bearing" />
+                    <TextView android:id="@+id/bearing" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView style="@style/Text.Label" android:text="@string/satellites" />
+                    <TextView android:id="@+id/satellites" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView style="@style/Text.Label" android:text="@string/source" />
+                    <TextView android:id="@+id/provider" style="@style/Text.Value" android:text="—" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <TextView style="@style/Text.Label" android:text="@string/fix_time" />
+                <TextView android:id="@+id/fixTime" style="@style/Text.Value" android:text="—" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <!-- Automatyczny zapis -->
+        <TextView
+            style="@style/Text.Title"
+            android:text="@string/auto_title" />
+
+        <LinearLayout style="@style/Surface">
+
+            <Switch
+                android:id="@+id/autoSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/auto_switch"
+                android:textColor="@color/text_primary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/autoStatus"
+                style="@style/Text.Secondary"
+                android:layout_marginTop="4dp"
+                android:text="@string/auto_desc" />
+
+            <LinearLayout
+                android:id="@+id/autoBatteryBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/banner_warn"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/autoBatteryHint"
+                    style="@style/Text"
+                    android:text="@string/auto_battery_hint"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/autoBatteryButton"
+                    style="@style/Btn.Filled"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/auto_battery_button" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Wygląd: przełącznik segmentowy -->
+        <TextView
+            style="@style/Text.Title"
+            android:text="@string/theme_title" />
+
+        <RadioGroup
+            android:id="@+id/themeGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:background="@drawable/segment_bg"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <RadioButton
+                android:id="@+id/themeSystem"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/segment_item"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/theme_system"
+                android:textColor="@color/segment_text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/themeLight"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/segment_item"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/theme_light"
+                android:textColor="@color/segment_text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/themeDark"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/segment_item"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/theme_dark"
+                android:textColor="@color/segment_text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </RadioGroup>
+
+        <!-- Więcej -->
+        <LinearLayout
+            style="@style/Surface"
+            android:layout_marginTop="28dp"
+            android:padding="0dp">
 
             <Button
                 android:id="@+id/btnHistory"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/history_title"
-                android:textColor="@color/primary" />
+                style="@style/Btn.Row"
+                android:text="@string/history_title" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="18dp"
+                android:background="@color/line" />
 
             <Button
                 android:id="@+id/btnDiagnostics"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/diag_title"
-                android:textColor="@color/text_secondary" />
+                style="@style/Btn.Row"
+                android:text="@string/diag_title" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

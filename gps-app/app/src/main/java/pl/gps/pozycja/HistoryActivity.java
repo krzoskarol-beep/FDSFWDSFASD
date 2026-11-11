@@ -41,6 +41,7 @@ public class HistoryActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        Fonts.apply(findViewById(R.id.root));
         store = new ParkingStore(this);
         list = findViewById(R.id.historyList);
         empty = findViewById(R.id.historyEmpty);
@@ -77,14 +78,27 @@ public class HistoryActivity extends Activity {
             String when = DateUtils.formatDateTime(this, s.savedAt,
                     DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_MONTH);
             boolean isCurrent = current != null && current.savedAt == s.savedAt;
-            row.put("title", (isCurrent ? getString(R.string.history_current) + "  " : "") + when);
+            row.put("title", (isCurrent ? getString(R.string.history_current) + " " : "") + when);
             row.put("subtitle", describe(s));
             rows.add(row);
         }
         list.setAdapter(new SimpleAdapter(this, rows, android.R.layout.simple_list_item_2,
-                new String[]{"title", "subtitle"}, new int[]{android.R.id.text1, android.R.id.text2}));
+                new String[]{"title", "subtitle"}, new int[]{android.R.id.text1, android.R.id.text2}) {
+            @Override
+            public View getView(int position, View convertView, android.view.ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((android.widget.TextView) v.findViewById(android.R.id.text1)).setTypeface(null, android.graphics.Typeface.BOLD);
+                Fonts.apply(v); // wiersze powstają po ustawieniu fontu na ekranie
+                v.setPadding(v.getPaddingLeft(), dp(12), v.getPaddingRight(), dp(12));
+                return v;
+            }
+        });
         empty.setVisibility(spots.isEmpty() ? View.VISIBLE : View.GONE);
         findViewById(R.id.historyClear).setVisibility(spots.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private String describe(ParkingStore.Spot s) {

@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tryb ciemny: włącza się razem z ciemnym motywem systemu (np. w nocy). -->
+<!-- Tryb ciemny: nocny parking. Karta „Twoje auto” zostaje asfaltowa, tło ciemnieje. -->
 <resources>
-    <color name="primary">#8AB4F8</color>
-    <color name="primary_dark">#A8C7FA</color>
-    <color name="background">#121417</color>
+    <color name="primary">#86ADEB</color>
+    <color name="primary_dark">#A9C5F2</color>
+    <color name="on_primary">#0D1E36</color>
+    <color name="primary_soft">#22324A</color>
+    <color name="background">#14171B</color>
     <color name="card">#1E2227</color>
-    <color name="text_primary">#E6E8EB</color>
-    <color name="text_secondary">#A0A6AD</color>
-    <color name="ok">#81C995</color>
-    <color name="warn">#FDBA74</color>
-    <color name="error">#F28B82</color>
-    <color name="dial">#FF2B3138</color>
+    <color name="line">#30363D</color>
+    <color name="text_primary">#E7E9EB</color>
+    <color name="text_secondary">#9BA3AC</color>
+    <color name="ok">#6FCF97</color>
+    <color name="warn">#F2B26A</color>
+    <color name="warn_soft">#3A2C1B</color>
+    <color name="error">#F0897D</color>
+
+    <color name="asphalt">#262B31</color>
+    <color name="asphalt_raised">#323840</color>
+    <color name="on_asphalt_line">#444B54</color>
 
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
         <item name="android:colorPrimary">@color/primary</item>
@@ -19,5 +26,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Znak „P” (parking) jako znak rozpoznawczy w nagłówku. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#1554A5" />
+    <stroke android:width="2dp" android:color="#FFFFFF" />
+    <corners android:radius="9dp" />
+</shape>

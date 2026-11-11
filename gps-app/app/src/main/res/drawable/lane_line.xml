@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Przerywana linia jak pas na jezdni: oddziela kierunek od szczegółów parkowania. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="line">
+    <stroke android:width="3dp" android:color="@color/lane_yellow"
+        android:dashWidth="18dp" android:dashGap="12dp" />
+</shape>

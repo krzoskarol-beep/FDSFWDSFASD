@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/history_title"
-        android:textColor="@color/primary_dark"
+        android:textColor="@color/text_primary"
         android:textSize="26sp"
         android:textStyle="bold" />
 
@@ -44,7 +44,8 @@
 
     <Button
         android:id="@+id/historyClear"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/Btn.Outlined"
+        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

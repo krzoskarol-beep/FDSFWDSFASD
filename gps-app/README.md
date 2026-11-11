@@ -55,6 +55,21 @@ start śledzenia w tle.
 Karta **Wygląd** na dole ekranu głównego: motyw **Systemowy** (zgodny z telefonem), **Jasny**
 albo **Ciemny**. Wybór obowiązuje na wszystkich ekranach aplikacji (`ThemePrefs`).
 
+### Wygląd i zrzuty ekranu
+
+Język wizualny: oznakowanie drogowe (niebieski znak „P”, asfalt, beton, żółty pas). Tokeny kolorów
+i style są w `res/values/themes.xml` (tryb ciemny: `res/values-night/themes.xml`). Krój pisma:
+Atkinson Hyperlegible z `assets/fonts` (licencja: `licenses/AtkinsonHyperlegible-OFL.txt`),
+nakładany przez `Fonts.apply()`.
+
+Zrzuty ekranu bez emulatora (Robolectric z natywną grafiką, pliki w `gps-app/screenshots/`):
+
+```bash
+./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'
+```
+
+Biblioteki Robolectric są pobierane z mirrora Maven Central od Google (`settings.gradle`).
+
 ### Adres i historia
 
 - Po zapisie aplikacja ustala **adres** miejsca (systemowy Geocoder, wymaga internetu)
