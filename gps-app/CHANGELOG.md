@@ -1,5 +1,17 @@
 # Zmiany – Moja pozycja GPS
 
+## 2.2
+
+- **Nowy wygląd** inspirowany oznakowaniem drogowym: niebieski znak „P” w nagłówku, karta
+  „Twoje auto” jako ciemny asfalt z tarczą i żółtą strzałką jak pas na jezdni, przerywana
+  żółta linia oddzielająca kierunek od szczegółów.
+- Krój pisma **Atkinson Hyperlegible** (Braille Institute, SIL OFL 1.1) zaprojektowany
+  dla czytelności, także w pośpiechu i w nocy.
+- Przyciski bez wielkich liter, w trzech poziomach ważności; „Prowadź” na całą szerokość.
+- Szczegóły pomiaru jako kafelki w dwóch kolumnach; wybór motywu jako przełącznik segmentowy;
+  Historia i Diagnostyka jako wiersze listy. Te same zasady na ekranach historii i diagnostyki.
+- Zrzuty ekranu bez emulatora (Robolectric): `./gradlew testDebugUnitTest -Pscreenshots`.
+
 ## 2.1
 
 - **Aplikacja sama rozpoznaje jazdę samochodem** (rozpoznawanie aktywności z usług Google Play),

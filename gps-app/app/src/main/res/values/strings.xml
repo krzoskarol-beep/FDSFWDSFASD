@@ -7,7 +7,7 @@
     <string name="altitude">Wysokość</string>
     <string name="speed">Prędkość</string>
     <string name="bearing">Kierunek</string>
-    <string name="satellites">Satelity (używane / widoczne)</string>
+    <string name="satellites">Satelity</string>
     <string name="source">Źródło</string>
     <string name="fix_time">Czas pomiaru</string>
     <string name="open_maps">Otwórz w mapach</string>
@@ -30,7 +30,7 @@
     <string name="share_text">Moja pozycja: %1$s\n%2$s</string>
 
     <!-- Gdzie zaparkowałem? -->
-    <string name="parking_title">Mój samochód</string>
+    <string name="parking_title">Twoje auto</string>
     <string name="parking_empty">Nie masz zapisanego miejsca. Po zaparkowaniu naciśnij przycisk poniżej, a aplikacja zaprowadzi Cię z powrotem do auta.</string>
     <string name="parking_save">Zapisz miejsce parkowania</string>
     <string name="parking_navigate">Prowadź</string>
@@ -114,7 +114,7 @@
     <string name="history_restore">Ustaw jako aktualne miejsce</string>
     <string name="history_delete">Usuń z historii</string>
     <string name="history_restored">Przywrócono miejsce parkowania</string>
-    <string name="history_current">● AKTUALNE</string>
+    <string name="history_current">Aktualne miejsce,</string>
 
     <!-- Niezawodność w tle -->
     <string name="auto_battery_title">Działanie w tle</string>
@@ -138,4 +138,9 @@
     <string name="auto_status_no_play_services">Wymaga usług Google Play, których ten telefon nie ma.</string>
     <string name="auto_enable_failed">Nie udało się włączyć rozpoznawania jazdy: %1$s</string>
     <string name="auto_permission_denied_activity">Bez dostępu do „Aktywności fizycznej” aplikacja nie rozpozna, że jedziesz autem.</string>
+
+    <!-- Nowy wygląd -->
+    <string name="header_title">Moja pozycja</string>
+    <string name="position_title">Twoja pozycja</string>
+    <string name="btn_map">Mapa</string>
 </resources>

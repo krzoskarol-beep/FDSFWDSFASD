@@ -48,6 +48,13 @@ cd gps-app
   Każdy inny typ ostrzeżenia trzeba naprawić albo uzasadnić.
 - Logikę bez zależności od Androida (np. `ParkingDetector`, `Geo`, `Formatters`) testuj
   zwykłym JUnitem w `app/src/test`; kod z `Context` w `app/src/androidTest` (działa w CI).
+- **Zrzuty ekranu bez emulatora** (zmiany wyglądu oglądaj, zanim je ogłosisz):
+  `./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'` → PNG w
+  `gps-app/screenshots/` (katalog w `.gitignore`), potem obejrzyj je narzędziem Read.
+  Robolectric bierze biblioteki z mirrora Google (repo.maven.apache.org potrafi zwrócić 429
+  na ~20 h). Ekran ma własny kontekst (`ThemePrefs.wrap`), więc w teście pomiar GPS wysyłaj
+  do `LocationManager` aktywności (`a.getSystemService`), nie aplikacji.
+- Wygląd: kolory i style w `res/values/themes.xml` (+ `values-night`), font przez `Fonts.apply()`.
 
 ### Pułapki znalezione w tym projekcie (minSdk 24)
 

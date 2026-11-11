@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Język wizualny: oznakowanie drogowe. Niebieski znaku „P”, asfalt, beton i żółty pas na jezdni.
+  Jedyny mocny element to ciemna karta „Twoje auto”; reszta jest spokojna.
+-->
 <resources>
-    <color name="primary">#1565C0</color>
-    <color name="primary_dark">#0D47A1</color>
-    <color name="background">#F2F5F9</color>
+    <!-- Kolory podstawowe (tryb jasny; ciemny w values-night) -->
+    <color name="primary">#1554A5</color>          <!-- niebieski znaku P -->
+    <color name="primary_dark">#0E3F80</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_soft">#E1EAF6</color>     <!-- tło przycisków drugorzędnych -->
+    <color name="background">#ECEEEA</color>       <!-- beton -->
     <color name="card">#FFFFFF</color>
-    <color name="text_primary">#1A1C1E</color>
-    <color name="text_secondary">#5F6368</color>
-    <color name="ok">#2E7D32</color>
-    <color name="warn">#E65100</color>
-    <color name="error">#C62828</color>
-    <color name="dial">#FFE3EAF4</color>
+    <color name="line">#D5D9D2</color>
+    <color name="text_primary">#1C2024</color>
+    <color name="text_secondary">#5C646D</color>
+    <color name="ok">#25734A</color>
+    <color name="warn">#A85008</color>
+    <color name="warn_soft">#FBEBD9</color>
+    <color name="error">#B8322A</color>
+
+    <!-- Karta „Twoje auto”: asfalt i żółty pas, taka sama w obu trybach -->
+    <color name="asphalt">#2B3036</color>
+    <color name="asphalt_raised">#383E46</color>
+    <color name="on_asphalt">#F4F5F2</color>
+    <color name="on_asphalt_soft">#B4BBC2</color>
+    <color name="on_asphalt_line">#4C535C</color>
+    <color name="lane_yellow">#F2C230</color>
+    <color name="arrived">#4CC38A</color>
 
     <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:colorPrimary">@color/primary</item>
@@ -18,40 +35,125 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 
-    <style name="Label">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:layout_marginTop">12dp</item>
-    </style>
+    <!-- ===== Tekst ===== -->
 
-    <style name="BigValue">
+    <style name="Text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">30sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">monospace</item>
         <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="Text.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+
+    <style name="Text.Secondary">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Etykieta kafelka pomiaru i wartość pod nią -->
+    <style name="Text.Label" parent="Text.Secondary">
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="Text.Value">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
+    <style name="Text.Coordinate">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFeatureSettings">tnum</item>
         <item name="android:textIsSelectable">true</item>
     </style>
 
-    <style name="SmallValue">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text_primary</item>
+    <style name="Text.OnAsphalt" parent="Text">
+        <item name="android:textColor">@color/on_asphalt</item>
     </style>
 
-    <style name="Card">
+    <style name="Text.OnAsphalt.Soft">
+        <item name="android:textColor">@color/on_asphalt_soft</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- ===== Powierzchnie ===== -->
+
+    <style name="Surface">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@drawable/card_bg</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:background">@drawable/surface</item>
+        <item name="android:padding">18dp</item>
+    </style>
+
+    <!-- Zgodność ze starszymi ekranami (historia, diagnostyka) -->
+    <style name="Card" parent="Surface">
         <item name="android:layout_marginTop">12dp</item>
-        <item name="android:elevation">2dp</item>
+    </style>
+
+    <!-- ===== Przyciski (bez wielkich liter, wysokość 48 dp) ===== -->
+
+    <style name="Btn" parent="android:Widget.Material.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="Btn.Filled">
+        <item name="android:background">@drawable/btn_filled</item>
+        <item name="android:textColor">@color/on_primary</item>
+    </style>
+
+    <style name="Btn.Tonal">
+        <item name="android:background">@drawable/btn_tonal</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="Btn.Outlined">
+        <item name="android:background">@drawable/btn_outlined</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- Na asfalcie: żółty jak pas (główna akcja) i przezroczysty z obwódką -->
+    <style name="Btn.Lane">
+        <item name="android:background">@drawable/btn_lane</item>
+        <item name="android:textColor">@color/asphalt</item>
+    </style>
+
+    <style name="Btn.OnAsphalt">
+        <item name="android:background">@drawable/btn_on_asphalt</item>
+        <item name="android:textColor">@color/on_asphalt</item>
+    </style>
+
+    <!-- Wiersz listy (Historia, Diagnostyka) -->
+    <style name="Btn.Row">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:background">@drawable/row_ripple</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:drawableEnd">@drawable/ic_chevron</item>
     </style>
 </resources>

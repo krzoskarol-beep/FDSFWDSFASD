@@ -33,6 +33,7 @@ public class DiagnosticsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diagnostics);
+        Fonts.apply(findViewById(R.id.root));
         status = findViewById(R.id.diagStatus);
         log = findViewById(R.id.diagLog);
 

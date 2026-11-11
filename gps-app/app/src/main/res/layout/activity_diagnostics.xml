@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/diag_title"
-            android:textColor="@color/primary_dark"
+            android:textColor="@color/text_primary"
             android:textSize="26sp"
             android:textStyle="bold" />
 
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/diag_status"
-                android:textColor="@color/primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -48,6 +48,7 @@
 
             <Button
                 android:id="@+id/diagShare"
+                style="@style/Btn.Tonal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -55,6 +56,8 @@
 
             <Button
                 android:id="@+id/diagRefresh"
+                style="@style/Btn.Outlined"
+                android:layout_marginStart="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -62,6 +65,8 @@
 
             <Button
                 android:id="@+id/diagClear"
+                style="@style/Btn.Outlined"
+                android:layout_marginStart="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -74,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/diag_log"
-                android:textColor="@color/primary_dark"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -130,6 +130,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Fonts.apply(findViewById(R.id.root));
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         status = findViewById(R.id.status);
@@ -342,9 +343,16 @@ public class MainActivity extends Activity {
         updateStatus();
     }
 
+    /** Kolor napisu i kropki stanu GPS. */
+    private void tintStatus(int colorRes) {
+        int color = getColor(colorRes);
+        status.setTextColor(color);
+        status.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(color));
+    }
+
     private void showProblem(int messageRes, int buttonRes, View.OnClickListener action) {
         status.setText(messageRes);
-        status.setTextColor(getColor(R.color.error));
+        tintStatus(R.color.error);
         actionButton.setText(buttonRes);
         actionButton.setOnClickListener(action);
         actionButton.setVisibility(View.VISIBLE);
@@ -470,13 +478,13 @@ public class MainActivity extends Activity {
 
         if (best == null) {
             status.setText(getString(R.string.status_waiting) + coarseNote);
-            status.setTextColor(getColor(R.color.warn));
+            tintStatus(R.color.warn);
         } else if (ageMs(best) <= FRESH_MS) {
             status.setText(getString(R.string.status_ok) + coarseNote);
-            status.setTextColor(getColor(R.color.ok));
+            tintStatus(R.color.ok);
         } else {
             status.setText(getString(R.string.status_stale, Formatters.formatAge(ageMs(best))) + coarseNote);
-            status.setTextColor(getColor(R.color.warn));
+            tintStatus(R.color.warn);
         }
     }
 
@@ -873,8 +881,7 @@ public class MainActivity extends Activity {
         autoStatus.setTextColor(getColor(color));
 
         boolean showBattery = enabled && !isIgnoringBatteryOptimizations();
-        autoBatteryHint.setVisibility(showBattery ? View.VISIBLE : View.GONE);
-        autoBatteryButton.setVisibility(showBattery ? View.VISIBLE : View.GONE);
+        findViewById(R.id.autoBatteryBanner).setVisibility(showBattery ? View.VISIBLE : View.GONE);
     }
 
     private boolean isIgnoringBatteryOptimizations() {
