@@ -1,0 +1,97 @@
+﻿nr;Ø max [mm];złącze;miejsca wiercenia (każda część, przez którą przechodzi)
+1;13;Ø12;"płyta H wewn. (x −): Ø13 (blok), (25; 25) od lewego dolnego rogu | płyta H zewn. (x −): Ø13 (blok), (25; 25) od lewego dolnego rogu"
+2;13;Ø12;"płyta H wewn. (x +): Ø13 (blok), (25; 25) od lewego dolnego rogu | płyta H zewn. (x +): Ø13 (blok), (25; 25) od lewego dolnego rogu"
+3;13;M12;"płyta S (x −): Ø13 (oczko), (40; 28) od lewego dolnego rogu"
+4;13;M12;"płyta S (x +): Ø13 (oczko), (40; 28) od lewego dolnego rogu"
+5;18,5;M12;"L1 (x=-125): Ø18,5 przez oba boki, s=1140 od końca przy przyczepie, z=20 od spodu | płyta Z (A, wewn., x −): Ø13, (140; 80) od rogu przy sworzniu | płyta Z (A, zewn., x −): Ø13, (140; 80) od rogu przy sworzniu"
+6;18,5;M12;"L1 (x=+125): Ø18,5 przez oba boki, s=1140 od końca przy przyczepie, z=20 od spodu | płyta Z (A, wewn., x +): Ø13, (140; 80) od rogu przy sworzniu | płyta Z (A, zewn., x +): Ø13, (140; 80) od rogu przy sworzniu"
+7;18,5;M12;"L1 (x=-125): Ø18,5 przez oba boki, s=1205 od końca przy przyczepie, z=20 od spodu | płyta Z (A, wewn., x −): Ø13, (75; 80) od rogu przy sworzniu | płyta Z (A, zewn., x −): Ø13, (75; 80) od rogu przy sworzniu"
+8;18,5;M12;"L1 (x=+125): Ø18,5 przez oba boki, s=1205 od końca przy przyczepie, z=20 od spodu | płyta Z (A, wewn., x +): Ø13, (75; 80) od rogu przy sworzniu | płyta Z (A, zewn., x +): Ø13, (75; 80) od rogu przy sworzniu"
+9;18,5;M12;"L1 (x=-125): Ø18,5 przez oba boki, s=120 od końca przy przyczepie, z=60 od spodu | płyta H wewn. (x −): Ø13 (M12), (170; 40) od lewego dolnego rogu | płyta H zewn. (x −): Ø13 (M12), (170; 40) od lewego dolnego rogu"
+10;18,5;M12;"L1 (x=+125): Ø18,5 przez oba boki, s=120 od końca przy przyczepie, z=60 od spodu | płyta H wewn. (x +): Ø13 (M12), (170; 40) od lewego dolnego rogu | płyta H zewn. (x +): Ø13 (M12), (170; 40) od lewego dolnego rogu"
+11;18,5;M12;"C1 (x=-345): Ø18,5 przez oba boki, s=259 od końca przy przyczepie, z=25 od spodu | płyta S (x −): Ø13 (M12), (40; 75) od lewego dolnego rogu"
+12;18,5;M12;"C1 (x=+345): Ø18,5 przez oba boki, s=259 od końca przy przyczepie, z=25 od spodu | płyta S (x +): Ø13 (M12), (40; 75) od lewego dolnego rogu"
+13;18,5;M12;"C1 (x=-345): Ø18,5 przez oba boki, s=259 od końca przy przyczepie, z=75 od spodu | płyta S (x −): Ø13 (M12), (40; 125) od lewego dolnego rogu"
+14;18,5;M12;"C1 (x=+345): Ø18,5 przez oba boki, s=259 od końca przy przyczepie, z=75 od spodu | płyta S (x +): Ø13 (M12), (40; 125) od lewego dolnego rogu"
+15;18,5;M12;"L1 (x=-125): Ø18,5 przez oba boki, s=40 od końca przy przyczepie, z=60 od spodu | płyta H wewn. (x −): Ø13 (M12), (90; 40) od lewego dolnego rogu | płyta H zewn. (x −): Ø13 (M12), (90; 40) od lewego dolnego rogu"
+16;18,5;M12;"L1 (x=+125): Ø18,5 przez oba boki, s=40 od końca przy przyczepie, z=60 od spodu | płyta H wewn. (x +): Ø13 (M12), (90; 40) od lewego dolnego rogu | płyta H zewn. (x +): Ø13 (M12), (90; 40) od lewego dolnego rogu"
+17;21;M20;"płyta H wewn. (x −): Ø21 (pin), (25; 55) od lewego dolnego rogu | płyta H zewn. (x −): Ø21 (pin), (25; 55) od lewego dolnego rogu"
+18;21;M20;"płyta H wewn. (x +): Ø21 (pin), (25; 55) od lewego dolnego rogu | płyta H zewn. (x +): Ø21 (pin), (25; 55) od lewego dolnego rogu"
+19;12,5;M8;L1 (x=+125): Ø12,5 przez górę i dół, s=1000 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 850 mm od jej końca, 20 mm od grzbietu
+20;12,5;M8;L1 (x=-125): Ø12,5 przez górę i dół, s=1000 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 850 mm od jej końca, 20 mm od grzbietu
+21;12,5;M8;L1 (x=+125): Ø12,5 przez górę i dół, s=200 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 50 mm od jej końca, 20 mm od grzbietu
+22;12,5;M8;L1 (x=-125): Ø12,5 przez górę i dół, s=200 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 50 mm od jej końca, 20 mm od grzbietu
+23;12,5;M8;L1 (x=+125): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 720 mm od lewego końca | prowadnica G1: Ø9, 190 mm od jej końca, 20 mm od grzbietu
+24;12,5;M8;C1 (x=+345): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 940 mm od lewego końca
+25;12,5;M8;L2 (x=+45): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 640 mm od lewego końca
+26;12,5;M8;C2 (x=+575): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 1170 mm od lewego końca
+27;12,5;M8;L1 (x=-125): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 470 mm od lewego końca | prowadnica G1: Ø9, 190 mm od jej końca, 20 mm od grzbietu
+28;12,5;M8;C1 (x=-345): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 250 mm od lewego końca
+29;12,5;M8;L2 (x=-45): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 550 mm od lewego końca
+30;12,5;M8;C2 (x=-575): Ø12,5 przez górę i dół, s=340 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=340): Ø12,5 przez górę i dół, 20 mm od lewego końca
+31;12,5;M8;L1 (x=+125): Ø12,5 przez górę i dół, s=580 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 430 mm od jej końca, 20 mm od grzbietu
+32;12,5;M8;L1 (x=-125): Ø12,5 przez górę i dół, s=580 od końca przy przyczepie, w osi ścianki | prowadnica G1: Ø9, 430 mm od jej końca, 20 mm od grzbietu
+33;12,5;M8;L1 (x=+125): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 720 mm od lewego końca | prowadnica G1: Ø9, 680 mm od jej końca, 20 mm od grzbietu
+34;12,5;M8;C1 (x=+345): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 940 mm od lewego końca
+35;12,5;M8;L2 (x=+45): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 640 mm od lewego końca
+36;12,5;M8;C2 (x=+575): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 1170 mm od lewego końca
+37;12,5;M8;L1 (x=-125): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 470 mm od lewego końca | prowadnica G1: Ø9, 680 mm od jej końca, 20 mm od grzbietu
+38;12,5;M8;C1 (x=-345): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 250 mm od lewego końca
+39;12,5;M8;L2 (x=-45): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 550 mm od lewego końca
+40;12,5;M8;C2 (x=-575): Ø12,5 przez górę i dół, s=830 od końca przy przyczepie, w osi ścianki | poprzeczka P (s=830): Ø12,5 przez górę i dół, 20 mm od lewego końca
+41;18,5;M12;"L3 (x=-125): Ø18,5 przez oba boki, s=110 od zawiasu środkowego, z=20 od spodu | płyta Z (B, wewn., x −): Ø13, (140; 80) od rogu przy sworzniu | płyta Z (B, zewn., x −): Ø13, (140; 80) od rogu przy sworzniu"
+42;18,5;M12;"L3 (x=+125): Ø18,5 przez oba boki, s=110 od zawiasu środkowego, z=20 od spodu | płyta Z (B, wewn., x +): Ø13, (140; 80) od rogu przy sworzniu | płyta Z (B, zewn., x +): Ø13, (140; 80) od rogu przy sworzniu"
+43;18,5;M12;"L3 (x=-125): Ø18,5 przez oba boki, s=45 od zawiasu środkowego, z=20 od spodu | płyta Z (B, wewn., x −): Ø13, (75; 80) od rogu przy sworzniu | płyta Z (B, zewn., x −): Ø13, (75; 80) od rogu przy sworzniu"
+44;18,5;M12;"L3 (x=+125): Ø18,5 przez oba boki, s=45 od zawiasu środkowego, z=20 od spodu | płyta Z (B, wewn., x +): Ø13, (75; 80) od rogu przy sworzniu | płyta Z (B, zewn., x +): Ø13, (75; 80) od rogu przy sworzniu"
+45;4,9;nit;L3 (x=+125): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 710 mm od lewego końca
+46;4,9;nit;L3 (x=+125): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 730 mm od lewego końca
+47;4,9;nit;C3 (x=+345): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 930 mm od lewego końca
+48;4,9;nit;L4 (x=+45): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 630 mm od lewego końca
+49;4,9;nit;C3 (x=+345): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 950 mm od lewego końca
+50;4,9;nit;L4 (x=+45): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 650 mm od lewego końca
+51;4,9;nit;C3 (x=+575): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 1160 mm od lewego końca
+52;4,9;nit;C3 (x=+575): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 1180 mm od lewego końca
+53;4,9;nit;L3 (x=-125): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 480 mm od lewego końca
+54;4,9;nit;L3 (x=-125): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 460 mm od lewego końca
+55;4,9;nit;C3 (x=-345): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 260 mm od lewego końca
+56;4,9;nit;L4 (x=-45): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 560 mm od lewego końca
+57;4,9;nit;C3 (x=-345): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 240 mm od lewego końca
+58;4,9;nit;L4 (x=-45): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 540 mm od lewego końca
+59;4,9;nit;C3 (x=-575): Ø4,9 w dnie pod nit, s=650, +10 mm od osi ścianki | listwa T: Ø4,9, 30 mm od lewego końca
+60;4,9;nit;C3 (x=-575): Ø4,9 w dnie pod nit, s=650, -10 mm od osi ścianki | listwa T: Ø4,9, 10 mm od lewego końca
+61;12,5;M8;L3 (x=+125): Ø12,5 przez górę i dół, s=180 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 175 mm od jej końca, 20 mm od grzbietu
+62;12,5;M8;L3 (x=-125): Ø12,5 przez górę i dół, s=180 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 175 mm od jej końca, 20 mm od grzbietu
+63;12,5;M8;L3 (x=+125): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 720 mm od lewego końca | prowadnica G2: Ø9, 255 mm od jej końca, 20 mm od grzbietu
+64;12,5;M8;C3 (x=+345): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 940 mm od lewego końca
+65;12,5;M8;L4 (x=+45): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 640 mm od lewego końca
+66;12,5;M8;C3 (x=+575): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 1170 mm od lewego końca
+67;12,5;M8;L3 (x=-125): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 470 mm od lewego końca | prowadnica G2: Ø9, 255 mm od jej końca, 20 mm od grzbietu
+68;12,5;M8;C3 (x=-345): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 250 mm od lewego końca
+69;12,5;M8;L4 (x=-45): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 550 mm od lewego końca
+70;12,5;M8;C3 (x=-575): Ø12,5 przez górę i dół, s=260 od zawiasu środkowego, w osi ścianki | poprzeczka P (s=260): Ø12,5 przez górę i dół, 20 mm od lewego końca
+71;12,5;M8;L3 (x=+125): Ø12,5 przez górę i dół, s=450 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 445 mm od jej końca, 20 mm od grzbietu
+72;12,5;M8;L3 (x=-125): Ø12,5 przez górę i dół, s=450 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 445 mm od jej końca, 20 mm od grzbietu
+73;12,5;M8;L3 (x=+125): Ø12,5 przez górę i dół, s=680 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 675 mm od jej końca, 20 mm od grzbietu
+74;12,5;M8;L3 (x=-125): Ø12,5 przez górę i dół, s=680 od zawiasu środkowego, w osi ścianki | prowadnica G2: Ø9, 675 mm od jej końca, 20 mm od grzbietu
+75;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=+207, 30 mm pod podłogą | wspornik K (zawias): Ø13, 55 mm od grzbietu, z=-30
+76;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=+207, 60 mm pod podłogą | wspornik K (zawias): Ø13, 55 mm od grzbietu, z=-60
+77;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=+424, 30 mm pod podłogą | wspornik K (sprężyna): Ø13, 55 mm od grzbietu, z=-30
+78;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=+424, 60 mm pod podłogą | wspornik K (sprężyna): Ø13, 55 mm od grzbietu, z=-60
+79;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=-207, 30 mm pod podłogą | wspornik K (zawias): Ø13, 55 mm od grzbietu, z=-30
+80;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=-207, 60 mm pod podłogą | wspornik K (zawias): Ø13, 55 mm od grzbietu, z=-60
+81;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=-424, 30 mm pod podłogą | wspornik K (sprężyna): Ø13, 55 mm od grzbietu, z=-30
+82;18,5;M12;belka przyczepy: Ø18,5 na wylot, x=-424, 60 mm pod podłogą | wspornik K (sprężyna): Ø13, 55 mm od grzbietu, z=-60
+83;13;–;wspornik K (sprężyna, x −): Ø13 (blok), y=70 od ściany belki, z=-25 od podłogi – tu nieużywany (część identyczna)
+84;13;–;wspornik K (sprężyna, x +): Ø13 (blok), y=70 od ściany belki, z=-25 od podłogi – tu nieużywany (część identyczna)
+85;13;Ø12;wspornik K (zawias, x −): Ø13 (blok), y=70 od ściany belki, z=-25 od podłogi
+86;13;Ø12;wspornik K (zawias, x +): Ø13 (blok), y=70 od ściany belki, z=-25 od podłogi
+87;21;–;wspornik K (sprężyna, x −): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi – tu nieużywany (część identyczna)
+88;21;–;wspornik K (sprężyna, x +): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi – tu nieużywany (część identyczna)
+89;21;M20;wspornik K (zawias, x −): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi
+90;21;M20;wspornik K (zawias, x +): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi
+91;13;M12;wspornik K (sprężyna, x −): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi
+92;13;M12;wspornik K (sprężyna, x +): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi
+93;13;–;wspornik K (zawias, x −): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi – tu nieużywany (część identyczna)
+94;13;–;wspornik K (zawias, x +): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi – tu nieużywany (część identyczna)
+95;21;M20;"płyta Z (A, wewn., x −): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (A, zewn., x −): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, wewn., x −): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, zewn., x −): Ø21, (30; 25) od rogu przy sworzniu"
+96;21;M20;"płyta Z (A, wewn., x +): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (A, zewn., x +): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, wewn., x +): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, zewn., x +): Ø21, (30; 25) od rogu przy sworzniu"

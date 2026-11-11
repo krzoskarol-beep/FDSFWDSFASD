@@ -1,0 +1,1442 @@
+{
+ "podsumowanie": {
+  "alpha_deg": 10.96,
+  "skos_mm": 516.4,
+  "masa_A": 39.4,
+  "masa_B": 27.3,
+  "masa_trapu": 66.6,
+  "masa_wspornikow_K": 7.8,
+  "cgA": [
+   612,
+   44
+  ],
+  "cgB": [
+   438,
+   48
+  ],
+  "max_wysilek_ze_sprezynami_kg": 19.4,
+  "max_wysilek_bez_sprezyn_kg": 37.1,
+  "moment_rozlozony_Nm": -146.7,
+  "moment_pion_Nm": 1.4000000000000057,
+  "sprezyna_L_min": 280.4,
+  "sprezyna_L_max": 374.6,
+  "najwieksze_wytezenie": {
+   "element": "To samo – CAŁE koło na jednej rurze (sprawdzenie skrajne)",
+   "wartosc": 0.876
+  },
+  "typy_czesci": 16,
+  "sztuk_czesci": 44,
+  "otwory": 268,
+  "typy_srub": 11,
+  "typy_tulei": 6,
+  "tuleje_szt": 64
+ },
+ "obliczenia": [
+  {
+   "nazwa": "Rura jezdna L1/L3 100×40×3 (6082-T6) – zginanie, rozpiętość 2,5 m",
+   "obciazenie": 151.14,
+   "nosnosc": 227.27,
+   "jedn": "MPa",
+   "wytezenie": 0.665,
+   "uwagi": "koło 273 kg ×φ1.5 ×γ1.5, 75 % na jedną rurę, w środku + ciężar własny ×1,35"
+  },
+  {
+   "nazwa": "To samo – CAŁE koło na jednej rurze (sprawdzenie skrajne)",
+   "obciazenie": 199.18,
+   "nosnosc": 227.27,
+   "jedn": "MPa",
+   "wytezenie": 0.876,
+   "uwagi": "gdyby siatka i poprzeczki nic nie rozkładały"
+  },
+  {
+   "nazwa": "[INFO] Ta sama rura, gdyby była z 6060-T6 (75 %) – NIE WOLNO",
+   "obciazenie": 151.14,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 1.108,
+   "uwagi": "pokazuje, dlaczego rury jezdne muszą być 6082-T6 (PA4)"
+  },
+  {
+   "nazwa": "Ugięcie w środku (charakterystyczne)",
+   "obciazenie": 10.5,
+   "nosnosc": 12.5,
+   "jedn": "mm",
+   "wytezenie": 0.84,
+   "uwagi": "limit L/200"
+  },
+  {
+   "nazwa": "Rura jezdna wewnętrzna – wspornik przy przyczepie 340 mm, całe koło na końcu",
+   "obciazenie": 104.53,
+   "nosnosc": 227.27,
+   "jedn": "MPa",
+   "wytezenie": 0.46,
+   "uwagi": "rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach"
+  },
+  {
+   "nazwa": "Rura jezdna wewnętrzna – wspornik przy zawiasie (sekcja A) 420 mm, całe koło na końcu",
+   "obciazenie": 129.12,
+   "nosnosc": 227.27,
+   "jedn": "MPa",
+   "wytezenie": 0.568,
+   "uwagi": "rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach"
+  },
+  {
+   "nazwa": "Rura jezdna wewnętrzna – wspornik przy zawiasie (sekcja B) 260 mm, całe koło na końcu",
+   "obciazenie": 79.93,
+   "nosnosc": 227.27,
+   "jedn": "MPa",
+   "wytezenie": 0.352,
+   "uwagi": "rury wewnętrzne nie mają zawiasów – opierają się na poprzeczkach"
+  },
+  {
+   "nazwa": "Zawias środkowy: sworzeń M20 8.8 – ścinanie (2 płaszczyzny na rurę)",
+   "obciazenie": 10.97,
+   "nosnosc": 120.64,
+   "jedn": "kN",
+   "wytezenie": 0.091,
+   "uwagi": "moment 2.96 kN·m / ramię 135 mm (styk góry rur ↔ sworzeń pod rurą)"
+  },
+  {
+   "nazwa": "Zawias środkowy: sworzeń M20 – zginanie (płyty A i B przylegają)",
+   "obciazenie": 65.83,
+   "nosnosc": 753.98,
+   "jedn": "N·m",
+   "wytezenie": 0.087,
+   "uwagi": "EN 1993-1-8 tab. 3.10"
+  },
+  {
+   "nazwa": "Zawias środkowy: docisk sworznia w płycie Z 6 mm",
+   "obciazenie": 10.97,
+   "nosnosc": 41.14,
+   "jedn": "kN",
+   "wytezenie": 0.267,
+   "uwagi": "S235, odl. otworu od końca 30 mm"
+  },
+  {
+   "nazwa": "Zawias środkowy: śruba M12 8.8 płyty Z – ścinanie",
+   "obciazenie": 10.78,
+   "nosnosc": 32.37,
+   "jedn": "kN",
+   "wytezenie": 0.333,
+   "uwagi": "mimośród 55 mm, rozstaw śrub 65 mm"
+  },
+  {
+   "nazwa": "Zawias środkowy: tuleja Ø18 → ścianka rury Al 3 mm (docisk)",
+   "obciazenie": 10.78,
+   "nosnosc": 25.39,
+   "jedn": "kN",
+   "wytezenie": 0.425,
+   "uwagi": "tuleja stalowa Ø18×2,5 w otworze Ø18,5; 45 mm od końca rury"
+  },
+  {
+   "nazwa": "Zawias środkowy: docisk górnych krawędzi rur (styk)",
+   "obciazenie": 43.89,
+   "nosnosc": 182.73,
+   "jedn": "kN",
+   "wytezenie": 0.24,
+   "uwagi": "4 rury stykają się czołami; liczona ¼ obwodu ścianek"
+  },
+  {
+   "nazwa": "Zawias przy przyczepie: sworzeń M20 – zginanie (ramię do wspornika K)",
+   "obciazenie": 120.87,
+   "nosnosc": 753.98,
+   "jedn": "N·m",
+   "wytezenie": 0.16,
+   "uwagi": "reakcja 4.7 kN na rurę, 2 płyty H"
+  },
+  {
+   "nazwa": "Zawias przy przyczepie: docisk sworznia w płycie H 6 mm",
+   "obciazenie": 2.37,
+   "nosnosc": 34.29,
+   "jedn": "kN",
+   "wytezenie": 0.069,
+   "uwagi": "krawędź 25 mm"
+  },
+  {
+   "nazwa": "Zawias przy przyczepie: śruba M12 płyty H → rura (docisk Al)",
+   "obciazenie": 3.33,
+   "nosnosc": 22.57,
+   "jedn": "kN",
+   "wytezenie": 0.147,
+   "uwagi": "mimośród 105 mm, rozstaw 80 mm"
+  },
+  {
+   "nazwa": "Wspornik K (kątownik 100×100×10) – zginanie ramienia",
+   "obciazenie": 6.73,
+   "nosnosc": 235.0,
+   "jedn": "MPa",
+   "wytezenie": 0.029,
+   "uwagi": "ramię 40 mm od ściany belki"
+  },
+  {
+   "nazwa": "Poprzeczka 60×40×4 (6060) na płasko – stopa na samej krawędzi, cała na jednej poprzeczce",
+   "obciazenie": 117.18,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.859,
+   "uwagi": "wspornik 450 mm od rury jezdnej"
+  },
+  {
+   "nazwa": "Poprzeczka – przenosi nacisk rury wewnętrznej na zewnętrzne (koło na końcu przy przyczepie)",
+   "obciazenie": 62.39,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.458,
+   "uwagi": "reakcja rury wewn. 10.2 kN"
+  },
+  {
+   "nazwa": "Śruba M8 8.8 na skrzyżowaniu – rozciąganie (poprzeczka wisi na rurze zewn.)",
+   "obciazenie": 6.94,
+   "nosnosc": 21.08,
+   "jedn": "kN",
+   "wytezenie": 0.329,
+   "uwagi": ""
+  },
+  {
+   "nazwa": "Przeciąganie łba / podkładki przez ściankę poprzeczki 4 mm",
+   "obciazenie": 6.94,
+   "nosnosc": 20.51,
+   "jedn": "kN",
+   "wytezenie": 0.338,
+   "uwagi": "podkładka Ø24 pod nakrętką"
+  },
+  {
+   "nazwa": "Podłużnica chodnika 100×40×2 (6060) – wspornik przy zawiasie A 420 mm",
+   "obciazenie": 71.67,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.526,
+   "uwagi": "stopa 105 kg ×1,5 ×1,5"
+  },
+  {
+   "nazwa": "Podłużnica chodnika 100×40×2 (6060) – przęsło między poprzeczkami A 490 mm",
+   "obciazenie": 20.9,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.153,
+   "uwagi": "stopa 105 kg ×1,5 ×1,5"
+  },
+  {
+   "nazwa": "Podłużnica chodnika 100×40×2 (6060) – wspornik przy przyczepie 340 mm",
+   "obciazenie": 58.01,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.425,
+   "uwagi": "stopa 105 kg ×1,5 ×1,5"
+  },
+  {
+   "nazwa": "Podłużnica chodnika 100×40×2 (6060) – B: od poprzeczki do oparcia skosu na ziemi 474 mm",
+   "obciazenie": 20.2,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.148,
+   "uwagi": "stopa 105 kg ×1,5 ×1,5"
+  },
+  {
+   "nazwa": "Prowadnica – kątownik 40×40×4: zginanie półki pionowej od bocznego pchnięcia opony",
+   "obciazenie": 79.09,
+   "nosnosc": 136.36,
+   "jedn": "MPa",
+   "wytezenie": 0.58,
+   "uwagi": "0,3 × koło na wys. 35 mm, współpracuje ~300 mm półki"
+  },
+  {
+   "nazwa": "Prowadnica – śruba M8 rozrywana (dźwignia 35/20 mm)",
+   "obciazenie": 3.16,
+   "nosnosc": 10.54,
+   "jedn": "kN",
+   "wytezenie": 0.3,
+   "uwagi": "cała siła na jednej śrubie, liczona kl. 4.6"
+  },
+  {
+   "nazwa": "Blokada w transporcie: sworzeń Ø12 – ścinanie",
+   "obciazenie": 8.1,
+   "nosnosc": 21.71,
+   "jedn": "kN",
+   "wytezenie": 0.373,
+   "uwagi": "trap w pionie 67 kg, hamowanie 0,8 g ×1,5, ramię 30 mm, 2 sworznie (sworzeń ze stali ≥ 400 MPa)"
+  },
+  {
+   "nazwa": "Blokada: docisk sworznia Ø12 w płycie H 6 mm",
+   "obciazenie": 8.1,
+   "nosnosc": 33.23,
+   "jedn": "kN",
+   "wytezenie": 0.244,
+   "uwagi": ""
+  },
+  {
+   "nazwa": "Oczko sprężyny: śruba M12 + tuleja Ø20×4 L18 – zginanie tulei",
+   "obciazenie": 104.97,
+   "nosnosc": 235.0,
+   "jedn": "MPa",
+   "wytezenie": 0.447,
+   "uwagi": "ramię 23 mm od blachy"
+  },
+  {
+   "nazwa": "Płyta S 8 mm – śruby M12 w podłużnicy 100×40×2 (docisk Al 2 mm)",
+   "obciazenie": 3.81,
+   "nosnosc": 8.82,
+   "jedn": "kN",
+   "wytezenie": 0.431,
+   "uwagi": "mimośród 72 mm, rozstaw 50 mm"
+  }
+ ],
+ "czesci": [
+  {
+   "pid": "L1",
+   "name": "Rura jezdna ZEWNĘTRZNA sekcji A (z zawiasami H i Z)",
+   "qty": 2,
+   "material": "EN AW-6082-T6",
+   "size": "RHS Al 100×40×3, L = 1250",
+   "mass": 2.71,
+   "holes": 18,
+   "how": "profil cięty na długość, otwory wg tabeli",
+   "where": "x = ±125"
+  },
+  {
+   "pid": "L2",
+   "name": "Rura jezdna WEWNĘTRZNA sekcji A",
+   "qty": 2,
+   "material": "EN AW-6082-T6",
+   "size": "RHS Al 100×40×3, L = 1250",
+   "mass": 2.71,
+   "holes": 4,
+   "how": "profil cięty na długość, otwory wg tabeli",
+   "where": "x = ±45"
+  },
+  {
+   "pid": "L3",
+   "name": "Rura jezdna ZEWNĘTRZNA sekcji B (zawias Z, skos przy ziemi)",
+   "qty": 2,
+   "material": "EN AW-6082-T6",
+   "size": "RHS Al 100×40×3, L = 1250, skos 516",
+   "mass": 2.13,
+   "holes": 14,
+   "how": "profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku",
+   "where": "x = ±125"
+  },
+  {
+   "pid": "L4",
+   "name": "Rura jezdna WEWNĘTRZNA sekcji B (skos przy ziemi)",
+   "qty": 2,
+   "material": "EN AW-6082-T6",
+   "size": "RHS Al 100×40×3, L = 1250, skos 516",
+   "mass": 2.13,
+   "holes": 4,
+   "how": "profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku",
+   "where": "x = ±45"
+  },
+  {
+   "pid": "C1",
+   "name": "Podłużnica chodnika sekcji A (z płytą sprężyny S)",
+   "qty": 2,
+   "material": "6060-T6",
+   "size": "RHS Al 100×40×2, L = 1250",
+   "mass": 1.84,
+   "holes": 8,
+   "how": "profil cięty na długość, otwory wg tabeli",
+   "where": "x = ±345"
+  },
+  {
+   "pid": "C2",
+   "name": "Podłużnica krawędzi sekcji A",
+   "qty": 2,
+   "material": "6060-T6",
+   "size": "RHS Al 100×40×2, L = 1250",
+   "mass": 1.84,
+   "holes": 4,
+   "how": "profil cięty na długość, otwory wg tabeli",
+   "where": "x = ±575"
+  },
+  {
+   "pid": "C3",
+   "name": "Podłużnica chodnika / krawędzi sekcji B (skos)",
+   "qty": 4,
+   "material": "6060-T6",
+   "size": "RHS Al 100×40×2, L = 1250, skos 516",
+   "mass": 1.45,
+   "holes": 4,
+   "how": "profil cięty na długość, otwory wg tabeli; skos przy ziemi wg rysunku",
+   "where": "x = ±345, ±575"
+  },
+  {
+   "pid": "P",
+   "name": "Poprzeczka – rura NA PŁASKO (40 mm wysokości)",
+   "qty": 3,
+   "material": "6060-T6",
+   "size": "RHS Al 60×40×4, L = 1190",
+   "mass": 2.36,
+   "holes": 16,
+   "how": "8 otworów Ø13 przez górę i dół",
+   "where": "A: s = [340.0, 830.0], B: s = [260.0]"
+  },
+  {
+   "pid": "T",
+   "name": "Listwa spinająca pod sekcją B (nitowana)",
+   "qty": 1,
+   "material": "6060",
+   "size": "płaskownik Al 40×5, L = 1190",
+   "mass": 0.64,
+   "holes": 16,
+   "how": "16 otworów Ø4,9 pod nity",
+   "where": "B: s = 650"
+  },
+  {
+   "pid": "G1",
+   "name": "Prowadnica koła sekcji A – leży na siatce nad rurą zewnętrzną",
+   "qty": 2,
+   "material": "6060",
+   "size": "kątownik Al 40×40×4, L = 1095",
+   "mass": 0.9,
+   "holes": 5,
+   "how": "otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°",
+   "where": "s = 150…1245"
+  },
+  {
+   "pid": "G2",
+   "name": "Prowadnica koła sekcji B – leży na siatce nad rurą zewnętrzną",
+   "qty": 2,
+   "material": "6060",
+   "size": "kątownik Al 40×40×4, L = 715",
+   "mass": 0.59,
+   "holes": 4,
+   "how": "otwory Ø9 w półce poziomej, 20 mm od grzbietu; końce ścięte 45°",
+   "where": "s = 5…720"
+  },
+  {
+   "pid": "H",
+   "name": "Płyta zawiasu przy przyczepie",
+   "qty": 4,
+   "material": "S235",
+   "size": "płaskownik 80×6, L = 200",
+   "mass": 0.75,
+   "holes": 4,
+   "how": "prostokąt, 4 otwory (wiercić 4 szt. w pakiecie)",
+   "where": "po 2 na rurę L1"
+  },
+  {
+   "pid": "Z",
+   "name": "Płyta zawiasu środkowego (A i B – ta sama)",
+   "qty": 8,
+   "material": "S235",
+   "size": "płaskownik 100×6, L = 170",
+   "mass": 0.8,
+   "holes": 3,
+   "how": "prostokąt, 3 otwory (wiercić 8 szt. w pakiecie)",
+   "where": "po 2 na rurę L1 i L3"
+  },
+  {
+   "pid": "S",
+   "name": "Płyta zaczepu sprężyny gazowej",
+   "qty": 2,
+   "material": "S235",
+   "size": "płaskownik 80×8, L = 150",
+   "mass": 0.75,
+   "holes": 3,
+   "how": "prostokąt, 3 otwory",
+   "where": "na C1, s = 219…299"
+  },
+  {
+   "pid": "K",
+   "name": "Wspornik na belce przyczepy (zawias / sprężyna)",
+   "qty": 4,
+   "material": "S235",
+   "size": "kątownik 100×100×10, L = 130",
+   "mass": 1.94,
+   "holes": 5,
+   "how": "odcinek kątownika, 5 otworów, BEZ gięcia",
+   "where": "2 × zawias (x ±152…162), 2 × sprężyna (x ±369…379)"
+  },
+  {
+   "pid": "SIATKA",
+   "name": "Siatka cięto-ciągniona Al (pokład)",
+   "qty": 2,
+   "material": "Al",
+   "size": "1190 × 1250 (LWD w poprzek)",
+   "mass": 3.72,
+   "holes": 0,
+   "how": "z 1 arkusza 1250×2500",
+   "where": "cały pokład A i B"
+  }
+ ],
+ "podnoszenie": [
+  {
+   "deg": -10.9,
+   "L": 280.4,
+   "Tg": -451.3,
+   "Ts": 304.6,
+   "user_kg": 11.7,
+   "hang": false
+  },
+  {
+   "deg": -9.3,
+   "L": 282.6,
+   "Tg": -454.3,
+   "Ts": 304.9,
+   "user_kg": 11.9,
+   "hang": false
+  },
+  {
+   "deg": -7.6,
+   "L": 284.8,
+   "Tg": -456.9,
+   "Ts": 304.9,
+   "user_kg": 12.2,
+   "hang": false
+  },
+  {
+   "deg": -5.9,
+   "L": 287.0,
+   "Tg": -459.1,
+   "Ts": 304.6,
+   "user_kg": 12.3,
+   "hang": false
+  },
+  {
+   "deg": -4.2,
+   "L": 289.3,
+   "Tg": -460.9,
+   "Ts": 304.1,
+   "user_kg": 12.5,
+   "hang": false
+  },
+  {
+   "deg": -2.5,
+   "L": 291.5,
+   "Tg": -462.3,
+   "Ts": 303.3,
+   "user_kg": 12.7,
+   "hang": false
+  },
+  {
+   "deg": -0.9,
+   "L": 293.7,
+   "Tg": -463.3,
+   "Ts": 302.2,
+   "user_kg": 12.9,
+   "hang": false
+  },
+  {
+   "deg": 0.8,
+   "L": 295.9,
+   "Tg": -463.9,
+   "Ts": 300.9,
+   "user_kg": 13.0,
+   "hang": false
+  },
+  {
+   "deg": 2.5,
+   "L": 298.1,
+   "Tg": -464.0,
+   "Ts": 299.4,
+   "user_kg": 13.2,
+   "hang": false
+  },
+  {
+   "deg": 4.2,
+   "L": 300.3,
+   "Tg": -463.8,
+   "Ts": 297.6,
+   "user_kg": 13.3,
+   "hang": false
+  },
+  {
+   "deg": 5.9,
+   "L": 302.5,
+   "Tg": -463.1,
+   "Ts": 295.6,
+   "user_kg": 13.4,
+   "hang": false
+  },
+  {
+   "deg": 7.6,
+   "L": 304.7,
+   "Tg": -462.0,
+   "Ts": 293.4,
+   "user_kg": 13.5,
+   "hang": false
+  },
+  {
+   "deg": 9.2,
+   "L": 306.9,
+   "Tg": -460.5,
+   "Ts": 291.0,
+   "user_kg": 13.6,
+   "hang": false
+  },
+  {
+   "deg": 10.9,
+   "L": 309.1,
+   "Tg": -458.6,
+   "Ts": 288.3,
+   "user_kg": 13.6,
+   "hang": false
+  },
+  {
+   "deg": 12.6,
+   "L": 311.2,
+   "Tg": -456.3,
+   "Ts": 285.5,
+   "user_kg": 13.7,
+   "hang": false
+  },
+  {
+   "deg": 14.3,
+   "L": 313.3,
+   "Tg": -453.6,
+   "Ts": 282.5,
+   "user_kg": 13.7,
+   "hang": false
+  },
+  {
+   "deg": 16.0,
+   "L": 315.5,
+   "Tg": -450.4,
+   "Ts": 279.3,
+   "user_kg": 13.7,
+   "hang": false
+  },
+  {
+   "deg": 17.7,
+   "L": 317.6,
+   "Tg": -446.9,
+   "Ts": 276.0,
+   "user_kg": 13.7,
+   "hang": false
+  },
+  {
+   "deg": 19.3,
+   "L": 319.6,
+   "Tg": -442.9,
+   "Ts": 272.5,
+   "user_kg": 13.6,
+   "hang": false
+  },
+  {
+   "deg": 21.0,
+   "L": 321.7,
+   "Tg": -438.5,
+   "Ts": 268.8,
+   "user_kg": 13.6,
+   "hang": false
+  },
+  {
+   "deg": 22.7,
+   "L": 323.7,
+   "Tg": -433.7,
+   "Ts": 265.0,
+   "user_kg": 13.5,
+   "hang": false
+  },
+  {
+   "deg": 24.4,
+   "L": 325.7,
+   "Tg": -428.5,
+   "Ts": 261.0,
+   "user_kg": 13.4,
+   "hang": false
+  },
+  {
+   "deg": 26.1,
+   "L": 327.7,
+   "Tg": -422.8,
+   "Ts": 256.9,
+   "user_kg": 13.3,
+   "hang": false
+  },
+  {
+   "deg": 27.7,
+   "L": 329.7,
+   "Tg": -416.7,
+   "Ts": 252.7,
+   "user_kg": 13.1,
+   "hang": false
+  },
+  {
+   "deg": 29.4,
+   "L": 331.6,
+   "Tg": -410.1,
+   "Ts": 248.3,
+   "user_kg": 12.9,
+   "hang": false
+  },
+  {
+   "deg": 31.1,
+   "L": 333.5,
+   "Tg": -403.1,
+   "Ts": 243.8,
+   "user_kg": 12.7,
+   "hang": false
+  },
+  {
+   "deg": 32.8,
+   "L": 335.3,
+   "Tg": -395.5,
+   "Ts": 239.2,
+   "user_kg": 12.5,
+   "hang": false
+  },
+  {
+   "deg": 34.5,
+   "L": 337.2,
+   "Tg": -387.3,
+   "Ts": 234.5,
+   "user_kg": 12.2,
+   "hang": false
+  },
+  {
+   "deg": 36.2,
+   "L": 339.0,
+   "Tg": -378.5,
+   "Ts": 229.7,
+   "user_kg": 11.9,
+   "hang": false
+  },
+  {
+   "deg": 37.8,
+   "L": 340.8,
+   "Tg": -368.6,
+   "Ts": 224.8,
+   "user_kg": 11.5,
+   "hang": false
+  },
+  {
+   "deg": 39.5,
+   "L": 342.5,
+   "Tg": -357.2,
+   "Ts": 219.8,
+   "user_kg": 11.0,
+   "hang": false
+  },
+  {
+   "deg": 41.2,
+   "L": 344.2,
+   "Tg": -342.5,
+   "Ts": 214.7,
+   "user_kg": 10.2,
+   "hang": false
+  },
+  {
+   "deg": 42.9,
+   "L": 345.8,
+   "Tg": -313.4,
+   "Ts": 209.5,
+   "user_kg": 8.3,
+   "hang": false
+  },
+  {
+   "deg": 44.6,
+   "L": 347.5,
+   "Tg": -447.0,
+   "Ts": 204.3,
+   "user_kg": 19.4,
+   "hang": true
+  },
+  {
+   "deg": 46.3,
+   "L": 349.0,
+   "Tg": -435.6,
+   "Ts": 198.9,
+   "user_kg": 18.9,
+   "hang": true
+  },
+  {
+   "deg": 47.9,
+   "L": 350.6,
+   "Tg": -423.8,
+   "Ts": 193.5,
+   "user_kg": 18.4,
+   "hang": true
+  },
+  {
+   "deg": 49.6,
+   "L": 352.1,
+   "Tg": -411.7,
+   "Ts": 188.0,
+   "user_kg": 17.9,
+   "hang": true
+  },
+  {
+   "deg": 51.3,
+   "L": 353.6,
+   "Tg": -399.1,
+   "Ts": 182.5,
+   "user_kg": 17.3,
+   "hang": true
+  },
+  {
+   "deg": 53.0,
+   "L": 355.0,
+   "Tg": -386.3,
+   "Ts": 176.8,
+   "user_kg": 16.7,
+   "hang": true
+  },
+  {
+   "deg": 54.7,
+   "L": 356.4,
+   "Tg": -373.1,
+   "Ts": 171.2,
+   "user_kg": 16.1,
+   "hang": true
+  },
+  {
+   "deg": 56.4,
+   "L": 357.7,
+   "Tg": -359.6,
+   "Ts": 165.4,
+   "user_kg": 15.5,
+   "hang": true
+  },
+  {
+   "deg": 58.0,
+   "L": 359.0,
+   "Tg": -345.7,
+   "Ts": 159.6,
+   "user_kg": 14.9,
+   "hang": true
+  },
+  {
+   "deg": 59.7,
+   "L": 360.2,
+   "Tg": -331.6,
+   "Ts": 153.8,
+   "user_kg": 14.2,
+   "hang": true
+  },
+  {
+   "deg": 61.4,
+   "L": 361.5,
+   "Tg": -317.2,
+   "Ts": 147.9,
+   "user_kg": 13.5,
+   "hang": true
+  },
+  {
+   "deg": 63.1,
+   "L": 362.6,
+   "Tg": -302.5,
+   "Ts": 142.0,
+   "user_kg": 12.8,
+   "hang": true
+  },
+  {
+   "deg": 64.8,
+   "L": 363.7,
+   "Tg": -287.6,
+   "Ts": 136.0,
+   "user_kg": 12.1,
+   "hang": true
+  },
+  {
+   "deg": 66.4,
+   "L": 364.8,
+   "Tg": -272.4,
+   "Ts": 130.0,
+   "user_kg": 11.4,
+   "hang": true
+  },
+  {
+   "deg": 68.1,
+   "L": 365.8,
+   "Tg": -256.9,
+   "Ts": 123.9,
+   "user_kg": 10.6,
+   "hang": true
+  },
+  {
+   "deg": 69.8,
+   "L": 366.8,
+   "Tg": -241.3,
+   "Ts": 117.8,
+   "user_kg": 9.9,
+   "hang": true
+  },
+  {
+   "deg": 71.5,
+   "L": 367.7,
+   "Tg": -225.4,
+   "Ts": 111.7,
+   "user_kg": 9.1,
+   "hang": true
+  },
+  {
+   "deg": 73.2,
+   "L": 368.6,
+   "Tg": -209.4,
+   "Ts": 105.5,
+   "user_kg": 8.3,
+   "hang": true
+  },
+  {
+   "deg": 74.9,
+   "L": 369.4,
+   "Tg": -193.1,
+   "Ts": 99.4,
+   "user_kg": 7.5,
+   "hang": true
+  },
+  {
+   "deg": 76.5,
+   "L": 370.2,
+   "Tg": -176.7,
+   "Ts": 93.2,
+   "user_kg": 6.7,
+   "hang": true
+  },
+  {
+   "deg": 78.2,
+   "L": 370.9,
+   "Tg": -160.2,
+   "Ts": 86.9,
+   "user_kg": 5.9,
+   "hang": true
+  },
+  {
+   "deg": 79.9,
+   "L": 371.6,
+   "Tg": -143.5,
+   "Ts": 80.7,
+   "user_kg": 5.0,
+   "hang": true
+  },
+  {
+   "deg": 81.6,
+   "L": 372.2,
+   "Tg": -126.7,
+   "Ts": 74.4,
+   "user_kg": 4.2,
+   "hang": true
+  },
+  {
+   "deg": 83.3,
+   "L": 372.8,
+   "Tg": -109.7,
+   "Ts": 68.1,
+   "user_kg": 3.3,
+   "hang": true
+  },
+  {
+   "deg": 85.0,
+   "L": 373.3,
+   "Tg": -92.7,
+   "Ts": 61.8,
+   "user_kg": 2.5,
+   "hang": true
+  },
+  {
+   "deg": 86.6,
+   "L": 373.8,
+   "Tg": -75.6,
+   "Ts": 55.4,
+   "user_kg": 1.6,
+   "hang": true
+  },
+  {
+   "deg": 88.3,
+   "L": 374.2,
+   "Tg": -58.5,
+   "Ts": 49.1,
+   "user_kg": 0.7,
+   "hang": true
+  },
+  {
+   "deg": 90.0,
+   "L": 374.6,
+   "Tg": -41.3,
+   "Ts": 42.7,
+   "user_kg": -0.1,
+   "hang": true
+  }
+ ],
+ "podnoszenie_bez_sprezyn": [
+  {
+   "deg": -10.9,
+   "L": 0.0,
+   "Tg": -451.3,
+   "Ts": 0.0,
+   "user_kg": 36.1,
+   "hang": false
+  },
+  {
+   "deg": -9.3,
+   "L": 0.0,
+   "Tg": -454.3,
+   "Ts": 0.0,
+   "user_kg": 36.3,
+   "hang": false
+  },
+  {
+   "deg": -7.6,
+   "L": 0.0,
+   "Tg": -456.9,
+   "Ts": 0.0,
+   "user_kg": 36.5,
+   "hang": false
+  },
+  {
+   "deg": -5.9,
+   "L": 0.0,
+   "Tg": -459.1,
+   "Ts": 0.0,
+   "user_kg": 36.7,
+   "hang": false
+  },
+  {
+   "deg": -4.2,
+   "L": 0.0,
+   "Tg": -460.9,
+   "Ts": 0.0,
+   "user_kg": 36.8,
+   "hang": false
+  },
+  {
+   "deg": -2.5,
+   "L": 0.0,
+   "Tg": -462.3,
+   "Ts": 0.0,
+   "user_kg": 37.0,
+   "hang": false
+  },
+  {
+   "deg": -0.9,
+   "L": 0.0,
+   "Tg": -463.3,
+   "Ts": 0.0,
+   "user_kg": 37.0,
+   "hang": false
+  },
+  {
+   "deg": 0.8,
+   "L": 0.0,
+   "Tg": -463.9,
+   "Ts": 0.0,
+   "user_kg": 37.1,
+   "hang": false
+  },
+  {
+   "deg": 2.5,
+   "L": 0.0,
+   "Tg": -464.0,
+   "Ts": 0.0,
+   "user_kg": 37.1,
+   "hang": false
+  },
+  {
+   "deg": 4.2,
+   "L": 0.0,
+   "Tg": -463.8,
+   "Ts": 0.0,
+   "user_kg": 37.1,
+   "hang": false
+  },
+  {
+   "deg": 5.9,
+   "L": 0.0,
+   "Tg": -463.1,
+   "Ts": 0.0,
+   "user_kg": 37.0,
+   "hang": false
+  },
+  {
+   "deg": 7.6,
+   "L": 0.0,
+   "Tg": -462.0,
+   "Ts": 0.0,
+   "user_kg": 36.9,
+   "hang": false
+  },
+  {
+   "deg": 9.2,
+   "L": 0.0,
+   "Tg": -460.5,
+   "Ts": 0.0,
+   "user_kg": 36.8,
+   "hang": false
+  },
+  {
+   "deg": 10.9,
+   "L": 0.0,
+   "Tg": -458.6,
+   "Ts": 0.0,
+   "user_kg": 36.7,
+   "hang": false
+  },
+  {
+   "deg": 12.6,
+   "L": 0.0,
+   "Tg": -456.3,
+   "Ts": 0.0,
+   "user_kg": 36.5,
+   "hang": false
+  },
+  {
+   "deg": 14.3,
+   "L": 0.0,
+   "Tg": -453.6,
+   "Ts": 0.0,
+   "user_kg": 36.3,
+   "hang": false
+  },
+  {
+   "deg": 16.0,
+   "L": 0.0,
+   "Tg": -450.4,
+   "Ts": 0.0,
+   "user_kg": 36.0,
+   "hang": false
+  },
+  {
+   "deg": 17.7,
+   "L": 0.0,
+   "Tg": -446.9,
+   "Ts": 0.0,
+   "user_kg": 35.7,
+   "hang": false
+  },
+  {
+   "deg": 19.3,
+   "L": 0.0,
+   "Tg": -442.9,
+   "Ts": 0.0,
+   "user_kg": 35.4,
+   "hang": false
+  },
+  {
+   "deg": 21.0,
+   "L": 0.0,
+   "Tg": -438.5,
+   "Ts": 0.0,
+   "user_kg": 35.1,
+   "hang": false
+  },
+  {
+   "deg": 22.7,
+   "L": 0.0,
+   "Tg": -433.7,
+   "Ts": 0.0,
+   "user_kg": 34.7,
+   "hang": false
+  },
+  {
+   "deg": 24.4,
+   "L": 0.0,
+   "Tg": -428.5,
+   "Ts": 0.0,
+   "user_kg": 34.3,
+   "hang": false
+  },
+  {
+   "deg": 26.1,
+   "L": 0.0,
+   "Tg": -422.8,
+   "Ts": 0.0,
+   "user_kg": 33.8,
+   "hang": false
+  },
+  {
+   "deg": 27.7,
+   "L": 0.0,
+   "Tg": -416.7,
+   "Ts": 0.0,
+   "user_kg": 33.3,
+   "hang": false
+  },
+  {
+   "deg": 29.4,
+   "L": 0.0,
+   "Tg": -410.1,
+   "Ts": 0.0,
+   "user_kg": 32.8,
+   "hang": false
+  },
+  {
+   "deg": 31.1,
+   "L": 0.0,
+   "Tg": -403.1,
+   "Ts": 0.0,
+   "user_kg": 32.2,
+   "hang": false
+  },
+  {
+   "deg": 32.8,
+   "L": 0.0,
+   "Tg": -395.5,
+   "Ts": 0.0,
+   "user_kg": 31.6,
+   "hang": false
+  },
+  {
+   "deg": 34.5,
+   "L": 0.0,
+   "Tg": -387.3,
+   "Ts": 0.0,
+   "user_kg": 31.0,
+   "hang": false
+  },
+  {
+   "deg": 36.2,
+   "L": 0.0,
+   "Tg": -378.5,
+   "Ts": 0.0,
+   "user_kg": 30.3,
+   "hang": false
+  },
+  {
+   "deg": 37.8,
+   "L": 0.0,
+   "Tg": -368.6,
+   "Ts": 0.0,
+   "user_kg": 29.5,
+   "hang": false
+  },
+  {
+   "deg": 39.5,
+   "L": 0.0,
+   "Tg": -357.2,
+   "Ts": 0.0,
+   "user_kg": 28.6,
+   "hang": false
+  },
+  {
+   "deg": 41.2,
+   "L": 0.0,
+   "Tg": -342.5,
+   "Ts": 0.0,
+   "user_kg": 27.4,
+   "hang": false
+  },
+  {
+   "deg": 42.9,
+   "L": 0.0,
+   "Tg": -313.4,
+   "Ts": 0.0,
+   "user_kg": 25.1,
+   "hang": false
+  },
+  {
+   "deg": 44.6,
+   "L": 0.0,
+   "Tg": -447.0,
+   "Ts": 0.0,
+   "user_kg": 35.7,
+   "hang": true
+  },
+  {
+   "deg": 46.3,
+   "L": 0.0,
+   "Tg": -435.6,
+   "Ts": 0.0,
+   "user_kg": 34.8,
+   "hang": true
+  },
+  {
+   "deg": 47.9,
+   "L": 0.0,
+   "Tg": -423.8,
+   "Ts": 0.0,
+   "user_kg": 33.9,
+   "hang": true
+  },
+  {
+   "deg": 49.6,
+   "L": 0.0,
+   "Tg": -411.7,
+   "Ts": 0.0,
+   "user_kg": 32.9,
+   "hang": true
+  },
+  {
+   "deg": 51.3,
+   "L": 0.0,
+   "Tg": -399.1,
+   "Ts": 0.0,
+   "user_kg": 31.9,
+   "hang": true
+  },
+  {
+   "deg": 53.0,
+   "L": 0.0,
+   "Tg": -386.3,
+   "Ts": 0.0,
+   "user_kg": 30.9,
+   "hang": true
+  },
+  {
+   "deg": 54.7,
+   "L": 0.0,
+   "Tg": -373.1,
+   "Ts": 0.0,
+   "user_kg": 29.8,
+   "hang": true
+  },
+  {
+   "deg": 56.4,
+   "L": 0.0,
+   "Tg": -359.6,
+   "Ts": 0.0,
+   "user_kg": 28.7,
+   "hang": true
+  },
+  {
+   "deg": 58.0,
+   "L": 0.0,
+   "Tg": -345.7,
+   "Ts": 0.0,
+   "user_kg": 27.6,
+   "hang": true
+  },
+  {
+   "deg": 59.7,
+   "L": 0.0,
+   "Tg": -331.6,
+   "Ts": 0.0,
+   "user_kg": 26.5,
+   "hang": true
+  },
+  {
+   "deg": 61.4,
+   "L": 0.0,
+   "Tg": -317.2,
+   "Ts": 0.0,
+   "user_kg": 25.4,
+   "hang": true
+  },
+  {
+   "deg": 63.1,
+   "L": 0.0,
+   "Tg": -302.5,
+   "Ts": 0.0,
+   "user_kg": 24.2,
+   "hang": true
+  },
+  {
+   "deg": 64.8,
+   "L": 0.0,
+   "Tg": -287.6,
+   "Ts": 0.0,
+   "user_kg": 23.0,
+   "hang": true
+  },
+  {
+   "deg": 66.4,
+   "L": 0.0,
+   "Tg": -272.4,
+   "Ts": 0.0,
+   "user_kg": 21.8,
+   "hang": true
+  },
+  {
+   "deg": 68.1,
+   "L": 0.0,
+   "Tg": -256.9,
+   "Ts": 0.0,
+   "user_kg": 20.5,
+   "hang": true
+  },
+  {
+   "deg": 69.8,
+   "L": 0.0,
+   "Tg": -241.3,
+   "Ts": 0.0,
+   "user_kg": 19.3,
+   "hang": true
+  },
+  {
+   "deg": 71.5,
+   "L": 0.0,
+   "Tg": -225.4,
+   "Ts": 0.0,
+   "user_kg": 18.0,
+   "hang": true
+  },
+  {
+   "deg": 73.2,
+   "L": 0.0,
+   "Tg": -209.4,
+   "Ts": 0.0,
+   "user_kg": 16.7,
+   "hang": true
+  },
+  {
+   "deg": 74.9,
+   "L": 0.0,
+   "Tg": -193.1,
+   "Ts": 0.0,
+   "user_kg": 15.4,
+   "hang": true
+  },
+  {
+   "deg": 76.5,
+   "L": 0.0,
+   "Tg": -176.7,
+   "Ts": 0.0,
+   "user_kg": 14.1,
+   "hang": true
+  },
+  {
+   "deg": 78.2,
+   "L": 0.0,
+   "Tg": -160.2,
+   "Ts": 0.0,
+   "user_kg": 12.8,
+   "hang": true
+  },
+  {
+   "deg": 79.9,
+   "L": 0.0,
+   "Tg": -143.5,
+   "Ts": 0.0,
+   "user_kg": 11.5,
+   "hang": true
+  },
+  {
+   "deg": 81.6,
+   "L": 0.0,
+   "Tg": -126.7,
+   "Ts": 0.0,
+   "user_kg": 10.1,
+   "hang": true
+  },
+  {
+   "deg": 83.3,
+   "L": 0.0,
+   "Tg": -109.7,
+   "Ts": 0.0,
+   "user_kg": 8.8,
+   "hang": true
+  },
+  {
+   "deg": 85.0,
+   "L": 0.0,
+   "Tg": -92.7,
+   "Ts": 0.0,
+   "user_kg": 7.4,
+   "hang": true
+  },
+  {
+   "deg": 86.6,
+   "L": 0.0,
+   "Tg": -75.6,
+   "Ts": 0.0,
+   "user_kg": 6.0,
+   "hang": true
+  },
+  {
+   "deg": 88.3,
+   "L": 0.0,
+   "Tg": -58.5,
+   "Ts": 0.0,
+   "user_kg": 4.7,
+   "hang": true
+  },
+  {
+   "deg": 90.0,
+   "L": 0.0,
+   "Tg": -41.3,
+   "Ts": 0.0,
+   "user_kg": 3.3,
+   "hang": true
+  }
+ ]
+}
