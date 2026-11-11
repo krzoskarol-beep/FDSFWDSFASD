@@ -1,5 +1,20 @@
 # Zmiany – Moja pozycja GPS
 
+## 1.6
+
+- **Poprawka: korek nie jest już parkingiem.** Gdy telefon jest połączony z Bluetooth auta,
+  długi postój (korek, czekanie z włączonym silnikiem) nie kończy jazdy. Wcześniej po 20 minutach
+  postoju aplikacja zapisywała złe miejsce i przestawała śledzić jazdę.
+- **Poprawka: zerwanie Bluetooth w trasie.** Gdy połączenie z autem zerwie się w trakcie jazdy
+  i nie wróci, parking zapisuje się 5 minut po zatrzymaniu (wcześniej po 20).
+- Połączony z autem, ale bez jazdy przez godzinę (np. radio grające po zgaszeniu silnika):
+  zapis miejsca postoju i wyłączenie GPS.
+- **Niezawodność w tle:** wyłączenie optymalizacji baterii jest krokiem konfiguracji
+  automatycznego zapisu, a gdy Android zablokuje śledzenie, pojawia się powiadomienie
+  (najwyżej raz na dobę).
+- **Podpowiedź kierunku** obok strzałki: „prosto”, „w prawo”, „za Tobą”…, czytana też przez TalkBack.
+- **Tryb ciemny** razem z ciemnym motywem systemu.
+
 ## 1.5
 
 - **Tylko Bluetooth auta:** automatyczne zapisywanie korzysta wyłącznie z połączenia

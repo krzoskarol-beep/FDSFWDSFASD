@@ -42,6 +42,8 @@ final class CarBluetooth {
     private static final String PREFS = "car_bluetooth";
     /** Zbiór wpisów „adres|nazwa”. */
     private static final String K_DEVICES = "devices";
+    /** Adresy wybranych urządzeń auta, z którymi telefon jest teraz połączony. */
+    private static final String K_CONNECTED = "connected";
     private static final char SEP = '|';
 
     private CarBluetooth() { }
@@ -76,6 +78,27 @@ final class CarBluetooth {
             if (e.startsWith(address + SEP)) return e.substring(e.indexOf(SEP) + 1);
         }
         return address;
+    }
+
+    /** Zapisywane przez {@link CarBluetoothReceiver} przy każdym połączeniu i rozłączeniu. */
+    static void setConnected(Context c, String address, boolean connected) {
+        Set<String> set = new HashSet<>(prefs(c).getStringSet(K_CONNECTED, Collections.emptySet()));
+        if (connected) set.add(address); else set.remove(address);
+        prefs(c).edit().putStringSet(K_CONNECTED, set).apply();
+    }
+
+    /** Czy telefon jest teraz połączony z którymkolwiek z wybranych urządzeń auta. */
+    static boolean isCarConnected(Context c) {
+        Set<String> connected = prefs(c).getStringSet(K_CONNECTED, Collections.emptySet());
+        for (String a : connected) {
+            if (addresses(c).contains(a)) return true;
+        }
+        return false;
+    }
+
+    /** Po restarcie telefonu żadne połączenie nie trwa (system zgłosi je od nowa). */
+    static void clearConnected(Context c) {
+        prefs(c).edit().remove(K_CONNECTED).apply();
     }
 
     /** @param selected adres → nazwa; pusta mapa wyłącza wyzwalacz Bluetooth */

@@ -16,6 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(a) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(a)) {
             EventLog.log(context, Intent.ACTION_BOOT_COMPLETED.equals(a)
                     ? "Restart telefonu" : "Aktualizacja aplikacji");
+            if (Intent.ACTION_BOOT_COMPLETED.equals(a)) CarBluetooth.clearConnected(context);
             AutoParking.checkAfterBoot(context);
         }
     }

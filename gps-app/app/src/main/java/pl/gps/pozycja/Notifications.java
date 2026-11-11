@@ -18,6 +18,10 @@ final class Notifications {
 
     static final int ID_DRIVING = 1;
     static final int ID_PARKED = 2;
+    static final int ID_BLOCKED = 3;
+
+    private static final String PREFS = "notifications";
+    private static final String K_LAST_BLOCKED = "lastBlockedAlert";
 
     private Notifications() { }
 
@@ -89,6 +93,27 @@ final class Notifications {
                         openApp(c, MainActivity.ACTION_NAVIGATE_TO_CAR, 21)).build())
                 .build();
         c.getSystemService(NotificationManager.class).notify(ID_PARKED, n);
+    }
+
+    /**
+     * Android nie pozwolił uruchomić śledzenia jazdy w tle. Najczęstsza przyczyna to optymalizacja
+     * baterii, więc dotknięcie otwiera aplikację. Najwyżej raz na dobę, żeby nie męczyć.
+     */
+    static void showTrackingBlocked(Context c) {
+        android.content.SharedPreferences p = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        long now = System.currentTimeMillis();
+        if (!canPost(c) || !DrivePolicy.shouldAlertBlocked(p.getLong(K_LAST_BLOCKED, 0), now)) return;
+        p.edit().putLong(K_LAST_BLOCKED, now).apply();
+        String text = c.getString(R.string.notif_blocked_text);
+        Notification n = builder(c, CHANNEL_PARKING)
+                .setSmallIcon(R.drawable.ic_stat_car)
+                .setContentTitle(c.getString(R.string.notif_blocked_title))
+                .setContentText(text)
+                .setStyle(new Notification.BigTextStyle().bigText(text))
+                .setAutoCancel(true)
+                .setContentIntent(openApp(c, Intent.ACTION_MAIN, 30))
+                .build();
+        c.getSystemService(NotificationManager.class).notify(ID_BLOCKED, n);
     }
 
     static boolean canPost(Context c) {

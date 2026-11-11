@@ -66,4 +66,18 @@ final class Formatters {
     private static boolean notEmpty(String s) {
         return s != null && !s.trim().isEmpty();
     }
+
+    /**
+     * Kierunek do auta względem tego, gdzie patrzysz (kąt strzałki, 0° = przed Tobą,
+     * zgodnie z ruchem wskazówek zegara): „prosto”, „lekko w prawo”, „za Tobą”…
+     */
+    static String relativeDirection(float arrowDegrees) {
+        double a = Geo.normalizeDegrees(arrowDegrees);
+        if (a < 20 || a >= 340) return "prosto";
+        if (a < 60) return "lekko w prawo";
+        if (a < 135) return "w prawo";
+        if (a < 225) return "za Tobą";
+        if (a < 300) return "w lewo";
+        return "lekko w lewo";
+    }
 }

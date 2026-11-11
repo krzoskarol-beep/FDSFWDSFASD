@@ -30,7 +30,9 @@ swojego auta (można kilka; przycisk **Wybierz Bluetooth auta**). Od tej pory:
 2. **Rozłączenie** (wyłączenie silnika) = zapis parkingu z pozycji **z chwili rozłączenia**,
    gdy telefon był jeszcze w aucie. Powiadomienie ma przycisk **Prowadź**.
 3. Chwilowe zerwanie Bluetooth w trakcie jazdy (auto jedzie) jest ignorowane.
-4. Gdyby rozłączenie nie dotarło, po 20 minutach bez jazdy usługa sama zapisuje miejsce postoju.
+4. Bez rozłączenia o końcu jazdy decyduje `DrivePolicy`: połączony z autem = jazda trwa
+   (korek), chyba że bez ruchu przez godzinę; po zerwaniu Bluetooth w trasie zapis 5 minut
+   po zatrzymaniu; bez jazdy przez 20 minut = fałszywy alarm.
 
 Aplikacja korzysta **wyłącznie z danych Bluetooth** (bez rozpoznawania aktywności i bez usług
 Google Play), więc nie ma fałszywych alarmów w autobusie i działa na każdym telefonie z Androidem 7.0+.

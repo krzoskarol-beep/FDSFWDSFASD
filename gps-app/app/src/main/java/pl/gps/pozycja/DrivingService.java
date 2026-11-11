@@ -24,8 +24,8 @@ import android.os.SystemClock;
  *
  * <p>Początek i koniec jazdy zgłasza {@link CarBluetoothReceiver}: połączenie / rozłączenie
  * z Bluetooth auta. Rozłączenie następuje przy wyłączeniu silnika, więc wiemy dokładnie,
- * kiedy auto stanęło. Gdyby rozłączenie nie dotarło, po 20 minutach bez jazdy usługa
- * sama uznaje jazdę za zakończoną ({@link #SOURCE_TIMEOUT}).
+ * kiedy auto stanęło. Gdyby rozłączenie nie dotarło, o końcu jazdy decyduje
+ * {@link DrivePolicy} ({@link #SOURCE_TIMEOUT}).
  *
  * <p>Zasada: pozycja ustalona po fakcie to miejsce, w którym stoi kierowca, a nie auto.
  * Pozycje sprzed zdarzenia o więcej niż {@link #CACHED_FIX_WINDOW_MS} odrzucamy, bo mogą
@@ -45,8 +45,6 @@ public class DrivingService extends Service {
     static final String SOURCE_BLUETOOTH = "bluetooth";
 
     private static final long GPS_INTERVAL_MS = 2000;
-    /** Jeśli przez tyle czasu nie było jazdy, uznajemy, że auto stoi (gdyby system nie zgłosił końca). */
-    private static final long NO_DRIVING_TIMEOUT_MS = 20 * 60_000L;
     /** Po zgłoszeniu końca jazdy bez danych z jazdy czekamy tyle na aktualną pozycję. */
     private static final long WAIT_FOR_FIX_MS = 45_000;
     /** Zapamiętana przez system pozycja jest użyteczna tylko, jeśli pochodzi z okolic zdarzenia. */
@@ -129,6 +127,7 @@ public class DrivingService extends Service {
         if (!goForeground(getString(ACTION_DRIVING_ENDED.equals(action)
                 ? R.string.notif_saving_text : R.string.notif_driving_text))) {
             if (ACTION_DRIVING_ENDED.equals(action)) saveLastKnown(this, eventTime);
+            Notifications.showTrackingBlocked(this);
             finishService();
             return START_NOT_STICKY;
         }
@@ -333,25 +332,27 @@ public class DrivingService extends Service {
         }
     };
 
-    /** Co minutę: czy jazda nie skończyła się bez zgłoszenia z systemu. */
+    /** Co minutę: czy jazda nie skończyła się bez zgłoszenia rozłączenia (reguły w {@link DrivePolicy}). */
     private final Runnable watchdog = new Runnable() {
         @Override
         public void run() {
             long now = SystemClock.elapsedRealtime();
-            long lastDriving = detector.lastDrivingTimeMs();
-            if (lastDriving >= 0 && now - lastDriving > NO_DRIVING_TIMEOUT_MS) {
-                EventLog.log(DrivingService.this, "Brak jazdy od 20 min, a system nie zgłosił końca: zapisuję");
-                driving = false;
-                onDrivingEnded(SOURCE_TIMEOUT, now);
-                return;
+            boolean connected = CarBluetooth.isCarConnected(DrivingService.this);
+            switch (DrivePolicy.onWatchdog(connected, now, startedAtMs, detector.lastDrivingTimeMs())) {
+                case END_AND_SAVE:
+                    EventLog.log(DrivingService.this, connected
+                            ? "Połączono z autem, ale bez jazdy od godziny: zapisuję miejsce postoju"
+                            : "Brak połączenia z autem i postój od 5 min (po zerwaniu Bluetooth): zapisuję");
+                    driving = false;
+                    onDrivingEnded(SOURCE_TIMEOUT, now);
+                    return;
+                case END_WITHOUT_SAVE:
+                    EventLog.log(DrivingService.this, "Fałszywy alarm: GPS nie wykrył jazdy, kończę bez zapisu");
+                    finishService();
+                    return;
+                default:
+                    handler.postDelayed(this, 60_000);
             }
-            if (lastDriving < 0 && now - startedAtMs > NO_DRIVING_TIMEOUT_MS) {
-                // Fałszywy alarm (np. chodzenie po mieście): nic nie zapisujemy.
-                EventLog.log(DrivingService.this, "Fałszywy alarm: przez 20 min GPS nie wykrył jazdy, kończę bez zapisu");
-                finishService();
-                return;
-            }
-            handler.postDelayed(this, 60_000);
         }
     };
 
@@ -385,7 +386,7 @@ public class DrivingService extends Service {
     }
 
     private static String sourceName(String source) {
-        return SOURCE_BLUETOOTH.equals(source) ? "Bluetooth auta" : "brak jazdy od 20 min";
+        return SOURCE_BLUETOOTH.equals(source) ? "Bluetooth auta" : "brak jazdy (reguła czasu)";
     }
 
     private void save(ParkingDetector.Fix fix, boolean approximate) {
