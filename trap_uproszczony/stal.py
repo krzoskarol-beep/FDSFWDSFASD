@@ -148,7 +148,7 @@ def calcs(v, mA, mB, F1):
     M75 = 0.75 * Pd * L / 4 + q_d * L ** 2 / 8
     M100 = Pd * L / 4 + q_d * L ** 2 / 8
     add(f"Rura jezdna {ln} – zginanie, rozpiętość 2,5 m (75 % koła)", M75 * 1e3 / lane["W"], lfy, "MPa", "")
-    add("To samo – całe koło na jednej rurze", M100 * 1e3 / lane["W"], lfy, "MPa", "")
+    add("Rura jezdna – zginanie, całe koło na jednej rurze", M100 * 1e3 / lane["W"], lfy, "MPa", "")
     qk = (mA + mB) * G / 1000 / 2 / L
     dk = 0.75 * Pk * 1e3 * L ** 3 / (48 * 210000 * lane["I"]) + 5 * qk * 1e3 * L ** 4 / (384 * 210000 * lane["I"])
     add("Ugięcie w środku (charakterystyczne)", dk, L / 200, "mm", "")
@@ -169,8 +169,8 @@ def calcs(v, mA, mB, F1):
         add("Zawias środkowy: śruba M12 8.8 – ścinanie (jednocięta)", 2 * Rb, 0.6 * 800 * 84.3 / 1.25 / 1e3, "kN", "jedna płyta Z")
         add(f"Zawias środkowy: tuleja Ø18 → ścianka rury {fmt(t)} mm (docisk, 75 % na ściankę zewn.)", 1.5 * Rb,
             2.5 * min(45 / 55.5, 1) * lfu * 18 * t / 1.25 / 1e3, "kN", "")
-        Tt = F / 2 * 1e3 * 23.0
-        add("Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (23 mm)", Tt / (2 * (100 - t) * (40 - t) * t) * math.sqrt(3), lfy, "MPa",
+        Tt = F / 2 * 1e3 * 29.0          # płyta Z sekcji B leży na podkładce 6 mm: oś płyty 20 + 6 + 3 mm od osi rury L3 (A: 23 mm)
+        add("Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (29 mm, L3)", Tt / (2 * (100 - t) * (40 - t) * t) * math.sqrt(3), lfy, "MPa",
             "naprężenie zastępcze od ścinania przy skręcaniu")
     else:
         add("Zawias środkowy: sworzeń M20 8.8 – ścinanie", F / 2, 0.6 * 800 * math.pi * 100 / 1.25 / 1e3, "kN", "")
@@ -301,7 +301,7 @@ def main():
         variants.append(dict(klucz=k, nazwa=r["v"]["nazwa"], masa=round(r["mA"] + r["mB"], 1), bez=round(r["l0"], 1),
                              sprezyny=f"{r['spr']['sztuk']} × {r['spr']['F1_N']} N ({'Ø40' if r['spr']['F1_N'] > 2500 else 'Ø28'})",
                              ze=round(r["spr"]["max_wysilek_kg"], 1), koszt=round(r["tot"]), wyt=r["worst"]["wytezenie"],
-                             rysunki="nowe rysunki (węższy trap)" if k == "S3" else "bez zmian"))
+                             rysunki="nowe rysunki (węższy trap)" if k == "S3" else "nowe rysunki (stal_S5/)" if k == "S5L" else "bez zmian"))
     summary = dict(polecany=RECOMMENDED, masa_al=round(aA + aB, 1), masa_stal=round(R["mA"] + R["mB"], 1),
                    wysilek_bez_sprezyn_stal=round(R["l0"], 1), sprezyny_stal=sp, koszt_al=round(tot_al), koszt_stal=round(R["tot"]),
                    najwieksze_wytezenie=dict(element=R["worst"]["nazwa"], wartosc=R["worst"]["wytezenie"]))

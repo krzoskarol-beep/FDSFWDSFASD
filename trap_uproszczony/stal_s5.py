@@ -69,7 +69,7 @@ def layout():
                       key=lambda s, z: f"Ah:{s:g}:{z:g}:1:L1")],
         cross_txt="RHS 60×40×2 S235JRH na płasko", tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
         guide=(40.0, 3.0, "kątownik stal 40×40×3"),
-        single_plates=True,
+        single_plates=V["single_plates"],
         s_plates=[dict(sg=1, face=XW + 20, inner=XW - 20, tube="C1"),
                   dict(sg=-1, face=g.X_LANE_OUT + 20, inner=g.X_LANE_OUT - 20, tube="L1 prawa (x −125)")],
         springs=[dict(sg=1, s_face=XW + 20, s_sp=22.0, k_xa=XW + 24, k_nm="sprężyna", k_sp=16.0),
@@ -119,8 +119,9 @@ def s5_extra_rows():
                      wytezenie=round(Fp / 4.0, 3), uwagi=f"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"))
     Rs = (Pd * (2 * L - 100) / (2 * L) + g.GAMMA_G * (mA + mB) * g.G / 1000 / 2) / 2      # reakcja na stronę [kN]
     Vh = math.hypot(Rs * 105 / 80, Rs / 2)
+    Vr = 0.6 * 800 * 84.3 / 1.25 / 1e3
     rows.append(dict(nazwa="Zawias przy przyczepie: śruba M12 płyty H (jedna płyta, jednocięta)", obciazenie=round(Vh, 2),
-                     nosnosc=round(0.6 * 800 * 84.3 / 1.25 / 1e3, 2), jedn="kN", wytezenie=round(Vh / 32.37, 3), uwagi="mimośród 105 mm, rozstaw 80 mm"))
+                     nosnosc=round(Vr, 2), jedn="kN", wytezenie=round(Vh / Vr, 3), uwagi="mimośród 105 mm, rozstaw 80 mm"))
     Fb = 2.5 * min(25 / 63, 1) * 360 * 20 * 6 / 1.25 / 1e3
     rows.append(dict(nazwa="Zawias przy przyczepie: sworzeń Ø20 – docisk w płycie H 6 mm", obciazenie=round(Rs, 2), nosnosc=round(Fb, 2), jedn="kN",
                      wytezenie=round(Rs / Fb, 3), uwagi="koło przy przyczepie + ciężar trapu"))
@@ -235,7 +236,7 @@ def page_cross(pdf):
 STEPS = [
     ("0. Narzędzia", ["Wiertarka STOŁOWA (albo statyw do wiertarki) – bez niej nie wiercisz otworów pionowych przez rurę 100 mm.",
                       "Przecinarka / piła taśmowa z ogranicznikiem, imadło, ścisk stolarski × 4, punktak, wiertła Ø6, Ø9, Ø13, Ø18,5, Ø21.",
-                      "Klucze 13, 18, 24, 30, klucz dynamometryczny 20–60 N·m, marker, kątownik stolarski."]),
+                      "Klucze 13, 18, klucz dynamometryczny 20–60 N·m, marker, kątownik stolarski."]),
     ("1. Materiał", ["Rury jezdne S355: atest 3.1 i oznaczenie na sztandze. Zaraz po zakupie pomaluj końce tych 8 rur sprayem na ŻÓŁTO.",
                      "Nie masz pewności, że to S355? Kup 100×40×3 S235 (+20 kg) – wtedy pomyłka jest niemożliwa."]),
     ("2. Cięcie", ["Ustaw ogranicznik na 1250 mm i tnij WSZYSTKIE rury podłużne z jednego ustawienia (różnica długości max 0,5 mm).",
@@ -244,7 +245,7 @@ STEPS = [
                    "Punktak w osi rury. Wiertło Ø6 PRZEZ CAŁY PAKIET (4 ścianki) jednym przejściem na wiertarce stołowej, potem Ø13 tak samo.",
                    "Oznacz parę markerem (np. A-P1-L2) – ta rura i ta poprzeczka już zawsze razem.",
                    "Tolerancja: miejsce wzdłuż rury ±2 mm nie ma znaczenia, bo wiercisz w pakiecie. Wiercone osobno – nie trafisz."]),
-    ("4. Otwory boczne Ø18,5", ["Przez oba boki rury jednym przejściem na wiertarce stołowej. Płyty H i Z wierć w pakiecie (4 i 8 szt. razem) i użyj ich jako szablonu.",
+    ("4. Otwory boczne Ø18,5", ["Przez oba boki rury jednym przejściem na wiertarce stołowej. Płyty H i Z wierć w pakiecie (2 i 4 szt. razem) i użyj ich jako szablonu.",
                    "Obie rury L1 są identyczne – wierć je razem albo z tego samego szablonu."]),
     ("5. Zawias środkowy", ["L1 i L3 czołami na płaskiej podłodze, górne krawędzie dosunięte. Płyty Z ściskami, sworzeń Ø20 włożony.",
                    "Dopiero teraz wierć Ø18,5 w rurach przez otwory płyt. Ten krok sam koryguje wcześniejsze błędy."]),
@@ -404,7 +405,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     old = (copy.deepcopy(g.S_PL), copy.deepcopy(g.K_PL), g.holes_long, g.OUT, dict(g.SPRING), g.TEMPL_NAME, g.SINGLE_PLATES)
     g.K_PL["n"] = 3
-    g.SINGLE_PLATES = True
+    g.SINGLE_PLATES = V["single_plates"]
     g.SPRING["F1"] = float(SPR["F1_N"])
     g.TEMPL_NAME = "szablony_1do1_S5.pdf"
     g.holes_long = holes_long

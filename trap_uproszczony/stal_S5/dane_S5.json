@@ -13,7 +13,7 @@
   },
   "wysilek_bez_sprezyn": 45.7,
   "najwieksze_wytezenie": {
-   "element": "To samo – całe koło na jednej rurze",
+   "element": "Rura jezdna – zginanie, całe koło na jednej rurze",
    "wartosc": 0.817
   },
   "otwory": 83,
@@ -30,7 +30,7 @@
    "uwagi": ""
   },
   {
-   "nazwa": "To samo – całe koło na jednej rurze",
+   "nazwa": "Rura jezdna – zginanie, całe koło na jednej rurze",
    "obciazenie": 289.97,
    "nosnosc": 355,
    "jedn": "MPa",
@@ -110,11 +110,11 @@
    "uwagi": ""
   },
   {
-   "nazwa": "Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (23 mm)",
-   "obciazenie": 29.68,
+   "nazwa": "Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (29 mm, L3)",
+   "obciazenie": 37.43,
    "nosnosc": 355,
    "jedn": "MPa",
-   "wytezenie": 0.084,
+   "wytezenie": 0.105,
    "uwagi": "naprężenie zastępcze od ścinania przy skręcaniu"
   },
   {

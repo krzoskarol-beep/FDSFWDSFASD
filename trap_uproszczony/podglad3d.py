@@ -132,6 +132,9 @@ def bolt(out, axis, c1, c2, face0, dirn, Lb, size, grip, head="hex", washer_head
     if head == "carriage":                    # śruba zamkowa: łeb grzybkowy Ø20 × 4,4
         cyl(axis, c1, c2, face0, face0 - dirn * 4.4, 10.0, out)
         s0 = face0
+    elif head == "pin":                       # sworzeń ISO 2341-B: łeb walcowy 1,5 d × 0,25 d
+        cyl(axis, c1, c2, face0, face0 - dirn * 0.25 * d, 0.75 * d, out)
+        s0 = face0
     else:
         hw = tw if washer_head else 0.0
         if washer_head:
@@ -144,6 +147,12 @@ def bolt(out, axis, c1, c2, face0, dirn, Lb, size, grip, head="hex", washer_head
         grp = next(m["grp"] for m in CUR.m.values() if m["tris"] is out)
         CUR.shanks.append((grp, axis, c1, c2, s0, g1, d, next(k for k, m in CUR.m.items() if m["tris"] is out)))
     cyl(axis, c1, c2, g1, g1 + dirn * tw, dw / 2, out)
+    if head == "pin":                         # podkładka + zawleczka (bez nakrętki)
+        zc = g1 + dirn * (tw + 3.0)
+        q = 0.45 * d
+        if axis == "x":
+            solid("sz", [(c1 - 2, c2 - q - 4), (c1 + 2, c2 - q - 4), (c1 + 2, c2 + q + 4), (c1 - 2, c2 + q + 4)], min(zc - 2, zc + 2), max(zc - 2, zc + 2), out)
+        return s0, s0 + dirn * Lb, g1 + dirn * (tw + 5.0)
     hexa(axis, c1, c2, g1 + dirn * tw, g1 + dirn * (tw + hn), af, out)
     return s0, s0 + dirn * Lb, g1 + dirn * (tw + hn)
 
@@ -394,7 +403,7 @@ def build(layout=None):
         if SINGLE:
             b = M.mesh(f"A:pinTr:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu przy przyczepie: ISO 2341-B Ø20×40 (stal C45 / 8.8)\n"
                        "płyta H – wspornik K; podkładka + ZAWLECZKA (nic nie dokręcasz)\n25 mm przed końcem rury, 25 mm pod pokładem")
-            bolt(b, "x", -25.0, 75.0, sg * XO, sg, 40, 20, 17)
+            bolt(b, "x", -25.0, 75.0, sg * XO, sg, 40, 20, 17, head="pin")
         else:
             b = M.mesh(f"A:pinTr:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu przy przyczepie: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
                        "H wewn. – (pusto) – H zewn. – wspornik K; podkładki + nakrętka samohamowna NIEDOKRĘCONA (ma się obracać)\n"
@@ -404,7 +413,7 @@ def build(layout=None):
         if SINGLE:
             b = M.mesh(f"A:pinMid:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu środkowego: ISO 2341-B Ø20×35 (stal C45 / 8.8)\n"
                        "płyta Z(A) – płyta Z(B); podkładka + ZAWLECZKA\n35 mm pod spodem rur, na styku rur")
-            bolt(b, "x", L, -35.0, sg * XO, sg, 35, 20, 12)
+            bolt(b, "x", L, -35.0, sg * XO, sg, 35, 20, 12, head="pin")
         else:
             b = M.mesh(f"A:pinMid:{sg}", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu środkowego: śruba M20×110 8.8 (gładki trzpień ≥ 64 mm)\n"
                        "Z(B) – Z(A) – (pod rurą) – Z(A) – Z(B); nakrętka samohamowna NIEDOKRĘCONA\n35 mm pod spodem rur, na styku rur")

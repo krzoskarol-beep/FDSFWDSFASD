@@ -50,8 +50,8 @@ chodnik 340 mm, poprzeczki i siatka 630 mm. Model pokazuje każdy otwór, śrub�
 <div class="kv">%KV%</div>
 <h2>Odchudzenie i tańsze części</h2>
 <div class="card">%OPT%
-<p class="note">Rury jezdne zostają 100×40×2 S355 – pod oponą o śladzie ~100 mm całe tylne koło może stanąć na jednej rurze (82 %), więc tu nie da się ująć bez utraty zapasu.
-Poprzeczka przy węższym chodniku pracuje lżej (66 % zamiast 87 %). Pojedyncza płyta zawiasu: śruba M12 jednocięta 67 %, skręcanie rury 8 %.</p></div>
+<p class="note">Rury jezdne zostają 100×40×2 S355 – pod oponą o śladzie ~100 mm całe tylne koło może stanąć na jednej rurze (%P_LANE%), więc tu nie da się ująć bez utraty zapasu.
+Poprzeczka przy węższym chodniku pracuje lżej (%P_CROSS% zamiast %P_CROSS0%). Pojedyncza płyta zawiasu: śruba M12 jednocięta %P_M12%, skręcanie rury %P_TORS%.</p></div>
 <h2>Co zmieniłem, żeby stal była lekka</h2>
 <div class="card">%CMP%
 <p class="note">Lewa strona = patrząc od ziemi na przyczepę. Prawa rura jezdna jest krawędzią trapu – prowadnica nad nią trzyma koło, a przy prowadzeniu stoisz po lewej, na chodniku.
@@ -107,6 +107,15 @@ def main():
     (oA, oAs, oAz), (oB, oBs, oBz) = stal.masses(v_old)
     o_spr, _ = stal.pick_springs(oA, (oAs, oAz), oB, (oBs, oBz))
     o_cost = round(sum(c[1] for c in stal.cost(v_old, oA, oB, o_spr)))
+    o_rows = stal.calcs(v_old, oA, oB, o_spr["F1_N"])
+    o_worst = max(o_rows, key=lambda r: r["wytezenie"])
+    o_spr_zl = o_spr["sztuk"] * stal.CENY["sprezyna_40" if o_spr["F1_N"] > 2500 else "sprezyna_28"]
+    spr_zl = spr["sztuk"] * stal.CENY["sprezyna_40" if spr["F1_N"] > 2500 else "sprezyna_28"]
+
+    def pct(rws, start):
+        return f'{next(r for r in rws if r["nazwa"].startswith(start))["wytezenie"] * 100:.0f} %'
+    pcts = {"%P_LANE%": pct(rows, "Rura jezdna – zginanie, całe koło"), "%P_CROSS%": pct(rows, "Poprzeczka"), "%P_CROSS0%": pct(o_rows, "Poprzeczka"),
+            "%P_M12%": pct(rows, "Zawias środkowy: śruba M12"), "%P_TORS%": pct(rows, "Rura jezdna zewnętrzna – skręcanie")}
     sp_txt = f"2 × {spr['F1_N']} N (Ø28)"
     kv = [(f"2,5 × {s5.WID / 1000:.2f} m".replace(".", ","), "trap rozłożony, 2 sekcje po 1,25 m"),
           (f"~{mA + mB:.0f} kg", f"trap (A {mA:.0f} kg, B {mB:.0f} kg); było {oA + oB:.0f} kg"),
@@ -119,11 +128,11 @@ def main():
     opt_rows = [["szerokość / chodnik", "740 mm / 450 mm", f"{s5.WID:.0f} mm / 340 mm (C1 x +{s5.XW:.0f}, C2 x +{s5.XE:.0f})"],
                 ["płyty zawiasów H i Z", "po 2 na rurę (12 szt.)", "po 1 na rurę, z zewnątrz (6 szt.)"],
                 ["sworznie zawiasów", "M20×110, nakrętka niedokręcona", "Ø20 ISO 2341-B + zawleczka (krótsze, nic nie regulujesz)"],
-                ["sprężyny gazowe", f"2 × {o_spr['F1_N']} N Ø40, oś M16 (ok. 460 zł)", f"{sp_txt}, oś M12 (ok. 180 zł)"],
+                ["sprężyny gazowe", f"{o_spr['sztuk']} × {o_spr['F1_N']} N Ø40, oś M16 (ok. {o_spr_zl:.0f} zł)", f"{sp_txt}, oś M12 (ok. {spr_zl:.0f} zł)"],
                 ["masa trapu", f"{oA + oB:.1f} kg".replace(".", ","), f"{mA + mB:.1f} kg".replace(".", ",")],
                 ["podnoszenie ze sprężynami", f"{o_spr['max_wysilek_kg']:.0f} kg", f"{spr['max_wysilek_kg']:.0f} kg"],
                 ["koszt materiału z cynkiem", f"{o_cost} zł", f"{cost} zł"],
-                ["najbardziej obciążona część", "87 % (poprzeczka)", f"{worst['wytezenie'] * 100:.0f} % (rura jezdna, całe koło na jednej rurze)"]]
+                ["najbardziej obciążona część", f"{o_worst['wytezenie'] * 100:.0f} % ({o_worst['nazwa']})", f"{worst['wytezenie'] * 100:.0f} % ({worst['nazwa']})"]]
     cmp_rows = [["szerokość", "1190 mm, chodnik po obu stronach", f"{s5.WID:.0f} mm, chodnik 340 mm tylko z lewej"],
                 ["rury jezdne (4 szt.)", "100×40×3 Al 6082-T6", "100×40×2 stal S355J2H"],
                 ["podłużnice chodnika", "4 na sekcję, 100×40×2 Al", "2 na sekcję, 100×40×1,5 stal S235"],
@@ -149,7 +158,7 @@ def main():
                  "%BOLTS%": table(["Rozmiar", "Rodzaj / gdzie", "Szt."], bolt_rows, (2,)),
                  "%HOLES%": table(["Nr", "Ø", "Złącze", "Miejsce wiercenia w każdej części, przez którą przechodzi"], hole_rows, (0, 1)),
                  "%NHOLES%": str(n_holes), "%TOL%": table(["Co", "Tolerancja", "Jak to osiągnąć"], [[E(a), f"<b>{E(b)}</b>", E(c)] for a, b, c in s5.TOL]),
-                 "%CHK1%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_LOAD), "%CHK2%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_DRIVE), "%BUY%": table(["Pozycja", "Ilość", "Uwagi"], buy_rows), "%COST%": str(cost), "%GLB%": glb}.items():
+                 "%CHK1%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_LOAD), "%CHK2%": "".join(f"<li>☐ {E(x)}</li>" for x in s5.CHECK_BEFORE_DRIVE), "%BUY%": table(["Pozycja", "Ilość", "Uwagi"], buy_rows), "%COST%": str(cost), **pcts, "%GLB%": glb}.items():
         page = page.replace(k, v)
     out = os.path.join(s5.OUT, "trap_s5_strona.html")
     with open(out, "w", encoding="utf-8") as f:

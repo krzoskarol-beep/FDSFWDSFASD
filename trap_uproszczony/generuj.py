@@ -675,11 +675,11 @@ def page_hinges(pdf):
     for (n, s, z, d) in H_PL["holes"]:
         ax.add_patch(Circle((s, z), d / 2, fill=False, ec="#c00000"))
         ax.text(s + d / 2 + 2, z - 4, f"{n} Ø{d:g}\ns={s:g}, z={z:g}", fontsize=6)
-    ax.text(-110, -75, ("Na rurze L1: JEDNA płyta H po stronie zewnętrznej, 2 × M12×70 + tuleje Ø18×2,5 dł. 40.\n"
+    ax.text(-110, -75, (("Na rurze L1: JEDNA płyta H po stronie zewnętrznej, 2 × M12×70 + tuleje Ø18×2,5 dł. 40.\n"
              "Sworzeń Ø20×40 ISO 2341-B (25 mm pod pokładem, 25 mm przed końcem rury):\nH – wspornik K, podkładka + zawleczka.\n")
             if SINGLE_PLATES else
             ("Na rurze L1: płyta H po OBU stronach (wewn. i zewn.), 2 × M12 + tuleje Ø18×2,5 dł. 40.\n"
-             "Sworzeń M20 (25 mm pod pokładem, 25 mm przed końcem rury) przechodzi:\nH wewn. – (pusto) – H zewn. – wspornik K.\n")
+             "Sworzeń M20 (25 mm pod pokładem, 25 mm przed końcem rury) przechodzi:\nH wewn. – (pusto) – H zewn. – wspornik K.\n"))
             + "Blokada Ø12 do jazdy: przez K i H zewn. (otwór „blok”).", fontsize=7, va="top")
     ax.set_xlim(-120, 320)
     ax.set_ylim(-170, 130)
@@ -699,12 +699,12 @@ def page_hinges(pdf):
     for (n, d, z, dd) in Z_PL["holes"][1:]:
         ax.text(d - 10, z + 14, f"d={d:g}\nz={z:g}", fontsize=6)
     ax.text(12, -40, "sworzeń Ø20\nd=0, z=−35", fontsize=6)
-    ax.text(-300, -75, ("Płyta Z sekcji A: JEDNA, na zewnętrznej ściance rury L1.\n"
+    ax.text(-300, -75, (("Płyta Z sekcji A: JEDNA, na zewnętrznej ściance rury L1.\n"
                         "Płyta Z sekcji B: na rurze L3 przez podkładkę 6 mm → leży NA ZEWNĄTRZ płyty A.\n"
                         "Sworzeń Ø20×35 ISO 2341-B + podkładka + zawleczka (35 mm pod rurami), przez 2 płyty.\n") if SINGLE_PLATES else
             ("Płyty Z sekcji A: na ściankach rury L1 (wewn. + zewn.).\n"
             "Płyty Z sekcji B: na rurze L3 przez podkładkę 6 mm → leżą NA ZEWNĄTRZ płyt A.\n"
-            "Sworzeń M20 (35 mm pod rurami) przechodzi przez 4 płyty.\n") +
+            "Sworzeń M20 (35 mm pod rurami) przechodzi przez 4 płyty.\n")) +
             "Rozłożony: górne krawędzie rur A i B STYKAJĄ SIĘ (przenoszą ściskanie).\n"
             "Składanie: B obraca się w dół, pod sekcję A.", fontsize=7, va="top")
     ax.set_xlim(-320, 320)

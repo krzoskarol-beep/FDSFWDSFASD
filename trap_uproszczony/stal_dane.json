@@ -94,7 +94,7 @@
    "ze": 19.6,
    "koszt": 2164,
    "wyt": 0.817,
-   "rysunki": "bez zmian"
+   "rysunki": "nowe rysunki (stal_S5/)"
   },
   {
    "klucz": "S6",
@@ -118,7 +118,7 @@
    "uwagi": ""
   },
   {
-   "nazwa": "To samo – całe koło na jednej rurze",
+   "nazwa": "Rura jezdna – zginanie, całe koło na jednej rurze",
    "obciazenie": 294.66,
    "nosnosc": 355,
    "jedn": "MPa",

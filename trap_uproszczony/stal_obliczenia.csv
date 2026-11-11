@@ -1,7 +1,7 @@
 ﻿wariant S2: stal LEKKA (rury jezdne S355 2 mm, podłużnice 1,5 mm, lżejsza siatka)
 element;obciążenie;nośność;jedn.;wytężenie;uwagi
 Rura jezdna RHS 100×40×2 S355J2H – zginanie, rozpiętość 2,5 m (75 % koła);225.34;355;MPa;0.635;
-To samo – całe koło na jednej rurze;294.66;355;MPa;0.83;
+Rura jezdna – zginanie, całe koło na jednej rurze;294.66;355;MPa;0.83;
 Ugięcie w środku (charakterystyczne);5.38;12.5;mm;0.431;
 Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm;186.33;355;MPa;0.525;
 Rura jezdna – ścianka górna 2 mm pod oponą (zginanie poprzeczne);160.06;355;MPa;0.451;pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami
