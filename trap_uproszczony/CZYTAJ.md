@@ -229,3 +229,10 @@ Poprawka: druga poprzeczka w B (s = 650) zamiast listwy T; zawias środkowy tak�
 2 oparcia chodnika z gumą na przyczepie; poprzeczki 60×40×3; śruby prowadnic A 200/540/1040, B 180/450.
 Masa trapu 90 kg, sprężyny 2 × 2500 N Ø28, podnoszenie ok. 24 kg.
 Wersja aluminiowa V2 ma ten sam układ (jedna poprzeczka w B, chodniki bez zawiasu) – NIE była poprawiana.
+
+## Zgodność z przepisami (PL)
+
+Patrz `stal_S5/zgodnosc_z_prawem.md`. Najważniejsze: złożony trap zasłoniłby lampy i tablicę w typowym miejscu,
+więc lampy, odblaski i tablicę trzeba dać nisko (górna krawędź ≤ 420 mm nad ziemią, lampy ≥ 350 mm) i poza
+zakresem od −212 do +522 mm w poprzek. Do sprawdzenia: DMC 750 kg (trap 90 kg + motocykl 350 kg) i nacisk na hak.
+Zarejestrowana przyczepa: badanie dodatkowe + zawiadomienie starosty w 30 dni.
