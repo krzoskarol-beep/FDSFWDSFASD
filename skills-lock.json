@@ -233,10 +233,10 @@
       "installMode": "copy"
     },
     "skill-creator": {
-      "source": "himself65/finance-skills",
+      "source": "anthropics/skills",
       "sourceType": "github",
-      "skillPath": "plugins/skill-creator/skills/skill-creator/SKILL.md",
-      "computedHash": "f35b83941726379bd02868acef0661e65dcff6cb38f63cd8c04df54fd65efacc",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "2d7f889e6ae93c6c27d699856942c336b5b8644537496987d5571043d059b1dc",
       "installMode": "copy"
     },
     "startup-analysis": {

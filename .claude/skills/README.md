@@ -45,7 +45,7 @@ w przeglądarce Chrome. W sesji w chmurze nie zadziałają.
 | `requesting-code-review` | Use when completing tasks, implementing major features, or before merging to verify work meets requirements | obra/superpowers |
 | `saas-valuation-compression` | > | himself65/finance-skills |
 | `sepa-strategy` | > | himself65/finance-skills |
-| `skill-creator` | > | himself65/finance-skills |
+| `skill-creator` | Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to c… | anthropics/skills |
 | `startup-analysis` | > | himself65/finance-skills |
 | `stock-correlation` | > | himself65/finance-skills |
 | `stock-liquidity` | > | himself65/finance-skills |
