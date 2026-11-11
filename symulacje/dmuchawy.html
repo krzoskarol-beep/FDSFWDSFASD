@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Symulacja: Fuxtec FX-LBP185TPRO vs Red Technic RTODL0059</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #ffffff; --ink: #1d1d1b; --muted: #6b6a65; --line: #e2e0d8;
+    --fux: #d4600f; --rt: #b3261e; --grass: #6f8f4e; --grass2: #66854a; --zone: #c9b98a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161614; --card: #22221f; --ink: #eceae3; --muted: #a09e96; --line: #3a3935;
+            --grass: #3f5a2e; --grass2: #3a542a; --zone: #6b5f3c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; background: var(--card);
+              border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+  .controls label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 4px; }
+  select, button { font: inherit; padding: 6px 10px; border-radius: 7px; border: 1px solid var(--line);
+                   background: var(--bg); color: var(--ink); }
+  button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); cursor: pointer; }
+  button { cursor: pointer; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .panel h2 { font-size: 16px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  canvas { width: 100%; height: auto; border-radius: 6px; display: block; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .stat { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .stat .k { font-size: 11px; color: var(--muted); }
+  .stat .v { font-size: 18px; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+  .bar > div { height: 100%; width: 0; }
+  #verdict { margin: 16px 0; padding: 14px 16px; border-radius: 10px; background: var(--card);
+             border: 1px solid var(--line); font-size: 16px; min-height: 52px; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
+  summary { cursor: pointer; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  th { color: var(--muted); font-weight: 500; }
+  code { font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Fuxtec FX-LBP185TPRO kontra Red Technic RTODL0059</h1>
+  <p class="sub">Fizyczna symulacja sprzątania liści: ten sam ogród 20 × 12 m, te same 2400 liści w identycznym ułożeniu, ten sam sposób pracy operatora. Wygrywa dmuchawa, która szybciej zgarnie 95% liści do pasa zbiorczego po prawej.</p>
+
+  <div class="controls">
+    <label>Liście
+      <select id="scenario">
+        <option value="dry">suche</option>
+        <option value="wet">mokre (po deszczu)</option>
+      </select>
+    </label>
+    <label>Dane dmuchaw
+      <select id="mode">
+        <option value="real">realne (skorygowane)</option>
+        <option value="catalog">katalogowe (z ofert)</option>
+      </select>
+    </label>
+    <label>Prędkość odtwarzania
+      <select id="speed">
+        <option value="1">1×</option>
+        <option value="5">5×</option>
+        <option value="20" selected>20×</option>
+        <option value="80">80×</option>
+      </select>
+    </label>
+    <button class="primary" id="start">Start</button>
+    <button id="reset">Reset</button>
+    <button id="series">Seria 12 losowych ogrodów</button>
+  </div>
+
+  <div class="grid">
+    <section class="panel" id="p-fux">
+      <h2><span class="dot" style="background:var(--fux)"></span>Fuxtec FX-LBP185TPRO <small style="color:var(--muted);font-weight:400">85 cm³ · 799 zł</small></h2>
+      <canvas id="c-fux" width="800" height="480"></canvas>
+      <div class="bar"><div id="bar-fux" style="background:var(--fux)"></div></div>
+      <div class="stats">
+        <div class="stat"><div class="k">czas</div><div class="v" id="t-fux">0:00</div></div>
+        <div class="stat"><div class="k">zebrane</div><div class="v" id="pct-fux">0%</div></div>
+        <div class="stat"><div class="k">paliwo</div><div class="v" id="fuel-fux">0,00 l</div></div>
+      </div>
+    </section>
+    <section class="panel" id="p-rt">
+      <h2><span class="dot" style="background:var(--rt)"></span>Red Technic RTODL0059 <small style="color:var(--muted);font-weight:400">52 cm³ · 378 zł</small></h2>
+      <canvas id="c-rt" width="800" height="480"></canvas>
+      <div class="bar"><div id="bar-rt" style="background:var(--rt)"></div></div>
+      <div class="stats">
+        <div class="stat"><div class="k">czas</div><div class="v" id="t-rt">0:00</div></div>
+        <div class="stat"><div class="k">zebrane</div><div class="v" id="pct-rt">0%</div></div>
+        <div class="stat"><div class="k">paliwo</div><div class="v" id="fuel-rt">0,00 l</div></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="verdict">Wybierz scenariusz i naciśnij <b>Start</b>.</div>
+
+  <details open>
+    <summary>Parametry strugi użyte w symulacji</summary>
+    <table id="params"></table>
+  </details>
+
+  <details>
+    <summary>Jak działa model</summary>
+    <ul>
+      <li><b>Struga powietrza</b>: turbulentna struga okrągła. Do ok. 6 średnic dyszy prędkość równa się prędkości wylotowej, dalej spada jak 1/x, a profil poprzeczny jest gaussowski i rozszerza się o ok. 0,1 m na każdy metr.</li>
+      <li><b>Liść</b>: siła oporu ½·ρ·C<sub>d</sub>·A·v² względem tarcia o trawę (μ·m·g). Liść ruszy dopiero, gdy siła powietrza pokona tarcie statyczne. Mokre liście są ok. 3 razy cięższe i mocniej przywierają. Każdy liść ma losowo ±30% inne parametry.</li>
+      <li><b>Bilans pędu</b>: suma sił działających na liście nie może przekroczyć połowy ciągu strugi (ρ·A·v²). Duża sterta „zjada” moc, tak jak w rzeczywistości.</li>
+      <li><b>Sterta</b>: pęd strugi zużywa się po kolei. Liście z przodu dostają pełną siłę, a te schowane za nimi tylko to, co zostanie. Sterta jest więc „obdzierana” z czoła, jak w rzeczywistości.</li>
+      <li><b>Operator</b>: przechodzi pasami co 1,5 m w stronę pasa zbiorczego, idzie 0,5 m/s i wachluje dyszą ±25°. Potem wraca na wolnych obrotach (1,2 m/s) i wybiera pas, w którym zostało najwięcej liści. Obaj operatorzy mają ten sam algorytm.</li>
+      <li><b>Dane realne</b>: ciąg szacowany z pojemności silnika: 0,33 N/cm³, jak dla budżetowych dmuchaw (Stihl BR 450: 28 N z 63 cm³, czyli 0,44 N/cm³). Średnica dyszy wyliczona z katalogowego przepływu i prędkości.</li>
+      <li><b>Dane katalogowe</b> są fizycznie niespójne: przy deklarowanym przepływie i prędkości struga musiałaby mieć 2–2,5 razy więcej mocy, niż deklaruje sam silnik. Pokazują więc tylko „obietnicę z pudełka”.</li>
+    </ul>
+  </details>
+</main>
+
+<script>
+"use strict";
+// ---------- Stałe fizyczne i dane dmuchaw ----------
+const RHO = 1.2, G = 9.81;
+const W = 20, H = 12, ZONE_X = W - 1.5;            // ogród i pas zbiorczy
+const N_LEAVES = 2400, DT = 0.02, T_MAX = 1800, TARGET = 0.95;
+const N_PER_CC = 0.33;          // realny ciąg na cm³ dla budżetowych dmuchaw
+const FAN_EFF = 0.35;           // sprawność wentylatora (moc strugi / moc wału)
+const BSFC = 0.50, FUEL_DENS = 0.74; // kg/kWh dla 2T przy pełnym gazie, kg/l mieszanki
+
+const BLOWERS = {
+  fux: { name: "Fuxtec FX-LBP185TPRO", cc: 85, Q: 0.45,        v: 95,        pClaim: 4.0, price: 799 },
+  rt:  { name: "Red Technic RTODL0059", cc: 52, Q: 1360 / 3600, v: 320 / 3.6, pClaim: 2.8, price: 378 },
+};
+
+const LEAF = {
+  dry: { m: 0.0010, A: 0.008, Cd: 0.4, muS: 0.6, muK: 0.45 },
+  wet: { m: 0.0030, A: 0.008, Cd: 0.4, muS: 1.5, muK: 1.0 },
+};
+
+function jetParams(b, mode) {
+  const A = b.Q / b.v, D = Math.sqrt(4 * A / Math.PI);
+  let v0, F;
+  if (mode === "catalog") { v0 = b.v; F = RHO * A * v0 * v0; }
+  else { F = N_PER_CC * b.cc; v0 = Math.sqrt(F / (RHO * A)); }
+  const jetPower = 0.5 * RHO * A * v0 ** 3;              // W
+  const shaftKW = jetPower / FAN_EFF / 1000;
+  const fuelLph = shaftKW * BSFC / FUEL_DENS;
+  return { A, D, v0, F, x0: 6.2 * D, jetPower, shaftKW, fuelLph, flow: A * v0 };
+}
+
+// ---------- Deterministyczny generator losowy ----------
+function rng(seed) {
+  let s = seed >>> 0;
+  return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+// ---------- Symulacja jednej dmuchawy ----------
+function createSim(key, mode, scenario, seed = 7919) {
+  const b = BLOWERS[key], jp = jetParams(b, mode), lp = LEAF[scenario];
+  const r = rng(seed);
+  const n = N_LEAVES;
+  const px = new Float64Array(n), py = new Float64Array(n), vx = new Float64Array(n), vy = new Float64Array(n);
+  const m = new Float64Array(n), k = new Float64Array(n), muS = new Float64Array(n), muK = new Float64Array(n);
+  const lam = new Float64Array(n), ux = new Float64Array(n), uy = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    // liście skupione przy drzewach (3 kępy) + rozproszone
+    if (r() < 0.55) {
+      const c = [[4, 3], [9, 8.5], [13, 4]][Math.floor(r() * 3)];
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 2.6;
+      px[i] = c[0] + Math.cos(a) * d; py[i] = c[1] + Math.sin(a) * d;
+    } else { px[i] = 0.5 + r() * (ZONE_X - 2); py[i] = 0.4 + r() * (H - 0.8); }
+    px[i] = Math.min(Math.max(px[i], 0.5), ZONE_X - 0.5); py[i] = Math.min(Math.max(py[i], 0.2), H - 0.2);
+    const f = () => 0.7 + 0.6 * r();
+    m[i] = lp.m * f(); k[i] = 0.5 * RHO * lp.Cd * lp.A * f(); muS[i] = lp.muS * f(); muK[i] = lp.muK * f();
+  }
+  // Pęd strugi zużywany sekwencyjnie: komórki [boczny pas][odległość]
+  const NL = 12, NA = 100, DA = 0.25;
+  const demand = new Float64Array(NL * NA), cellScale = new Float64Array(NL * NA), cellOf = new Int32Array(n);
+  const latW = new Float64Array(NL);
+  { let sum = 0; for (let j = 0; j < NL; j++) { const s0 = -3 + 6 * (j + 0.5) / NL; latW[j] = Math.exp(-2 * s0 * s0); sum += latW[j]; }
+    for (let j = 0; j < NL; j++) latW[j] /= sum; }
+  const LANES = []; for (let y = 0.75; y < H; y += 1.5) LANES.push(y);
+  const NOZ = 0.8, START_X = -0.6, END_X = ZONE_X + 0.3 - NOZ, WALK = 0.5, BACK = 1.2;
+
+  const s = { key, b, jp, lp, n, px, py, vx, vy, t: 0, fuel: 0, done: null, passes: 0,
+    op: { x: START_X, y: LANES[0], ang: 0, blowing: true, tx: START_X, ty: LANES[0] }, collected: 0 };
+
+  function pickLane() {
+    let best = LANES[0], bc = -1;
+    for (const ly of LANES) {
+      let c = 0;
+      for (let i = 0; i < n; i++) if (px[i] < ZONE_X && Math.abs(py[i] - ly) <= 0.75) c++;
+      if (c > bc) { bc = c; best = ly; }
+    }
+    return best;
+  }
+
+  s.step = function () {
+    if (s.done !== null) return;
+    const op = s.op;
+    // --- operator: przejścia pasami w stronę pasa zbiorczego ---
+    if (op.blowing) {
+      op.x += WALK * DT;
+      if (op.x >= END_X) { op.blowing = false; op.ty = pickLane(); op.tx = START_X; s.passes++; }
+    } else {
+      const dx = op.tx - op.x, dy = op.ty - op.y, d = Math.hypot(dx, dy), stepL = BACK * DT;
+      if (d <= stepL) { op.x = op.tx; op.y = op.ty; op.blowing = true; }
+      else { op.x += dx / d * stepL; op.y += dy / d * stepL; }
+    }
+    op.ang = 0.436 * Math.sin(s.t * 2 * Math.PI / 1.6);   // wachlowanie ±25°
+    const cx = Math.cos(op.ang), cy = Math.sin(op.ang);
+    const nx = op.x + NOZ * cx, ny = op.y + NOZ * cy;       // wylot dyszy
+    const { v0, D, x0, F } = jp;
+
+    // --- zapotrzebowanie na siłę od strugi ---
+    demand.fill(0);
+    for (let i = 0; i < n; i++) {
+      lam[i] = 0; ux[i] = 0; uy[i] = 0; cellOf[i] = -1;
+      if (!op.blowing) continue;
+      const dx = px[i] - nx, dy = py[i] - ny;
+      const xa = dx * cx + dy * cy;
+      if (xa <= 0.02 || xa >= NA * DA) continue;
+      const rs = -dx * cy + dy * cx, bw = 0.1 * xa + D / 2, sN = rs / bw;
+      if (sN <= -3 || sN >= 3) continue;
+      const uc = xa < x0 ? v0 : v0 * x0 / xa;
+      const u = uc * Math.exp(-sN * sN);
+      if (u < 0.3) continue;
+      ux[i] = u * cx; uy[i] = u * cy;
+      const rx = ux[i] - vx[i], ry = uy[i] - vy[i], rel = Math.hypot(rx, ry);
+      lam[i] = k[i] * rel;
+      const c = (((sN + 3) / 6 * NL) | 0) * NA + ((xa / DA) | 0);
+      cellOf[i] = c; demand[c] += lam[i] * rel;
+    }
+    // --- rozdział pędu: pierwsze liście na drodze strugi dostają najwięcej ---
+    if (op.blowing) for (let j = 0; j < NL; j++) {
+      let rem = 0.5 * F * latW[j];
+      for (let a = 0; a < NA; a++) {
+        const c = j * NA + a, d = demand[c];
+        if (d <= 0) { cellScale[c] = 1; continue; }
+        const sc = rem >= d ? 1 : rem / d; cellScale[c] = sc; rem -= d * sc;
+      }
+    }
+
+    // --- ruch liści ---
+    let col = 0;
+    for (let i = 0; i < n; i++) {
+      const sp = Math.hypot(vx[i], vy[i]);
+      if (lam[i] === 0 && sp === 0) { if (px[i] >= ZONE_X) col++; continue; }
+      const scale = cellOf[i] >= 0 ? cellScale[cellOf[i]] : 0;
+      const L = lam[i] * scale / m[i];
+      if (sp < 1e-3) {
+        const fa = L * m[i] * Math.hypot(ux[i] - vx[i], uy[i] - vy[i]);
+        if (fa <= muS[i] * m[i] * G) { vx[i] = 0; vy[i] = 0; if (px[i] >= ZONE_X) col++; continue; }
+      }
+      // opór półniejawnie (stabilnie), potem tarcie kinetyczne
+      let nvx = (vx[i] + DT * L * ux[i]) / (1 + L * DT);
+      let nvy = (vy[i] + DT * L * uy[i]) / (1 + L * DT);
+      const ns = Math.hypot(nvx, nvy), dv = muK[i] * G * DT;
+      if (ns <= dv) { nvx = 0; nvy = 0; } else { nvx *= (ns - dv) / ns; nvy *= (ns - dv) / ns; }
+      vx[i] = nvx; vy[i] = nvy;
+      px[i] += vx[i] * DT; py[i] += vy[i] * DT;
+      if (px[i] < 0) { px[i] = 0; vx[i] = 0; }
+      if (px[i] > W - 0.05) { px[i] = W - 0.05; vx[i] = 0; }
+      if (py[i] < 0.05) { py[i] = 0.05; vy[i] = 0; }
+      if (py[i] > H - 0.05) { py[i] = H - 0.05; vy[i] = 0; }
+      if (px[i] >= ZONE_X) col++;
+    }
+    s.collected = col / n;
+    s.t += DT;
+    s.fuel += jp.fuelLph * (op.blowing ? 1 : 0.15) * DT / 3600;   // powrót na wolnych obrotach
+    if (s.collected >= TARGET) s.done = s.t;
+    else if (s.t >= T_MAX) s.done = Infinity;
+  };
+  return s;
+}
+
+// ---------- Tryb bez grafiki (do testów / wyników) ----------
+function runHeadless(mode, scenario, seed = 7919) {
+  const out = {};
+  for (const key of ["fux", "rt"]) {
+    const s = createSim(key, mode, scenario, seed);
+    while (s.done === null) s.step();
+    out[key] = { time: s.done, pct: s.collected, fuel: s.fuel, passes: s.passes, jp: s.jp };
+  }
+  return out;
+}
+window.runHeadless = runHeadless;
+window.jetParams = jetParams;
+window.BLOWERS = BLOWERS;
+window.LEAF = LEAF;
+
+// ---------- Rysowanie ----------
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function draw(s, canvas, color) {
+  const ctx = canvas.getContext("2d"), S = canvas.width / W;
+  ctx.fillStyle = css("--grass"); ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = css("--grass2");
+  for (let x = 0; x < W; x += 2) ctx.fillRect(x * S, 0, S, canvas.height);
+  ctx.fillStyle = css("--zone"); ctx.globalAlpha = 0.55;
+  ctx.fillRect(ZONE_X * S, 0, (W - ZONE_X) * S, canvas.height); ctx.globalAlpha = 1;
+  // struga
+  const op = s.op, cx = Math.cos(op.ang), cy = Math.sin(op.ang);
+  const nx = op.x + 0.8 * cx, ny = op.y + 0.8 * cy;
+  const uTh = Math.sqrt(2 * s.lp.muS * s.lp.m * G / (RHO * s.lp.Cd * s.lp.A));
+  const reach = Math.min(25, s.jp.x0 * s.jp.v0 / uTh);
+  const half = 0.1 * reach + s.jp.D / 2;
+  ctx.fillStyle = "rgba(255,255,255,0.16)";
+  if (op.blowing) {
+  ctx.beginPath(); ctx.moveTo(nx * S, ny * S);
+  ctx.lineTo((nx + reach * cx - half * cy) * S, (ny + reach * cy + half * cx) * S);
+  ctx.lineTo((nx + reach * cx + half * cy) * S, (ny + reach * cy - half * cx) * S);
+  ctx.closePath(); ctx.fill();
+  }
+  // liście
+  ctx.fillStyle = s.lp === LEAF.wet ? "#7a4a1c" : "#e0a030";
+  for (let i = 0; i < s.n; i++) ctx.fillRect(s.px[i] * S - 1.5, s.py[i] * S - 1.5, 3, 3);
+  // operator
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(op.x * S, op.y * S, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+  ctx.moveTo(op.x * S, op.y * S); ctx.lineTo(nx * S, ny * S); ctx.stroke();
+}
+
+const fmtT = (t) => !isFinite(t) ? "> 30:00" : `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+const fmtN = (x, d = 1) => x.toFixed(d).replace(".", ",");
+
+let sims = null, running = false;
+const els = (id) => document.getElementById(id);
+function paramsTable() {
+  const mode = els("mode").value, sc = els("scenario").value, lp = LEAF[sc];
+  const uTh = Math.sqrt(2 * lp.muS * lp.m * G / (RHO * lp.Cd * lp.A));
+  const rows = [["", "Fuxtec FX-LBP185TPRO", "Red Technic RTODL0059"]];
+  const p = { fux: jetParams(BLOWERS.fux, mode), rt: jetParams(BLOWERS.rt, mode) };
+  const add = (lab, f) => rows.push([lab, f(p.fux, BLOWERS.fux), f(p.rt, BLOWERS.rt)]);
+  add("Średnica dyszy", (j) => fmtN(j.D * 100) + " cm");
+  add("Prędkość wylotowa", (j) => fmtN(j.v0 * 3.6, 0) + " km/h");
+  add("Przepływ", (j) => fmtN(j.flow * 3600, 0) + " m³/h");
+  add("Ciąg (siła nadmuchu)", (j) => fmtN(j.F) + " N");
+  add("Moc strugi powietrza", (j) => fmtN(j.jetPower / 1000, 2) + " kW");
+  add("Wymagana moc silnika", (j, b) => fmtN(j.shaftKW, 1) + " kW (deklarowana " + fmtN(b.pClaim, 1) + ")");
+  add("Skuteczny zasięg (" + (sc === "wet" ? "mokre" : "suche") + ")", (j) => fmtN(j.x0 * j.v0 / uTh) + " m");
+  add("Spalanie (pełny gaz)", (j) => fmtN(j.fuelLph, 2) + " l/h");
+  els("params").innerHTML = rows.map((r, i) =>
+    `<tr>${r.map((c) => i === 0 ? `<th>${c}</th>` : `<td>${c}</td>`).join("")}</tr>`).join("");
+}
+
+function reset() {
+  running = false; els("start").textContent = "Start";
+  const mode = els("mode").value, sc = els("scenario").value;
+  sims = { fux: createSim("fux", mode, sc), rt: createSim("rt", mode, sc) };
+  els("verdict").innerHTML = "Wybierz scenariusz i naciśnij <b>Start</b>.";
+  paramsTable(); render();
+}
+function render() {
+  for (const key of ["fux", "rt"]) {
+    const s = sims[key];
+    draw(s, els("c-" + key), css(key === "fux" ? "--fux" : "--rt"));
+    els("t-" + key).textContent = fmtT(s.done ?? s.t);
+    els("pct-" + key).textContent = Math.round(s.collected * 100) + "%";
+    els("fuel-" + key).textContent = fmtN(s.fuel, 2) + " l";
+    els("bar-" + key).style.width = Math.min(100, s.collected / TARGET * 100) + "%";
+  }
+}
+function verdict() {
+  const a = sims.fux, b = sims.rt;
+  if (a.done === null || b.done === null) {
+    const first = a.done !== null ? a : b.done !== null ? b : null;
+    if (first) els("verdict").innerHTML = `<b>${first.b.name}</b> skończyła pierwsza (${fmtT(first.done)}). Czekamy na drugą…`;
+    return;
+  }
+  const win = a.done <= b.done ? a : b, lose = win === a ? b : a;
+  const diff = isFinite(lose.done) ? Math.round((lose.done / win.done - 1) * 100) : null;
+  els("verdict").innerHTML = `🏆 Wygrywa <b>${win.b.name}</b>: ${fmtT(win.done)} wobec ${fmtT(lose.done)}` +
+    (diff !== null ? ` (druga o <b>${diff}%</b> wolniej).` : " (druga nie skończyła w 30 min).") +
+    ` Paliwo: ${fmtN(win.fuel, 2)} l wobec ${fmtN(lose.fuel, 2)} l.` +
+    ` <br><small style="color:var(--muted)">To jeden ogród. Pewniejszy wynik da <b>Seria 12 losowych ogrodów</b>.</small>`;
+  running = false; els("start").textContent = "Start";
+}
+let last = 0;
+function loop(ts) {
+  if (!running) return;
+  const dtReal = Math.min(0.05, (ts - (last || ts)) / 1000); last = ts;
+  const steps = Math.round(dtReal * Number(els("speed").value) / DT);
+  for (let i = 0; i < steps; i++) { sims.fux.step(); sims.rt.step(); }
+  render(); verdict();
+  if (running) requestAnimationFrame(loop);
+}
+els("start").onclick = () => {
+  if (sims.fux.done !== null && sims.rt.done !== null) reset();
+  running = !running; els("start").textContent = running ? "Pauza" : "Start";
+  if (running) { last = 0; requestAnimationFrame(loop); }
+};
+els("reset").onclick = reset;
+els("series").onclick = () => {
+  running = false; els("start").textContent = "Start";
+  const mode = els("mode").value, sc = els("scenario").value, N = 12;
+  const T = { fux: [], rt: [] }, Fu = { fux: [], rt: [] }; let wins = 0, seed = 0;
+  els("series").disabled = true;
+  const next = () => {
+    seed++;
+    const o = runHeadless(mode, sc, seed * 7919);
+    for (const k of ["fux", "rt"]) { T[k].push(o[k].time); Fu[k].push(o[k].fuel); }
+    if (o.fux.time < o.rt.time) wins++;
+    els("verdict").innerHTML = `Liczę serię… ${seed}/${N}`;
+    if (seed < N) { setTimeout(next, 0); return; }
+    const avg = (a) => a.reduce((p, q) => p + q, 0) / a.length;
+    const tf = avg(T.fux), tr = avg(T.rt);
+    const win = tf <= tr ? "fux" : "rt", lose = win === "fux" ? "rt" : "fux";
+    const pctFaster = Math.round((Math.max(tf, tr) / Math.min(tf, tr) - 1) * 100);
+    els("verdict").innerHTML = `📊 Seria ${N} ogrodów (${sc === "wet" ? "mokre" : "suche"} liście, dane ${mode === "real" ? "realne" : "katalogowe"}): ` +
+      `<b>${BLOWERS[win].name}</b> szybsza w <b>${win === "fux" ? wins : N - wins}/${N}</b> przebiegach. ` +
+      `Średnio ${fmtT(avg(T[win]))} wobec ${fmtT(avg(T[lose]))} (o ${pctFaster}% szybciej). ` +
+      `Paliwo na jedno sprzątanie: ${fmtN(avg(Fu.fux), 2)} l (Fuxtec) wobec ${fmtN(avg(Fu.rt), 2)} l (Red Technic).`;
+    els("series").disabled = false;
+  };
+  setTimeout(next, 0);
+};
+els("scenario").onchange = reset;
+els("mode").onchange = reset;
+reset();
+</script>
+</body>
+</html>
