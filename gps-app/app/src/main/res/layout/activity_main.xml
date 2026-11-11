@@ -224,20 +224,6 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/autoBtDevices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/autoBtChoose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bt_choose" />
-
-            <TextView
                 android:id="@+id/autoBatteryHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

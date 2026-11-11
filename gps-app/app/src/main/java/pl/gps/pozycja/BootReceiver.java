@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Po restarcie telefonu i aktualizacji aplikacji sprawdza, czy automatyczny zapis
- * nadal ma potrzebne uprawnienia (wpis do dziennika diagnostycznego).
+ * Usługi Google zapominają rejestrację rozpoznawania jazdy po restarcie telefonu
+ * i po aktualizacji aplikacji, więc odnawiamy ją w tych momentach.
  */
 public class BootReceiver extends BroadcastReceiver {
 
@@ -16,8 +16,8 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(a) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(a)) {
             EventLog.log(context, Intent.ACTION_BOOT_COMPLETED.equals(a)
                     ? "Restart telefonu" : "Aktualizacja aplikacji");
-            if (Intent.ACTION_BOOT_COMPLETED.equals(a)) CarBluetooth.clearConnected(context);
-            AutoParking.checkAfterBoot(context);
+            if (Intent.ACTION_BOOT_COMPLETED.equals(a)) AutoParking.clearInVehicle(context);
+            AutoParking.reRegisterIfEnabled(context);
         }
     }
 }

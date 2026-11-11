@@ -6,18 +6,16 @@
 
     <!-- Automatyczne zapisywanie parkowania -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission
+        android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <!-- Bluetooth auta jako wyzwalacz parkowania -->
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
 
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
@@ -57,15 +55,9 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
-        <!-- Zdarzenia połączeń Bluetooth są dostarczane także zamkniętej aplikacji. -->
         <receiver
-            android:name=".CarBluetoothReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
-                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
+            android:name=".TransitionReceiver"
+            android:exported="false" />
 
         <receiver
             android:name=".BootReceiver"

@@ -5,7 +5,7 @@ description: Use when building, testing, signing, releasing or delivering the An
 
 # Android: budowanie, podpisywanie, wydawanie i weryfikacja APK
 
-Projekt: `gps-app/` (Java, bez zewnętrznych bibliotek, minSdk 24, targetSdk 36, AGP 8.13.2,
+Projekt: `gps-app/` (Java, jedyna biblioteka: `play-services-location` do rozpoznawania jazdy, minSdk 24, targetSdk 36, AGP 8.13.2,
 Gradle 8.14.3 przez `./gradlew`). Identyfikator aplikacji od 2.0: `pl.mojapozycja.gps`
 (`namespace`, czyli pakiet klas, to nadal `pl.gps.pozycja`). Nie zmieniaj go bez potrzeby:
 nowy identyfikator to dla Androida nowa aplikacja (bez danych poprzedniej). Przy zmianie popraw
@@ -100,7 +100,7 @@ cd gps-app
 Nie masz dostępu do telefonu użytkownika. Skopiuj APK do scratchpada pod czytelną nazwą
 (np. `MojaPozycjaGPS-1.6.apk`) i wyślij `SendUserFile` z `display: "attach"`. Napisz, czy
 instaluje się na poprzednią wersję (ten sam klucz) i czego nie dało się przetestować
-(Bluetooth, GPS i zachowanie w tle tylko na prawdziwym telefonie).
+(rozpoznawanie jazdy, GPS i zachowanie w tle tylko na prawdziwym telefonie).
 
 ## 7. APK cudzych aplikacji open source z GitHuba
 
