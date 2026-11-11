@@ -1,25 +1,30 @@
 ﻿element;obciążenie;nośność;jedn.;wytężenie;uwagi
-Rura jezdna RHS 100×40×2 S355J2H – zginanie, rozpiętość 2,5 m (75 % koła);220.65;355;MPa;0.622;
-Rura jezdna – zginanie, całe koło na jednej rurze;289.97;355;MPa;0.817;
-Ugięcie w środku (charakterystyczne);5.17;12.5;mm;0.413;
+Rura jezdna RHS 100×40×2 S355J2H – zginanie, rozpiętość 2,5 m (75 % koła);221.66;355;MPa;0.624;
+Rura jezdna – zginanie, całe koło na jednej rurze;290.98;355;MPa;0.82;
+Ugięcie w środku (charakterystyczne);5.21;12.5;mm;0.417;
 Rura jezdna wewnętrzna – wspornik przy zawiasie 420 mm;186.33;355;MPa;0.525;
 Rura jezdna – ścianka górna 2 mm pod oponą (zginanie poprzeczne);160.06;355;MPa;0.451;pół koła na rurę, ślad opony 120 mm wzdłuż, ścianka 34 mm między bokami
-Poprzeczka RHS 60×40×2 S235JRH (na płasko) – stopa na samej krawędzi;154.1;235;MPa;0.656;
+Poprzeczka RHS 60×40×3 S235JRH (na płasko) – stopa na samej krawędzi;110.11;235;MPa;0.469;
 Podłużnica chodnika RHS 100×40×1,5 S235JRH – wspornik 420 mm;93.73;235;MPa;0.399;
-Zawias środkowy: sworzeń Ø20 C45 – ścinanie (jedna płaszczyzna);11.1;90.48;kN;0.123;jedna płyta Z na rurę, płyty A i B stykają się
-Zawias środkowy: sworzeń Ø20 C45 – zginanie (ramię 6 mm);84.8;355.0;MPa;0.239;C45 ulepszana ≥ 355 MPa
-Zawias środkowy: śruba M12 8.8 – ścinanie (jednocięta);21.82;32.37;kN;0.674;jedna płyta Z
-Zawias środkowy: tuleja Ø18 → ścianka rury 2 mm (docisk, 75 % na ściankę zewn.);16.36;27.44;kN;0.596;
-Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (29 mm, L3);37.43;355;MPa;0.105;naprężenie zastępcze od ścinania przy skręcaniu
-Blokada do jazdy: sworzeń Ø12 8.8 / C45 – ścinanie;10.13;43.43;kN;0.233;trap w pionie 83 kg, hamowanie 0,8 g ×1,5
-Blokada: docisk sworznia Ø12 w płycie H 6 mm;10.13;33.23;kN;0.305;
+Zawias środkowy: sworzeń Ø20 C45 – ścinanie (jedna płaszczyzna);11.15;90.48;kN;0.123;jedna płyta Z na rurę, płyty A i B stykają się
+Zawias środkowy: sworzeń Ø20 C45 – zginanie (ramię 6 mm);85.19;355.0;MPa;0.24;C45 ulepszana ≥ 355 MPa
+Zawias środkowy: śruba M12 8.8 – ścinanie (jednocięta);21.92;32.37;kN;0.677;jedna płyta Z
+Zawias środkowy: tuleja Ø18 → ścianka rury 2 mm (docisk, 75 % na ściankę zewn.);16.44;27.44;kN;0.599;
+Rura jezdna zewnętrzna – skręcanie od mimośrodu płyty Z (29 mm, L3);37.6;355;MPa;0.106;naprężenie zastępcze od ścinania przy skręcaniu
+Blokada do jazdy: sworzeń Ø12 8.8 / C45 – ścinanie;10.94;43.43;kN;0.252;trap w pionie 90 kg, hamowanie 0,8 g ×1,5
+Blokada: docisk sworznia Ø12 w płycie H 6 mm;10.94;33.23;kN;0.329;
 Oczko sprężyny: tuleja Ø22×5 + M12 – zginanie;173.96;235.0;MPa;0.74;sprężyna 2500 N, ramię 34 mm od blachy
 Płyta S – śruby M12 w ściance podłużnicy 1,5 mm (docisk);5.95;14.01;kN;0.424;
 Prowadnica – kątownik 40×40×3 S235: zginanie półki pionowej od bocznego pchnięcia opony;148.6;235.0;MPa;0.632;0,3 × koło obl. na wys. 37 mm, współpracuje ~300 mm półki
 Prowadnica – śruba M8 8.8 rozrywana (dźwignia 37/20 mm);3.34;21.08;kN;0.159;cała siła boczna na jednej śrubie
 [INFO] Siatka – koło zamiast stopy (dlaczego są prowadnice);6.03;2.32;kN;2.6;"siatka liczona na stopę 105 kg; koło to 2,6 × więcej"
 Rura L1 w miejscu 2 otworów Ø18,5 płyty S (całe koło na jednej rurze, s = 259);130.4;355.0;MPa;0.367;"przekrój netto 86 % pełnego; w lewej rurze otwory zaślepione tuleją i śrubą"
-Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12;0.75;4.0;kN;0.187;"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
-Zawias przy przyczepie: śruba M12 płyty H (jedna płyta, jednocięta);4.45;32.37;kN;0.137;mimośród 105 mm, rozstaw 80 mm
-Zawias przy przyczepie: sworzeń Ø20 – docisk w płycie H 6 mm;3.17;34.29;kN;0.092;koło przy przyczepie + ciężar trapu
+Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12;0.81;4.0;kN;0.202;"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
+Zawias przy przyczepie: śruba M12 płyty H (jedna płyta, jednocięta);4.48;32.37;kN;0.138;mimośród 105 mm, rozstaw 80 mm
+Zawias przy przyczepie: sworzeń Ø20 – docisk w płycie H 6 mm;3.19;34.29;kN;0.093;koło przy przyczepie + ciężar trapu
 Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk);5.95;24.39;kN;0.244;
+"Skrzyżowanie: śruba M8 8.8 – rozciąganie (poprzeczka wisi na rurze; ruszt)";7.54;21.08;kN;0.358;"B s=260 x=+125; koło x=+45, przy zawiasie (B)"
+Poprzeczka 60×40×3 – ścianka pod podkładką M8 (linie załomów);7.54;11.42;kN;0.66;przy ściance 2 mm nośność 5.1 kN – za mało
+Rura jezdna L2/L4 – ścianka górna pod łbem M8 (bez prowadnicy);6.08;10.87;kN;0.56;łeb zamkowy Ø20 przez siatkę
+[INFO] Ugięcie chodnika pod stopą (obliczeniowo), najgorsze miejsce;7.3;1962.3;mm;0.004;nośność = wartość PRZED poprawką (mechanizm: chodnik bez podparcia przy zawiasie)
+[INFO] Skok na styku sekcji pod kołem (obliczeniowo);4.4;658.1;mm;0.007;nośność = wartość PRZED poprawką

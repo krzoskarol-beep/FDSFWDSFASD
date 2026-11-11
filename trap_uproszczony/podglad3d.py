@@ -251,18 +251,19 @@ def build(layout=None):
                 solid("xz", [(X0, -ch), (X1, -ch), (X1, 0), (X0, 0)], w0, w1, body)
 
     # ---------------------------------------------------------- listwa T pod sekcją B (nity)
-    body = M.mesh("B:T", "B", c_walk, "profil", f"T – listwa spinająca, {Ly['tie_txt']}, L = {fmt(WID)}\n"
-                  f"pod sekcją B, s = {fmt(g.TIE_B)} od zawiasu; {2 * len(XS)} otworów Ø4,9 (±10 mm od osi każdej podłużnicy)")
-    rv = [(g.TIE_B, x + dx, 4.9, f"Br:{g.TIE_B:g}:{x + dx:+.0f}",
-           f"listwa T: Ø4,9, {x + dx - X0:.0f} mm od lewego końca") for x in XS for dx in (-10, 10)]
-    slab(M, "B", "sx", [(g.TIE_B - 20, X0), (g.TIE_B + 20, X0), (g.TIE_B + 20, X1), (g.TIE_B - 20, X1)], rv, -5, 0, body)
-    riv = M.mesh("B:nity", "B", C_RIVET, "śruba", f"nity zrywalne 4,8 z szerokim kołnierzem – listwa T → dno podłużnic B ({2 * len(XS)} szt.)")
-    for x in XS:
-        for dx in (-10, 10):
-            cyl("z", g.TIE_B, x + dx, -5, -6.5, 4.8, riv, 10)
-            cyl("z", g.TIE_B, x + dx, -6.5, 5, 2.4, riv, 8)
-            cyl("z", g.TIE_B, x + dx, 2.5, 6, 3.2, riv, 8)
-            M.bolt_axes.append((f"Br:{g.TIE_B:g}:{x + dx:+.0f}", "nit"))
+    if g.TIE_B:
+        body = M.mesh("B:T", "B", c_walk, "profil", f"T – listwa spinająca, {Ly['tie_txt']}, L = {fmt(WID)}\n"
+                      f"pod sekcją B, s = {fmt(g.TIE_B)} od zawiasu; {2 * len(XS)} otworów Ø4,9 (±10 mm od osi każdej podłużnicy)")
+        rv = [(g.TIE_B, x + dx, 4.9, f"Br:{g.TIE_B:g}:{x + dx:+.0f}",
+               f"listwa T: Ø4,9, {x + dx - X0:.0f} mm od lewego końca") for x in XS for dx in (-10, 10)]
+        slab(M, "B", "sx", [(g.TIE_B - 20, X0), (g.TIE_B + 20, X0), (g.TIE_B + 20, X1), (g.TIE_B - 20, X1)], rv, -5, 0, body)
+        riv = M.mesh("B:nity", "B", C_RIVET, "śruba", f"nity zrywalne 4,8 z szerokim kołnierzem – listwa T → dno podłużnic B ({2 * len(XS)} szt.)")
+        for x in XS:
+            for dx in (-10, 10):
+                cyl("z", g.TIE_B, x + dx, -5, -6.5, 4.8, riv, 10)
+                cyl("z", g.TIE_B, x + dx, -6.5, 5, 2.4, riv, 8)
+                cyl("z", g.TIE_B, x + dx, 2.5, 6, 3.2, riv, 8)
+                M.bolt_axes.append((f"Br:{g.TIE_B:g}:{x + dx:+.0f}", "nit"))
 
     # ---------------------------------------------------------- siatka + wkręty
     for grp in "AB":
@@ -419,6 +420,45 @@ def build(layout=None):
                        "Z(B) – Z(A) – (pod rurą) – Z(A) – Z(B); nakrętka samohamowna NIEDOKRĘCONA\n35 mm pod spodem rur, na styku rur")
             bolt(b, "x", L, -35.0, sg * (XO - 52), sg, 110, 20, 64)
         M.bolt_axes.append((f"pin:mid:{sg}", "M20"))
+    # ---------------------------------------------------------- zawias środkowy krawędzi chodnika (C2 | C3), oś wspólna z głównym
+    WH = Ly.get("walk_hinge")
+    if WH:
+        wz, hz, zh2, _ = g.plate_outline("Z")
+        xf, xi = WH["x"] + 20.0, WH["x"] - 20.0
+        for grp, s_of in (("A", lambda d: L - d), ("B", lambda d: d)):
+            a_, b_ = (xf, xf + 6) if grp == "A" else (xf + 6, xf + 12)
+            holes = []
+            for (n, d_, z, dd), (_, pa, pb, _) in zip(g.Z_PL["holes"], zh2):
+                key = "pin:mid:chodnik" if n == "pin" else WH["key"](grp, s_of(d_), z)
+                holes.append((s_of(d_), z, dd, key, f"płyta Z chodnika ({grp}): Ø{fmt(dd)}, ({fmt(pa)}; {fmt(pb)}) od rogu przy sworzniu"))
+            sa, sb = sorted((s_of(g.Z_PL["d0"]), s_of(g.Z_PL["d0"] + wz)))
+            plate(grp, [(sa, g.Z_PL["z0"]), (sb, g.Z_PL["z0"]), (sb, g.Z_PL["z0"] + hz), (sa, g.Z_PL["z0"] + hz)], holes, (a_, b_),
+                  f"Z – płyta zawiasu środkowego KRAWĘDZI CHODNIKA (ta sama co na rurach jezdnych), sekcja {grp}, x +{xf:.0f}\n"
+                  "ta sama oś co zawias główny – chodnik ma własną podporę na styku sekcji", f"{grp}:Z:chodnik")
+            for (n, d_, z, dd) in g.Z_PL["holes"]:
+                if n != "M12":
+                    continue
+                s_ = s_of(d_)
+                m12_through_tube(grp, s_, z, 1, xi, 46 if grp == "A" else 52, 70 if grp == "A" else 80,
+                                 f"śruba M12×{70 if grp == 'A' else 80} 8.8 + 2 podkładki + nakrętka samohamowna\n"
+                                 f"rura {pid_at[(grp, WH['x'])]} (x +{WH['x']:.0f}) – {'' if grp == 'A' else 'podkładka 6 mm – '}płyta Z, s={fmt(s_)}, z={fmt(z)}\n"
+                                 "tuleja Ø18×2,5 dł. 40", WH["key"](grp, s_, z), f"{grp}:M12zch:{s_:g}:{z:g}")
+                cyl("x", s_, z, xi, xf, 9.0, M.mesh(f"{grp}:tul40", grp, C_SLEEVE, "tuleja", "tuleje Ø18×2,5 dł. 40 (M12)"), 14)
+                if grp == "B":
+                    cyl("x", s_, z, xf, xf + 6, 15.0, M.mesh(f"B:pk6ch:{s_:g}", "B", C_BOLT, "śruba", "podkładka dystansowa DIN 7349 M12 (13×30×6)"), 18)
+        b = M.mesh("A:pinMid:chodnik", "A", "#d0d0d0", "śruba", "SWORZEŃ zawiasu krawędzi chodnika: ISO 2341-B Ø20×35 + podkładka + zawleczka\n"
+                   "płyta Z(A) – płyta Z(B), na tej samej osi co zawias główny")
+        bolt(b, "x", L, -35.0, xf, 1, 35, 20, 12, head="pin")
+        M.bolt_axes.append(("pin:mid:chodnik", "M20"))
+    for pl in Ly.get("walk_plugs", []):       # zaślepki: identyczna rura bez płyty
+        for (n, d_, z, dd) in g.Z_PL["holes"]:
+            if n != "M12":
+                continue
+            s_ = d_ if pl["grp"] == "B" else L - d_
+            m12_through_tube(pl["grp"], s_, z, 1, pl["x"] - 20.0, 40, 60, f"śruba M12×60 8.8 + 2 podkładki + nakrętka – ZAŚLEPKA\n"
+                             f"rura {pid_at[(pl['grp'], pl['x'])]} (x +{pl['x']:.0f}): otwór płyty Z (rury identyczne), s={fmt(s_)}, z={fmt(z)}\n"
+                             "tuleja Ø18×2,5 dł. 40", pl["key"](s_, z), f"{pl['grp']}:M12zas:{s_:g}:{z:g}")
+            cyl("x", s_, z, pl["x"] - 20.0, pl["x"] + 20.0, 9.0, M.mesh(f"{pl['grp']}:tul40", pl["grp"], C_SLEEVE, "tuleja", ""), 14)
     eye = Ly["eye"]
     for sp in Ly["s_plates"]:
         sg = sp["sg"]
@@ -451,6 +491,20 @@ def build(layout=None):
 
     # ---------------------------------------------------------- przyczepa (poglądowo) + wsporniki K z otworami
     T = "T"
+    if Ly.get("walk_rest"):
+        th0 = pose(0.0)[0]
+        oA = np.array((0.0, g.PIN_Z, -g.PIN_Y))
+        for xr_ in Ly["walk_rest"]:
+            P = oA + rot_x(np.array([[xr_, 0.0 - 75.0, -(0.0 + 25.0)]]), th0)[0]     # dolna krawędź końca rury, rozłożony
+            ytop, s_end = P[1] - 5.0, -P[2]                                            # 5 mm gumy EPDM
+            m = M.mesh(f"T:oparcie:{xr_:.0f}", T, "#b04a3a", "płyta",
+                       f"OPARCIE CHODNIKA przy przyczepie: kątownik 100×100×10, L = 40, pod rurą x +{xr_:.0f}\n"
+                       f"guma EPDM 5 mm na półce; rura tylko się opiera (przy składaniu odchodzi w górę).\n"
+                       f"półka {ytop:.0f} mm względem podłogi – DOPASUJ do swojej belki")
+            solid("sx", [(0.0, xr_ - 20), (s_end + 10, xr_ - 20), (s_end + 10, xr_ + 20), (0.0, xr_ + 20)], ytop - 10, ytop, m)
+            solid("sx", [(0.0, xr_ - 20), (10.0, xr_ - 20), (10.0, xr_ + 20), (0.0, xr_ + 20)], ytop - 100, ytop - 10, m)
+            solid("sx", [(s_end - 20, xr_ - 18), (s_end + 10, xr_ - 18), (s_end + 10, xr_ + 18), (s_end - 20, xr_ + 18)], ytop, ytop + 5,
+                  M.mesh(f"T:epdm:{xr_:.0f}", T, "#222222", "płyta", "guma EPDM 5 mm (oparcie chodnika)"))
     solid("sx", [(-1400, -650), (-50, -650), (-50, 650), (-1400, 650)], -18, 0,
           M.mesh("T:podloga", T, "#9a8f80", "przyczepa", "podłoga przyczepy (przykład: 480 mm nad ziemią)"))
     beam = M.mesh("T:belka", T, "#7d7d7d", "przyczepa", "tylna belka przyczepy – PRZYKŁAD 50×75×3 (dopasuj!)\n"

@@ -76,6 +76,10 @@ S5_WALK, S5_EDGE = 305.0, 465.0
 VARIANTS["S5L"] = dict(nazwa="S5 lekki i tani: chodnik 340 mm, pojedyncze płyty zawiasów, sprężyny Ø28", n_walk=2,
                        width=g.X_LANE_OUT + 20 + S5_EDGE + 20, edge_x=S5_EDGE, lane_mm=282, single_plates=True, spring_max=2500,
                        eye_lever=34.0, eye_tube=(22, 12, "Ø22×5 + M12"), wspolne_delta=-60.0, **_light)
+# po analizie dróg sił (rusztu): 2. poprzeczka w B zamiast nitowanej listwy T, poprzeczki 60×40×3 (ścianka pod nakrętką),
+# zawias na krawędzi chodnika (C2|C3) + oparcie chodnika na przyczepie
+VARIANTS["S5L"].update(crossB=[260.0, 650.0], tie=False, walk_hinge=True, wspolne_delta=-20.0,
+                       cross=("RHS 60×40×3 S235JRH (na płasko)", rhs(60, 40, 3), 235, 360))
 VARIANTS["S6"] = dict(nazwa="stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm) – tylko opony do ~180 mm, NIE dla tylnej opony 240", n_walk=2, n_lane=3,
                       width=120 + g.X_EDGE - g.X_WALK + g.X_WALK + 20, lane_mm=222, **_light)
 RECOMMENDED = "S2"
@@ -103,8 +107,13 @@ def masses(v):
         full = p["kgm"] * L / 1000
         cut = (SK * 40 * p["t"] + SK * 100 * p["t"]) * RHO_ST
         B += [(n * full, L / 2, 50.0), (-n * cut, L - SK / 3, 25.0)]
-    B += [(cross["kgm"] * W / 1000, s, -g.CROSS_H / 2) for s in g.CROSS_B]
-    B += [(40 * 5 * W * RHO_ST, g.TIE_B, -2.5), (W * L * 1e-6 * v["mesh"][1], L / 2, 101.5),
+    B += [(cross["kgm"] * W / 1000, s, -g.CROSS_H / 2) for s in v.get("crossB", g.CROSS_B)]
+    if v.get("tie", True):
+        B += [(40 * 5 * W * RHO_ST, g.TIE_B, -2.5)]
+    if v.get("walk_hinge"):                              # płyta Z na krawędzi chodnika (A i B) + śruby, sworzeń
+        A += [(170 * 100 * 6 * RHO_ST + 0.25, L - 55.0, -10.0)]
+        B += [(170 * 100 * 6 * RHO_ST + 0.35, 55.0, -10.0)]
+    B += [(W * L * 1e-6 * v["mesh"][1], L / 2, 101.5),
           (2 * v["guide"][1] * (g.GUIDE_B[1] - g.GUIDE_B[0]) / 1000, sum(g.GUIDE_B) / 2, 115.0),
           (npl * 170 * 100 * 6 * RHO_ST + (0.13 if npl == 2 else 0.26), 55.0, -10.0), (1.6, 500.0, 50.0)]
     return acc(A), acc(B)

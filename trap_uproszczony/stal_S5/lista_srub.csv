@@ -1,20 +1,21 @@
 ﻿śruba / element;rodzaj;szt.;gdzie
-M8×160;zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna;18;skrzyżowania (6 podłużnic × 3 poprzeczki)
-M8×130;zamkowa DIN 603 + podkładka + nakrętka samohamowna;12;prowadnice
-M12×70;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;8;płyty H (4) i Z sekcji A (4)
-M12×80;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;8;płyty S (4) i Z sekcji B (4)
-M12×60;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;2;ZAŚLEPKI: nieużywane otwory płyty S w lewej rurze L1
+M8×160;zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna;24;skrzyżowania (6 podłużnic × 4 poprzeczki)
+M8×130;zamkowa DIN 603 + podkładka + nakrętka samohamowna;10;prowadnice
+M12×70;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;10;płyty H (4), Z sekcji A (4), Z chodnika A (2)
+M12×80;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;10;płyty S (4), Z sekcji B (4), Z chodnika B (2)
+M12×60;sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna;4;ZAŚLEPKI: lewa L1 (płyta S) i C3 x +305 (płyta Z)
+M12×80 (oparcie);sześciokątna 8.8 (DOPASUJ do belki);4;2 oparcia chodnika → belka przyczepy
 M12×80;sześciokątna 8.8 (DOPASUJ do belki);6;3 wsporniki K → belka przyczepy
 M12×60 / M12×70;sześciokątna 8.8 + podkładka + nakrętka samohamowna;3 / 1;osie oczek sprężyn (×70: płyta S prawa)
 sworzeń Ø20×40;ISO 2341-B, stal C45 / 8.8, + podkładka 21 + zawleczka 4×36;2;zawias przy przyczepie (H – K)
-sworzeń Ø20×35;ISO 2341-B, stal C45 / 8.8, + podkładka 21 + zawleczka 4×36;2;zawias środkowy (Z A – Z B)
+sworzeń Ø20×35;ISO 2341-B, stal C45 / 8.8, + podkładka 21 + zawleczka 4×36;3;zawias środkowy: 2 × rury jezdne + 1 × krawędź chodnika
 Ø12×40;sworzeń ISO 2341-B ze stali 8.8 / C45 ulepszanej + zawleczka, na łańcuszku;2;blokada do jazdy
-podkładka M12 gr. 6;DIN 7349 (13×30×6);4;dystans płyt Z sekcji B
-nit 4,8;nit zrywalny stalowy 4,8, szeroki kołnierz;20;listwa T (12) + zapięcia (8)
+podkładka M12 gr. 6;DIN 7349 (13×30×6);6;dystans płyt Z sekcji B
+nit 4,8;nit zrywalny stalowy 4,8, szeroki kołnierz;8;zapięcia
 wkręt 4,8×19;wkręt samowiercący z podkładką EPDM;70;siatka, co ~250 mm
-tuleja Ø12×1,5 dł. 139,5;rura stal bezszwowa ocynk;18;skrzyżowania
-tuleja Ø12×1,5 dł. 99,5;rura stal bezszwowa ocynk;12;prowadnice
-tuleja Ø18×2,5 dł. 40;rura stal bezszwowa ocynk;18;płyty H, Z, S + 2 zaślepki
+tuleja Ø12×1,5 dł. 139,5;rura stal bezszwowa ocynk;24;skrzyżowania
+tuleja Ø12×1,5 dł. 99,5;rura stal bezszwowa ocynk;10;prowadnice
+tuleja Ø18×2,5 dł. 40;rura stal bezszwowa ocynk;24;płyty H, Z, S + 4 zaślepki
 tuleja Ø18×2,5 dł. 50;rura stal bezszwowa ocynk (DOPASUJ do belki);6;belka przyczepy
 tuleja Ø22×5 dł. 22 / 25 / 16 / 16;rura stal bezszwowa;4;dystanse oczek: S lewa 22, S prawa 25, K 16 i 16
 sprężyna gazowa 460/200 2500 N;Ø28, oczka Ø12,2 (M12) – tania, standardowa;2;"lewa: C1 ↔ K sprężyny; prawa: prawa L1 ↔ K zawiasu"

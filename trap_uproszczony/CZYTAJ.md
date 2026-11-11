@@ -212,3 +212,20 @@ Poprawka (V2 i S5):
 | największe wytężenie | 87 % (poprzeczka) | 82 % (rura jezdna, całe koło na jednej rurze) |
 
 Rury jezdne 100×40×2 S355 zostają – to one decydują o nośności. Wariant S6 (3 rury pod koło, pas 222 mm) jest lżejszy, ale NIE mieści tylnej opony 240 mm.
+
+## Drogi sił w pokładzie (S5) – sprawdzenie modelem rusztu i poprawka
+
+`sily.py` liczy pokład jako ruszt: rury i poprzeczki to belki, skrzyżowanie = jedna śruba M8 (docisk albo rozciąganie),
+ziemia działa tylko na docisk, zawias środkowy łączy A i B tylko tam, gdzie są płyty Z. 36 położeń koła i stopy, obciążenia obliczeniowe.
+Wyniki: `stal_S5/sily_S5.csv`, wykres `stal_S5/sily_sruby_S5.png`, strona 3 w `rysunki_trap_S5.pdf`.
+
+| | przed | po |
+|---|---|---|
+| stopa na krawędzi chodnika przy zawiasie | **mechanizm** (rury chodnika bez podpory na zawiasie, w B jedna poprzeczka + słaba listwa T) | ugięcie 7,3 mm |
+| koło przy zawiasie (rura wewnętrzna) | skok 4,5 mm, śruby do 14 kN | skok 4,4 mm, śruby do 7,5 kN |
+| ścianka poprzeczki pod podkładką M8 | 2 mm – nośność ok. 5,1 kN (za mało) | 3 mm – 11,4 kN |
+
+Poprawka: druga poprzeczka w B (s = 650) zamiast listwy T; zawias środkowy także na krawędzi chodnika (płyta Z + sworzeń Ø20 na tej samej osi);
+2 oparcia chodnika z gumą na przyczepie; poprzeczki 60×40×3; śruby prowadnic A 200/540/1040, B 180/450.
+Masa trapu 90 kg, sprężyny 2 × 2500 N Ø28, podnoszenie ok. 24 kg.
+Wersja aluminiowa V2 ma ten sam układ (jedna poprzeczka w B, chodniki bez zawiasu) – NIE była poprawiana.

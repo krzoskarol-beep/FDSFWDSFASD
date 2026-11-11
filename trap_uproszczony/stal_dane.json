@@ -88,12 +88,12 @@
   {
    "klucz": "S5L",
    "nazwa": "S5 lekki i tani: chodnik 340 mm, pojedyncze płyty zawiasów, sprężyny Ø28",
-   "masa": 83.3,
-   "bez": 45.7,
+   "masa": 90.0,
+   "bez": 50.3,
    "sprezyny": "2 × 2500 N (Ø28)",
-   "ze": 19.6,
-   "koszt": 2164,
-   "wyt": 0.817,
+   "ze": 24.0,
+   "koszt": 2290,
+   "wyt": 0.82,
    "rysunki": "nowe rysunki (stal_S5/)"
   },
   {

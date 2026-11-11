@@ -36,7 +36,7 @@ chodnik 340 mm, poprzeczki i siatka 630 mm. Model pokazuje każdy otwór, śrub�
 </div>
 <div class="bar">
   <button data-f="A:pinTr:1" data-v="1,0.3,-0.6">Zawias przy przyczepie</button><button data-f="A:pinMid:-1" data-v="-1,0.2,-0.4">Zawias środkowy</button><button data-f="A:M8x:340:+125">Skrzyżowanie</button>
-  <button data-f="A:M12oko:1" data-v="1,-0.25,-0.6">Sprężyna lewa</button><button data-f="A:M12oko:-1" data-v="-1,-0.25,-0.6">Sprężyna prawa</button><button data-f="B:T">Listwa T</button><button id="b-all">Cały trap</button>
+  <button data-f="A:M12oko:1" data-v="1,-0.25,-0.6">Sprężyna lewa</button><button data-f="A:M12oko:-1" data-v="-1,-0.25,-0.6">Sprężyna prawa</button><button data-f="B:P:650">Poprzeczka B2</button><button data-f="A:pinMid:chodnik" data-v="1,0.2,-0.4">Zawias chodnika</button><button id="b-all">Cały trap</button>
 </div>
 <div class="bar">
   <button class="lay" data-k="śruba" aria-pressed="true">Śruby</button><button class="lay" data-k="tuleja" aria-pressed="true">Tuleje</button>
@@ -44,10 +44,22 @@ chodnik 340 mm, poprzeczki i siatka 630 mm. Model pokazuje każdy otwór, śrub�
   <button id="b-x" aria-pressed="false">Profile przezroczyste</button><button id="b-drill" aria-pressed="false">Tylko otwory</button>
 </div>
 <div class="legend"><span><i style="background:#8a96a3"></i>rury jezdne S355 100×40×2</span><span><i style="background:#b9c0c8"></i>podłużnice chodnika 100×40×1,5</span>
-<span><i style="background:#c9a77a"></i>poprzeczki 60×40×2 (na płasko)</span><span><i style="background:#3f6fb0"></i>prowadnice 40×40×3</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
+<span><i style="background:#c9a77a"></i>poprzeczki 60×40×3 (na płasko)</span><span><i style="background:#3f6fb0"></i>prowadnice 40×40×3</span><span><i style="background:#3a3a3a"></i>płyty H / Z / S</span>
 <span><i style="background:#b04a3a"></i>wsporniki K</span><span><i style="background:#e01b1b"></i>otwory</span><span><i style="background:#a9afb6"></i>śruby</span><span><i style="background:#d4b030"></i>tuleje</span></div>
 <h2>W liczbach</h2>
 <div class="kv">%KV%</div>
+<h2>Drogi sił – co sprawdziłem i co poprawiłem</h2>
+<div class="card"><p style="margin:0 0 8px">Policzyłem cały pokład jako <b>ruszt</b>: każda rura i poprzeczka to belka, każde skrzyżowanie to jedna śruba M8,
+która przenosi docisk (rura naciska na poprzeczkę) albo rozciąganie (poprzeczka „wisi” na rurze). Podpory: sworznie przy przyczepie, ziemia pod końcem B
+(tylko docisk – koniec może się oderwać), zawias środkowy tylko tam, gdzie są płyty Z. 36 położeń koła i stopy, obciążenia obliczeniowe.</p>
+%SILY%
+<p style="margin:10px 0 6px"><b>Co było źle:</b> rury chodnika kończyły się na zawiasie bez podpory, a sekcja B miała jedną poprzeczkę i słabą listwę T na nitach.
+Stopa na krawędzi chodnika przy zawiasie obracała rurę B na tej jednej poprzeczce (koniec przy ziemi się odrywał) – w obliczeniach to <b>mechanizm</b>, w praktyce
+uginający się chodnik trzymany tylko przez siatkę. Poprzeczki „wiszą” na śrubach przy rurach L1/L3 z siłą do 14 kN, a ścianka 2 mm pod podkładką M8 przenosi ok. 5 kN.</p>
+<p style="margin:0"><b>Poprawka:</b> 2. poprzeczka w B (s = 650) zamiast listwy T; krawędź chodnika ma własny zawias (płyta Z + sworzeń Ø20 na tej samej osi);
+2 oparcia chodnika z gumą na przyczepie; poprzeczki ze ścianką 3 mm. Waga: ok. +7 kg, a podnoszenie ze sprężynami Ø28 rośnie do %LIFT% kg.</p>
+<img src="data:image/png;base64,%SILYPNG%" alt="Siła w śrubach skrzyżowań przed i po poprawce" style="width:100%;margin-top:10px;border-radius:8px">
+<p class="note">Słupki: największe rozciąganie śruby w 10 najbardziej obciążonych skrzyżowaniach; linie przerywane: nośność ścianki poprzeczki pod podkładką. Dane: stal_S5/sily_S5.csv, model: sily.py.</p></div>
 <h2>Odchudzenie i tańsze części</h2>
 <div class="card">%OPT%
 <p class="note">Rury jezdne zostają 100×40×2 S355 – pod oponą o śladzie ~100 mm całe tylne koło może stanąć na jednej rurze (%P_LANE%), więc tu nie da się ująć bez utraty zapasu.
@@ -118,7 +130,7 @@ def main():
             "%P_M12%": pct(rows, "Zawias środkowy: śruba M12"), "%P_TORS%": pct(rows, "Rura jezdna zewnętrzna – skręcanie")}
     sp_txt = f"2 × {spr['F1_N']} N (Ø28)"
     kv = [(f"2,5 × {s5.WID / 1000:.2f} m".replace(".", ","), "trap rozłożony, 2 sekcje po 1,25 m"),
-          (f"~{mA + mB:.0f} kg", f"trap (A {mA:.0f} kg, B {mB:.0f} kg); było {oA + oB:.0f} kg"),
+          (f"~{mA + mB:.0f} kg", f"trap (A {mA:.0f} kg, B {mB:.0f} kg); pierwsza wersja S5: {oA + oB:.0f} kg"),
           (f"~{max(r['user_kg'] for r in lift0):.0f} kg", f"podnoszenie bez sprężyn; ze sprężynami {spr['max_wysilek_kg']:.0f} kg"),
           (f"{g.ALPHA:.1f}°".replace(".", ","), f"kąt przy podłodze {g.H_FLOOR / 10:.0f} cm"),
           (f"{worst['wytezenie'] * 100:.0f}%", "najbardziej obciążona część"),
@@ -126,7 +138,8 @@ def main():
           (f"~{cost} zł", f"materiał z cynkowaniem; było {o_cost} zł")]
     kv_html = "".join(f"<div><b>{E(a)}</b><span>{E(b)}</span></div>" for a, b in kv)
     opt_rows = [["szerokość / chodnik", "740 mm / 450 mm", f"{s5.WID:.0f} mm / 340 mm (C1 x +{s5.XW:.0f}, C2 x +{s5.XE:.0f})"],
-                ["płyty zawiasów H i Z", "po 2 na rurę (12 szt.)", "po 1 na rurę, z zewnątrz (6 szt.)"],
+                ["płyty zawiasów H i Z", "po 2 na rurę (12 szt.)", "po 1 na rurę, z zewnątrz (8 szt., w tym 2 na krawędzi chodnika)"],
+                ["poprzeczki", "3 × 60×40×2 + listwa T 40×5 na nitach", "4 × 60×40×3 (druga w sekcji B zamiast listwy)"],
                 ["sworznie zawiasów", "M20×110, nakrętka niedokręcona", "Ø20 ISO 2341-B + zawleczka (krótsze, nic nie regulujesz)"],
                 ["sprężyny gazowe", f"{o_spr['sztuk']} × {o_spr['F1_N']} N Ø40, oś M16 (ok. {o_spr_zl:.0f} zł)", f"{sp_txt}, oś M12 (ok. {spr_zl:.0f} zł)"],
                 ["masa trapu", f"{oA + oB:.1f} kg".replace(".", ","), f"{mA + mB:.1f} kg".replace(".", ",")],
@@ -136,7 +149,7 @@ def main():
     cmp_rows = [["szerokość", "1190 mm, chodnik po obu stronach", f"{s5.WID:.0f} mm, chodnik 340 mm tylko z lewej"],
                 ["rury jezdne (4 szt.)", "100×40×3 Al 6082-T6", "100×40×2 stal S355J2H"],
                 ["podłużnice chodnika", "4 na sekcję, 100×40×2 Al", "2 na sekcję, 100×40×1,5 stal S235"],
-                ["poprzeczki / prowadnice", "60×40×4 Al (na płasko) / kątownik 40×40×4 Al", "60×40×2 stal / kątownik 40×40×3 stal"],
+                ["poprzeczki / prowadnice", "60×40×4 Al (na płasko) / kątownik 40×40×4 Al", "4 × 60×40×3 stal / kątownik 40×40×3 stal"],
                 ["siatka", "Al, 1190 × 2500", f"stal ocynk ~4 kg/m², {s5.WID:.0f} × 2500 (1 arkusz)"],
                 ["sprężyny gazowe", "2 × 1600 N (Ø28), obie przy chodnikach", f"{sp_txt}, oś M12; prawa na prawej rurze jezdnej L1"],
                 ["wsporniki K na belce", "4", "3 (prawy zawiasowy trzyma też sprężynę)"],
@@ -152,7 +165,16 @@ def main():
                  for i, k in enumerate(sorted(M.hole_dia, key=lambda k: (M.hole_txt[k][0])), 1)]
     buy_rows = [[E(a), E(b), E(c)] for a, b, c in rd("lista_zakupow.csv") if a]
     page = HEAD + BODY + TAIL
-    for k, v in {"%KV%": kv_html, "%CMP%": table(["", "aluminium V2", "stal S5"], cmp_rows), "%CHART%": chart(lift, lift0), "%OPT%": table(["", "było (S5)", "jest (S5 lekki i tani)"], opt_rows), "%SPR%": E(sp_txt),
+    for k, v in {"%KV%": kv_html, "%CMP%": table(["", "aluminium V2", "stal S5"], cmp_rows), "%CHART%": chart(lift, lift0),
+                 "%SILY%": table(["", "przed poprawką", "po poprawce"], [
+                     ["ugięcie chodnika pod stopą (najgorsze miejsce)", "mechanizm – brak podparcia (trzyma tylko siatka)" if -s5.SILY['przed']['walk'] > 100 else f"{-s5.SILY['przed']['walk']:.0f} mm", f"{-s5.SILY['po']['walk']:.1f} mm".replace(".", ",")],
+                     ["ugięcie pod kołem (najgorsze miejsce)", f"{-s5.SILY['przed']['lane']:.1f} mm".replace(".", ","), f"{-s5.SILY['po']['lane']:.1f} mm".replace(".", ",")],
+                     ["największa siła w śrubie skrzyżowania", f"{s5.SILY['przed']['tmax'][1][0] / 1e3:.1f} kN".replace(".", ","),
+                      f"{s5.SILY['po']['tmax'][1][0] / 1e3:.1f} kN".replace(".", ",")],
+                     ["nośność ścianki poprzeczki pod podkładką", f"{s5.face_NRd(235, 2.0, 60, 16) / 1e3:.1f} kN (2 mm)".replace(".", ","),
+                      f"{s5.face_NRd(235, 3.0, 60, 16) / 1e3:.1f} kN (3 mm)".replace(".", ",")]]),
+                 "%SILYPNG%": base64.b64encode(open(os.path.join(s5.OUT, "sily_sruby_S5.png"), "rb").read()).decode(),
+                 "%LIFT%": f"{spr['max_wysilek_kg']:.0f}", "%OPT%": table(["", "było (S5)", "jest (S5 lekki i tani)"], opt_rows), "%SPR%": E(sp_txt),
                  "%CALC%": table(["Sprawdzenie", "Obciążenie / nośność", "Wytężenie"], calc_rows, (1, 2)), "%WORST%": E(worst["nazwa"]),
                  "%STEPS%": steps_html, "%BOM%": table(["Część", "Szt.", "Wymiar [mm]", "kg/szt."], bom_rows, (1, 3)),
                  "%BOLTS%": table(["Rozmiar", "Rodzaj / gdzie", "Szt."], bolt_rows, (2,)),

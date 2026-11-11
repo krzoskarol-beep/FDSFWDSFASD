@@ -112,7 +112,8 @@ def holes_long(kind):
     else:                                         # sekcja B
         for s in CROSS_B:
             h.append((s, "g/d", None, D_M8SL, "poprzeczka – M8 + tuleja 140"))
-        h.append((TIE_B, "dół", None, 4.9, "2 nity listwy T (x ±10)"))
+        if TIE_B:
+            h.append((TIE_B, "dół", None, 4.9, "2 nity listwy T (x ±10)"))
     if kind == "L1":
         for s in GUIDE_BOLTS_A:
             h.append((s, "g/d", None, D_M8SL, "prowadnica – M8 + tuleja 100"))
@@ -243,7 +244,7 @@ def masses():
     for kgm, t, n in ((P_LANE["kgm"], 3, 4), (P_WALK["kgm"], 2, 4)):
         B += [(n * m, s, z) for (m, s, z) in skos_tube(kgm, t)]
     B += [(P_CROSS["kgm"] * WIDTH / 1000, s, -CROSS_H / 2) for s in CROSS_B]
-    B += [(40 * 5 * WIDTH * RHO_AL, TIE_B, -2.5), (WIDTH * L_SEC * 1e-6 * MESH_KGM2, L_SEC / 2, 101.5)]
+    B += ([(40 * 5 * WIDTH * RHO_AL, TIE_B, -2.5)] if TIE_B else []) + [(WIDTH * L_SEC * 1e-6 * MESH_KGM2, L_SEC / 2, 101.5)]
     B += [(2 * ANGLE_KGM * (GUIDE_B[1] - GUIDE_B[0]) / 1000, sum(GUIDE_B) / 2, 115.0)]
     B += [(4 * 170 * 100 * 6 * RHO_ST + 8 * 0.033, 55.0, -10.0), (1.6, 500.0, 50.0)]
     return acc(A), acc(B)
