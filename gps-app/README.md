@@ -20,38 +20,35 @@ Prosta aplikacja na Androida, która pokazuje aktualną pozycję telefonu.
   Aplikacja poczeka na aktualną pozycję i od razu zaproponuje zapis (Android 7.1+).
 - Ostrzega, gdy zapisywana pozycja jest niedokładna albo nieaktualna.
 
-### Automatyczne zapisywanie parkowania (Bluetooth auta)
+### Automatyczne zapisywanie parkowania (rozpoznawanie jazdy Google)
 
-Włącz przełącznik **„Zapisuj parking automatycznie”** i wskaż radio albo zestaw głośnomówiący
-swojego auta (można kilka; przycisk **Wybierz Bluetooth auta**). Od tej pory:
+Włącz przełącznik **„Zapisuj parking automatycznie”**. Aplikacja sama rozpozna, że prowadzisz
+auto, bez wybierania auta czy Bluetooth:
 
-1. **Połączenie** telefonu z Bluetooth auta = początek jazdy: startuje usługa z powiadomieniem
-   „Jedziesz”, która śledzi GPS (GPS działa tylko wtedy).
-2. **Rozłączenie** (wyłączenie silnika) = zapis parkingu z pozycji **z chwili rozłączenia**,
-   gdy telefon był jeszcze w aucie. Powiadomienie ma przycisk **Prowadź**.
-3. Chwilowe zerwanie Bluetooth w trakcie jazdy (auto jedzie) jest ignorowane.
-4. Bez rozłączenia o końcu jazdy decyduje `DrivePolicy`: połączony z autem = jazda trwa
-   (korek), chyba że bez ruchu przez godzinę; po zerwaniu Bluetooth w trasie zapis 5 minut
-   po zatrzymaniu; bez jazdy przez 20 minut = fałszywy alarm.
+1. **Rozpoznawanie aktywności z usług Google Play** zgłasza „w pojeździe” (działa w tle bez GPS,
+   prawie bez zużycia baterii). Startuje usługa z powiadomieniem „Jedziesz”, która śledzi GPS.
+2. Gdy Google zgłosi **koniec jazdy**, aplikacja czeka 3 minuty (`DrivePolicy.EXIT_CONFIRM_MS`):
+   jeśli auto znów pojedzie (np. koniec zgłoszony w korku), jazda trwa dalej.
+3. Potem zapisuje **miejsce pierwszego postoju po ostatnim odcinku jazdy** (a nie miejsce, do
+   którego zdążyłeś dojść) i pokazuje powiadomienie z przyciskiem **Prowadź**.
+4. Bez zgłoszenia końca o jeździe decyduje `DrivePolicy`: Google widzi pojazd = jazda trwa
+   (korek), chyba że bez ruchu przez godzinę; bez jazdy przez 20 minut = fałszywy alarm.
 
-Aplikacja korzysta **wyłącznie z danych Bluetooth** (bez rozpoznawania aktywności i bez usług
-Google Play), więc nie ma fałszywych alarmów w autobusie i działa na każdym telefonie z Androidem 7.0+.
+Jazda autobusem, pociągiem czy jako pasażer też wygląda na jazdę, dlatego w powiadomieniu
+„Jedziesz” jest przycisk **„Nie zapisuj”**. Wymaga usług Google Play.
 
 Zasada (za projektem ParKing, patrz niżej): **pozycja ustalona po fakcie to miejsce, gdzie stoi
 kierowca, a nie auto.** Dlatego pozycje zapamiętane przez system są brane pod uwagę tylko z okolic
 zdarzenia (do 60 s przed). Jeśli takiej pozycji brak, aplikacja prosi o ręczny zapis zamiast
 zapisywać zgadywane miejsce.
 
-Kolejność wyboru miejsca (`DrivingService`, `ParkingDetector`):
-1. ostatni dokładny pomiar GPS sprzed rozłączenia (najwyżej 30 s wcześniej),
-2. pierwszy postój (poniżej ok. 3,6 km/h) po ostatnim odcinku jazdy powyżej ok. 15 km/h;
-   gdy GPS zniknie (garaż podziemny), ostatni punkt jazdy,
-3. pozycja zapamiętana przez system z okolic zdarzenia,
-4. nowy pomiar zaraz po rozłączeniu (oznaczony jako przybliżony).
+Jak wybierany jest punkt postoju (`ParkingDetector`): pierwszy pomiar z prędkością poniżej
+ok. 3,6 km/h po ostatnim odcinku jazdy powyżej ok. 15 km/h. Postój na światłach kasuje się,
+gdy auto znów rusza. Gdy GPS zniknie (garaż podziemny), zapisywany jest ostatni punkt jazdy.
 
-Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Urządzenia w pobliżu” (Bluetooth)
-i (opcjonalnie) powiadomienia. Zalecane: wyłączenie optymalizacji baterii, bo inaczej Android
-może zablokować start śledzenia w tle.
+Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Aktywność fizyczna” i (opcjonalnie)
+powiadomienia. Zalecane: wyłączenie optymalizacji baterii, bo inaczej Android może zablokować
+start śledzenia w tle.
 
 ### Wygląd
 
@@ -65,7 +62,7 @@ albo **Ciemny**. Wybór obowiązuje na wszystkich ekranach aplikacji (`ThemePref
 - **Historia parkowań** (przycisk pod kartami): 30 ostatnich miejsc. Dotknięcie otwiera mapę,
   przytrzymanie pozwala **przywrócić miejsce jako aktualne** albo je usunąć.
 
-Aplikacja nie ma żadnych zewnętrznych bibliotek (tylko systemowe API Androida).
+Jedyna zewnętrzna biblioteka: `play-services-location` (rozpoznawanie jazdy).
 Działa na Androidzie 7.0 lub nowszym (minSdk 24, targetSdk 36).
 Identyfikator aplikacji od wersji 2.0: `pl.mojapozycja.gps` (pakiet kodu Java pozostaje `pl.gps.pozycja`).
 
@@ -148,7 +145,7 @@ licencji open source, więc kod nie był kopiowany, tylko pomysły):
 ## Diagnostyka
 
 Na dole ekranu głównego jest przycisk **Diagnostyka**: stan uprawnień, optymalizacji baterii
-i Bluetooth oraz dziennik zdarzeń z tła (wykrycie jazdy, start usługi, zapis parkingu, błędy).
+i usług Google oraz dziennik zdarzeń z tła (wykrycie jazdy, start usługi, zapis parkingu, błędy).
 Dziennik jest przechowywany tylko w telefonie (ostatnie ok. 500 wpisów); przycisk
 **Udostępnij** pozwala go wysłać, np. przy zgłaszaniu problemu.
 

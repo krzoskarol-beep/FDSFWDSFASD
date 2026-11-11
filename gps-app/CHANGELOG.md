@@ -1,5 +1,15 @@
 # Zmiany – Moja pozycja GPS
 
+## 2.1
+
+- **Aplikacja sama rozpoznaje jazdę samochodem** (rozpoznawanie aktywności z usług Google Play),
+  bez wybierania Bluetooth auta. Tryb Bluetooth usunięty.
+- **Potwierdzanie końca jazdy:** po zgłoszeniu końca jazdy aplikacja czeka 3 minuty; jeśli auto
+  znów jedzie (np. Google zgłosił koniec w korku), jazda trwa dalej. Zapisywane jest miejsce
+  pierwszego postoju, więc opóźnienie nie psuje dokładności.
+- Włączanie: lokalizacja → „Aktywność fizyczna” → lokalizacja w tle → optymalizacja baterii.
+- Diagnostyka pokazuje usługi Google, uprawnienie „Aktywność fizyczna” i stan „w pojeździe”.
+
 ## 2.0
 
 - **Nowy identyfikator aplikacji: `pl.mojapozycja.gps`** (wcześniej `pl.gps.pozycja`).

@@ -99,13 +99,11 @@ public class MainActivity extends Activity {
     private static final int REQ_AUTO_LOCATION = 2;
     private static final int REQ_AUTO_FOREGROUND = 3;
     private static final int REQ_AUTO_BACKGROUND = 4;
-    private static final int REQ_BT_PICK = 5;
     private static final int REQ_BATTERY = 6;
 
     private Switch autoSwitch;
     private TextView autoStatus, autoBatteryHint;
     private Button autoBatteryButton;
-    private TextView autoBtDevices;
     /** Zapobiega reakcji na programowe przestawienie przełącznika. */
     private boolean suppressSwitch;
     private boolean notificationsAsked;
@@ -197,8 +195,7 @@ public class MainActivity extends Activity {
             if (!suppressSwitch) onAutoSwitchChanged(checked);
         });
         autoBatteryButton.setOnClickListener(v -> requestIgnoreBatteryOptimizations());
-        autoBtDevices = findViewById(R.id.autoBtDevices);
-        findViewById(R.id.autoBtChoose).setOnClickListener(v -> chooseCarBluetooth());
+        AutoParking.reRegisterIfEnabled(this);
         Notifications.createChannels(this);
 
         applySystemBarInsets(findViewById(R.id.root));
@@ -296,11 +293,6 @@ public class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
-        if (requestCode == REQ_BT_PICK) {
-            if (CarBluetooth.hasPermission(this)) chooseCarBluetooth();
-            else autoSetupFailed(R.string.bt_permission_denied);
-            return;
-        }
         if (requestCode == REQ_AUTO_LOCATION || requestCode == REQ_AUTO_FOREGROUND
                 || requestCode == REQ_AUTO_BACKGROUND) {
             onAutoPermissionResult(requestCode);
@@ -752,6 +744,11 @@ public class MainActivity extends Activity {
             updateAutoUi();
             return;
         }
+        if (!AutoParking.isPlayServicesAvailable(this)) {
+            Toast.makeText(this, R.string.auto_status_no_play_services, Toast.LENGTH_LONG).show();
+            setAutoSwitch(false);
+            return;
+        }
         notificationsAsked = false;
         batteryAsked = false;
         autoSetupInProgress = true;
@@ -759,9 +756,9 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Konfiguracja krok po kroku: lokalizacja → „Urządzenia w pobliżu” (i powiadomienia) →
-     * wybór Bluetooth auta → lokalizacja w tle (Android wymaga, żeby o nią prosić osobno).
-     * Na końcu włącza automatyczny zapis.
+     * Konfiguracja krok po kroku: lokalizacja → „Aktywność fizyczna” (i powiadomienia) →
+     * lokalizacja w tle (Android wymaga, żeby o nią prosić osobno) → optymalizacja baterii.
+     * Na końcu rejestruje rozpoznawanie jazdy w usługach Google.
      */
     private void continueAutoSetup() {
         if (!hasFinePermission()) {
@@ -771,18 +768,15 @@ public class MainActivity extends Activity {
         }
 
         java.util.List<String> needed = new java.util.ArrayList<>();
-        if (!CarBluetooth.hasPermission(this)) needed.add(Manifest.permission.BLUETOOTH_CONNECT);
+        if (!AutoParking.hasActivityRecognitionPermission(this)) {
+            needed.add(Manifest.permission.ACTIVITY_RECOGNITION);
+        }
         if (Build.VERSION.SDK_INT >= 33 && !notificationsAsked && !Notifications.canPost(this)) {
             needed.add(Manifest.permission.POST_NOTIFICATIONS);
         }
         if (!needed.isEmpty()) {
             notificationsAsked = true;
             requestPermissions(needed.toArray(new String[0]), REQ_AUTO_FOREGROUND);
-            return;
-        }
-
-        if (!CarBluetooth.isConfigured(this)) {
-            chooseCarBluetooth(); // po wyborze wraca tutaj przez applyCarBluetooth()
             return;
         }
 
@@ -800,7 +794,7 @@ public class MainActivity extends Activity {
         }
 
         if (!batteryAsked && !isIgnoringBatteryOptimizations()) {
-            // Bez tego Android 12+ może nie pozwolić włączyć GPS w tle po połączeniu z autem.
+            // Bez tego Android 12+ może nie pozwolić włączyć GPS w tle po wykryciu jazdy.
             batteryAsked = true;
             openDialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.auto_battery_title)
@@ -812,20 +806,23 @@ public class MainActivity extends Activity {
             return;
         }
 
-        autoSetupInProgress = false;
-        if (AutoParking.enable(this)) {
+        AutoParking.enable(this, () -> {
+            autoSetupInProgress = false;
             Toast.makeText(this, R.string.auto_enabled_toast, Toast.LENGTH_SHORT).show();
-        } else {
+            updateAutoUi();
+        }, e -> {
+            Toast.makeText(this, getString(R.string.auto_enable_failed, e.getLocalizedMessage()),
+                    Toast.LENGTH_LONG).show();
             setAutoSwitch(false);
-        }
-        updateAutoUi();
+            updateAutoUi();
+        });
     }
 
     private void onAutoPermissionResult(int requestCode) {
         if (requestCode == REQ_AUTO_LOCATION && !hasFinePermission()) {
             autoSetupFailed(R.string.auto_permission_denied_location);
-        } else if (requestCode == REQ_AUTO_FOREGROUND && !CarBluetooth.hasPermission(this)) {
-            autoSetupFailed(R.string.bt_permission_denied);
+        } else if (requestCode == REQ_AUTO_FOREGROUND && !AutoParking.hasActivityRecognitionPermission(this)) {
+            autoSetupFailed(R.string.auto_permission_denied_activity);
         } else if (requestCode == REQ_AUTO_BACKGROUND && !AutoParking.hasBackgroundLocationPermission(this)) {
             autoSetupFailed(R.string.auto_permission_denied_bg);
         } else {
@@ -868,82 +865,16 @@ public class MainActivity extends Activity {
             text = getString(R.string.auto_status_driving);
             color = R.color.ok;
         } else {
-            text = getString(R.string.auto_status_on_bt);
+            text = getString(R.string.auto_status_on);
             color = R.color.ok;
             if (!Notifications.canPost(this)) text += "\n\n" + getString(R.string.auto_status_no_notifications);
         }
         autoStatus.setText(text);
         autoStatus.setTextColor(getColor(color));
 
-        java.util.List<String> cars = CarBluetooth.names(this);
-        autoBtDevices.setText(cars.isEmpty() ? getString(R.string.bt_none)
-                : getString(R.string.bt_selected, android.text.TextUtils.join(", ", cars)));
-
         boolean showBattery = enabled && !isIgnoringBatteryOptimizations();
         autoBatteryHint.setVisibility(showBattery ? View.VISIBLE : View.GONE);
         autoBatteryButton.setVisibility(showBattery ? View.VISIBLE : View.GONE);
-    }
-
-    /** Wybór urządzeń Bluetooth auta spośród sparowanych z telefonem. */
-    private void chooseCarBluetooth() {
-        if (!CarBluetooth.hasPermission(this)) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQ_BT_PICK);
-            return;
-        }
-        if (CarBluetooth.adapter(this) == null) {
-            Toast.makeText(this, R.string.bt_unavailable, Toast.LENGTH_LONG).show();
-            if (autoSetupInProgress) setAutoSwitch(false);
-            return;
-        }
-        java.util.List<CarBluetooth.Device> devices = CarBluetooth.bondedDevices(this);
-        if (devices.isEmpty()) {
-            Toast.makeText(this, R.string.bt_no_bonded, Toast.LENGTH_LONG).show();
-            if (autoSetupInProgress) setAutoSwitch(false);
-            return;
-        }
-        java.util.Set<String> selected = CarBluetooth.addresses(this);
-        String[] labels = new String[devices.size()];
-        boolean[] checked = new boolean[devices.size()];
-        for (int i = 0; i < devices.size(); i++) {
-            CarBluetooth.Device d = devices.get(i);
-            labels[i] = d.looksLikeCar ? getString(R.string.bt_car_label, d.name) : d.name;
-            checked[i] = selected.contains(d.address);
-        }
-        openDialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.bt_dialog_title)
-                .setMultiChoiceItems(labels, checked, (d, which, isChecked) -> checked[which] = isChecked)
-                .setPositiveButton(R.string.parking_dialog_save, (d, w) -> {
-                    java.util.Map<String, String> chosen = new java.util.HashMap<>();
-                    for (int i = 0; i < devices.size(); i++) {
-                        if (checked[i]) chosen.put(devices.get(i).address, devices.get(i).name);
-                    }
-                    applyCarBluetooth(chosen);
-                })
-                .setNeutralButton(R.string.bt_clear, (d, w) -> applyCarBluetooth(new java.util.HashMap<>()))
-                .setNegativeButton(R.string.parking_dialog_cancel, (d, w) -> {
-                    if (autoSetupInProgress) setAutoSwitch(false);
-                })
-                .setOnCancelListener(d -> {
-                    if (autoSetupInProgress) setAutoSwitch(false);
-                })
-                .show();
-    }
-
-    private void applyCarBluetooth(java.util.Map<String, String> chosen) {
-        CarBluetooth.save(this, chosen);
-        EventLog.log(this, chosen.isEmpty() ? "Bluetooth auta: nie wybrano"
-                : "Bluetooth auta: wybrano " + CarBluetooth.names(this));
-        if (chosen.isEmpty()) {
-            // Bez urządzenia auta nie ma czego nasłuchiwać.
-            if (AutoParking.isEnabled(this)) AutoParking.disable(this);
-            if (autoSetupInProgress) {
-                Toast.makeText(this, R.string.bt_required, Toast.LENGTH_LONG).show();
-            }
-            setAutoSwitch(false);
-        } else if (autoSetupInProgress) {
-            continueAutoSetup();
-        }
-        updateAutoUi();
     }
 
     private boolean isIgnoringBatteryOptimizations() {
