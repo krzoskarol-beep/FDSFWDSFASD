@@ -127,4 +127,15 @@
     <string name="history_restored">Przywrócono miejsce parkowania</string>
     <string name="history_current">● AKTUALNE</string>
     <string name="bt_required">Automatyczne zapisywanie działa tylko z wybranym Bluetooth auta.</string>
+
+    <!-- Niezawodność w tle -->
+    <string name="auto_battery_title">Działanie w tle</string>
+    <string name="auto_battery_message">Android może nie pozwolić aplikacji włączyć GPS w tle po połączeniu z autem. Na następnym ekranie zezwól aplikacji działać bez optymalizacji baterii.\n\nAplikacja używa GPS tylko w trakcie jazdy, więc bateria nie ucierpi.</string>
+    <string name="auto_battery_skip">Pomiń</string>
+    <string name="notif_blocked_title">Nie mogę śledzić jazdy</string>
+    <string name="notif_blocked_text">Android zablokował śledzenie jazdy w tle, więc parking może się nie zapisać. Dotknij i wyłącz optymalizację baterii dla aplikacji.</string>
+
+    <!-- Kierunek względny i dostępność -->
+    <string name="parking_direction_relative">%1$s · %2$s</string>
+    <string name="parking_arrow_description">Auto: %1$s, %2$s</string>
 </resources>

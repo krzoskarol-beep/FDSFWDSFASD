@@ -70,4 +70,26 @@ public class FormattersTest {
     public void formatAddress_nothingKnown() {
         assertEquals("", Formatters.formatAddress(null, null, null, null));
     }
+
+    @Test
+    public void relativeDirection_aheadAndBehind() {
+        assertEquals("prosto", Formatters.relativeDirection(0f));
+        assertEquals("prosto", Formatters.relativeDirection(15f));
+        assertEquals("prosto", Formatters.relativeDirection(345f));
+        assertEquals("za Tobą", Formatters.relativeDirection(180f));
+    }
+
+    @Test
+    public void relativeDirection_rightAndLeft() {
+        assertEquals("lekko w prawo", Formatters.relativeDirection(40f));
+        assertEquals("w prawo", Formatters.relativeDirection(90f));
+        assertEquals("w lewo", Formatters.relativeDirection(270f));
+        assertEquals("lekko w lewo", Formatters.relativeDirection(320f));
+    }
+
+    @Test
+    public void relativeDirection_normalizesAngle() {
+        assertEquals("w prawo", Formatters.relativeDirection(450f));   // 90°
+        assertEquals("w lewo", Formatters.relativeDirection(-90f));    // 270°
+    }
 }

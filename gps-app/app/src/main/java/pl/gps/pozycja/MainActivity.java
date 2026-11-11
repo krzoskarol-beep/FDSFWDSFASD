@@ -100,6 +100,7 @@ public class MainActivity extends Activity {
     private static final int REQ_AUTO_FOREGROUND = 3;
     private static final int REQ_AUTO_BACKGROUND = 4;
     private static final int REQ_BT_PICK = 5;
+    private static final int REQ_BATTERY = 6;
 
     private Switch autoSwitch;
     private TextView autoStatus, autoBatteryHint;
@@ -108,6 +109,8 @@ public class MainActivity extends Activity {
     /** Zapobiega reakcji na programowe przestawienie przełącznika. */
     private boolean suppressSwitch;
     private boolean notificationsAsked;
+    /** Prośba o wyłączenie optymalizacji baterii padła w tej konfiguracji (nie pytamy w kółko). */
+    private boolean batteryAsked;
     /** Konfiguracja trwa od włączenia przełącznika do zapisania ustawienia (okna uprawnień). */
     private boolean autoSetupInProgress;
 
@@ -583,6 +586,7 @@ public class MainActivity extends Activity {
         if (best == null) {
             parkingDistance.setText("—");
             parkingDirection.setText(R.string.parking_waiting_position);
+            setArrowDescription(getString(R.string.parking_waiting_position));
             parkingArrow.setArrived(false);
             parkingArrow.hideArrow();
             return;
@@ -598,18 +602,33 @@ public class MainActivity extends Activity {
         if (distance <= arriveRadius) {
             parkingDirection.setText(R.string.parking_arrived);
             parkingArrow.setArrived(true);
+            setArrowDescription(getString(R.string.parking_arrived));
             return;
         }
         parkingArrow.setArrived(false);
-        parkingDirection.setText(getString(R.string.parking_direction,
-                Formatters.compassDirection((float) bearingToCar), Math.round(bearingToCar) % 360));
+        String absolute = getString(R.string.parking_direction,
+                Formatters.compassDirection((float) bearingToCar), Math.round(bearingToCar) % 360);
+        String distanceText = Formatters.formatDistance(distance);
 
         if (compassAzimuth != null) {
             // Kompas wskazuje północ magnetyczną, a kierunek do auta liczymy od geograficznej.
             float heading = compassAzimuth + declination;
-            parkingArrow.setAngle((float) Geo.normalizeDegrees(bearingToCar - heading));
+            float angle = (float) Geo.normalizeDegrees(bearingToCar - heading);
+            parkingArrow.setAngle(angle);
+            String relative = Formatters.relativeDirection(angle);
+            parkingDirection.setText(getString(R.string.parking_direction_relative, absolute, relative));
+            setArrowDescription(getString(R.string.parking_arrow_description, distanceText, relative));
         } else {
             parkingArrow.setAngle((float) bearingToCar); // góra ekranu = północ
+            parkingDirection.setText(absolute);
+            setArrowDescription(getString(R.string.parking_arrow_description, distanceText, absolute));
+        }
+    }
+
+    /** Opis strzałki dla TalkBack; zmieniamy go tylko, gdy treść się zmieni (kompas odświeża się często). */
+    private void setArrowDescription(String text) {
+        if (!text.contentEquals(parkingArrow.getContentDescription() == null ? "" : parkingArrow.getContentDescription())) {
+            parkingArrow.setContentDescription(text);
         }
     }
 
@@ -711,6 +730,7 @@ public class MainActivity extends Activity {
             return;
         }
         notificationsAsked = false;
+        batteryAsked = false;
         autoSetupInProgress = true;
         continueAutoSetup();
     }
@@ -752,6 +772,19 @@ public class MainActivity extends Activity {
                             REQ_AUTO_BACKGROUND))
                     .setNegativeButton(R.string.parking_dialog_cancel, (d, w) -> setAutoSwitch(false))
                     .setOnCancelListener(d -> setAutoSwitch(false))
+                    .show();
+            return;
+        }
+
+        if (!batteryAsked && !isIgnoringBatteryOptimizations()) {
+            // Bez tego Android 12+ może nie pozwolić włączyć GPS w tle po połączeniu z autem.
+            batteryAsked = true;
+            openDialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.auto_battery_title)
+                    .setMessage(R.string.auto_battery_message)
+                    .setPositiveButton(R.string.auto_bg_continue, (d, w) -> requestIgnoreBatteryOptimizations())
+                    .setNegativeButton(R.string.auto_battery_skip, (d, w) -> continueAutoSetup())
+                    .setOnCancelListener(d -> continueAutoSetup())
                     .show();
             return;
         }
@@ -899,10 +932,27 @@ public class MainActivity extends Activity {
     private void requestIgnoreBatteryOptimizations() {
         Intent i = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
                 Uri.parse("package:" + getPackageName()));
-        if (!startActivitySafe(i)) {
-            startActivitySafe(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+        try {
+            startActivityForResult(i, REQ_BATTERY);
+        } catch (ActivityNotFoundException e) {
+            try {
+                startActivityForResult(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), REQ_BATTERY);
+            } catch (ActivityNotFoundException e2) {
+                if (autoSetupInProgress) continueAutoSetup();
+            }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQ_BATTERY) return;
+        EventLog.log(this, isIgnoringBatteryOptimizations()
+                ? "Optymalizacja baterii wyłączona dla aplikacji" : "Optymalizacja baterii nadal włączona");
+        if (autoSetupInProgress) continueAutoSetup();
+        updateAutoUi();
+    }
+
 
     // ------------------------------------------------------------------ akcje
 

@@ -21,7 +21,8 @@ public class ArrowView extends View {
     public ArrowView(Context context, AttributeSet attrs) {
         super(context, attrs);
         dialPaint.setStyle(Paint.Style.FILL);
-        dialPaint.setColor(0xFFE3EAF4);
+        dialPaint.setColor(context.getColor(R.color.dial));
+        setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
         arrowPaint.setStyle(Paint.Style.FILL);
     }
 

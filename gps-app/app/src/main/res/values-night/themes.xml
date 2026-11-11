@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tryb ciemny: włącza się razem z ciemnym motywem systemu (np. w nocy). -->
+<resources>
+    <color name="primary">#8AB4F8</color>
+    <color name="primary_dark">#A8C7FA</color>
+    <color name="background">#121417</color>
+    <color name="card">#1E2227</color>
+    <color name="text_primary">#E6E8EB</color>
+    <color name="text_secondary">#A0A6AD</color>
+    <color name="ok">#81C995</color>
+    <color name="warn">#FDBA74</color>
+    <color name="error">#F28B82</color>
+    <color name="dial">#FF2B3138</color>
+
+    <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/background</item>
+        <item name="android:colorAccent">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
