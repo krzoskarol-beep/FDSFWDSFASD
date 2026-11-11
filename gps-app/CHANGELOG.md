@@ -1,5 +1,14 @@
 # Zmiany – Moja pozycja GPS
 
+## 2.0
+
+- **Nowy identyfikator aplikacji: `pl.mojapozycja.gps`** (wcześniej `pl.gps.pozycja`).
+  Wersja 2.0 instaluje się jako nowa aplikacja, bez konfliktu z poprzednimi instalacjami
+  (wersje 1.0–1.2 były podpisane innym kluczem i blokowały aktualizację: „App not installed”).
+  Starą aplikację można po instalacji 2.0 odinstalować. Zapisane miejsca nie są przenoszone.
+- Skrót „Zapisz parking” wskazuje na nowy identyfikator (test `ShortcutsTest`).
+- Funkcje bez zmian względem 1.7.
+
 ## 1.7
 
 - **Przełącznik motywu:** karta „Wygląd” na dole ekranu głównego z wyborem Systemowy / Jasny /

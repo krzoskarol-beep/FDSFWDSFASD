@@ -6,7 +6,10 @@ description: Use when building, testing, signing, releasing or delivering the An
 # Android: budowanie, podpisywanie, wydawanie i weryfikacja APK
 
 Projekt: `gps-app/` (Java, bez zewnętrznych bibliotek, minSdk 24, targetSdk 36, AGP 8.13.2,
-Gradle 8.14.3 przez `./gradlew`). Kod, testy i wydania opisuje `gps-app/README.md` i
+Gradle 8.14.3 przez `./gradlew`). Identyfikator aplikacji od 2.0: `pl.mojapozycja.gps`
+(`namespace`, czyli pakiet klas, to nadal `pl.gps.pozycja`). Nie zmieniaj go bez potrzeby:
+nowy identyfikator to dla Androida nowa aplikacja (bez danych poprzedniej). Przy zmianie popraw
+`targetPackage` w `res/xml/shortcuts.xml` (pilnuje tego `ShortcutsTest`). Kod, testy i wydania opisuje `gps-app/README.md` i
 `gps-app/CHANGELOG.md`; przeczytaj je przed zmianami.
 
 ## 1. Android SDK w sesji w chmurze

@@ -10,6 +10,6 @@
         <intent
             android:action="pl.gps.pozycja.SAVE_PARKING"
             android:targetClass="pl.gps.pozycja.MainActivity"
-            android:targetPackage="pl.gps.pozycja" />
+            android:targetPackage="pl.mojapozycja.gps" />
     </shortcut>
 </shortcuts>

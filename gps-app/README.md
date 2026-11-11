@@ -67,6 +67,7 @@ albo **Ciemny**. Wybór obowiązuje na wszystkich ekranach aplikacji (`ThemePref
 
 Aplikacja nie ma żadnych zewnętrznych bibliotek (tylko systemowe API Androida).
 Działa na Androidzie 7.0 lub nowszym (minSdk 24, targetSdk 36).
+Identyfikator aplikacji od wersji 2.0: `pl.mojapozycja.gps` (pakiet kodu Java pozostaje `pl.gps.pozycja`).
 
 ## Budowanie
 
