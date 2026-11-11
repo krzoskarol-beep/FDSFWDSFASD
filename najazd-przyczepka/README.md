@@ -8,6 +8,9 @@ W oryginale jest kratka (blacha cięto-ciągniona) na spawanej ramie. Tu cała r
 
 Rysunek wektorowy: [`rysunek.svg`](rysunek.svg)
 
+**Podgląd 3D** z każdym otworem i każdą śrubą: [`podglad-3d.html`](podglad-3d.html)
+(otwórz w przeglądarce; obracanie palcem, suwak „Rozłóż”, „Prześwietl”, dotknięcie części pokazuje jej otwory i śruby).
+
 ---
 
 ## 1. Najpierw zmierz swoją przyczepkę
@@ -42,10 +45,10 @@ Wszystkie wymiary poniżej są dla przykładu **S = 1500, L = 1500, H = 500**.
 |---|---|---|---|
 | 1 | Podłużnice (nośne) | profil zamknięty **60×40×2** | 5 × 1500 |
 | 2 | Poprzeczki (pod rurami) | kątownik **40×40×4** | 2 × 1500 |
-| 3 | Krawężniki boczne | kątownik **30×30×3** | 2 × 1500 |
-| 4 | Listwa krawędzi najazdowej | płaskownik **50×6** | 1 × 1500 |
+| 3 | Krawężniki boczne | kątownik **30×30×3** | 2 × 1380 |
+| 4 | Listwa krawędzi najazdowej | płaskownik **80×6** | 1 × 1500 |
 | 5 | Ucha zawiasów (na rampie) | płaskownik **50×8** | 3 × 140 |
-| 6 | Wsporniki zawiasów (na przyczepce) | kątownik **60×60×6** | 3 × 80 |
+| 6 | Wsporniki zawiasów (na przyczepce) | kątownik **60×60×6** | 3 × 70 |
 | 7 | Tulejki dystansowe | rurka stalowa **16×2** (np. hydrauliczna) | 10 × 58 mm + 6 × 38 mm |
 | 8 | Pokrycie | **blacha cięto-ciągniona** ocynk, oczko ok. 60×25, mostek i grubość 3–4 mm (np. 62×25×4×4; lżejsza 43×13×3×3) | 1500 × 1500 |
 
@@ -57,10 +60,10 @@ Arkusz blachy ma zwykle 1000×2000 albo 1250×2500. Jeśli potrzebujesz dwóch k
 | Gdzie | Śruba | Szt. |
 |---|---|---|
 | Poprzeczki do rur (pionowo, przez całą rurę) | M10×90 + podkładka poszerzana DIN 9021 od góry + zwykła od dołu | 10 |
-| Ucha do rur (poziomo, przez rurę) | M10×60 + 2 podkładki | 6 |
+| Ucha do rur (poziomo, przez rurę) | M10×70 + 2 podkładki | 6 |
 | Sworznie zawiasów | **M16×50 z gładkim trzonem** (DIN 931, gwint tylko na końcu) + 3 podkładki | 3 |
 | Wsporniki do belki przyczepki | M10, długość pod Twoją belkę (albo nitonakrętki M10 przy profilu zamkniętym) | 6 |
-| Listwa najazdowa | M8×30 + podkładki | 5 |
+| Listwa najazdowa | M8×25 + 2 podkładki | 5 |
 | Krawężniki do rur 1 i 5 | wkręty samowiercące 5,5×38 do grubej stali, co ~200 mm | ~16 |
 | Blacha do rur 2, 3, 4 | wkręty samowiercące 5,5×25 + podkładka poszerzana M6, co ~150 mm | ~30 |
 | Blokada w pozycji pionowej | 2 łańcuchy z hakiem/karabińczykiem **albo** 2 przykręcane zamki burtowe | 2 |
@@ -120,9 +123,10 @@ Trzy zawiasy: na **rurze 1, 3 i 5**. Każdy to **ucho** na rampie, **wspornik** 
    Przyłóż ucho do **boku rury** (przy rurach skrajnych od wewnętrznej strony, żeby rampa nie była
    szersza), tak żeby wystawało **50 mm za koniec rury**. Otwór sworznia ma być wtedy 25 mm za rurą,
    na środku jej wysokości. Przez rurę wierć Ø10,5, w przeciwnej ściance Ø16,5 na tulejkę 38 mm.
-   Przykręć 2× M10×60.
-2. **Wspornik**: kątownik 60×60×6 × 80 mm. Jedna półka przykręcona do **tylnej belki przyczepki**
-   (2× M10), druga sterczy do tyłu i ma otwór **Ø17 w odległości 45 mm od belki**.
+   Przykręć 2× M10×70.
+2. **Wspornik**: kątownik 60×60×6 × 70 mm. Jedna półka przykręcona do **tylnej belki przyczepki**
+   (2× M10 jeden nad drugim, rozstaw 35 mm), druga sterczy do tyłu i ma otwór **Ø17 w odległości 45 mm od belki**,
+   20 mm poniżej górnej krawędzi wspornika (wspornik nie wystaje ponad podłogę).
    Wspornik stoi **obok ucha, po stronie dalszej od rury** (połączenie jednocięte: ucho + wspornik + sworzeń).
 3. **Wysokość:** oś sworznia ok. **33 mm poniżej górnej powierzchni podłogi**. Wtedy opuszczona
    rampa (blacha na rurach) wypada równo z podłogą.
@@ -149,12 +153,14 @@ z czopem M16–M20**. Daj **3 sztuki**, nie 2: środkowy przejmuje obciążenie 
 1. Połóż blachę na rurach (**LWD w poprzek**). Na końcu zawiasowym blacha kończy się równo z rurami,
    na końcu najazdowym dochodzi do samego czubka skosu.
 2. **Śruby M10×90 poprzeczek** włóż od góry przez blachę i tulejki, z podkładką DIN 9021 pod łbem.
-3. **Krawężniki** 30×30×3 połóż na blachę nad rurą 1 i 5, pionową półką do góry przy zewnętrznej
-   krawędzi. Przechodzą przez nie śruby poprzeczek, a między nimi dajesz wkręty samowiercące 5,5×38 co ~200 mm.
+3. **Krawężniki** 30×30×3 (dł. 1380) połóż na blachę nad rurą 1 i 5, pionową półką do góry przy zewnętrznej
+   krawędzi. Zaczynają się **40 mm od końca zawiasowego** (inaczej przy podnoszeniu rampy zahaczą o podłogę),
+   a kończą przy listwie najazdowej. Przechodzą przez nie śruby poprzeczek, a między nimi dajesz wkręty samowiercące 5,5×38 co ~200 mm.
    Krawężnik dociska brzeg blachy i nie pozwala kołu zjechać z rampy.
 4. Rury 2, 3, 4: wkręty samowiercące 5,5×25 z podkładką poszerzaną co ~150 mm.
-5. **Listwa najazdowa** (płaskownik 50×6) idzie w poprzek na sam koniec, na blachę. W każdej rurze
-   1× M8×30. Nakrętkę zakładasz od spodu przez otwarte ścięcie rury.
+5. **Listwa najazdowa** (płaskownik 80×6) idzie w poprzek na sam koniec, na blachę. W każdej rurze
+   1× M8×25, otwór **55 mm od czubka** (bliżej skos jest za płytki na nakrętkę). Nakrętkę zakładasz od spodu
+   przez otwarte ścięcie rury.
 6. Dokręć wszystko: **M10 ok. 40 Nm** (z tulejkami można), M8 ok. 20 Nm. Ostre krawędzie blachy spiłuj.
 
 ## 8. Blokada w pozycji pionowej (jako burta)

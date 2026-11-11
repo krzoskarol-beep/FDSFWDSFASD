@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Najazd do przyczepki – podgląd 3D (wersja skręcana)</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#e9edf1;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1d2731}
+  #view{position:fixed;inset:0}
+  #view canvas{display:block;touch-action:none}
+  #labels{position:fixed;inset:0;pointer-events:none}
+  .lbl{font-size:11.5px;background:rgba(255,255,255,.88);border:1px solid #b9c3cc;border-radius:6px;padding:2px 6px;white-space:nowrap;color:#1d2731;font-weight:600}
+  #top{position:fixed;left:8px;right:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;pointer-events:none}
+  #top>*{pointer-events:auto}
+  .grp{display:flex;background:#fff;border:1px solid #c7d0d8;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .grp button{border:0;background:transparent;padding:7px 10px;font-size:13px;color:#1d2731;cursor:pointer;border-right:1px solid #e3e8ec}
+  .grp button:last-child{border-right:0}
+  .grp button.on{background:#1f6feb;color:#fff}
+  .ex{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #c7d0d8;border-radius:10px;padding:4px 10px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .ex input{width:110px}
+  #panel{position:fixed;left:8px;bottom:8px;width:min(430px,calc(100vw - 16px));max-height:46vh;display:flex;flex-direction:column;background:#fff;border:1px solid #c7d0d8;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+  #panel.min{max-height:none}
+  #panel.min #pbody{display:none}
+  #tabs{display:flex;border-bottom:1px solid #e3e8ec}
+  #tabs button{flex:1;border:0;background:transparent;padding:9px 4px;font-size:13px;cursor:pointer;color:#55626e;font-weight:600}
+  #tabs button.on{color:#1f6feb;box-shadow:inset 0 -2px 0 #1f6feb}
+  #tabs #mini{flex:0 0 38px;font-size:16px}
+  #pbody{overflow:auto;padding:10px 12px 12px;font-size:13.5px;line-height:1.45}
+  #pbody h3{margin:0 0 4px;font-size:15px}
+  #pbody ul{margin:4px 0 8px;padding-left:18px}
+  #pbody li{margin:2px 0}
+  .muted{color:#66737f}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  td,th{border-bottom:1px solid #edf0f3;padding:4px 4px;text-align:left;vertical-align:top}
+  th{color:#55626e;font-weight:600}
+  tr.click{cursor:pointer}
+  tr.click:hover{background:#f2f6fb}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:4px;border:2px solid currentColor;background:#fff}
+  #legend{position:fixed;right:8px;bottom:8px;background:rgba(255,255,255,.95);border:1px solid #c7d0d8;border-radius:10px;padding:6px 9px;font-size:12px;line-height:1.6}
+  @media (max-width:760px){#legend{display:none} .grp button{padding:7px 8px;font-size:12.5px}}
+  #err{position:fixed;inset:30% 10% auto;background:#fff;border:1px solid #c33;padding:14px;border-radius:10px;display:none}
+</style>
+</head>
+<body>
+<div id="view"></div>
+<div id="labels"></div>
+
+<div id="top">
+  <div class="grp" id="pos">
+    <button data-p="flat" class="on">Pozioma</button>
+    <button data-p="down">Opuszczona</button>
+    <button data-p="up">Podniesiona</button>
+  </div>
+  <div class="ex">Rozłóż <input id="explode" type="range" min="0" max="1" step="0.01" value="0"></div>
+  <div class="grp" id="tog">
+    <button data-t="xray">Prześwietl</button>
+    <button data-t="mesh" class="on">Blacha</button>
+    <button data-t="trailer" class="on">Przyczepka</button>
+    <button data-t="labels" class="on">Opisy</button>
+  </div>
+  <div class="grp" id="cams">
+    <button data-c="all">Całość</button>
+    <button data-c="hinge">Zawias</button>
+    <button data-c="cross">Poprzeczka</button>
+    <button data-c="tip">Krawędź</button>
+    <button data-c="under">Spód</button>
+  </div>
+</div>
+
+<div id="legend">
+  <b>Otwory</b><br>
+  <span style="color:#e53935"><span class="dot"></span></span>Ø10,5 (M10)<br>
+  <span style="color:#1e88e5"><span class="dot"></span></span>Ø16,5 (tulejka)<br>
+  <span style="color:#8e24aa"><span class="dot"></span></span>Ø17 (sworzeń M16)<br>
+  <span style="color:#2e9d4a"><span class="dot"></span></span>Ø8,5 (M8)
+</div>
+
+<div id="panel">
+  <div id="tabs">
+    <button data-tab="part" class="on">Część</button>
+    <button data-tab="holes">Wiercenia</button>
+    <button data-tab="bolts">Śruby</button>
+    <button data-tab="steps">Montaż</button>
+    <button id="mini" title="Zwiń">▾</button>
+  </div>
+  <div id="pbody"></div>
+</div>
+<div id="err">Nie udało się wczytać biblioteki 3D (three.js). Odśwież stronę.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+<script>
+(function(){
+if(!window.THREE){document.getElementById('err').style.display='block';return;}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const PI=Math.PI, R3=Math.sqrt(3);
+
+/* ---------- wymiary (mm). x = w poprzek, y = w górę, z = wzdłuż rampy (0 = koniec przy zawiasach) ---------- */
+const S=1500, L=1500, CX=[20,385,750,1115,1480], ZC=[150,1000], BEV=175, ZB=L-BEV;
+const AXY=30, AXZ=-25;                       // oś zawiasu
+const ALPHA=18.96*PI/180;                     // kąt rampy przy H=500
+const H=500, GROUND=63-H;                     // ziemia
+const HOLE_COL={10.5:0xe53935,16.5:0x1e88e5,17:0x8e24aa,8.5:0x2e9d4a};
+
+/* ---------- scena ---------- */
+const view=document.getElementById('view');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.outputEncoding=THREE.sRGBEncoding;
+view.appendChild(renderer.domElement);
+const lr=new THREE.CSS2DRenderer();
+lr.setSize(innerWidth,innerHeight);
+document.getElementById('labels').appendChild(lr.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0xe9edf1);
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,5,40000);
+const FAR=()=>innerWidth<innerHeight?1.9:1;
+camera.position.set(750+1750*FAR(),1500*FAR(),600+1800*FAR());
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.target.set(750,0,600);controls.enableDamping=true;controls.dampingFactor=0.12;
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f96,0.85));
+const sun=new THREE.DirectionalLight(0xffffff,0.75);sun.position.set(1500,3000,2200);scene.add(sun);
+const sun2=new THREE.DirectionalLight(0xffffff,0.35);sun2.position.set(-1500,-800,-1500);scene.add(sun2);
+
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(9000,9000),new THREE.MeshStandardMaterial({color:0xcfd4d8,roughness:1}));
+ground.rotation.x=-PI/2;ground.position.set(750,GROUND-1,600);scene.add(ground);
+const grid=new THREE.GridHelper(9000,90,0xaab2ba,0xbfc6cc);grid.position.set(750,GROUND,600);scene.add(grid);
+
+const pivot=new THREE.Group();pivot.position.set(0,AXY,AXZ);scene.add(pivot);
+const ramp=new THREE.Group();ramp.position.set(0,-AXY,-AXZ);pivot.add(ramp);
+const trailer=new THREE.Group();scene.add(trailer);
+
+/* ---------- materiały ---------- */
+const std=(c,m,r)=>new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r,side:THREE.DoubleSide});
+const BASE={
+  tube:std(0xb3c0cc,0.45,0.45), angle:std(0x7f8d9a,0.45,0.5), curb:std(0x5f7d8c,0.4,0.5), flat:std(0x55636f,0.45,0.5),
+  ear:std(0xe67e22,0.25,0.5), bracket:std(0x2e4a62,0.4,0.5), bolt:std(0xd9b44a,0.75,0.32), nut:std(0xc39a2f,0.75,0.35),
+  washer:std(0xe4e8ec,0.8,0.28), sleeve:std(0xc7743d,0.6,0.4), screw:std(0x9db4cb,0.7,0.3), wood:std(0xb08455,0,0.85),
+  beam:std(0x39434d,0.4,0.6), plug:std(0x202326,0,0.8)
+};
+const XRAY_KEYS=['tube','angle','curb','flat','ear','bracket','beam','wood','plug'];
+const mats={};
+function mat(kind,key){const k=kind+'|'+key;if(!mats[k]){const m=BASE[key].clone();m.userData={kind,key};mats[k]=m;}return mats[k];}
+
+const movables=[];
+function reg(obj,parent,kind,ex){obj.userData.kind=kind;parent.add(obj);movables.push({obj,base:obj.position.clone(),ex:ex||V(0,0,0)});return obj;}
+
+/* ---------- prymitywy ---------- */
+function shapeFrom(outline,holes){
+  const sh=new THREE.Shape();outline.forEach((p,i)=>i?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));
+  (holes||[]).forEach(h=>{const p=new THREE.Path();p.absarc(h[0],h[1],h[2]/2,0,2*PI,true);sh.holes.push(p);});
+  return sh;
+}
+// plane: 'xz' (pozioma, grubość w górę od off), 'zy' (pionowa, normalna x, od off-t do off), 'xy' (normalna z, od off do off+t)
+function plate(parent,plane,outline,holes,t,off,kind,key,ex){
+  let ol=outline, hl=holes||[];
+  if(plane==='xz'){ol=outline.map(p=>[p[0],-p[1]]);hl=hl.map(h=>[h[0],-h[1],h[2]]);}
+  const g=new THREE.ExtrudeGeometry(shapeFrom(ol,hl),{depth:t,bevelEnabled:false,curveSegments:22});
+  const m=new THREE.Mesh(g,mat(kind,key));
+  if(plane==='xz'){m.rotation.x=-PI/2;m.position.y=off;}
+  else if(plane==='zy'){m.rotation.y=-PI/2;m.position.x=off;}
+  else m.position.z=off;
+  reg(m,parent,kind,ex);
+  // kolorowe obwódki otworów (obie strony)
+  (holes||[]).forEach(h=>{
+    const col=HOLE_COL[h[2]]||0x000000;
+    [0,t].forEach(f=>{
+      const r=new THREE.Mesh(new THREE.TorusGeometry(h[2]/2+0.9,0.9,6,28),new THREE.MeshBasicMaterial({color:col}));
+      if(plane==='xz'){r.rotation.x=PI/2;r.position.set(h[0],off+f,h[1]);}
+      else if(plane==='zy'){r.rotation.y=PI/2;r.position.set(off-f,h[1],h[0]);}
+      else r.position.set(h[0],h[1],off+f);
+      r.userData.isHole=true;reg(r,parent,kind,ex.clone?ex.clone():ex);
+    });
+  });
+  return m;
+}
+function box(parent,x0,x1,y0,y1,z0,z1,kind,key,ex){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mat(kind,key));
+  m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);return reg(m,parent,kind,ex);
+}
+function orient(m,axis){if(axis==='x')m.rotation.z=PI/2;else if(axis==='z')m.rotation.x=PI/2;}
+// cylinder along axis between a0..a1 (współrzędna osi), pozostałe współrzędne c
+function cyl(parent,axis,a0,a1,c,r,seg,kind,key,ex){
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,Math.abs(a1-a0),seg),mat(kind,key));orient(m,axis);
+  const mid=(a0+a1)/2;m.position.set(axis==='x'?mid:c[0],axis==='y'?mid:c[1],axis==='z'?mid:c[2]);
+  if(seg===6)m.rotateY(PI/6);
+  return reg(m,parent,kind,ex);
+}
+function ring(parent,axis,a0,a1,c,ro,ri,kind,key,ex){
+  const sh=new THREE.Shape();sh.absarc(0,0,ro,0,2*PI,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,2*PI,true);sh.holes.push(hp);
+  const len=Math.abs(a1-a0);const g=new THREE.ExtrudeGeometry(sh,{depth:len,bevelEnabled:false,curveSegments:24});g.translate(0,0,-len/2);
+  const m=new THREE.Mesh(g,mat(kind,key));
+  if(axis==='x')m.rotation.y=PI/2;else if(axis==='y')m.rotation.x=PI/2;
+  const mid=(a0+a1)/2;m.position.set(axis==='x'?mid:c[0],axis==='y'?mid:c[1],axis==='z'?mid:c[2]);
+  return reg(m,parent,kind,ex);
+}
+const hex=(p,axis,a0,a1,c,AF,kind,key,ex)=>cyl(p,axis,a0,a1,c,AF/R3,6,kind,key,ex);
+const labels=[];
+function label(parent,text,pos,ex){
+  const d=document.createElement('div');d.className='lbl';d.textContent=text;
+  const o=new THREE.CSS2DObject(d);o.position.copy(pos);parent.add(o);movables.push({obj:o,base:pos.clone(),ex:ex||V(0,0,0)});labels.push(o);return o;
+}
+
+/* ================= RAMPA ================= */
+const EAR_TUBES={0:+1,2:+1,4:-1};   // rura 1 i 3: ucho po stronie +x, rura 5: po stronie -x
+CX.forEach((cx,i)=>{
+  const kind='tube';
+  // górna ścianka
+  plate(ramp,'xz',[[cx-20,0],[cx+20,0],[cx+20,L],[cx-20,L]],[[cx,ZC[0],16.5],[cx,ZC[1],16.5],[cx,1445,8.5]],2,58,kind,'tube',V(0,0,0));
+  // dolna ścianka (krótsza o skos)
+  plate(ramp,'xz',[[cx-20,0],[cx+20,0],[cx+20,ZB],[cx-20,ZB]],[[cx,ZC[0],10.5],[cx,ZC[1],10.5]],2,0,kind,'tube',V(0,0,0));
+  // boczne ścianki ze skosem
+  const s=EAR_TUBES[i];
+  const side=[[0,2],[ZB+BEV*2/60,2],[L-BEV*2/60,58],[0,58]];
+  const earSide=[[20,30,10.5],[70,30,10.5]], farSide=[[20,30,16.5],[70,30,16.5]];
+  plate(ramp,'zy',side,s===undefined?[]:(s<0?earSide:farSide),2,cx-18,kind,'tube',V(0,0,0)); // lewa ścianka
+  plate(ramp,'zy',side,s===undefined?[]:(s>0?earSide:farSide),2,cx+20,kind,'tube',V(0,0,0)); // prawa ścianka
+  // zaślepka
+  box(ramp,cx-20,cx+20,0,60,-3,0,'plug','plug',V(0,0,-60));
+});
+
+// poprzeczki – kątownik 40x40x4 pod rurami
+ZC.forEach(zc=>{
+  const ex=V(0,-130,0);
+  plate(ramp,'xz',[[0,zc-20],[S,zc-20],[S,zc+20],[0,zc+20]],CX.map(cx=>[cx,zc,10.5]),4,-4,'cross','angle',ex);
+  plate(ramp,'xy',[[0,-40],[S,-40],[S,-4],[0,-4]],[],4,zc+16,'cross','angle',ex);
+});
+
+// blacha cięto-ciągniona
+(function(){
+  const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');
+  g.strokeStyle='#fff';g.lineWidth=15;g.lineJoin='miter';
+  for(const dx of [-256,0,256])for(const dy of [-128,0,128]){g.beginPath();g.moveTo(dx,dy+64);g.lineTo(dx+128,dy);g.lineTo(dx+256,dy+64);g.lineTo(dx+128,dy+128);g.closePath();g.stroke();}
+  const tex=new THREE.CanvasTexture(c);tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(S/62,L/25);tex.anisotropy=8;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(S,L),new THREE.MeshStandardMaterial({color:0x8d9aa6,metalness:0.6,roughness:0.4,alphaMap:tex,alphaTest:0.5,side:THREE.DoubleSide}));
+  m.material.userData={kind:'mesh',key:'mesh'};mats['mesh|mesh']=m.material;
+  m.rotation.x=-PI/2;m.position.set(S/2,61.8,L/2);reg(m,ramp,'mesh',V(0,190,0));
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S,3.6,L)),new THREE.LineBasicMaterial({color:0x5b6670}));
+  e.position.set(S/2,61.8,L/2);reg(e,ramp,'mesh',V(0,190,0));
+  window.__meshObjs=[m,e];
+})();
+
+// krawężniki 30x30x3 (od z=40 do z=1420)
+[[0,1],[S-30,-1]].forEach(([x0,dir],k)=>{
+  const ex=V(0,290,0), cxx=k?1480:20;
+  plate(ramp,'xz',[[x0,40],[x0+30,40],[x0+30,1420],[x0,1420]],ZC.map(z=>[cxx,z,10.5]),3,63,'curb','curb',ex);
+  const vx=k?S:3;
+  plate(ramp,'zy',[[40,66],[1420,66],[1420,93],[40,93]],[],3,vx,'curb','curb',ex);
+});
+
+// listwa najazdowa 80x6
+plate(ramp,'xz',[[0,1420],[S,1420],[S,L],[0,L]],CX.map(cx=>[cx,1445,8.5]),6,63,'tip','flat',V(0,290,0));
+
+/* ---- śruby poprzeczek M10x90 + tulejki 58 ---- */
+CX.forEach((cx,i)=>ZC.forEach(zc=>{
+  const top=(i===0||i===4)?66:63, up=V(0,420,0), dn=V(0,-230,0);
+  ring(ramp,'y',2,60,[cx,0,zc],8,6,'sleeveV','sleeve',V(0,110,0));
+  ring(ramp,'y',top,top+2.5,[cx,0,zc],15,5.5,'boltX','washer',up);
+  hex(ramp,'y',top+2.5,top+8.9,[cx,0,zc],17,'boltX','bolt',up);
+  cyl(ramp,'y',top+2.5-90,top+2.5,[cx,0,zc],5,16,'boltX','bolt',up);
+  ring(ramp,'y',-6,-4,[cx,0,zc],10,5.3,'boltX','washer',dn);
+  hex(ramp,'y',-16,-6,[cx,0,zc],17,'boltX','nut',dn);
+}));
+
+/* ---- wkręty samowiercące ---- */
+[1,2,3].forEach(i=>[75,300,450,600,750,900,1075,1200,1350].forEach(z=>{
+  const cx=CX[i],ex=V(0,420,0);
+  ring(ramp,'y',63,64.6,[cx,0,z],9,3,'screwM','washer',ex);
+  hex(ramp,'y',64.6,70,[cx,0,z],8,'screwM','screw',ex);
+  cyl(ramp,'y',64.6-25,64.6,[cx,0,z],2.75,10,'screwM','screw',ex);
+}));
+[15,S-15].forEach(x=>[60,300,500,700,850,1150,1300,1400].forEach(z=>{
+  const ex=V(0,420,0);
+  hex(ramp,'y',66,71.5,[x,0,z],8,'screwC','screw',ex);
+  cyl(ramp,'y',66-38,66,[x,0,z],2.75,10,'screwC','screw',ex);
+}));
+
+/* ---- listwa: M8x25 ---- */
+CX.forEach(cx=>{
+  const up=V(0,420,0),dn=V(0,-170,0);
+  ring(ramp,'y',69,70.6,[cx,0,1445],8,4.3,'boltT','washer',up);
+  hex(ramp,'y',70.6,75.9,[cx,0,1445],13,'boltT','bolt',up);
+  cyl(ramp,'y',45.6,70.6,[cx,0,1445],4,14,'boltT','bolt',up);
+  ring(ramp,'y',56.4,58,[cx,0,1445],8,4.3,'boltT','washer',dn);
+  hex(ramp,'y',48.4,56.4,[cx,0,1445],13,'boltT','nut',dn);
+});
+
+/* ---- zawiasy: ucho, śruby M10x70, tulejki 38, sworzeń M16, wspornik ---- */
+Object.keys(EAR_TUBES).forEach(k=>{
+  const i=+k, s=EAR_TUBES[i], cx=CX[i], xf=cx+20*s, X=u=>xf+s*u;
+  const xa=(u0,u1)=>[X(u0),X(u1)];
+  // ucho 50x8x140
+  plate(ramp,'zy',[[-50,5],[90,5],[90,55],[-50,55]],[[20,30,10.5],[70,30,10.5],[-25,30,17]],8,Math.max(X(0),X(8)),'ear','ear',V(s*80,0,0));
+  // śruby ucha
+  [20,70].forEach(z=>{
+    const out=V(s*210,0,0),back=V(-s*170,0,0);
+    ring(ramp,'x',...xa(8,10),[0,30,z],10,5.3,'boltE','washer',out);
+    hex(ramp,'x',...xa(10,16.4),[0,30,z],17,'boltE','bolt',out);
+    cyl(ramp,'x',...xa(-60,10),[0,30,z],5,16,'boltE','bolt',out);
+    ring(ramp,'x',...xa(-40,-2),[0,30,z],8,6,'sleeveH','sleeve',V(-s*95,0,0));
+    ring(ramp,'x',...xa(-42,-40),[0,30,z],10,5.3,'boltE','washer',back);
+    hex(ramp,'x',...xa(-52,-42),[0,30,z],17,'boltE','nut',back);
+  });
+  // sworzeń M16x50
+  const pinOut=V(-s*170,0,0);
+  hex(ramp,'x',...xa(-13,-3),[0,AXY,AXZ],24,'pin','bolt',pinOut);
+  ring(ramp,'x',...xa(-3,0),[0,AXY,AXZ],15,8.5,'pin','washer',pinOut);
+  cyl(ramp,'x',...xa(45,-3),[0,AXY,AXZ],8,20,'pin','bolt',pinOut);
+  ring(ramp,'x',...xa(8,11),[0,AXY,AXZ],15,8.5,'pin','washer',V(s*112,0,0));
+  ring(ramp,'x',...xa(17,20),[0,AXY,AXZ],15,8.5,'pin','washer',V(s*160,0,0));
+  hex(trailer,'x',...xa(20,36),[0,AXY,AXZ],24,'pin','nut',V(s*230,0,0));
+  // wspornik 60x60x6 x 70 (na przyczepce)
+  const bex=V(0,150,0);
+  plate(trailer,'zy',[[-70,-20],[-10,-20],[-10,50],[-70,50]],[[-25,30,17]],6,Math.max(X(11),X(17)),'bracket','bracket',bex);
+  const fa0=Math.min(X(17),X(71)),fa1=Math.max(X(17),X(71));
+  plate(trailer,'xy',[[fa0,-20],[fa1,-20],[fa1,50],[fa0,50]],[[X(44),-5,10.5],[X(44),30,10.5]],6,-70,'bracket','bracket',bex);
+  // śruby wspornika do belki
+  [-5,30].forEach(y=>{
+    const out=V(0,150,110),back=V(0,0,-120),c=[X(44),y,0];
+    ring(trailer,'z',-64,-62,c,10,5.3,'boltB','washer',out);
+    hex(trailer,'z',-62,-55.6,c,17,'boltB','bolt',out);
+    cyl(trailer,'z',-152,-62,c,5,16,'boltB','bolt',out);
+    ring(trailer,'z',-132,-130,c,10,5.3,'boltB','washer',back);
+    hex(trailer,'z',-142,-132,c,17,'boltB','nut',back);
+  });
+});
+
+/* ---- przyczepka (fragment) ---- */
+const beamHoles=[];Object.keys(EAR_TUBES).forEach(k=>{const s=EAR_TUBES[k],xf=CX[k]+20*s;[-5,30].forEach(y=>beamHoles.push([xf+s*44,y,10.5]));});
+plate(trailer,'xy',[[-20,-37],[S+20,-37],[S+20,43],[-20,43]],beamHoles,60,-130,'beam','beam',V(0,0,-40));
+box(trailer,-20,S+20,43,63,-900,-70,'beam','wood',V(0,0,-40));
+for(let x=-20;x<S+20;x+=140){const l=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.6,830),new THREE.MeshBasicMaterial({color:0x7a5a35}));l.position.set(x,63.3,-485);reg(l,trailer,'beam',V(0,0,-40));}
+
+/* ---- opisy ---- */
+label(ramp,'Rura 60×40×2',V(385,64,620));
+label(ramp,'Poprzeczka 40×40×4',V(1180,-40,1000),V(0,-130,0));
+label(ramp,'Blacha cięto-ciągniona',V(570,64,420),V(0,190,0));
+label(ramp,'Krawężnik 30×30×3',V(0,96,760),V(0,290,0));
+label(ramp,'Listwa 80×6',V(750,72,1470),V(0,290,0));
+label(ramp,'Ucho 50×8',V(44,60,40),V(80,0,0));
+label(trailer,'Wspornik 60×60×6',V(1410,55,-45),V(0,150,0));
+label(ramp,'Sworzeń M16',V(760,-5,-25),V(-170,0,0));
+label(trailer,'Belka przyczepki',V(560,-40,-100),V(0,0,-40));
+
+/* ================= DANE: części, wiercenia, śruby ================= */
+const INFO={
+ tube:{t:'Rura nośna – profil 60×40×2, dł. 1500 (5 szt.)',
+  d:'Wysokość 60 pionowo. Osie rur od lewej krawędzi: 20 / 385 / 750 / 1115 / 1480 mm. Koniec najazdowy: dolną część ściąć skosem ok. 19° na długości 175 mm (górna ścianka zostaje pełna).',
+  h:['Górna ścianka: <b>Ø16,5 ×2</b> na osi rury, 150 i 1000 mm od końca zawiasowego (na tulejki).',
+     'Dolna ścianka: <b>Ø10,5 ×2</b> dokładnie pod nimi (śruby poprzeczek).',
+     'Górna ścianka: <b>Ø8,5 ×1</b>, 55 mm od czubka (listwa najazdowa).',
+     'Tylko rury 1, 3, 5: bok od strony ucha <b>Ø10,5 ×2</b> (20 i 70 mm od końca, 30 mm od dołu); bok przeciwny <b>Ø16,5 ×2</b> w tych samych miejscach (tulejki 38).'],
+  b:['M10×90 + tulejka 58 – z poprzeczkami','M10×70 + tulejka 38 – z uchem (rury 1,3,5)','M8×25 – listwa','wkręty 5,5×25 (rury 2–4) / 5,5×38 (rury 1 i 5, przez krawężnik)']},
+ cross:{t:'Poprzeczka – kątownik 40×40×4, dł. 1500 (2 szt.)',
+  d:'Pod rurami, pozioma półka przylega do rur, pionowa w dół (od strony końca najazdowego). Pozycje: 150 i 1000 mm od końca zawiasowego.',
+  h:['Pozioma półka: <b>Ø10,5 ×5</b> w osiach rur (20 / 385 / 750 / 1115 / 1480), na środku półki.'],
+  b:['M10×90 kl. 8.8 + podkładka DIN 125 + nakrętka samokontrująca od dołu']},
+ mesh:{t:'Blacha cięto-ciągniona 1500×1500 (ocynk)',
+  d:'Oczko ok. 62×25, mostek i grubość 3–4 mm. Dłuższa przekątna oczek (LWD) w POPRZEK rampy.',
+  h:['Nie wiercisz – śruby przechodzą przez oczka. Jeśli trafisz na mostek: Ø10,5 (poprzeczki) lub Ø8,5 (listwa).'],
+  b:['Dociskają ją: łby M10×90 z podkładką DIN 9021, krawężniki, listwa, wkręty 5,5×25 z podkładką poszerzaną co ~150 mm']},
+ curb:{t:'Krawężnik – kątownik 30×30×3, dł. 1380 (2 szt.)',
+  d:'Na blasze nad rurą 1 i 5, pionowa półka do góry przy zewnętrznej krawędzi. Od 40 mm od końca zawiasowego (żeby nie zahaczał o podłogę przy podnoszeniu) do listwy.',
+  h:['Pozioma półka: <b>Ø10,5 ×2</b> – 110 i 960 mm od początku krawężnika, 20 mm od zewnętrznej krawędzi (śruby poprzeczek).'],
+  b:['M10×90 (wspólne z poprzeczką)','wkręty samowiercące 5,5×38 ×8 na stronę']},
+ tip:{t:'Listwa najazdowa – płaskownik 80×6, dł. 1500',
+  d:'W poprzek na samym końcu najazdowym, na blasze. Spina końce rur.',
+  h:['<b>Ø8,5 ×5</b> w osiach rur, 25 mm od wewnętrznej krawędzi listwy (55 mm od czubka).'],
+  b:['M8×25 kl. 8.8 + 2 podkładki + nakrętka samokontrująca; nakrętkę zakładasz od spodu przez otwarte ścięcie rury']},
+ ear:{t:'Ucho zawiasu – płaskownik 50×8, dł. 140 (3 szt.)',
+  d:'Na boku rur 1, 3, 5. Wystaje 50 mm za koniec rury. Przy rurach skrajnych – od wewnętrznej strony.',
+  h:['<b>Ø10,5 ×2</b> – 20 i 70 mm od tylnego końca, na środku wysokości (25 mm).','<b>Ø17 ×1</b> – 115 mm od tylnego końca (sworzeń).'],
+  b:['M10×70 ×2 przez rurę (z tulejką 38)','sworzeń M16×50']},
+ bracket:{t:'Wspornik zawiasu – kątownik 60×60×6, dł. 70 (3 szt.)',
+  d:'Jedna półka przykręcona do tylnej belki przyczepki, druga sterczy do tyłu, obok ucha (po stronie dalszej od rury). Oś sworznia ok. 33 mm pod powierzchnią podłogi.',
+  h:['Półka do belki: <b>Ø10,5 ×2</b> jedna nad drugą (35 mm rozstawu), na środku wolnej części półki.','Półka odstająca: <b>Ø17 ×1</b>, 45 mm od belki.'],
+  b:['M10 przez belkę ×2 (długość wg Twojej belki, tu M10×90)','sworzeń M16×50']},
+ pin:{t:'Sworzeń zawiasu – śruba M16×50 kl. 8.8, gładki trzon (DIN 931) – 3 szt.',
+  d:'Kolejność: łeb – podkładka – ucho – podkładka – wspornik – podkładka – nakrętka samokontrująca. Dokręcić tylko do oporu, nasmarować.',
+  h:['Otwory Ø17 w uchu i we wsporniku.'],b:['podkładki M16 ×3, nakrętka samokontrująca M16 ×1 na sworzeń']},
+ boltX:{t:'Śruba M10×90 kl. 8.8 – poprzeczka ↔ rura (10 szt.)',
+  d:'Od góry: łeb, podkładka poszerzana DIN 9021 (Ø30), [krawężnik], blacha, rura z tulejką, poprzeczka, podkładka, nakrętka samokontrująca. Moment ok. 40 Nm.',
+  h:['Rura: góra Ø16,5, dół Ø10,5. Poprzeczka Ø10,5. Krawężnik Ø10,5.'],b:['tulejka 16×2 dł. 58 w środku rury']},
+ sleeveV:{t:'Tulejka dystansowa – rurka 16×2, dł. 58 (10 szt.)',
+  d:'Wsuwasz ją od góry przez otwór Ø16,5 – staje na dolnej ściance. Górą jest równo z rurą. Dzięki niej śruba nie zgniata profilu.',h:['—'],b:['M10×90 przechodzi w środku']},
+ boltE:{t:'Śruba M10×70 kl. 8.8 – ucho ↔ rura (6 szt.)',
+  d:'Poziomo przez rurę: łeb + podkładka po stronie ucha, po drugiej stronie podkładka + nakrętka samokontrująca.',
+  h:['Rura: bok od ucha Ø10,5, bok przeciwny Ø16,5 (tulejka). Ucho Ø10,5.'],b:['tulejka 16×2 dł. 38']},
+ sleeveH:{t:'Tulejka dystansowa – rurka 16×2, dł. 38 (6 szt.)',d:'Wsuwasz przez otwór Ø16,5 w ściance przeciwnej do ucha.',h:['—'],b:['M10×70 w środku']},
+ boltB:{t:'Śruba M10 kl. 8.8 – wspornik ↔ belka przyczepki (6 szt.)',
+  d:'Długość zależy od belki (tu belka 60 mm → M10×90). Przy profilu zamkniętym: tulejka jak w rampie albo nitonakrętka M10.',
+  h:['Belka: <b>Ø10,5 ×6</b> – wiercić przez wsporniki DOPIERO po ustawieniu rampy na pręcie Ø16 (wszystkie zawiasy w jednej osi).'],b:['podkładki ×2, nakrętka samokontrująca']},
+ boltT:{t:'Śruba M8×25 kl. 8.8 – listwa ↔ rura (5 szt.)',d:'Nakrętkę zakładasz od spodu przez skos rury.',h:['Listwa i górna ścianka rury: Ø8,5.'],b:['podkładki M8 ×2, nakrętka samokontrująca M8']},
+ screwM:{t:'Wkręt samowiercący 5,5×25 + podkładka poszerzana M6 (27 szt.)',d:'Mocuje blachę do rur 2, 3, 4 co ~150 mm. Bez wiercenia (wkrętarka).',h:['—'],b:[]},
+ screwC:{t:'Wkręt samowiercący 5,5×38 do grubej stali (16 szt.)',d:'Krawężnik + blacha + rura 1/5, co ~200 mm.',h:['—'],b:[]},
+ plug:{t:'Zaślepka 60×40 (plastik, opcja)',d:'Zamyka końce rur od strony zawiasu.',h:['—'],b:[]},
+ beam:{t:'Przyczepka – belka tylna i podłoga (Twoja)',d:'Tu przykładowo belka 80×60. Zmierz swoją i dobierz długość śrub wsporników.',h:['<b>Ø10,5 ×6</b> pod wsporniki.'],b:['M10 ×6']}
+};
+const HOLES=[
+ ['tube','Rury (każda z 5)','<span style="color:#1e88e5">Ø16,5</span> ×2 góra, <span style="color:#e53935">Ø10,5</span> ×2 dół, <span style="color:#2e9d4a">Ø8,5</span> ×1 góra'],
+ ['tube','Rury 1, 3, 5 – boki','<span style="color:#e53935">Ø10,5</span> ×2 + <span style="color:#1e88e5">Ø16,5</span> ×2'],
+ ['cross','Poprzeczki (2)','<span style="color:#e53935">Ø10,5</span> ×5 każda'],
+ ['curb','Krawężniki (2)','<span style="color:#e53935">Ø10,5</span> ×2 każdy'],
+ ['tip','Listwa najazdowa','<span style="color:#2e9d4a">Ø8,5</span> ×5'],
+ ['ear','Ucha (3)','<span style="color:#e53935">Ø10,5</span> ×2 + <span style="color:#8e24aa">Ø17</span> ×1 każde'],
+ ['bracket','Wsporniki (3)','<span style="color:#e53935">Ø10,5</span> ×2 + <span style="color:#8e24aa">Ø17</span> ×1 każdy'],
+ ['beam','Belka przyczepki','<span style="color:#e53935">Ø10,5</span> ×6 (przez wsporniki)']
+];
+const BOLTS=[
+ ['boltX','M10×90 kl. 8.8 (poprzeczki)','10'],
+ ['boltB','M10×90 kl. 8.8 (wsporniki↔belka, wg belki)','6'],
+ ['boltE','M10×70 kl. 8.8 (ucha)','6'],
+ ['pin','M16×50 DIN 931 gładki trzon (sworznie)','3'],
+ ['boltT','M8×25 kl. 8.8 (listwa)','5'],
+ [null,'Nakrętki samokontrujące M10 / M16 / M8','22 / 3 / 5'],
+ ['boltX','Podkładki poszerzane M10 DIN 9021 (Ø30)','10'],
+ [null,'Podkładki M10 DIN 125','34'],
+ ['pin','Podkładki M16','9'],
+ ['boltT','Podkładki M8','10'],
+ ['sleeveV','Tulejki 16×2 × 58 mm','10'],
+ ['sleeveH','Tulejki 16×2 × 38 mm','6'],
+ ['screwM','Wkręty samowiercące 5,5×25 + podkładka M6 poszerzana','27'],
+ ['screwC','Wkręty samowiercące 5,5×38 (do grubej stali)','16']
+];
+const STEPS=[
+ 'Utnij 5 rur 60×40×2 na 1500. Ściśnij razem i zetnij dolną część końców skosem ~19° na długości 175 mm.',
+ 'Wywierć rury wg zakładki „Wiercenia” (najpierw Ø5 pilot, Ø16,5 stopniowo: 8 → 12 → 16,5).',
+ 'Wywierć poprzeczki 40×40×4, ułóż rury na płasko w osiach 20/385/750/1115/1480, poprzeczki pod spód (150 i 1000 mm).',
+ 'Wsuń tulejki 58 od góry. Połóż blachę (LWD w poprzek), krawężniki nad rurą 1 i 5.',
+ 'Przełóż M10×90 od góry przez podkładkę DIN 9021, krawężnik/blachę, tulejkę i poprzeczkę. Nakrętki od dołu.',
+ 'Listwa 80×6 na końcu: M8×25, nakrętki od spodu przez skos. Wkręty 5,5×25 i 5,5×38.',
+ 'Ucha 50×8 na rury 1, 3, 5: M10×70 z tulejkami 38.',
+ 'Zawieś rampę na jednym pręcie Ø16 przez ucha i wsporniki, ustaw oś ~33 mm pod podłogą, dociśnij wsporniki ściskami, wywierć belkę Ø10,5 przez wsporniki, przykręć.',
+ 'Zamień pręt na 3 sworznie M16×50 (podkładka między blachami), dokręć do oporu, nasmaruj.',
+ 'Dokręć wszystkie M10 (~40 Nm), M8 (~20 Nm). Pomaluj otwory cynkiem. Załóż łańcuchy/zamki do jazdy.'
+];
+
+/* ================= UI ================= */
+const pbody=document.getElementById('pbody');let tab='part',selected=null;
+function renderPanel(){
+  let h='';
+  if(tab==='part'){
+    if(!selected||!INFO[selected]) h='<h3>Dotknij dowolnej części</h3><div class="muted">Pokażę jej wymiary, wszystkie otwory i śruby. Przesuń suwak <b>Rozłóż</b>, żeby zobaczyć połączenia od środka, albo włącz <b>Prześwietl</b>, żeby zobaczyć tulejki w rurach.</div>';
+    else{const I=INFO[selected];h=`<h3>${I.t}</h3><div>${I.d}</div><div style="margin-top:6px"><b>Otwory:</b></div><ul>${I.h.map(x=>'<li>'+x+'</li>').join('')}</ul>`+(I.b.length?`<b>Śruby / łączniki:</b><ul>${I.b.map(x=>'<li>'+x+'</li>').join('')}</ul>`:'');}
+  }else if(tab==='holes'){
+    h='<div style="margin-bottom:6px">Kolory obwódek otworów w modelu: <span style="color:#e53935">●</span> Ø10,5 · <span style="color:#1e88e5">●</span> Ø16,5 · <span style="color:#8e24aa">●</span> Ø17 · <span style="color:#2e9d4a">●</span> Ø8,5</div><table><tr><th>Część</th><th>Otwory</th></tr>'+HOLES.map(r=>`<tr class="click" data-k="${r[0]}"><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+'</table>'+
+      '<div class="muted" style="margin-top:6px">Razem: Ø10,5 ×48 · Ø16,5 ×16 · Ø17 ×6 · Ø8,5 ×10. Blachy cięto-ciągnionej nie wiercisz. Dotknij wiersza, żeby podświetlić część.</div>';
+  }else if(tab==='bolts'){
+    h='<table><tr><th>Łącznik</th><th>Szt.</th></tr>'+BOLTS.map(r=>`<tr class="${r[0]?'click':''}" data-k="${r[0]||''}"><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+'</table><div class="muted" style="margin-top:6px">Wszystko klasa 8.8, ocynk. Nakrętki z wkładką nylonową.</div>';
+  }else{
+    h='<ol style="padding-left:20px;margin:0">'+STEPS.map(s=>'<li style="margin:4px 0">'+s+'</li>').join('')+'</ol>';
+  }
+  pbody.innerHTML=h;
+  pbody.querySelectorAll('tr.click').forEach(tr=>tr.onclick=()=>{if(tr.dataset.k){select(tr.dataset.k,false);}});
+}
+document.querySelectorAll('#tabs button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('#tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('panel').classList.remove('min');renderPanel();});
+document.getElementById('mini').onclick=()=>{const p=document.getElementById('panel');p.classList.toggle('min');document.getElementById('mini').textContent=p.classList.contains('min')?'▴':'▾';};
+
+function select(kind,switchTab){
+  selected=kind;
+  Object.values(mats).forEach(m=>{if(m.emissive){const on=m.userData.kind===kind;m.emissive.setHex(on?0x2a5bd7:0);m.emissiveIntensity=on?0.55:0;}});
+  if(switchTab!==false){tab='part';document.querySelectorAll('#tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab==='part'));}
+  renderPanel();
+}
+
+// wybór dotknięciem
+const ray=new THREE.Raycaster();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});
+renderer.domElement.addEventListener('pointerup',e=>{
+  if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+  const r=renderer.domElement.getBoundingClientRect();
+  ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},camera);
+  const hits=ray.intersectObjects(movables.map(m=>m.obj).filter(o=>o.isMesh&&o.visible&&isVisible(o)),false).filter(h=>h.object.userData.kind);
+  if(!hits.length){select(null);return;}
+  let pick=hits[0];
+  if(pick.object.userData.kind==='mesh'){const nxt=hits.find(h=>h.object.userData.kind!=='mesh');if(nxt&&nxt.distance-pick.distance<25)pick=nxt;}
+  select(pick.object.userData.kind);
+});
+function isVisible(o){while(o){if(!o.visible)return false;o=o.parent;}return true;}
+
+// pozycja rampy
+let angTarget=0,ang=0;
+document.querySelectorAll('#pos button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#pos button').forEach(x=>x.classList.toggle('on',x===b));angTarget={flat:0,down:ALPHA,up:-PI/2}[b.dataset.p];});
+// przełączniki
+const state={xray:false,mesh:true,trailer:true,labels:true};
+document.querySelectorAll('#tog button').forEach(b=>b.onclick=()=>{const k=b.dataset.t;state[k]=!state[k];b.classList.toggle('on',state[k]);applyToggles();});
+function applyToggles(){
+  Object.values(mats).forEach(m=>{const k=m.userData.key;if(XRAY_KEYS.includes(k)){m.transparent=state.xray;m.opacity=state.xray?0.22:1;m.depthWrite=!state.xray;m.needsUpdate=true;}});
+  window.__meshObjs.forEach(o=>o.visible=state.mesh);
+  trailer.visible=state.trailer;
+  labels.forEach(l=>l.visible=state.labels);
+  lr.domElement.style.display=state.labels?'':'none';
+}
+// rozłożenie
+let ex=0;document.getElementById('explode').oninput=e=>{ex=+e.target.value;};
+// kamery
+let camAnim=null;
+const CAMS={all:[V(750,0,600),V(1800,1300,1900),false],hinge:[V(60,30,-25),V(330,260,260),true],cross:[V(385,0,150),V(260,-280,420),true],tip:[V(385,40,1460),V(330,260,330),true],under:[V(750,0,750),V(900,-1700,900),true]};
+document.querySelectorAll('#cams button').forEach(b=>b.onclick=()=>{
+  const c=CAMS[b.dataset.c];const cur=pivot.rotation.x;pivot.rotation.x=angTarget;pivot.updateMatrixWorld(true);
+  const tgt=c[2]?ramp.localToWorld(c[0].clone()):c[0].clone();pivot.rotation.x=cur;pivot.updateMatrixWorld(true);
+  const off=c[1].clone();if(b.dataset.c==='all'||b.dataset.c==='under')off.multiplyScalar(FAR());
+  camAnim={t:0,p0:camera.position.clone(),t0:controls.target.clone(),p1:tgt.clone().add(off),t1:tgt};
+});
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);lr.setSize(innerWidth,innerHeight);});
+
+let last=performance.now();
+function loop(now){
+  const rdt=Math.min(0.25,(now-last)/1000),dt=Math.min(0.05,rdt);last=now;
+  ang+=(angTarget-ang)*Math.min(1,rdt*5);pivot.rotation.x=ang;
+  const e=ex*ex*(3-2*ex);
+  movables.forEach(m=>{m.obj.position.copy(m.base).addScaledVector(m.ex,e);});
+  if(camAnim){camAnim.t=Math.min(1,camAnim.t+rdt*1.6);const k=camAnim.t*camAnim.t*(3-2*camAnim.t);
+    camera.position.lerpVectors(camAnim.p0,camAnim.p1,k);controls.target.lerpVectors(camAnim.t0,camAnim.t1,k);if(camAnim.t>=1)camAnim=null;}
+  controls.update();renderer.render(scene,camera);lr.render(scene,camera);
+  requestAnimationFrame(loop);
+}
+renderPanel();applyToggles();requestAnimationFrame(loop);
+window.__api={select,setEx:v=>{ex=v;},setAng:a=>{angTarget=a;ang=a;},cam:k=>document.querySelector(`#cams [data-c="${k}"]`).click(),state,applyToggles};
+})();
+</script>
+</body>
+</html>
