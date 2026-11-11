@@ -1,5 +1,11 @@
 # Zmiany – Moja pozycja GPS
 
+## 1.7
+
+- **Przełącznik motywu:** karta „Wygląd” na dole ekranu głównego z wyborem Systemowy / Jasny /
+  Ciemny. Wybór działa na wszystkich ekranach i niezależnie od ustawienia telefonu
+  (wcześniej tryb ciemny włączał się tylko razem z ciemnym motywem systemu).
+
 ## 1.6
 
 - **Poprawka: korek nie jest już parkingiem.** Gdy telefon jest połączony z Bluetooth auta,

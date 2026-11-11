@@ -385,6 +385,53 @@
                 style="@style/SmallValue"
                 android:text="—" />
         </LinearLayout>
+        <!-- Wygląd -->
+        <LinearLayout style="@style/Card">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_title"
+                android:textColor="@color/primary_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/themeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/themeSystem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:text="@string/theme_system"
+                    android:textColor="@color/text_primary" />
+
+                <RadioButton
+                    android:id="@+id/themeLight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:text="@string/theme_light"
+                    android:textColor="@color/text_primary" />
+
+                <RadioButton
+                    android:id="@+id/themeDark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:text="@string/theme_dark"
+                    android:textColor="@color/text_primary" />
+            </RadioGroup>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

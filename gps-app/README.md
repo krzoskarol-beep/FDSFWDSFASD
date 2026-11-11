@@ -53,6 +53,11 @@ Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Urządzenia w pobli�
 i (opcjonalnie) powiadomienia. Zalecane: wyłączenie optymalizacji baterii, bo inaczej Android
 może zablokować start śledzenia w tle.
 
+### Wygląd
+
+Karta **Wygląd** na dole ekranu głównego: motyw **Systemowy** (zgodny z telefonem), **Jasny**
+albo **Ciemny**. Wybór obowiązuje na wszystkich ekranach aplikacji (`ThemePrefs`).
+
 ### Adres i historia
 
 - Po zapisie aplikacja ustala **adres** miejsca (systemowy Geocoder, wymaga internetu)

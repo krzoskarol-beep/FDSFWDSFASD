@@ -123,6 +123,12 @@ public class MainActivity extends Activity {
     // ------------------------------------------------------------------ cykl życia
 
     @Override
+    protected void attachBaseContext(Context base) {
+        // Motyw wybrany w aplikacji (systemowy / jasny / ciemny), patrz ThemePrefs.
+        super.attachBaseContext(ThemePrefs.wrap(base));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -145,6 +151,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.btnMaps).setOnClickListener(v -> openInMaps());
         findViewById(R.id.btnCopy).setOnClickListener(v -> copyCoordinates());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareCoordinates());
+        setupThemeChooser();
         findViewById(R.id.btnHistory).setOnClickListener(
                 v -> startActivity(new Intent(this, HistoryActivity.class)));
         findViewById(R.id.btnDiagnostics).setOnClickListener(
@@ -719,6 +726,22 @@ public class MainActivity extends Activity {
         if (!startActivitySafe(new Intent(Intent.ACTION_VIEW, web))) {
             Toast.makeText(this, R.string.no_maps_app, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // ------------------------------------------------------------------ wygląd
+
+    private void setupThemeChooser() {
+        android.widget.RadioGroup group = findViewById(R.id.themeGroup);
+        int mode = ThemePrefs.get(this);
+        group.check(mode == ThemePrefs.MODE_DARK ? R.id.themeDark
+                : mode == ThemePrefs.MODE_LIGHT ? R.id.themeLight : R.id.themeSystem);
+        group.setOnCheckedChangeListener((g, id) -> {
+            int chosen = id == R.id.themeDark ? ThemePrefs.MODE_DARK
+                    : id == R.id.themeLight ? ThemePrefs.MODE_LIGHT : ThemePrefs.MODE_SYSTEM;
+            if (chosen == ThemePrefs.get(this)) return;
+            ThemePrefs.set(this, chosen);
+            recreate(); // wczytaj ekran od nowa z nowymi kolorami
+        });
     }
 
     // ------------------------------------------------------------------ automatyczne zapisywanie

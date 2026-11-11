@@ -1,6 +1,7 @@
 package pl.gps.pozycja;
 
 import android.app.Activity;
+import android.content.Context;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -29,6 +30,12 @@ public class HistoryActivity extends Activity {
     private ListView list;
     private View empty;
     private List<ParkingStore.Spot> spots = new ArrayList<>();
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Motyw wybrany w aplikacji (systemowy / jasny / ciemny), patrz ThemePrefs.
+        super.attachBaseContext(ThemePrefs.wrap(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,6 +2,7 @@ package pl.gps.pozycja;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -21,6 +22,12 @@ import java.util.List;
 public class DiagnosticsActivity extends Activity {
 
     private TextView status, log;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Motyw wybrany w aplikacji (systemowy / jasny / ciemny), patrz ThemePrefs.
+        super.attachBaseContext(ThemePrefs.wrap(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
