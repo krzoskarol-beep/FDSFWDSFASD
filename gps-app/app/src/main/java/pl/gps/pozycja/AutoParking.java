@@ -1,43 +1,25 @@
 package pl.gps.pozycja;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityTransition;
-import com.google.android.gms.location.ActivityTransitionRequest;
-import com.google.android.gms.location.DetectedActivity;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
-
 /**
- * Automatyczne zapisywanie parkowania: rejestruje w usługach Google powiadomienia
- * o rozpoczęciu i zakończeniu jazdy samochodem. Rozpoznawanie aktywności działa
- * w tle cały czas, prawie bez zużycia baterii (bez GPS).
+ * Automatyczne zapisywanie parkowania na podstawie Bluetooth auta:
+ * połączenie z autem = początek jazdy, rozłączenie (wyłączenie silnika) = zapis parkingu.
+ * Zdarzenia odbiera {@link CarBluetoothReceiver} zarejestrowany w manifeście, więc
+ * nic nie trzeba rejestrować w systemie. Nie korzysta z usług Google Play.
  */
 final class AutoParking {
-
-    static final String ACTION_TRANSITION = "pl.gps.pozycja.ACTIVITY_TRANSITION";
 
     private static final String PREFS = "auto_parking";
     private static final String K_ENABLED = "enabled";
 
     private AutoParking() { }
 
-    static boolean isPlayServicesAvailable(Context c) {
-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(c)
-                == ConnectionResult.SUCCESS;
-    }
-
+    /** Włączone przez użytkownika i z wybranym Bluetooth auta. */
     static boolean isEnabled(Context c) {
         return prefs(c).getBoolean(K_ENABLED, false);
     }
@@ -46,113 +28,46 @@ final class AutoParking {
         return c.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
-    private static boolean granted(Context c, String permission) {
-        return c.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    static boolean hasActivityRecognitionPermission(Context c) {
-        return Build.VERSION.SDK_INT < 29 || granted(c, Manifest.permission.ACTIVITY_RECOGNITION);
-    }
-
     static boolean hasBackgroundLocationPermission(Context c) {
-        return Build.VERSION.SDK_INT < 29 || granted(c, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        return Build.VERSION.SDK_INT < 29
+                || c.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
-    /** Czy wyzwalaczem jest Bluetooth auta (zamiast rozpoznawania aktywności). */
-    static boolean usesBluetooth(Context c) {
-        return CarBluetooth.isConfigured(c);
-    }
-
-    /**
-     * Wszystko, bez czego wykrywanie w tle nie zadziała (powiadomienia są opcjonalne).
-     * Tryb Bluetooth potrzebuje „Urządzeń w pobliżu”, tryb aktywności „Aktywności fizycznej”.
-     */
+    /** Wszystko, bez czego zapis w tle nie zadziała (powiadomienia są opcjonalne). */
     static boolean hasRequiredPermissions(Context c) {
-        return granted(c, Manifest.permission.ACCESS_FINE_LOCATION)
+        return c.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && hasBackgroundLocationPermission(c)
-                && (usesBluetooth(c) ? CarBluetooth.hasPermission(c) : hasActivityRecognitionPermission(c));
+                && CarBluetooth.hasPermission(c);
     }
 
-    private static PendingIntent transitionsIntent(Context c) {
-        Intent i = new Intent(c, TransitionReceiver.class).setAction(ACTION_TRANSITION);
-        // Usługi Google dopisują do tego Intentu wynik, więc musi być modyfikowalny.
-        int flags = PendingIntent.FLAG_UPDATE_CURRENT
-                | (Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0);
-        return PendingIntent.getBroadcast(c, 0, i, flags);
-    }
-
-    /** Włącza wykrywanie jazdy. Uprawnienia muszą już być przyznane. */
-    @SuppressLint("MissingPermission") // sprawdzane przez hasRequiredPermissions()
-    static void enable(Context context, Runnable onSuccess, Consumer<Exception> onFailure) {
+    /** Włącza automatyczny zapis. Wymaga wybranego Bluetooth auta i przyznanych uprawnień. */
+    static boolean enable(Context context) {
         Context c = context.getApplicationContext();
+        if (!CarBluetooth.isConfigured(c)) {
+            EventLog.log(c, "Nie można włączyć: nie wybrano Bluetooth auta");
+            return false;
+        }
         if (!hasRequiredPermissions(c)) {
-            EventLog.log(c, "Nie można włączyć wykrywania jazdy: brak uprawnień");
-            onFailure.accept(new SecurityException("missing permissions"));
-            return;
+            EventLog.log(c, "Nie można włączyć: brak uprawnień");
+            return false;
         }
-        if (usesBluetooth(c)) {
-            // Zdarzenia Bluetooth odbiera odbiornik z manifestu, nic nie trzeba rejestrować.
-            stopActivityRecognition(c);
-            prefs(c).edit().putBoolean(K_ENABLED, true).apply();
-            EventLog.log(c, "Wykrywanie jazdy przez Bluetooth auta: " + CarBluetooth.names(c));
-            if (onSuccess != null) onSuccess.run();
-            return;
-        }
-        ActivityTransitionRequest request = new ActivityTransitionRequest(Arrays.asList(
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.IN_VEHICLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                        .build(),
-                new ActivityTransition.Builder()
-                        .setActivityType(DetectedActivity.IN_VEHICLE)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                        .build()));
-        try {
-            ActivityRecognition.getClient(c)
-                    .requestActivityTransitionUpdates(request, transitionsIntent(c))
-                    .addOnSuccessListener(v -> {
-                        prefs(c).edit().putBoolean(K_ENABLED, true).apply();
-                        EventLog.log(c, "Wykrywanie jazdy zarejestrowane w usługach Google");
-                        if (onSuccess != null) onSuccess.run();
-                    })
-                    .addOnFailureListener(e -> {
-                        EventLog.log(c, "BŁĄD rejestracji wykrywania jazdy: " + e);
-                        if (onFailure != null) onFailure.accept(e);
-                    });
-        } catch (SecurityException e) {
-            if (onFailure != null) onFailure.accept(e);
-        }
-    }
-
-    /** Ponowna rejestracja, np. po restarcie telefonu albo aktualizacji aplikacji. */
-    static void reRegisterIfEnabled(Context c) {
-        if (!isEnabled(c)) return;
-        if (!hasRequiredPermissions(c)) {
-            EventLog.log(c, "UWAGA: automatyczne zapisywanie włączone, ale brakuje uprawnień");
-        } else if (usesBluetooth(c)) {
-            // nic do odnowienia: odbiornik Bluetooth jest w manifeście
-        } else if (!isPlayServicesAvailable(c)) {
-            EventLog.log(c, "UWAGA: usługi Google Play niedostępne");
-        } else {
-            enable(c, null, e -> { });
-        }
+        prefs(c).edit().putBoolean(K_ENABLED, true).apply();
+        EventLog.log(c, "Automatyczne zapisywanie włączone, Bluetooth auta: " + CarBluetooth.names(c));
+        return true;
     }
 
     static void disable(Context context) {
         Context c = context.getApplicationContext();
         prefs(c).edit().putBoolean(K_ENABLED, false).apply();
-        EventLog.log(c, "Automatyczne zapisywanie wyłączone przez użytkownika");
-        stopActivityRecognition(c);
+        EventLog.log(c, "Automatyczne zapisywanie wyłączone");
         DrivingService.cancel(c);
     }
 
-    @SuppressLint("MissingPermission")
-    private static void stopActivityRecognition(Context c) {
-        if (!isPlayServicesAvailable(c)) return;
-        try {
-            ActivityRecognition.getClient(c).removeActivityTransitionUpdates(transitionsIntent(c));
-        } catch (SecurityException e) {
-            // uprawnienie już odebrane: system i tak nie wysyła zdarzeń
+    /** Po restarcie telefonu / aktualizacji: tylko sprawdzenie, czy nadal mamy uprawnienia. */
+    static void checkAfterBoot(Context c) {
+        if (isEnabled(c) && !hasRequiredPermissions(c)) {
+            EventLog.log(c, "UWAGA: automatyczne zapisywanie włączone, ale brakuje uprawnień");
         }
     }
 }

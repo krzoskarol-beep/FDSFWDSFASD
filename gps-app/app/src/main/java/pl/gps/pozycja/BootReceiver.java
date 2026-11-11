@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Usługi Google zapominają rejestrację wykrywania jazdy po restarcie telefonu
- * i po aktualizacji aplikacji, więc odnawiamy ją w tych momentach.
+ * Po restarcie telefonu i aktualizacji aplikacji sprawdza, czy automatyczny zapis
+ * nadal ma potrzebne uprawnienia (wpis do dziennika diagnostycznego).
  */
 public class BootReceiver extends BroadcastReceiver {
 
@@ -16,7 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(a) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(a)) {
             EventLog.log(context, Intent.ACTION_BOOT_COMPLETED.equals(a)
                     ? "Restart telefonu" : "Aktualizacja aplikacji");
-            AutoParking.reRegisterIfEnabled(context);
+            AutoParking.checkAfterBoot(context);
         }
     }
 }

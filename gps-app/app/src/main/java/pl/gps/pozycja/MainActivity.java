@@ -190,7 +190,6 @@ public class MainActivity extends Activity {
         autoBtDevices = findViewById(R.id.autoBtDevices);
         findViewById(R.id.autoBtChoose).setOnClickListener(v -> chooseCarBluetooth());
         Notifications.createChannels(this);
-        AutoParking.reRegisterIfEnabled(this);
 
         applySystemBarInsets(findViewById(R.id.root));
 
@@ -711,19 +710,15 @@ public class MainActivity extends Activity {
             updateAutoUi();
             return;
         }
-        if (!AutoParking.usesBluetooth(this) && !AutoParking.isPlayServicesAvailable(this)) {
-            Toast.makeText(this, R.string.auto_status_no_play_services, Toast.LENGTH_LONG).show();
-            setAutoSwitch(false);
-            return;
-        }
         notificationsAsked = false;
         autoSetupInProgress = true;
         continueAutoSetup();
     }
 
     /**
-     * Prosi o uprawnienia po kolei (Android wymaga, żeby lokalizację w tle
-     * zażądać osobno, po zwykłej lokalizacji), a na końcu włącza wykrywanie jazdy.
+     * Konfiguracja krok po kroku: lokalizacja → „Urządzenia w pobliżu” (i powiadomienia) →
+     * wybór Bluetooth auta → lokalizacja w tle (Android wymaga, żeby o nią prosić osobno).
+     * Na końcu włącza automatyczny zapis.
      */
     private void continueAutoSetup() {
         if (!hasFinePermission()) {
@@ -733,17 +728,18 @@ public class MainActivity extends Activity {
         }
 
         java.util.List<String> needed = new java.util.ArrayList<>();
-        if (AutoParking.usesBluetooth(this)) {
-            if (!CarBluetooth.hasPermission(this)) needed.add(Manifest.permission.BLUETOOTH_CONNECT);
-        } else if (!AutoParking.hasActivityRecognitionPermission(this)) {
-            needed.add(Manifest.permission.ACTIVITY_RECOGNITION);
-        }
+        if (!CarBluetooth.hasPermission(this)) needed.add(Manifest.permission.BLUETOOTH_CONNECT);
         if (Build.VERSION.SDK_INT >= 33 && !notificationsAsked && !Notifications.canPost(this)) {
             needed.add(Manifest.permission.POST_NOTIFICATIONS);
         }
         if (!needed.isEmpty()) {
             notificationsAsked = true;
             requestPermissions(needed.toArray(new String[0]), REQ_AUTO_FOREGROUND);
+            return;
+        }
+
+        if (!CarBluetooth.isConfigured(this)) {
+            chooseCarBluetooth(); // po wyborze wraca tutaj przez applyCarBluetooth()
             return;
         }
 
@@ -760,26 +756,20 @@ public class MainActivity extends Activity {
             return;
         }
 
-        AutoParking.enable(this, () -> {
-            autoSetupInProgress = false;
+        autoSetupInProgress = false;
+        if (AutoParking.enable(this)) {
             Toast.makeText(this, R.string.auto_enabled_toast, Toast.LENGTH_SHORT).show();
-            updateAutoUi();
-        }, e -> {
-            Toast.makeText(this, getString(R.string.auto_enable_failed, e.getLocalizedMessage()),
-                    Toast.LENGTH_LONG).show();
+        } else {
             setAutoSwitch(false);
-        });
+        }
+        updateAutoUi();
     }
 
     private void onAutoPermissionResult(int requestCode) {
         if (requestCode == REQ_AUTO_LOCATION && !hasFinePermission()) {
             autoSetupFailed(R.string.auto_permission_denied_location);
-        } else if (requestCode == REQ_AUTO_FOREGROUND && AutoParking.usesBluetooth(this)
-                && !CarBluetooth.hasPermission(this)) {
+        } else if (requestCode == REQ_AUTO_FOREGROUND && !CarBluetooth.hasPermission(this)) {
             autoSetupFailed(R.string.bt_permission_denied);
-        } else if (requestCode == REQ_AUTO_FOREGROUND && !AutoParking.usesBluetooth(this)
-                && !AutoParking.hasActivityRecognitionPermission(this)) {
-            autoSetupFailed(R.string.auto_permission_denied_activity);
         } else if (requestCode == REQ_AUTO_BACKGROUND && !AutoParking.hasBackgroundLocationPermission(this)) {
             autoSetupFailed(R.string.auto_permission_denied_bg);
         } else {
@@ -822,8 +812,7 @@ public class MainActivity extends Activity {
             text = getString(R.string.auto_status_driving);
             color = R.color.ok;
         } else {
-            text = getString(AutoParking.usesBluetooth(this)
-                    ? R.string.auto_status_on_bt : R.string.auto_status_on);
+            text = getString(R.string.auto_status_on_bt);
             color = R.color.ok;
             if (!Notifications.canPost(this)) text += "\n\n" + getString(R.string.auto_status_no_notifications);
         }
@@ -847,11 +836,13 @@ public class MainActivity extends Activity {
         }
         if (CarBluetooth.adapter(this) == null) {
             Toast.makeText(this, R.string.bt_unavailable, Toast.LENGTH_LONG).show();
+            if (autoSetupInProgress) setAutoSwitch(false);
             return;
         }
         java.util.List<CarBluetooth.Device> devices = CarBluetooth.bondedDevices(this);
         if (devices.isEmpty()) {
             Toast.makeText(this, R.string.bt_no_bonded, Toast.LENGTH_LONG).show();
+            if (autoSetupInProgress) setAutoSwitch(false);
             return;
         }
         java.util.Set<String> selected = CarBluetooth.addresses(this);
@@ -873,18 +864,27 @@ public class MainActivity extends Activity {
                     applyCarBluetooth(chosen);
                 })
                 .setNeutralButton(R.string.bt_clear, (d, w) -> applyCarBluetooth(new java.util.HashMap<>()))
-                .setNegativeButton(R.string.parking_dialog_cancel, null)
+                .setNegativeButton(R.string.parking_dialog_cancel, (d, w) -> {
+                    if (autoSetupInProgress) setAutoSwitch(false);
+                })
+                .setOnCancelListener(d -> {
+                    if (autoSetupInProgress) setAutoSwitch(false);
+                })
                 .show();
     }
 
     private void applyCarBluetooth(java.util.Map<String, String> chosen) {
         CarBluetooth.save(this, chosen);
-        EventLog.log(this, chosen.isEmpty() ? "Bluetooth auta: brak (rozpoznawanie aktywności)"
+        EventLog.log(this, chosen.isEmpty() ? "Bluetooth auta: nie wybrano"
                 : "Bluetooth auta: wybrano " + CarBluetooth.names(this));
-        if (AutoParking.isEnabled(this)) {
-            // Zmiana trybu: przejdź przez konfigurację jeszcze raz (inne uprawnienia).
-            autoSetupInProgress = true;
-            notificationsAsked = true;
+        if (chosen.isEmpty()) {
+            // Bez urządzenia auta nie ma czego nasłuchiwać.
+            if (AutoParking.isEnabled(this)) AutoParking.disable(this);
+            if (autoSetupInProgress) {
+                Toast.makeText(this, R.string.bt_required, Toast.LENGTH_LONG).show();
+            }
+            setAutoSwitch(false);
+        } else if (autoSetupInProgress) {
             continueAutoSetup();
         }
         updateAutoUi();

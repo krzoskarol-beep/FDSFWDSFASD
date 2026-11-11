@@ -62,22 +62,18 @@
 
     <!-- Automatyczne zapisywanie parkowania -->
     <string name="auto_title">Automatyczne zapisywanie</string>
-    <string name="auto_switch">Zapisuj parking automatycznie</string>
-    <string name="auto_desc">Aplikacja w tle wykrywa jazdę samochodem i po jej zakończeniu sama zapisuje, gdzie stoi auto. GPS włącza się tylko w trakcie jazdy, więc bateria prawie nie jest zużywana.</string>
-    <string name="auto_status_on">Włączone. Gdy wysiądziesz z auta, miejsce zapisze się samo i dostaniesz powiadomienie.</string>
-    <string name="auto_status_driving">Wykryto jazdę: śledzę trasę i zapiszę, gdzie zaparkujesz.</string>
+    <string name="auto_switch">Zapisuj parking automatycznie (Bluetooth auta)</string>
+    <string name="auto_desc">Aplikacja zapisze, gdzie stoi auto, gdy telefon rozłączy się z Bluetooth samochodu (wyłączenie silnika). GPS działa tylko w trakcie jazdy, czyli gdy telefon jest połączony z autem.</string>
+    <string name="auto_status_driving">Połączono z autem: śledzę trasę i zapiszę miejsce, gdy wyłączysz silnik.</string>
     <string name="auto_status_missing_permissions">Brakuje uprawnień, więc automatyczne zapisywanie nie działa. Wyłącz i włącz je ponownie.</string>
-    <string name="auto_status_no_play_services">Wymaga usług Google Play, których ten telefon nie ma.</string>
     <string name="auto_status_no_notifications">Powiadomienia są wyłączone, więc nie zobaczysz informacji o zapisie (miejsce i tak się zapisze).</string>
     <string name="auto_battery_button">Wyłącz optymalizację baterii</string>
-    <string name="auto_battery_hint">Niektóre telefony (np. Xiaomi, Huawei, Samsung) usypiają aplikacje w tle. Jeśli parking się nie zapisuje, wyłącz dla niej optymalizację baterii.</string>
+    <string name="auto_battery_hint">Android może nie pozwolić aplikacji w tle uruchomić GPS po połączeniu z autem. Wyłączenie optymalizacji baterii zdejmuje tę blokadę (zalecane, szczególnie na Xiaomi, Huawei, Samsung).</string>
     <string name="auto_enabled_toast">Automatyczne zapisywanie włączone</string>
-    <string name="auto_enable_failed">Nie udało się włączyć wykrywania jazdy: %1$s</string>
     <string name="auto_bg_title">Lokalizacja w tle</string>
     <string name="auto_bg_message">Żeby zapisać miejsce parkowania, gdy aplikacja jest zamknięta, potrzebny jest dostęp do lokalizacji przez cały czas.\n\nNa następnym ekranie wybierz „Zezwalaj zawsze” (albo „Zawsze zezwalaj”).</string>
     <string name="auto_bg_continue">Dalej</string>
     <string name="auto_permission_denied_title">Brak uprawnienia</string>
-    <string name="auto_permission_denied_activity">Bez dostępu do „Aktywności fizycznej” aplikacja nie rozpozna, że jedziesz autem.</string>
     <string name="auto_permission_denied_bg">Bez dostępu do lokalizacji „przez cały czas” aplikacja nie zapisze parkingu, gdy jest zamknięta.</string>
     <string name="auto_permission_denied_location">Bez dostępu do dokładnej lokalizacji nie da się zapisać miejsca parkowania.</string>
     <string name="auto_open_settings">Otwórz ustawienia</string>
@@ -90,13 +86,13 @@
     <string name="channel_parking">Zapisany parking</string>
     <string name="channel_parking_desc">Informacja, że miejsce parkowania zostało zapisane.</string>
     <string name="notif_driving_title">Jedziesz</string>
-    <string name="notif_driving_text">Zapamiętam, gdzie zaparkujesz. Jeśli jedziesz autobusem lub pociągiem, naciśnij „To nie moje auto”.</string>
+    <string name="notif_driving_text">Połączono z autem. Zapamiętam, gdzie zaparkujesz. Jeśli to nie Twoja jazda (np. jesteś pasażerem), naciśnij „Nie zapisuj”.</string>
     <string name="notif_saving_text">Zapisuję miejsce parkowania…</string>
-    <string name="notif_driving_cancel">To nie moje auto</string>
+    <string name="notif_driving_cancel">Nie zapisuj</string>
     <string name="notif_parked_title">Zapisano miejsce parkowania</string>
     <string name="notif_parked_text">Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
     <string name="notif_parked_text_approx">Pozycja może być przybliżona. Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
-    <string name="notif_parked_failed">Wykryto koniec jazdy, ale nie udało się ustalić pozycji (brak sygnału GPS). Zapisz miejsce ręcznie.</string>
+    <string name="notif_parked_failed">Rozłączono z autem, ale nie udało się ustalić pozycji (brak sygnału GPS). Zapisz miejsce ręcznie.</string>
 
     <!-- Diagnostyka -->
     <string name="diag_title">Diagnostyka</string>
@@ -109,7 +105,7 @@
 
     <!-- Bluetooth auta -->
     <string name="bt_choose">Wybierz Bluetooth auta</string>
-    <string name="bt_none">Bluetooth auta: nie wybrano (jazda rozpoznawana przez usługi Google). Wybierz radio lub zestaw głośnomówiący auta: zapis będzie dokładniejszy, szybszy i bez fałszywych alarmów w autobusie.</string>
+    <string name="bt_none">Bluetooth auta: nie wybrano. Wybierz radio lub zestaw głośnomówiący swojego auta.</string>
     <string name="bt_selected">Bluetooth auta: %1$s. Połączenie = początek jazdy, rozłączenie (wyłączenie silnika) = zapis parkingu.</string>
     <string name="bt_dialog_title">Które urządzenie to Twoje auto?</string>
     <string name="bt_car_label">%1$s (samochód)</string>
@@ -130,4 +126,5 @@
     <string name="history_delete">Usuń z historii</string>
     <string name="history_restored">Przywrócono miejsce parkowania</string>
     <string name="history_current">● AKTUALNE</string>
+    <string name="bt_required">Automatyczne zapisywanie działa tylko z wybranym Bluetooth auta.</string>
 </resources>

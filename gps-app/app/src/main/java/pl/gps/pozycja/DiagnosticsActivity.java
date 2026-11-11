@@ -60,13 +60,17 @@ public class DiagnosticsActivity extends Activity {
         line(sb, "Aplikacja", versionName());
         line(sb, "Telefon", Build.MANUFACTURER + " " + Build.MODEL);
         line(sb, "Android", Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + ")");
-        line(sb, "Usługi Google Play", yesNo(AutoParking.isPlayServicesAvailable(this)));
+
         line(sb, "Automatyczny zapis", AutoParking.isEnabled(this) ? "włączony" : "wyłączony");
         line(sb, "Usługa jazdy", DrivingService.running
                 ? (DrivingService.driving ? "działa (jazda)" : "działa") : "nie działa");
         line(sb, "Lokalizacja dokładna", yesNo(granted(Manifest.permission.ACCESS_FINE_LOCATION)));
         line(sb, "Lokalizacja w tle", yesNo(AutoParking.hasBackgroundLocationPermission(this)));
-        line(sb, "Aktywność fizyczna", yesNo(AutoParking.hasActivityRecognitionPermission(this)));
+        line(sb, "Urządzenia w pobliżu (Bluetooth)", yesNo(CarBluetooth.hasPermission(this)));
+        android.bluetooth.BluetoothAdapter bt = CarBluetooth.adapter(this);
+        line(sb, "Bluetooth w telefonie", bt == null ? "BRAK" : (bt.isEnabled() ? "włączony" : "WYŁĄCZONY"));
+        java.util.List<String> cars = CarBluetooth.names(this);
+        line(sb, "Bluetooth auta", cars.isEmpty() ? "NIE WYBRANO" : TextUtils.join(", ", cars));
         line(sb, "Powiadomienia", yesNo(Notifications.canPost(this)));
         PowerManager pm = getSystemService(PowerManager.class);
         line(sb, "Bez optymalizacji baterii",

@@ -28,8 +28,8 @@ android {
         applicationId "pl.gps.pozycja"
         minSdk 24
         targetSdk 36
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,9 +64,6 @@ android {
 }
 
 dependencies {
-    // Rozpoznawanie aktywności (wykrywanie jazdy autem) z usług Google Play
-    implementation "com.google.android.gms:play-services-location:21.4.0"
-
     testImplementation "junit:junit:4.13.2"
 
     androidTestImplementation "androidx.test.ext:junit:1.3.0"

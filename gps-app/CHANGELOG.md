@@ -1,5 +1,16 @@
 # Zmiany – Moja pozycja GPS
 
+## 1.5
+
+- **Tylko Bluetooth auta:** automatyczne zapisywanie korzysta wyłącznie z połączenia
+  z Bluetooth samochodu. Usunięto rozpoznawanie aktywności (usługi Google Play)
+  i uprawnienie „Aktywność fizyczna”.
+- Aplikacja nie ma już żadnych zewnętrznych bibliotek i działa na telefonach bez usług
+  Google; APK zmalał z ok. 340 KB do ok. 60 KB.
+- Włączanie automatu prowadzi krok po kroku: lokalizacja → „Urządzenia w pobliżu” →
+  wybór auta → lokalizacja w tle.
+- Diagnostyka pokazuje stan Bluetooth i wybrane auto.
+
 ## 1.4
 
 - **Bluetooth auta jako wyzwalacz:** połączenie z radiem / zestawem głośnomówiącym auta

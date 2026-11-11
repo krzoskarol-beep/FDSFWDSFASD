@@ -20,52 +20,45 @@ Prosta aplikacja na Androida, która pokazuje aktualną pozycję telefonu.
   Aplikacja poczeka na aktualną pozycję i od razu zaproponuje zapis (Android 7.1+).
 - Ostrzega, gdy zapisywana pozycja jest niedokładna albo nieaktualna.
 
-### Bluetooth auta (zalecany wyzwalacz)
+### Automatyczne zapisywanie parkowania (Bluetooth auta)
 
-W karcie „Automatyczne zapisywanie” → **Wybierz Bluetooth auta** wskaż radio albo zestaw
-głośnomówiący swojego auta (można kilka). Wtedy:
+Włącz przełącznik **„Zapisuj parking automatycznie”** i wskaż radio albo zestaw głośnomówiący
+swojego auta (można kilka; przycisk **Wybierz Bluetooth auta**). Od tej pory:
 
-- **połączenie** z autem = początek jazdy (start śledzenia GPS),
-- **rozłączenie** (wyłączenie silnika) = zapis parkingu z pozycji **z chwili rozłączenia**,
-  gdy telefon był jeszcze w aucie,
-- chwilowe zerwanie Bluetooth w trakcie jazdy (auto jedzie) jest ignorowane,
-- rozpoznawanie aktywności jest wtedy wyłączone, więc nie ma fałszywych alarmów w autobusie,
-- **nie są potrzebne usługi Google Play** (wystarczy uprawnienie „Urządzenia w pobliżu”).
+1. **Połączenie** telefonu z Bluetooth auta = początek jazdy: startuje usługa z powiadomieniem
+   „Jedziesz”, która śledzi GPS (GPS działa tylko wtedy).
+2. **Rozłączenie** (wyłączenie silnika) = zapis parkingu z pozycji **z chwili rozłączenia**,
+   gdy telefon był jeszcze w aucie. Powiadomienie ma przycisk **Prowadź**.
+3. Chwilowe zerwanie Bluetooth w trakcie jazdy (auto jedzie) jest ignorowane.
+4. Gdyby rozłączenie nie dotarło, po 20 minutach bez jazdy usługa sama zapisuje miejsce postoju.
 
-### Adres i historia
-
-- Po zapisie aplikacja ustala **adres** miejsca (systemowy Geocoder, wymaga internetu)
-  i pokazuje go na karcie i w powiadomieniu.
-- **Historia parkowań** (przycisk pod kartami): 30 ostatnich miejsc. Dotknięcie otwiera mapę,
-  przytrzymanie pozwala **przywrócić miejsce jako aktualne** (np. po fałszywym alarmie) albo je usunąć.
-
-### Automatyczne zapisywanie parkowania (w tle)
-
-Włącz przełącznik **„Zapisuj parking automatycznie”**. Od tej pory:
-
-1. Rozpoznawanie aktywności z usług Google Play wykrywa, że jedziesz samochodem
-   (działa w tle bez GPS, więc prawie nie zużywa baterii).
-2. W trakcie jazdy działa usługa z powiadomieniem „Jedziesz”, która śledzi GPS.
-3. Po zakończeniu jazdy aplikacja zapisuje **miejsce, w którym auto stanęło**
-   (a nie to, do którego zdążyłeś dojść, zanim system zgłosił koniec jazdy)
-   i pokazuje powiadomienie z przyciskiem **Prowadź**.
+Aplikacja korzysta **wyłącznie z danych Bluetooth** (bez rozpoznawania aktywności i bez usług
+Google Play), więc nie ma fałszywych alarmów w autobusie i działa na każdym telefonie z Androidem 7.0+.
 
 Zasada (za projektem ParKing, patrz niżej): **pozycja ustalona po fakcie to miejsce, gdzie stoi
 kierowca, a nie auto.** Dlatego pozycje zapamiętane przez system są brane pod uwagę tylko z okolic
 zdarzenia (do 60 s przed). Jeśli takiej pozycji brak, aplikacja prosi o ręczny zapis zamiast
 zapisywać zgadywane miejsce.
 
-Jak wybierany jest punkt postoju (`ParkingDetector`): pierwszy pomiar z prędkością poniżej
-ok. 3,6 km/h po ostatnim odcinku jazdy powyżej ok. 15 km/h. Postój na światłach kasuje się,
-gdy auto znów rusza. Gdy GPS zniknie (garaż podziemny), zapisywany jest ostatni punkt jazdy.
+Kolejność wyboru miejsca (`DrivingService`, `ParkingDetector`):
+1. ostatni dokładny pomiar GPS sprzed rozłączenia (najwyżej 30 s wcześniej),
+2. pierwszy postój (poniżej ok. 3,6 km/h) po ostatnim odcinku jazdy powyżej ok. 15 km/h;
+   gdy GPS zniknie (garaż podziemny), ostatni punkt jazdy,
+3. pozycja zapamiętana przez system z okolic zdarzenia,
+4. nowy pomiar zaraz po rozłączeniu (oznaczony jako przybliżony).
 
-Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Aktywność fizyczna” i (opcjonalnie)
-powiadomienia. Wymaga usług Google Play. Jazda autobusem czy pociągiem też jest rozpoznawana
-jako jazda, więc w powiadomieniu „Jedziesz” jest przycisk **„To nie moje auto”**.
+Wymagane uprawnienia: lokalizacja „Zezwalaj zawsze”, „Urządzenia w pobliżu” (Bluetooth)
+i (opcjonalnie) powiadomienia. Zalecane: wyłączenie optymalizacji baterii, bo inaczej Android
+może zablokować start śledzenia w tle.
 
-Pozycję odczytuje z systemowego `LocationManager`, więc podstawowe funkcje działają także
-na telefonach bez usług Google. Tylko automatyczne zapisywanie parkowania korzysta
-z biblioteki `play-services-location` (rozpoznawanie aktywności).
+### Adres i historia
+
+- Po zapisie aplikacja ustala **adres** miejsca (systemowy Geocoder, wymaga internetu)
+  i pokazuje go na karcie i w powiadomieniu.
+- **Historia parkowań** (przycisk pod kartami): 30 ostatnich miejsc. Dotknięcie otwiera mapę,
+  przytrzymanie pozwala **przywrócić miejsce jako aktualne** albo je usunąć.
+
+Aplikacja nie ma żadnych zewnętrznych bibliotek (tylko systemowe API Androida).
 Działa na Androidzie 7.0 lub nowszym (minSdk 24, targetSdk 36).
 
 ## Budowanie
@@ -103,7 +96,7 @@ keyPassword=...
 Albo ustaw zmienne środowiskowe `SIGNING_STORE_FILE`, `SIGNING_STORE_PASSWORD`,
 `SIGNING_KEY_ALIAS`, `SIGNING_KEY_PASSWORD`. Bez klucza `assembleRelease` tworzy APK niepodpisany.
 
-Wersja release jest zoptymalizowana przez R8 (ok. 0,3 MB zamiast ok. 3–5 MB w wersji debug).
+Wersja release jest zoptymalizowana przez R8 (ok. 60 KB).
 
 ## CI (GitHub Actions)
 
@@ -147,7 +140,7 @@ licencji open source, więc kod nie był kopiowany, tylko pomysły):
 ## Diagnostyka
 
 Na dole ekranu głównego jest przycisk **Diagnostyka**: stan uprawnień, optymalizacji baterii
-i usług Google oraz dziennik zdarzeń z tła (wykrycie jazdy, start usługi, zapis parkingu, błędy).
+i Bluetooth oraz dziennik zdarzeń z tła (wykrycie jazdy, start usługi, zapis parkingu, błędy).
 Dziennik jest przechowywany tylko w telefonie (ostatnie ok. 500 wpisów); przycisk
 **Udostępnij** pozwala go wysłać, np. przy zgłaszaniu problemu.
 
