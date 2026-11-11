@@ -236,3 +236,7 @@ Patrz `stal_S5/zgodnosc_z_prawem.md`. Najważniejsze: złożony trap zasłoniłb
 więc lampy, odblaski i tablicę trzeba dać nisko (górna krawędź ≤ 420 mm nad ziemią, lampy ≥ 350 mm) i poza
 zakresem od −212 do +522 mm w poprzek. Do sprawdzenia: DMC 750 kg (trap 90 kg + motocykl 350 kg) i nacisk na hak.
 Zarejestrowana przyczepa: badanie dodatkowe + zawiadomienie starosty w 30 dni.
+
+Poprawka: dwa wysięgniki lamp WL-L i WL-P (345 mm za belką, poza obrysem trapu). Mają lampy zespolone, odblaski i tablicę dwurzędową,
+które mieszczą się w wysokościach z zał. 6. W skrzyżowaniach są nakrętki kołpakowe DIN 986. Złożony trap ma środek masy 139 mm za belką
+i 697 mm nad podłogą – to dane do przeliczenia nacisku na hak.

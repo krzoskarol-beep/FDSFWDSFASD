@@ -49,6 +49,21 @@ S_M12 = [(s, z) for (n, s, z, d) in g.S_PL["holes"] if n == "M12"]
 Z_M12 = [(d, z) for (n, d, z, dd) in g.Z_PL["holes"] if n == "M12"]
 # po analizie dróg sił (sily.py): 4 poprzeczki (B: 260 i 650 zamiast listwy T), śruby prowadnic omijają nakrętki po złożeniu
 CROSS_B_S5 = [260.0, 650.0]
+# wysięgniki lamp/tablicy: poza obrysem złożonego trapu (−212…+522 mm w poprzek, do 328 mm za belką) – ZA nim, więc nic nie zasłania
+LH_DEPTH = 345.0
+LIGHT_HOLDERS = [
+    dict(key="P", depth=LH_DEPTH, arm_x=-255.0, arm_h=455.0, x0=-225.0, x1=-545.0, y0=295.0, y1=665.0,
+         info="WL-P – wysięgnik prawy: kątownik 40×40×4 dł. 345 + płyta 320×370×3; tablica, lampa zespolona, odblask trójkątny\n"
+              "za tylną płaszczyzną złożonego trapu – nic go nie zasłania; DOPASUJ mocowanie do belki przyczepy",
+         items=[("tablica", -230.0, -535.0, 300.0, 514.0, "#f4f4f4", 1.0, "tablica rejestracyjna dwurzędowa 305×214 (300–514 mm nad ziemią)"),
+                ("lampa", -395.0, -535.0, 530.0, 600.0, "#c0202a", 25.0, "lampa zespolona tylna z oświetleniem tablicy (pozycja, stop, kierunkowskaz), 140×70, 530–600 mm"),
+                ("odblask", -235.0, -385.0, 525.0, 655.0, "#e03030", 6.0, "odblask trójkątny E (bok 150 mm), 525–655 mm nad ziemią")]),
+    dict(key="L", depth=LH_DEPTH, arm_x=600.0, arm_h=470.0, x0=530.0, x1=670.0, y0=245.0, y1=475.0,
+         info="WL-L – wysięgnik lewy: kątownik 40×40×4 dł. 345 + płyta 140×230×3; lampa zespolona i odblask trójkątny\n"
+              "góra 475 mm nad ziemią – na poziomie chodnika, krawędzie zaokrąglone; DOPASUJ mocowanie do belki",
+         items=[("lampa", 530.0, 670.0, 400.0, 470.0, "#c0202a", 25.0, "lampa zespolona tylna (pozycja, stop, kierunkowskaz), 140×70, 400–470 mm"),
+                ("odblask", 535.0, 665.0, 255.0, 385.0, "#e03030", 6.0, "odblask trójkątny E (bok 150 mm), 255–385 mm nad ziemią")]),
+]
 GUIDE_BOLTS_A_S5 = [200.0, 540.0, 1040.0]
 GUIDE_BOLTS_B_S5 = [180.0, 450.0]
 
@@ -88,7 +103,8 @@ def layout():
         cross_txt="RHS 60×40×3 S235JRH na płasko",
         walk_hinge=dict(x=XE, key=lambda grp, s, z: f"{grp}h:{s:g}:{z:g}:1:C{XE:.0f}"),
         walk_plugs=[dict(grp="B", x=XW, key=lambda s, z: f"Bh:{s:g}:{z:g}:1:C{XW:.0f}")],
-        walk_rest=[XW, XE], tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
+        walk_rest=[XW, XE],
+        light_holders=LIGHT_HOLDERS, tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
         guide=(40.0, 3.0, "kątownik stal 40×40×3"),
         single_plates=V["single_plates"],
         s_plates=[dict(sg=1, face=XW + 20, inner=XW - 20, tube="C1"),
@@ -408,12 +424,14 @@ STEPS = [
     ("6. Próbny montaż (przed cynkowaniem!)", ["Skręć wszystko na sucho bez siatki. Złóż sekcje na stole jak do jazdy – nic nie może się dotykać.",
                    "Dopiero gdy wszystko pasuje: rozbierz, cynkuj."]),
     ("7. Cynkowanie", ["Cynkownia ogniowa (rury mają otwarte końce – tak ma być). Po cynkowaniu przetrzyj otwory wiertłem Ø13 / Ø18,5 ręcznie."]),
-    ("8. Montaż", ["Każde skrzyżowanie: tuleja w otworze, ZANIM włożysz śrubę (bez tulei M8 zgniecie ściankę). M8 20 N·m, M12 40 N·m.",
+    ("8. Montaż", ["Każde skrzyżowanie: tuleja w otworze, ZANIM włożysz śrubę (bez tulei M8 zgniecie ściankę); od spodu nakrętka kołpakowa DIN 986. M8 20 N·m, M12 40 N·m.",
                    f"Zaślepki: śruba M12×60 + tuleja w 2 nieużywanych otworach lewej rury L1 i w 2 otworach rury C3 przy x +{XW:.0f}.", "Sworznie zawiasów Ø20: podkładka + zawleczka – nic nie dokręcasz."]),
     ("9. Wsporniki K i oparcia chodnika", ["Przełóż PRĘT Ø20 przez oba wsporniki zawiasu i płyty H, dopiero wtedy wierć belkę i przykręcaj K – osie będą współosiowe.",
                    "Sprawdź: trap obraca się ręką bez zacięć w całym zakresie (także zawias chodnika – ten sam pręt przez 3 płyty Z na stole).",
                    "Oparcia chodnika: rozłóż trap, podłóż kątownik z gumą pod końce C1 i C2 tak, by rury lekko na nim leżały, zaznacz i przykręć do belki."]),
-    ("10. Próba", ["400 kg (worki) przy zawiasie środkowym nad każdą rurą jezdną – nic nie może zostać wygięte, pomiar ugięcia przed/po.",
+    ("10. Światła", ["Wysięgniki WL-L i WL-P do belki (M10), lampy, odblaski i tablica na płytach. Sprawdź przy złożonym trapie: lampy i tablica widoczne z tyłu i z boków.",
+                    "Rozłóż trap – nic nie może dotknąć wysięgników."]),
+    ("11. Próba", ["400 kg (worki) przy zawiasie środkowym nad każdą rurą jezdną – nic nie może zostać wygięte, pomiar ugięcia przed/po.",
                    "Pierwszy wjazd bez kierowcy, przyczepa podpięta do auta."]),
 ]
 TOL = [("Długość rur podłużnych", "±0,5 mm między sobą", "ogranicznik / cięcie z jednego ustawienia"),
@@ -430,6 +448,7 @@ CHECK_BEFORE_LOAD = ["Przyczepa PODPIĘTA do auta, auto na hamulcu ręcznym (alb
                      "Koło ustawione w osi pasa, prowadnice po obu stronach. Idziesz po chodniku z LEWEJ.",
                      "Nikt nie stoi z prawej strony trapu."]
 CHECK_BEFORE_DRIVE = ["Trap w pionie: OBA sworznie Ø12 przez wspornik K i płytę H, zawleczki założone.",
+                      "Światła przyczepy działają (pozycja, stop, oba kierunkowskazy), tablica czysta i oświetlona.",
                       "Zapięcia sekcji A–B zapięte.",
                       "PAS TRANSPORTOWY założony na poprzeczce P i dociągnięty (druga, niezależna blokada).",
                       "Motocykl przypięty pasami do uch przyczepy, nie opiera się o trap.",
@@ -486,6 +505,10 @@ def bom():
              round(V["guide"][1] * (g.GUIDE_A[1] - g.GUIDE_A[0]) / 1000, 2), 5, ""],
             ["G2", "Prowadnica koła sekcji B", 2, "S235", f"kątownik 40×40×3, L = {g.GUIDE_B[1] - g.GUIDE_B[0]:.0f}",
              round(V["guide"][1] * (g.GUIDE_B[1] - g.GUIDE_B[0]) / 1000, 2), 4, ""],
+            ["WL-P", "Wysięgnik prawy lamp i tablicy (część PRZYCZEPY)", 1, "S235", "kątownik 40×40×4, L = 345 + płyta 320×370×3", 2.4, 6,
+             "tablica dwurzędowa 305×214 (300–514 mm nad ziemią), lampa 530–600, odblask 525–655; płyta 345 mm za belką"],
+            ["WL-L", "Wysięgnik lewy lamp (część PRZYCZEPY)", 1, "S235", "kątownik 40×40×4, L = 345 + płyta 140×230×3", 1.6, 4,
+             "lampa 400–470 mm, odblask 255–385 mm nad ziemią; x +530…+670 (poza obrysem trapu)"],
             ["O", "Oparcie chodnika przy przyczepie (część PRZYCZEPY)", 2, "S235", "kątownik 100×100×10, L = 40 + guma EPDM 5 mm", 0.6, 2,
              f"pod końcami rur C1 i C2 (x +{XW:.0f}, +{XE:.0f}); rura tylko się opiera – DOPASUJ wysokość do belki"],
             ["H", "Płyta zawiasu przy przyczepie", 2, "S235", "płaskownik 80×6, L = 200", 0.75, 4, "1 na każdą rurę L1, po stronie zewnętrznej"],
@@ -502,12 +525,15 @@ def bom():
 def bolts():
     F = SPR["F1_N"]
     return [
-        ("M8×160", "zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna", 24, "skrzyżowania (6 podłużnic × 4 poprzeczki)"),
+        ("M8×160", "zamkowa DIN 603 kl. 8.8 + podkładka + nakrętka KOŁPAKOWA samohamowna DIN 986", 24,
+         "skrzyżowania (6 podłużnic × 4 poprzeczki); kołpak zakrywa koniec śruby – tył złożonego trapu bez ostrych końcówek"),
         ("M8×130", "zamkowa DIN 603 + podkładka + nakrętka samohamowna", 10, "prowadnice"),
         ("M12×70", "sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna", 10, "płyty H (4), Z sekcji A (4), Z chodnika A (2)"),
         ("M12×80", "sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna", 10, "płyty S (4), Z sekcji B (4), Z chodnika B (2)"),
         ("M12×60", "sześciokątna 8.8 + 2 podkładki + nakrętka samohamowna", 4, "ZAŚLEPKI: lewa L1 (płyta S) i C3 x +305 (płyta Z)"),
         ("M12×80 (oparcie)", "sześciokątna 8.8 (DOPASUJ do belki)", 4, "2 oparcia chodnika → belka przyczepy"),
+        ("M10×30", "sześciokątna 8.8 + podkładki + nakrętka samohamowna", 8, "wysięgniki lamp WL-P i WL-L: 2 do belki + 2 do płyty, każdy"),
+        ("M5×16", "nierdzewna + nakrętka samohamowna", 10, "lampy, odblaski, tablica na płytach wysięgników"),
         ("M12×80", "sześciokątna 8.8 (DOPASUJ do belki)", 6, "3 wsporniki K → belka przyczepy"),
         ("M12×60 / M12×70", "sześciokątna 8.8 + podkładka + nakrętka samohamowna", "3 / 1", "osie oczek sprężyn (×70: płyta S prawa)"),
         ("sworzeń Ø20×40", "ISO 2341-B, stal C45 / 8.8, + podkładka 21 + zawleczka 4×36", 2, "zawias przy przyczepie (H – K)"),
@@ -542,6 +568,11 @@ def buy():
         (f"Sprężyna gazowa 460 mm / skok 200 / {SPR['F1_N']} N, Ø28, oczka Ø12,2", "2", "dobrana do masy trapu; standardowa Ø28 (tańsza niż Ø40)"),
         ("Zapięcie dźwigniowe z regulowanym kabłąkiem, zasięg ≥ 180 mm, ≥ 200 daN (lub pas z grzechotką)", "2", "spina złożone sekcje"),
         ("Pasek gumy EPDM 3–5 mm × 40 mm", "ok. 3 m", "pod skosy przy ziemi (6 × 0,5 m)"),
+        ("Lampa zespolona tylna 12 V z homologacją E (pozycja, stop, kierunkowskaz; prawa z oświetleniem tablicy), ok. 140×70 mm", "2 (L + P)",
+         "na wysięgnikach WL-L / WL-P; LED nie wymaga zmian w instalacji auta, sprawdź tylko sygnalizację kierunkowskazów"),
+        ("Odblask trójkątny czerwony z homologacją E, bok 150 mm", "2", "na wysięgnikach, 250–900 mm nad ziemią"),
+        ("Kątownik 40×40×4 + blacha 3 mm (płyty wysięgników)", "0,7 m + 0,15 m²", "wysięgniki WL-L / WL-P – po wierceniu cynk ogniowy"),
+        ("Przewód 5–7 żył + dławiki, wtyczka 7- lub 13-pin", "wg przyczepy", "zasilanie lamp na wysięgnikach"),
         ("Pas z grzechotką 25 mm, LC ≥ 400 daN, z hakami", "1", "DRUGA blokada do jazdy (gdyby sworznie Ø12 zostały w kieszeni)"),
         ("Pręt stalowy gładki Ø20 h9 (lub sworzeń M20 z gładkim trzpieniem), dł. ok. 400 mm", "1", "PRZYRZĄD: przekładasz przez oba wsporniki K przy ich przykręcaniu – osie zawiasu współosiowe"),
         ("Rozwiertak / wiertło Ø13 i Ø18,5", "po 1", "przetarcie otworów po cynkowaniu"),

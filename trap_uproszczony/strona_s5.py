@@ -103,12 +103,12 @@ Otwór przechodzący przez kilka części wierć razem albo przez płytę jako s
 <p class="note">Orientacyjny koszt materiału z cynkowaniem: ok. %COST% zł netto (ceny-założenia w stal.py, sprawdź w swojej hurtowni).</p></div>
 <h2>Zgodność z polskimi przepisami</h2>
 <div class="card"><div class="tw"><table><thead><tr><th>Obszar</th><th>Stan</th><th>Co zrobić</th></tr></thead><tbody>
-<tr><td>Światła, odblaski, tablica</td><td><span class="pill bad">do poprawy</span></td><td>Złożony trap zajmuje 430–1760 mm nad ziemią i od −212 do +522 mm w poprzek. Lampy i tablicę daj nisko
-(górna krawędź ≤ 420 mm, lampy ≥ 350 mm), poza tym zakresem w poprzek; tablica po prawej. Zał. 6 rozporządzenia o warunkach technicznych, art. 61 PoRD.</td></tr>
+<tr><td>Światła, odblaski, tablica</td><td><span class="pill ok">po zmianie</span></td><td>Dwa wysięgniki lamp (WL-L, WL-P) 345 mm za belką, czyli za złożonym trapem (328 mm), i poza jego obrysem w poprzek.
+Lampy 400–470 i 530–600 mm, odblaski 255–385 i 525–655 mm, tablica dwurzędowa 300–514 mm nad ziemią – w granicach zał. 6 rozporządzenia o warunkach technicznych; art. 61 PoRD.</td></tr>
 <tr><td>Masa – przyczepa lekka (DMC ≤ 750 kg)</td><td><span class="pill warn">sprawdź</span></td><td>Trap 90 kg + ok. 8 kg wsporników; z motocyklem 350 kg rama może ważyć najwyżej ok. 302 kg. Powyżej 750 kg: hamulce i B+E / B96.</td></tr>
-<tr><td>Nacisk na hak</td><td><span class="pill warn">sprawdź</span></td><td>Trap za osią zmniejsza nacisk na hak o ok. 40 kg – wpisz go jako korektę masy w modelu przyczepy v3; zostań w granicach z instrukcji auta.</td></tr>
+<tr><td>Nacisk na hak</td><td><span class="pill warn">sprawdź</span></td><td>Złożony trap: 90 kg, środek masy 139 mm za belką, 697 mm nad podłogą – zmniejsza nacisk na hak o ok. 40 kg. Wpisz go w modelu przyczepy v3; zostań w granicach z instrukcji auta.</td></tr>
 <tr><td>Rejestracja</td><td><span class="pill warn">formalność</span></td><td>Przyczepa SAM jeszcze niezarejestrowana: zamontuj trap przed badaniem. Już zarejestrowana: badanie dodatkowe (art. 81 ust. 11) i zawiadomienie starosty w 30 dni (art. 78 ust. 2).</td></tr>
-<tr><td>Zabezpieczenie w jeździe</td><td><span class="pill ok">OK</span></td><td>2 sworznie Ø12 + pas z grzechotką + zapięcia; stępione krawędzie.</td></tr>
+<tr><td>Zabezpieczenie w jeździe</td><td><span class="pill ok">OK</span></td><td>2 sworznie Ø12 + pas z grzechotką + zapięcia; nakrętki kołpakowe w skrzyżowaniach, stępione krawędzie.</td></tr>
 <tr><td>Wymiary, prawo jazdy</td><td><span class="pill ok">OK</span></td><td>Szerokość 0,63 m, złożony 1,76 m nad ziemią, do 0,33 m za ramą; kat. B dla przyczepy lekkiej.</td></tr>
 </tbody></table></div>
 <p class="note">Analiza inżynierska, nie opinia prawna – rozstrzyga diagnosta stacji kontroli pojazdów. Szczegóły: stal_S5/zgodnosc_z_prawem.md.</p></div>

@@ -491,6 +491,17 @@ def build(layout=None):
 
     # ---------------------------------------------------------- przyczepa (poglądowo) + wsporniki K z otworami
     T = "T"
+    for lh in Ly.get("light_holders", []):    # wysięgniki lamp i tablicy (część przyczepy), wysokości od ziemi
+        Y = lambda h: h - g.H_FLOOR
+        d = lh["depth"]
+        arm = M.mesh(f"T:wl:{lh['key']}", T, "#555555", "płyta", lh["info"])
+        xa = lh["arm_x"]
+        solid("sx", [(0.0, xa - 20), (d, xa - 20), (d, xa + 20), (0.0, xa + 20)], Y(lh["arm_h"]) - 4, Y(lh["arm_h"]), arm)
+        solid("sx", [(0.0, xa - 20), (d, xa - 20), (d, xa - 16), (0.0, xa - 16)], Y(lh["arm_h"]) - 40, Y(lh["arm_h"]), arm)
+        solid("sx", [(d, lh["x0"]), (d + 3, lh["x0"]), (d + 3, lh["x1"]), (d, lh["x1"])], Y(lh["y0"]), Y(lh["y1"]), arm)
+        for (nm, x0, x1, y0, y1, col, th, info) in lh["items"]:
+            solid("sx", [(d + 3, x0), (d + 3 + th, x0), (d + 3 + th, x1), (d + 3, x1)], Y(y0), Y(y1),
+                  M.mesh(f"T:wl:{lh['key']}:{nm}", T, col, "przyczepa", info))
     if Ly.get("walk_rest"):
         th0 = pose(0.0)[0]
         oA = np.array((0.0, g.PIN_Z, -g.PIN_Y))
