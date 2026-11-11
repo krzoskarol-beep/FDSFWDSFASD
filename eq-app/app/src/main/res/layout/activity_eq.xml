@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Nagłówek z głównym przełącznikiem -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Text.Hero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/header_sub"
+                    android:textColor="@color/text_dim"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/master"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/accent"
+                android:scaleX="1.3"
+                android:scaleY="1.3"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/statusMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/panel_bg"
+            android:padding="14dp"
+            android:text="@string/enable_to_edit"
+            android:textColor="@color/text_dim"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- Zestawy (presety) -->
+        <LinearLayout
+            style="@style/Panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                style="@style/Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/presets_label" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/presetRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Pasma (fadery) -->
+        <LinearLayout
+            style="@style/Panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Text.Title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/bands_label" />
+
+                <Button
+                    android:id="@+id/btnReset"
+                    style="@style/Btn.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/reset"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/faderRow"
+                android:layout_width="match_parent"
+                android:layout_height="248dp"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <!-- Bas -->
+        <LinearLayout
+            style="@style/Panel"
+            android:id="@+id/bassPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                style="@style/Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bass_label" />
+
+            <SeekBar
+                android:id="@+id/bass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="1000"
+                android:progressDrawable="@drawable/seek_progress"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="0dp" />
+        </LinearLayout>
+
+        <!-- Przestrzeń -->
+        <LinearLayout
+            style="@style/Panel"
+            android:id="@+id/surroundPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                style="@style/Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/surround_label" />
+
+            <SeekBar
+                android:id="@+id/surround"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="1000"
+                android:progressDrawable="@drawable/seek_progress"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

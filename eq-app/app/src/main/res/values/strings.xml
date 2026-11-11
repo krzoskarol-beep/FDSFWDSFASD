@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Korektor</string>
+    <string name="header_sub">Działa na cały dźwięk: Spotify, YouTube, odtwarzacz</string>
+
+
+    <string name="presets_label">Zestawy</string>
+    <string name="custom_preset">Własny</string>
+
+    <string name="bands_label">Pasma</string>
+    <string name="bass_label">Wzmocnienie basu</string>
+    <string name="surround_label">Przestrzeń (surround)</string>
+    <string name="reset">Wyzeruj</string>
+
+    <string name="enable_to_edit">Włącz korektor przełącznikiem u góry, aby zmieniać dźwięk.</string>
+    <string name="unsupported">Ten telefon nie udostępnia globalnego korektora dźwięku, więc aplikacja nie może zmieniać dźwięku innych aplikacji.</string>
+
+    <string name="notif_active">Korektor aktywny — działa na cały dźwięk</string>
+    <string name="notif_stop">Wyłącz</string>
+    <string name="channel_name">Korektor</string>
+    <string name="channel_desc">Informacja, że korektor jest aktywny.</string>
+</resources>

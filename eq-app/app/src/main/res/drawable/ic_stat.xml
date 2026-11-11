@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ikona w pasku stanu: biała, przezroczyste tło -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24"
+    android:tint="#FFFFFF">
+    <path android:fillColor="#FFFFFF" android:pathData="M4,14h3v6h-3z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M4,6h3v5h-3z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M10.5,10h3v10h-3z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M10.5,4h3v3h-3z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M17,13h3v7h-3z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M17,5h3v5h-3z" />
+</vector>

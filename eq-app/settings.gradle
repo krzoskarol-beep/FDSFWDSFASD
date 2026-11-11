@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories { google(); mavenCentral(); gradlePluginPortal() }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // Oficjalny mirror Maven Central od Google, tylko dla Robolectric (duże pliki do zrzutów
+        // ekranu; repo.maven.apache.org potrafi je czasowo blokować limitem pobrań).
+        maven {
+            url "https://maven-central.storage-download.googleapis.com/maven2"
+            content { includeGroup "org.robolectric" }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Korektor"
+include ":app"
