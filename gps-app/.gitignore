@@ -1,0 +1,10 @@
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+
+# Klucz podpisu: nigdy do repozytorium
+keystore.properties
+*.jks
+*.keystore

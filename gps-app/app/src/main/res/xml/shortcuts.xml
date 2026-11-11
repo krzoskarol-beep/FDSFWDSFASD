@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Przytrzymaj ikonę aplikacji na ekranie głównym, żeby zobaczyć ten skrót. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_parking"
+        android:shortcutId="save_parking"
+        android:shortcutLongLabel="@string/shortcut_save_long"
+        android:shortcutShortLabel="@string/shortcut_save_short">
+        <intent
+            android:action="pl.gps.pozycja.SAVE_PARKING"
+            android:targetClass="pl.gps.pozycja.MainActivity"
+            android:targetPackage="pl.gps.pozycja" />
+    </shortcut>
+</shortcuts>

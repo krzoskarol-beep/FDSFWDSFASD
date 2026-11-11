@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Moja pozycja GPS</string>
+    <string name="latitude">Szerokość geograficzna</string>
+    <string name="longitude">Długość geograficzna</string>
+    <string name="accuracy">Dokładność</string>
+    <string name="altitude">Wysokość</string>
+    <string name="speed">Prędkość</string>
+    <string name="bearing">Kierunek</string>
+    <string name="satellites">Satelity (używane / widoczne)</string>
+    <string name="source">Źródło</string>
+    <string name="fix_time">Czas pomiaru</string>
+    <string name="open_maps">Otwórz w mapach</string>
+    <string name="copy">Kopiuj</string>
+    <string name="share">Udostępnij</string>
+    <string name="grant_permission">Zezwól na lokalizację</string>
+    <string name="open_settings">Włącz lokalizację</string>
+
+    <string name="status_waiting">Szukam sygnału GPS…</string>
+    <string name="status_ok">Pozycja aktualna</string>
+    <string name="status_stale">Ostatnia znana pozycja (sprzed %1$s)</string>
+    <string name="status_no_permission">Aplikacja potrzebuje dostępu do lokalizacji, żeby pokazać Twoją pozycję.</string>
+    <string name="status_permission_denied_forever">Dostęp do lokalizacji jest zablokowany. Włącz go w ustawieniach aplikacji.</string>
+    <string name="status_disabled">Lokalizacja w telefonie jest wyłączona.</string>
+    <string name="status_coarse_only">Masz włączoną tylko przybliżoną lokalizację, więc dokładność będzie niska.</string>
+
+    <string name="copied">Skopiowano współrzędne</string>
+    <string name="no_maps_app">Brak aplikacji map w telefonie</string>
+    <string name="no_position_yet">Jeszcze nie ma pozycji</string>
+    <string name="share_text">Moja pozycja: %1$s\n%2$s</string>
+
+    <!-- Gdzie zaparkowałem? -->
+    <string name="parking_title">Mój samochód</string>
+    <string name="parking_empty">Nie masz zapisanego miejsca. Po zaparkowaniu naciśnij przycisk poniżej, a aplikacja zaprowadzi Cię z powrotem do auta.</string>
+    <string name="parking_save">Zapisz miejsce parkowania</string>
+    <string name="parking_navigate">Prowadź</string>
+    <string name="parking_save_here">Zapisz tutaj</string>
+    <string name="parking_delete">Usuń</string>
+    <string name="parking_direction">na %1$s (%2$d°)</string>
+    <string name="parking_arrived">Jesteś przy aucie</string>
+    <string name="parking_waiting_position">Czekam na Twoją pozycję…</string>
+    <string name="parking_saved_at">Zaparkowano %1$s (%2$s temu)</string>
+    <string name="parking_saved_accuracy">Dokładność zapisu: ± %1$d m</string>
+    <string name="parking_hint_compass">Trzymaj telefon poziomo, strzałka wskazuje auto.</string>
+    <string name="parking_hint_no_compass">Brak kompasu: strzałka pokazuje kierunek względem północy (góra = północ).</string>
+    <string name="parking_hint_calibrate">Kompas jest niedokładny: porusz telefonem kilka razy w kształcie ósemki.</string>
+
+    <string name="parking_dialog_title">Zapisać miejsce parkowania?</string>
+    <string name="parking_dialog_note_hint">Notatka, np. poziom -2, sektor B</string>
+    <string name="parking_dialog_replace">Poprzednie miejsce zostanie zastąpione.</string>
+    <string name="parking_dialog_low_accuracy">Uwaga: pozycja jest niedokładna (± %1$d m). Jeśli możesz, poczekaj chwilę, aż GPS złapie lepszy sygnał.</string>
+    <string name="parking_dialog_stale">Uwaga: to pozycja sprzed %1$s, a nie z tej chwili.</string>
+    <string name="parking_dialog_save">Zapisz</string>
+    <string name="parking_dialog_cancel">Anuluj</string>
+    <string name="parking_saved_toast">Zapisano miejsce parkowania</string>
+    <string name="parking_delete_title">Usunąć zapisane miejsce parkowania?</string>
+    <string name="parking_waiting_for_fix">Czekam na dokładną pozycję, zaraz zapiszę miejsce…</string>
+    <string name="parking_label">Mój samochód</string>
+
+    <string name="shortcut_save_short">Zapisz parking</string>
+    <string name="shortcut_save_long">Zapisz miejsce parkowania</string>
+
+    <!-- Automatyczne zapisywanie parkowania -->
+    <string name="auto_title">Automatyczne zapisywanie</string>
+    <string name="auto_switch">Zapisuj parking automatycznie (Bluetooth auta)</string>
+    <string name="auto_desc">Aplikacja zapisze, gdzie stoi auto, gdy telefon rozłączy się z Bluetooth samochodu (wyłączenie silnika). GPS działa tylko w trakcie jazdy, czyli gdy telefon jest połączony z autem.</string>
+    <string name="auto_status_driving">Połączono z autem: śledzę trasę i zapiszę miejsce, gdy wyłączysz silnik.</string>
+    <string name="auto_status_missing_permissions">Brakuje uprawnień, więc automatyczne zapisywanie nie działa. Wyłącz i włącz je ponownie.</string>
+    <string name="auto_status_no_notifications">Powiadomienia są wyłączone, więc nie zobaczysz informacji o zapisie (miejsce i tak się zapisze).</string>
+    <string name="auto_battery_button">Wyłącz optymalizację baterii</string>
+    <string name="auto_battery_hint">Android może nie pozwolić aplikacji w tle uruchomić GPS po połączeniu z autem. Wyłączenie optymalizacji baterii zdejmuje tę blokadę (zalecane, szczególnie na Xiaomi, Huawei, Samsung).</string>
+    <string name="auto_enabled_toast">Automatyczne zapisywanie włączone</string>
+    <string name="auto_bg_title">Lokalizacja w tle</string>
+    <string name="auto_bg_message">Żeby zapisać miejsce parkowania, gdy aplikacja jest zamknięta, potrzebny jest dostęp do lokalizacji przez cały czas.\n\nNa następnym ekranie wybierz „Zezwalaj zawsze” (albo „Zawsze zezwalaj”).</string>
+    <string name="auto_bg_continue">Dalej</string>
+    <string name="auto_permission_denied_title">Brak uprawnienia</string>
+    <string name="auto_permission_denied_bg">Bez dostępu do lokalizacji „przez cały czas” aplikacja nie zapisze parkingu, gdy jest zamknięta.</string>
+    <string name="auto_permission_denied_location">Bez dostępu do dokładnej lokalizacji nie da się zapisać miejsca parkowania.</string>
+    <string name="auto_open_settings">Otwórz ustawienia</string>
+
+    <string name="auto_note">Zapisano automatycznie po jeździe</string>
+    <string name="auto_note_approx">Zapisano automatycznie (pozycja przybliżona)</string>
+
+    <string name="channel_driving">Jazda</string>
+    <string name="channel_driving_desc">Widoczne w trakcie jazdy, gdy aplikacja śledzi, gdzie zaparkujesz.</string>
+    <string name="channel_parking">Zapisany parking</string>
+    <string name="channel_parking_desc">Informacja, że miejsce parkowania zostało zapisane.</string>
+    <string name="notif_driving_title">Jedziesz</string>
+    <string name="notif_driving_text">Połączono z autem. Zapamiętam, gdzie zaparkujesz. Jeśli to nie Twoja jazda (np. jesteś pasażerem), naciśnij „Nie zapisuj”.</string>
+    <string name="notif_saving_text">Zapisuję miejsce parkowania…</string>
+    <string name="notif_driving_cancel">Nie zapisuj</string>
+    <string name="notif_parked_title">Zapisano miejsce parkowania</string>
+    <string name="notif_parked_text">Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
+    <string name="notif_parked_text_approx">Pozycja może być przybliżona. Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
+    <string name="notif_parked_failed">Rozłączono z autem, ale nie udało się ustalić pozycji (brak sygnału GPS). Zapisz miejsce ręcznie.</string>
+
+    <!-- Diagnostyka -->
+    <string name="diag_title">Diagnostyka</string>
+    <string name="diag_status">Stan</string>
+    <string name="diag_log">Dziennik zdarzeń (najnowsze na górze)</string>
+    <string name="diag_log_empty">Brak wpisów. Zdarzenia pojawią się po włączeniu automatycznego zapisywania i pierwszej jeździe.</string>
+    <string name="diag_refresh">Odśwież</string>
+    <string name="diag_clear">Wyczyść</string>
+    <string name="diag_clear_confirm">Wyczyścić dziennik zdarzeń?</string>
+
+    <!-- Bluetooth auta -->
+    <string name="bt_choose">Wybierz Bluetooth auta</string>
+    <string name="bt_none">Bluetooth auta: nie wybrano. Wybierz radio lub zestaw głośnomówiący swojego auta.</string>
+    <string name="bt_selected">Bluetooth auta: %1$s. Połączenie = początek jazdy, rozłączenie (wyłączenie silnika) = zapis parkingu.</string>
+    <string name="bt_dialog_title">Które urządzenie to Twoje auto?</string>
+    <string name="bt_car_label">%1$s (samochód)</string>
+    <string name="bt_clear">Żadne</string>
+    <string name="bt_unavailable">Ten telefon nie ma Bluetooth.</string>
+    <string name="bt_no_bonded">Brak sparowanych urządzeń. Najpierw sparuj telefon z autem w ustawieniach Bluetooth (i włącz Bluetooth).</string>
+    <string name="bt_permission_denied">Bez uprawnienia „Urządzenia w pobliżu” aplikacja nie wie, kiedy łączysz się z autem.</string>
+    <string name="auto_status_on_bt">Włączone. Gdy wyłączysz silnik i telefon rozłączy się z autem, miejsce zapisze się samo.</string>
+
+    <!-- Adres i historia -->
+    <string name="notif_parked_text_address">%1$s. Dotknij, żeby zobaczyć, jak wrócić do auta.</string>
+    <string name="history_title">Historia parkowań</string>
+    <string name="history_hint">Dotknij, żeby otworzyć w mapach. Przytrzymaj, żeby przywrócić miejsce jako aktualne albo usunąć.</string>
+    <string name="history_empty">Historia jest pusta. Zapisane miejsca parkowania pojawią się tutaj.</string>
+    <string name="history_clear">Wyczyść historię</string>
+    <string name="history_clear_confirm">Usunąć całą historię parkowań?</string>
+    <string name="history_restore">Ustaw jako aktualne miejsce</string>
+    <string name="history_delete">Usuń z historii</string>
+    <string name="history_restored">Przywrócono miejsce parkowania</string>
+    <string name="history_current">● AKTUALNE</string>
+    <string name="bt_required">Automatyczne zapisywanie działa tylko z wybranym Bluetooth auta.</string>
+</resources>
