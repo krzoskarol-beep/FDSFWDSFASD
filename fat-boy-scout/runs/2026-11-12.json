@@ -4,8 +4,8 @@
     "facebook"
   ],
   "coverage": [
-    "Facebook Marketplace, cała USA: 8 zapytań startowych i 2 eksperymenty w indeksie wyszukiwarki. Ogłoszeń nie otwierano, bo wymagają logowania.",
-    "Szukane: tylko Harley-Davidson Fat Boy 114, rocznik 2018+, cena do 11 000 USD włącznie. Cycle Trader jest wyłączony."
+    "Facebook Marketplace, cała USA: 9 zapytań startowych, 5 eksperymentów i doszukiwanie przebiegu w indeksie wyszukiwarki. Ogłoszeń nie otwierano, bo wymagają logowania.",
+    "Szukane: Harley-Davidson Fat Boy od rocznika 2018 bez górnej granicy (2025+ z silnikiem 117), cena do 11 000 USD włącznie. Ranking według ceny i przebiegu. Cycle Trader wyłączony."
   ],
   "queries": [
     {
@@ -123,6 +123,44 @@
       "results": 9,
       "candidates": [],
       "origin": "experiment"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
+      "results": 40,
+      "origin": "seed",
+      "candidates": [
+        "fb-859386487237912",
+        "fb-1141470008854499",
+        "fb-1111805658430274",
+        "fb-1380435967178904",
+        "fb-1652121533075030"
+      ]
+    },
+    {
+      "q": "\"Harley-Davidson Fat Boy 114\" Hartford Michigan miles facebook marketplace",
+      "results": 8,
+      "origin": "experiment",
+      "candidates": [
+        "fb-26573702002279243",
+        "fb-vernonrockville-ct-2018",
+        "fb-williamsbay-wi-2023"
+      ]
+    },
+    {
+      "q": "\"2020 Harley-Davidson Fat Boy EX-L\" Nellysford Virginia miles",
+      "results": 8,
+      "origin": "experiment",
+      "candidates": [
+        "fb-1075545595270351"
+      ]
+    },
+    {
+      "q": "\"2018 Harley-Davidson FAT BOY\" Ormond Beach Florida $9995 miles",
+      "results": 8,
+      "origin": "experiment",
+      "candidates": [
+        "fb-1687282615899659"
+      ]
     }
   ],
   "listings": [
@@ -161,12 +199,12 @@
       "model": "2018 Harley-Davidson Fat Boy",
       "year": 2018,
       "price": 9995,
-      "miles": null,
+      "miles": 31000,
       "city": "Ormond Beach",
       "state": "FL",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1687282615899659/",
-      "notes": "silnik nieznany; w tej samej miejscowości dealer ma 2018 FLFBS za 9 495 USD na Cycle Trader"
+      "notes": "silnik nieznany (2018 może być 107); w tej samej miejscowości dealer ma 2018 FLFBS za 9 495 USD na Cycle Trader"
     },
     {
       "id": "fb-1075545595270351",
@@ -175,7 +213,7 @@
       "model": "2020 Harley-Davidson Fat Boy EX-L",
       "year": 2020,
       "price": 10500,
-      "miles": null,
+      "miles": 26000,
       "city": "Nellysford",
       "state": "VA",
       "verified": false,
@@ -691,6 +729,99 @@
       "state": null,
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1094361853598408/"
+    },
+    {
+      "id": "fb-vernonrockville-ct-2018",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "year": 2018,
+      "price": 9000,
+      "miles": 9900,
+      "city": "Vernon Rockville",
+      "state": "CT",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/109503062402713/harley-davidson/",
+      "notes": "w indeksie z oznaczeniem „price drop”; brak bezpośredniego linku – link do strony Harleyów w Essex, CT, na której oferta była widoczna",
+      "code": "FLFBS"
+    },
+    {
+      "id": "fb-williamsbay-wi-2023",
+      "source": "facebook",
+      "category": "main",
+      "model": "2023 Harley-Davidson Fat Boy 114 EX-L",
+      "year": 2023,
+      "price": 12500,
+      "miles": 7200,
+      "city": "Williams Bay",
+      "state": "WI",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/112743995405538/harley-davidson/"
+    },
+    {
+      "id": "fb-859386487237912",
+      "source": "facebook",
+      "category": "main",
+      "model": "2026 Harley-Davidson Fat Boy",
+      "year": 2026,
+      "price": 24543,
+      "miles": null,
+      "city": "Charlestown",
+      "state": "IN",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/859386487237912/"
+    },
+    {
+      "id": "fb-1141470008854499",
+      "source": "facebook",
+      "category": "main",
+      "model": "2026 Harley-Davidson Fat Boy",
+      "year": 2026,
+      "price": 23249,
+      "miles": 2,
+      "city": null,
+      "state": null,
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1141470008854499/"
+    },
+    {
+      "id": "fb-1111805658430274",
+      "source": "facebook",
+      "category": "main",
+      "model": "2026 Harley-Davidson Fat Boy",
+      "year": 2026,
+      "price": 22995,
+      "miles": null,
+      "city": "San Antonio",
+      "state": "TX",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1111805658430274/"
+    },
+    {
+      "id": "fb-1380435967178904",
+      "source": "facebook",
+      "category": "main",
+      "model": "2026 Harley-Davidson Fat Boy",
+      "year": 2026,
+      "price": 24943,
+      "miles": null,
+      "city": null,
+      "state": null,
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1380435967178904/"
+    },
+    {
+      "id": "fb-1652121533075030",
+      "source": "facebook",
+      "category": "main",
+      "model": "2026 Harley-Davidson Fat Boy",
+      "year": 2026,
+      "price": 23699,
+      "miles": null,
+      "city": null,
+      "state": "ID",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1652121533075030/"
     }
   ],
   "watchlist_unpriced": [

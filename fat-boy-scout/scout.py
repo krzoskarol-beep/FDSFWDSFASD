@@ -163,10 +163,9 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
         if year is not None and year < rules["min_year"]:
             return False, f"rocznik < {rules['min_year']}"
     if cat == "main":
-        if l.get("engine") == "107":
-            return False, "wersja 107"
-        if l.get("engine") == "117":
-            return False, "wersja 117 (2025+)"
+        excluded = rules.get("exclude_engines", ["107", "117"])
+        if l.get("engine") in excluded:
+            return False, f"wersja {l['engine']}"
         families = rules.get("families", ["Fat Boy 114", "Fat Bob 114", "Fat Boy", "Fat Bob"])
         if l.get("family") not in families:
             return False, f"inny model (szukamy: {rules['label']})"
@@ -206,6 +205,8 @@ def score(l: dict, config: dict) -> dict:
         flags.append("sygnały oszustwa w opisie")
     if l.get("category") == "main" and l.get("engine") is None:
         flags.append("114 niepotwierdzone")
+    if l.get("category") == "main" and l.get("miles") is None:
+        flags.append("przebieg do ustalenia")
     if l.get("category") == "main" and not l.get("year"):
         flags.append("rocznik nieznany (nazwa 114 oznacza 2018+)")
     if l.get("fees"):
@@ -234,6 +235,20 @@ def score(l: dict, config: dict) -> dict:
     else:
         label = "drogo"
     return {"ref": ref, "discount": discount, "label": label, "flags": flags}
+
+
+# ---------------------------------------------------------------- ranking: cena + przebieg
+def effective_price(l: dict, config: dict) -> float | None:
+    """Cena „efektywna”: cena ogłoszenia + koszt przebiegu (domyślnie 0,10 USD za milę)."""
+    if l.get("price") is None or l.get("miles") is None:
+        return None
+    return l["price"] + config.get("ranking", {}).get("usd_per_mile", 0.10) * l["miles"]
+
+
+def rank_key(l: dict, config: dict) -> tuple:
+    eff = effective_price(l, config)
+    # najpierw oferty ze znanym przebiegiem (wg ceny efektywnej), potem bez przebiegu (wg ceny)
+    return (0, eff) if eff is not None else (1, l.get("price") or 0)
 
 
 # ---------------------------------------------------------------- region
@@ -478,16 +493,18 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
 
     verified_sources = [s for s in config.get("sources", ["cycletrader", "facebook"]) if s != "facebook"]
     pool = diff["active"] + diff["unverified_all"]
-    ranked = [l for l in pool if (l.get("score") or {}).get("discount") is not None]
-    ranked.sort(key=lambda l: -l["score"]["discount"])
+    ranked = sorted([l for l in pool if l.get("price")], key=lambda l: rank_key(l, config))
     if ranked:
-        lines = ["## Ranking okazji (orientacyjny – porównanie z cenami ofertowymi, nie transakcyjnymi)"]
-        for i, l in enumerate(ranked[:5], 1):
-            s = l["score"]
-            loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
+        r = config.get("ranking", {})
+        lines = [f"## Ranking: cena i przebieg (cena + {r.get('usd_per_mile', 0.10):.2f} USD za każdą milę; "
+                 "oferty bez przebiegu na końcu)".replace(".", ",", 1)]
+        for i, l in enumerate(ranked[:r.get("top", 10)], 1):
+            loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x) or "lokalizacja: brak danych"
             tag = "" if l.get("verified", True) else " [FB, nieotwarte]"
-            lines.append(f"{i}. {l.get('model')} – {fmt_price(l['price'])} – {loc} – {s['label']} "
-                         f"({round(s['discount'] * 100):+d}%){tag}\n   {l.get('url') or 'link: brak'}")
+            eff = effective_price(l, config)
+            eff_txt = f"efektywnie {fmt_price(eff)}" if eff is not None else "przebieg do ustalenia"
+            lines.append(f"{i}. {l.get('model')} – {fmt_price(l['price'])} – {fmt_miles(l.get('miles'))} – "
+                         f"{eff_txt} – {loc}{tag}\n   {l.get('url') or 'link: brak'}")
         blocks.append("\n".join(lines))
 
     for cat, rules in (config["categories"].items() if verified_sources else []):

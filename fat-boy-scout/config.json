@@ -47,13 +47,16 @@
   "expected_miles_per_year": 3000,
   "categories": {
     "main": {
-      "label": "Fat Boy 114",
+      "label": "Fat Boy (2018+)",
       "min_year": 2018,
-      "require_engine": "114",
+      "exclude_engines": [
+        "107"
+      ],
       "families": [
         "Fat Boy 114",
         "Fat Boy"
-      ]
+      ],
+      "_note": "bez górnej granicy rocznika: 2018–2024 = 114 (2018–2020 może być 107), 2025+ = 117"
     }
   },
   "vin_model_codes": {
@@ -76,13 +79,15 @@
   "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
   "market_reference": {
     "Fat Boy 114": {
-      "2018": 12250,
+      "2018": 12050,
       "2019": 13000,
       "2020": 14000,
       "2021": 15000,
       "2022": 15750,
-      "2023": 17000,
-      "2024": 18750
+      "2023": 15950,
+      "2024": 18750,
+      "2025": 20500,
+      "2026": 23100
     },
     "Fat Bob 114": {
       "2018": 12000,
@@ -226,7 +231,20 @@
         "status": "active"
       },
       {
+        "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
         "q": "site:facebook.com/marketplace/item 2018 Harley-Davidson Fat Boy Caledonia Wisconsin",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "eksperyment z 1 unikalnymi trafieniami"
+      },
+      {
+        "q": "\"Harley-Davidson Fat Boy 114\" Hartford Michigan miles facebook marketplace",
         "origin": "auto",
         "added": "2026-11-12",
         "status": "active",
@@ -266,6 +284,13 @@
         "added": "2026-11-12",
         "status": "active",
         "why": "miasto z trafieniem (Forney, TX)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Vernon Rockville\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Vernon Rockville, CT)"
       }
     ],
     "usa_radius": 10000,
@@ -344,5 +369,10 @@
     "gone_after_missing_runs": 3,
     "experiments_per_run": 3,
     "city_query_template": "site:facebook.com/marketplace \"Fat Boy\" \"{city}\""
+  },
+  "ranking": {
+    "usd_per_mile": 0.1,
+    "top": 10,
+    "_note": "ranking według ceny efektywnej = cena + 0,10 USD/milę; oferty bez przebiegu na końcu"
   }
 }

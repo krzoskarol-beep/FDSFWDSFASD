@@ -20,7 +20,7 @@ CONFIG["market_reference"] = {"Fat Boy 114": {"2018": 12500, "2019": 13000, "202
                               "Africa Twin": {"2017": 8000}}
 # Profil bieżący: tylko Fat Boy, tylko Facebook, cała USA
 FB = dict(REAL, scope="usa", sources=["facebook"],
-          categories={"main": {"label": "Fat Boy 114", "min_year": 2018, "require_engine": "114",
+          categories={"main": {"label": "Fat Boy (2018+)", "min_year": 2018, "exclude_engines": ["107"],
                                "families": ["Fat Boy 114", "Fat Boy"]}})
 
 
@@ -246,14 +246,15 @@ class FacebookOnlyTests(unittest.TestCase):
         self.assertEqual(scout.normalize(self.fb(model="2018 Harley-Davidson FLFBS Fatboy", year=2018), FB)["engine"], "114")
         self.assertEqual(scout.normalize(self.fb(model="2018 Harley-Davidson FLFB Fat Boy", year=2018), FB)["engine"], "107")
         l = scout.normalize(self.fb(model="2025 Harley-Davidson Fat Boy", year=2025), FB)
-        self.assertEqual(scout.eligibility(l, FB)[1], "wersja 117 (2025+)")
+        self.assertEqual(l["engine"], "117")
+        self.assertEqual(scout.eligibility(l, FB)[1], "ok")  # bez górnej granicy rocznika
         self.assertIsNone(scout.normalize(self.fb(model="2018 Harley-Davidson Fat Boy", year=2018), FB).get("engine"))
 
     def test_report_lists_fb_offers_as_main_section(self):
         st, d = scout.merge(scout.empty_state(), run([self.fb()], sources=("facebook",)), FB)
         text = "\n".join(scout.render(d, run([self.fb()]), FB, 1))
         self.assertIn("Pasujące oferty: 1", text)
-        self.assertIn("## Fat Boy 114 – Facebook Marketplace", text)
+        self.assertIn("## Fat Boy (2018+) – Facebook Marketplace", text)
         self.assertIn("[FB, nieotwarte]", text)
 
     def test_fb_gone_after_missing_runs(self):
@@ -285,6 +286,16 @@ class FacebookOnlyTests(unittest.TestCase):
         st, _ = scout.merge(scout.empty_state(), r, FB)
         self.assertEqual(st["query_stats"]["a"]["unique_hits"], 0)
         self.assertEqual(st["query_stats"]["a"]["match_hits"], 1)
+
+
+class RankingTests(unittest.TestCase):
+    def test_price_and_miles(self):
+        a = dict(price=10500, miles=2000)    # 10 700
+        b = dict(price=10000, miles=20000)   # 12 000
+        c = dict(price=9000, miles=None)     # bez przebiegu – na końcu
+        order = sorted([b, c, a], key=lambda l: scout.rank_key(l, FB))
+        self.assertEqual(order, [a, b, c])
+        self.assertEqual(scout.effective_price(a, FB), 10700)
 
 
 class RecallTests(unittest.TestCase):
