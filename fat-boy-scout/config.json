@@ -80,15 +80,15 @@
   "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
   "market_reference": {
     "Fat Boy 114": {
-      "2018": 12500,
+      "2018": 12550,
       "2019": 13000,
-      "2020": 14000,
-      "2021": 14500,
-      "2022": 15750,
-      "2023": 15950,
-      "2024": 18750,
+      "2020": 14950,
+      "2021": 14600,
+      "2022": 15500,
+      "2023": 16050,
+      "2024": 18100,
       "2025": 20500,
-      "2026": 23100
+      "2026": 23400
     },
     "Fat Bob 114": {
       "2018": 12000,
@@ -338,6 +338,48 @@
         "added": "2026-11-12",
         "status": "active",
         "why": "miasto z trafieniem (Anoka, MN)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Ridgeland\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Ridgeland, WI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Clover\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Clover, SC)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Bellingham\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Bellingham, MA)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Uxbridge\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Uxbridge, MA)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Seymour\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Seymour, CT)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Cape Coral\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Cape Coral, FL)"
       }
     ],
     "usa_radius": 10000,

@@ -23,6 +23,10 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 
 - 2026-11-12: Ranking liczy koszt całkowity z dowozem (0,60 USD za milę powyżej 300 mil). Oferta z Idaho za 10 500 USD kosztuje realnie ~11 600 USD, czyli więcej niż oferta z Michigan za 10 000 USD. Zawsze wpisuj `distance_mi`.
 
+- 2026-11-12 (runda 3): Oferty z „related” bez linku najlepiej doszukiwać zbiorczo, jednym zapytaniem z 2–3 miastami, np. `site:facebook.com/marketplace "2018 Harley-Davidson Fat Boy" Gautier OR "Cape Coral" OR Clover`. Strony kategorii tych miast podały przebieg trzech ofert naraz. Kopie ogłoszeń na stronach-lustrach (fleetpainting.com, capracycling.com) zawierają pełny opis, dzięki czemu potwierdzono 114 w Caledonii. Ogólne zapytania z todo o cenę („<rocznik> Fat Boy 114 price facebook marketplace”) dały 0 trafień na 6 prób.
+- 2026-11-12 (runda 3): Pułapka: ta sama oferta ma w indeksie różne ceny, np. Rathdrum 13 000/11 900/10 500, a Seymour 15 000/13 500/12 000/10 000. Niższa cena to zwykle nowsza obniżka, ale trzeba to opisać w notatce. Parser przypisuje cenę i przebieg z sąsiednich ogłoszeń w „related”: Seymour dostał 8000 mil od Fat Boba, a Hartford cenę z Grand Rapids. Wynik `parse` zawsze sprawdzaj ręcznie.
+- 2026-11-12 (runda 3): Ograniczenia silnika: raport zapisuje się pod samą datą, więc drugi przebieg tego samego dnia nadpisuje `reports/RRRR-MM-DD.md`. Oferta z watchlisty, która dostała cenę (Killen, 29 000 USD), zostaje w watchliście i dalej figuruje w todo. Przebieg za 49 zapytań kosztuje ~350 kredytów, a po nim Firecrawl ostrzega o niskim saldzie.
+
 ## Pomysły na eksperymenty
 - Grupy stanów jeszcze nieprzeszukane: południe (LA, MS, AR, AL, GA, SC), Nowa Anglia (ME, VT, RI) i Plains (NE, SD, ND, MT, WY, NM)
 - „<miasto> harley-davidson Fat Boy 114 miles” dla stanów, gdzie jeszcze nic nie znaleziono (np. NJ, MA, MD, TN, MO)
