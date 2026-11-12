@@ -139,7 +139,8 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
         return False, f"cena-wypełniacz ({fmt_price(price)})"
     if price > config["max_price_usd"]:
         return False, f"cena > {fmt_int(config['max_price_usd'])} USD"
-    if l.get("state") not in config["states_priority"]:
+    allowed = config["us_states"] if config.get("scope") == "usa" else config["states_priority"]
+    if l.get("state") not in allowed:
         return False, f"poza regionem ({l.get('state') or 'stan nieznany'})"
     cat = l.get("category")
     rules = config["categories"].get(cat)
@@ -231,6 +232,10 @@ def region_key(l: dict, config: dict) -> tuple:
     city = (l.get("city") or "").lower()
     dist = l.get("distance_mi")
     metro = (st == "IL") and (city in config["metro_cities"] or (dist is not None and dist <= config["metro_radius_mi"]))
+    if config.get("scope") == "usa":
+        # najpierw Des Plaines/Chicago, potem stany priorytetowe, potem reszta kraju; w grupie według odległości
+        group = 0 if metro else (1 if st in prio else 2)
+        return (group, dist if dist is not None else 9999, l.get("price") or 0)
     state_rank = prio.index(st) + 1 if st in prio else 99
     return (0 if metro else state_rank, dist if dist is not None else 9999, l.get("price") or 0)
 
@@ -518,8 +523,11 @@ def cmd_vin(args) -> int:
 
 def cmd_plan(args) -> int:
     cfg = load_json(CONFIG_PATH)
+    usa = cfg.get("scope") == "usa"
+    print(f"Zasięg: {'cała USA (radius=' + str(cfg['searches']['usa_radius']) + ')' if usa else 'Midwest (radius=500)'}")
     for s in cfg["searches"]["cycletrader"]:
-        print(f"[CT/{s['category']}] {s['name']}{' (+&page=N)' if s.get('paged') else ''}\n  {s['url']}")
+        url = s["url"].replace("radius=500", f"radius={cfg['searches']['usa_radius']}") if usa else s["url"]
+        print(f"[CT/{s['category']}] {s['name']}{' (+&page=N)' if s.get('paged') else ''}\n  {url}")
     for q in cfg["searches"]["facebook_index"]:
         print(f"[FB-index] {q}")
     return 0

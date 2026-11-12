@@ -80,6 +80,21 @@ class EligibilityTests(unittest.TestCase):
         self.assertFalse(self.check(active=False)[0])
 
 
+class ScopeTests(unittest.TestCase):
+    def test_usa_scope(self):
+        cfg = dict(CONFIG, scope="usa")
+        l = scout.normalize(L(state="FL", city="Tampa", distance_mi=1025), cfg)
+        self.assertTrue(scout.eligibility(l, cfg)[0])
+        self.assertFalse(scout.eligibility(l, CONFIG)[0])
+        near = scout.normalize(L(state="OH", city="Medina", distance_mi=319), cfg)
+        far_close = scout.normalize(L(state="KY", city="Georgetown", distance_mi=317), cfg)
+        self.assertLess(scout.region_key(near, cfg), scout.region_key(far_close, cfg))
+
+    def test_usa_rejects_non_us(self):
+        cfg = dict(CONFIG, scope="usa")
+        self.assertFalse(scout.eligibility(scout.normalize(L(state="ON"), cfg), cfg)[0])
+
+
 class ScoreTests(unittest.TestCase):
     def test_salvage_flag_and_penalty(self):
         clean = scout.score(scout.normalize(L(price=9000), CONFIG), CONFIG)

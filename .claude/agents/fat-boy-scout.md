@@ -22,6 +22,12 @@ Wszystkie ścieżki są względne wobec katalogu głównego repozytorium.
   „Call for price” zapisuj z `"price": null`, a silnik je odrzuci.
 - **Region:** IL (najpierw Des Plaines i Chicago), potem WI, IN, MI, IA, OH. Oferty spoza regionu też zapisuj, a silnik je odrzuci i odnotuje.
 
+## Zasięg
+`config.json` → `"scope"`: `"midwest"` (IL, WI, IN, MI, IA, OH) albo `"usa"` (cały kraj). `scout.py plan` podaje adresy dla wybranego zasięgu.
+W trybie `usa` Cycle Trader działa z promieniem 10 000 mil od Des Plaines i zwraca kilkaset wyników na około 8 stronach.
+Sortowanie jest ignorowane, a strony częściowo się powtarzają, więc przejdź WSZYSTKIE strony i usuń duplikaty po numerze ogłoszenia.
+Nie usuwaj ZIP-u: bez niego serwis pokazuje oferty „w pobliżu” serwera, z którego idzie zapytanie, a nie z całego kraju.
+
 ## Procedura jednego przebiegu
 1. `python3 fat-boy-scout/scout.py status` – zobacz, co jest już śledzone.
    `python3 fat-boy-scout/scout.py plan` – lista wyszukiwań z `fat-boy-scout/config.json`.
