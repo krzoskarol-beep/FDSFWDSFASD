@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Najazd motocyklowy 2,7 m z 2 części – model 3D</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#e9edf1;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1d2731}
+  #view{position:fixed;inset:0}
+  #view canvas{display:block;touch-action:none}
+  #labels{position:fixed;inset:0;pointer-events:none}
+  .lbl{font-size:11.5px;background:rgba(255,255,255,.88);border:1px solid #b9c3cc;border-radius:6px;padding:2px 6px;white-space:nowrap;color:#1d2731;font-weight:600}
+  #top{position:fixed;left:8px;right:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;pointer-events:none}
+  #top>*{pointer-events:auto}
+  .grp{display:flex;background:#fff;border:1px solid #c7d0d8;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .grp button{border:0;background:transparent;padding:7px 10px;font-size:13px;color:#1d2731;cursor:pointer;border-right:1px solid #e3e8ec}
+  .grp button:last-child{border-right:0}
+  .grp button.on{background:#1f6feb;color:#fff}
+  .ex{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #c7d0d8;border-radius:10px;padding:4px 10px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .ex input{width:110px}
+  #panel{position:fixed;left:8px;bottom:8px;width:min(430px,calc(100vw - 16px));max-height:46vh;display:flex;flex-direction:column;background:#fff;border:1px solid #c7d0d8;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+  #panel.min{max-height:none}
+  #panel.min #pbody{display:none}
+  #tabs{display:flex;border-bottom:1px solid #e3e8ec}
+  #tabs button{flex:1;border:0;background:transparent;padding:9px 4px;font-size:13px;cursor:pointer;color:#55626e;font-weight:600}
+  #tabs button.on{color:#1f6feb;box-shadow:inset 0 -2px 0 #1f6feb}
+  #tabs #mini{flex:0 0 38px;font-size:16px}
+  #pbody{overflow:auto;padding:10px 12px 12px;font-size:13.5px;line-height:1.45}
+  #pbody h3{margin:0 0 4px;font-size:15px}
+  #pbody ul{margin:4px 0 8px;padding-left:18px}
+  #pbody li{margin:2px 0}
+  .muted{color:#66737f}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  td,th{border-bottom:1px solid #edf0f3;padding:4px 4px;text-align:left;vertical-align:top}
+  th{color:#55626e;font-weight:600}
+  tr.click{cursor:pointer}
+  tr.click:hover{background:#f2f6fb}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:4px;border:2px solid currentColor;background:#fff}
+  #legend{position:fixed;right:8px;bottom:8px;background:rgba(255,255,255,.95);border:1px solid #c7d0d8;border-radius:10px;padding:6px 9px;font-size:12px;line-height:1.6}
+  @media (max-width:760px){#legend{display:none} .grp button{padding:7px 8px;font-size:12.5px}}
+  #err{position:fixed;inset:30% 10% auto;background:#fff;border:1px solid #c33;padding:14px;border-radius:10px;display:none}
+</style>
+</head>
+<body>
+<div id="view"></div>
+<div id="labels"></div>
+
+<div id="top">
+  <div class="grp" id="pos">
+    <button data-p="tilt" class="on">Na przyczepce</button>
+    <button data-p="flat">Pozioma</button>
+    <button data-p="split">Rozłożona</button>
+  </div>
+  <div class="ex">Rozłóż <input id="explode" type="range" min="0" max="1" step="0.01" value="0"></div>
+  <div class="grp" id="tog">
+    <button data-t="xray">Prześwietl</button>
+    <button data-t="mesh" class="on">Blacha</button>
+    <button data-t="trailer" class="on">Przyczepka</button>
+    <button data-t="labels" class="on">Opisy</button>
+  </div>
+  <div class="grp" id="cams">
+    <button data-c="all">Całość</button>
+    <button data-c="joint">Łączenie</button>
+    <button data-c="leg">Podpora</button>
+    <button data-c="top">Zaczep</button>
+    <button data-c="tip">Dół</button>
+    <button data-c="under">Spód</button>
+  </div>
+</div>
+
+<div id="legend">
+  <b>Otwory</b><br>
+  <span style="color:#e53935"><span class="dot"></span></span>Ø10,5 (M10)<br>
+  <span style="color:#1e88e5"><span class="dot"></span></span>Ø16,5 (tulejka)<br>
+  <span style="color:#8e24aa"><span class="dot"></span></span>Ø17 (sworzeń M16)<br>
+  <span style="color:#2e9d4a"><span class="dot"></span></span>Ø8,5 (M8)
+</div>
+
+<div id="panel">
+  <div id="tabs">
+    <button data-tab="part" class="on">Część</button>
+    <button data-tab="holes">Wiercenia</button>
+    <button data-tab="bolts">Śruby</button>
+    <button data-tab="steps">Montaż</button>
+    <button id="mini" title="Zwiń">▾</button>
+  </div>
+  <div id="pbody"></div>
+</div>
+<div id="err">Nie udało się wczytać biblioteki 3D (three.js). Odśwież stronę.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+<script>
+(function(){
+if(!window.THREE){document.getElementById('err').style.display='block';return;}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const PI=Math.PI, R3=Math.sqrt(3);
+
+/* ---------- wymiary (mm). x = w poprzek, y = w górę, z = wzdłuż rampy (0 = koniec przy zawiasach) ---------- */
+const S=300, L=2700, BEV=400;
+const PIVY=64, PIVZ=-10;                      // krawędź podłogi przyczepki
+const ALPHA=Math.asin(396/2710);              // ~8,4° przy podłodze 400 mm
+const H=400, GROUND=64-H;
+const HOLE_COL={10.5:0xe53935,16.5:0x1e88e5,17:0x8e24aa,8.5:0x2e9d4a};
+
+/* ---------- scena ---------- */
+const view=document.getElementById('view');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.outputEncoding=THREE.sRGBEncoding;
+view.appendChild(renderer.domElement);
+const lr=new THREE.CSS2DRenderer();
+lr.setSize(innerWidth,innerHeight);
+document.getElementById('labels').appendChild(lr.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0xe9edf1);
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,5,40000);
+const FAR=()=>innerWidth<innerHeight?1.9:1;
+camera.position.set(150+2300*FAR(),700*FAR(),1350+1500*FAR());
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.target.set(150,-150,1300);controls.enableDamping=true;controls.dampingFactor=0.12;
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f96,0.85));
+const sun=new THREE.DirectionalLight(0xffffff,0.75);sun.position.set(1500,3000,2200);scene.add(sun);
+const sun2=new THREE.DirectionalLight(0xffffff,0.35);sun2.position.set(-1500,-800,-1500);scene.add(sun2);
+
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(9000,9000),new THREE.MeshStandardMaterial({color:0xcfd4d8,roughness:1}));
+ground.rotation.x=-PI/2;ground.position.set(150,GROUND-1,1300);scene.add(ground);
+const grid=new THREE.GridHelper(9000,90,0xaab2ba,0xbfc6cc);grid.position.set(150,GROUND,1300);scene.add(grid);
+
+const pivot=new THREE.Group();pivot.position.set(0,PIVY,PIVZ);scene.add(pivot);
+const ramp=new THREE.Group();ramp.position.set(0,-PIVY,-PIVZ);pivot.add(ramp);
+const trailer=new THREE.Group();scene.add(trailer);
+
+/* ---------- materiały ---------- */
+const std=(c,m,r)=>new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r,side:THREE.DoubleSide});
+const BASE={
+  tube:std(0xb3c0cc,0.45,0.45), angle:std(0x7f8d9a,0.45,0.5), curb:std(0x5f7d8c,0.4,0.5), flat:std(0x55636f,0.45,0.5),
+  ear:std(0xe67e22,0.25,0.5), insert:std(0xe67e22,0.35,0.45), bracket:std(0x2e4a62,0.4,0.5), bolt:std(0xd9b44a,0.75,0.32), nut:std(0xc39a2f,0.75,0.35),
+  washer:std(0xe4e8ec,0.8,0.28), sleeve:std(0xc7743d,0.6,0.4), screw:std(0x9db4cb,0.7,0.3), wood:std(0xb08455,0,0.85),
+  beam:std(0x39434d,0.4,0.6), plug:std(0x202326,0,0.8)
+};
+const XRAY_KEYS=['tube','angle','curb','flat','ear','bracket','beam','wood','plug'];
+const mats={};
+function mat(kind,key){const k=kind+'|'+key;if(!mats[k]){const m=BASE[key].clone();m.userData={kind,key};mats[k]=m;}return mats[k];}
+
+const movables=[];
+function reg(obj,parent,kind,ex){obj.userData.kind=kind;parent.add(obj);movables.push({obj,base:obj.position.clone(),ex:ex||V(0,0,0)});return obj;}
+
+/* ---------- prymitywy ---------- */
+function shapeFrom(outline,holes){
+  const sh=new THREE.Shape();outline.forEach((p,i)=>i?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));
+  (holes||[]).forEach(h=>{const p=new THREE.Path();p.absarc(h[0],h[1],h[2]/2,0,2*PI,true);sh.holes.push(p);});
+  return sh;
+}
+// plane: 'xz' (pozioma, grubość w górę od off), 'zy' (pionowa, normalna x, od off-t do off), 'xy' (normalna z, od off do off+t)
+function plate(parent,plane,outline,holes,t,off,kind,key,ex){
+  let ol=outline, hl=holes||[];
+  if(plane==='xz'){ol=outline.map(p=>[p[0],-p[1]]);hl=hl.map(h=>[h[0],-h[1],h[2]]);}
+  const g=new THREE.ExtrudeGeometry(shapeFrom(ol,hl),{depth:t,bevelEnabled:false,curveSegments:22});
+  const m=new THREE.Mesh(g,mat(kind,key));
+  if(plane==='xz'){m.rotation.x=-PI/2;m.position.y=off;}
+  else if(plane==='zy'){m.rotation.y=-PI/2;m.position.x=off;}
+  else m.position.z=off;
+  reg(m,parent,kind,ex);
+  // kolorowe obwódki otworów (obie strony)
+  (holes||[]).forEach(h=>{
+    const col=HOLE_COL[h[2]]||0x000000;
+    [0,t].forEach(f=>{
+      const r=new THREE.Mesh(new THREE.TorusGeometry(h[2]/2+0.9,0.9,6,28),new THREE.MeshBasicMaterial({color:col}));
+      if(plane==='xz'){r.rotation.x=PI/2;r.position.set(h[0],off+f,h[1]);}
+      else if(plane==='zy'){r.rotation.y=PI/2;r.position.set(off-f,h[1],h[0]);}
+      else r.position.set(h[0],h[1],off+f);
+      r.userData.isHole=true;reg(r,parent,kind,ex.clone?ex.clone():ex);
+    });
+  });
+  return m;
+}
+function box(parent,x0,x1,y0,y1,z0,z1,kind,key,ex){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mat(kind,key));
+  m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);return reg(m,parent,kind,ex);
+}
+function orient(m,axis){if(axis==='x')m.rotation.z=PI/2;else if(axis==='z')m.rotation.x=PI/2;}
+// cylinder along axis between a0..a1 (współrzędna osi), pozostałe współrzędne c
+function cyl(parent,axis,a0,a1,c,r,seg,kind,key,ex){
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,Math.abs(a1-a0),seg),mat(kind,key));orient(m,axis);
+  const mid=(a0+a1)/2;m.position.set(axis==='x'?mid:c[0],axis==='y'?mid:c[1],axis==='z'?mid:c[2]);
+  if(seg===6)m.rotateY(PI/6);
+  return reg(m,parent,kind,ex);
+}
+function ring(parent,axis,a0,a1,c,ro,ri,kind,key,ex){
+  const sh=new THREE.Shape();sh.absarc(0,0,ro,0,2*PI,false);const hp=new THREE.Path();hp.absarc(0,0,ri,0,2*PI,true);sh.holes.push(hp);
+  const len=Math.abs(a1-a0);const g=new THREE.ExtrudeGeometry(sh,{depth:len,bevelEnabled:false,curveSegments:24});g.translate(0,0,-len/2);
+  const m=new THREE.Mesh(g,mat(kind,key));
+  if(axis==='x')m.rotation.y=PI/2;else if(axis==='y')m.rotation.x=PI/2;
+  const mid=(a0+a1)/2;m.position.set(axis==='x'?mid:c[0],axis==='y'?mid:c[1],axis==='z'?mid:c[2]);
+  return reg(m,parent,kind,ex);
+}
+const hex=(p,axis,a0,a1,c,AF,kind,key,ex)=>cyl(p,axis,a0,a1,c,AF/R3,6,kind,key,ex);
+const labels=[];
+function label(parent,text,pos,ex){
+  const d=document.createElement('div');d.className='lbl';d.textContent=text;
+  const o=new THREE.CSS2DObject(d);o.position.copy(pos);parent.add(o);movables.push({obj:o,base:pos.clone(),ex:ex||V(0,0,0)});labels.push(o);return o;
+}
+
+/* ================= NAJAZD 2,7 m Z 2 CZĘŚCI ================= */
+const halfA=new THREE.Group(),halfB=new THREE.Group();ramp.add(halfA);ramp.add(halfB);
+const RX=[20,280];
+function rail(g,cx,z0,z1,bevel,top,bot,side){
+  plate(g,'xz',[[cx-20,z0],[cx+20,z0],[cx+20,z1],[cx-20,z1]],top.map(h=>[cx,h[0],h[1]]),3,57,'tube','tube',V(0,0,0));
+  const zb=bevel?z1-BEV:z1;
+  plate(g,'xz',[[cx-20,z0],[cx+20,z0],[cx+20,zb],[cx-20,zb]],bot.map(h=>[cx,h[0],h[1]]),3,0,'tube','tube',V(0,0,0));
+  const sd=bevel?[[z0,3],[zb+BEV*3/60,3],[z1-BEV*3/60,57],[z0,57]]:[[z0,3],[z1,3],[z1,57],[z0,57]];
+  const sh=side.map(z=>[z,30,10.5]);
+  plate(g,'zy',sd,sh,3,cx-17,'tube','tube',V(0,0,0));
+  plate(g,'zy',sd,sh,3,cx+20,'tube','tube',V(0,0,0));
+}
+const ZA=[150,575,1000], ZH=[20,55];
+RX.forEach(cx=>{
+  rail(halfA,cx,0,1350,false,[...ZH,...ZA].map(z=>[z,16.5]),[...ZH,...ZA].map(z=>[z,10.5]),[1150,1250]);
+  rail(halfB,cx,1350,2700,true,[[1700,16.5],[2200,16.5],[2595,8.5]],[[1700,10.5],[2200,10.5]],[1450,1550]);
+  box(halfA,cx-20,cx+20,0,60,-3,0,'plug','plug',V(0,0,-60));
+  // wkładka 50x30x4 (zostaje w górnej połowie)
+  const ih=[1150,1250,1450,1550].map(z=>[z,30,10.5]);
+  plate(halfA,'xz',[[cx-15,1050],[cx+15,1050],[cx+15,1650],[cx-15,1650]],[],4,51,'insert','insert',V(0,0,0));
+  plate(halfA,'xz',[[cx-15,1050],[cx+15,1050],[cx+15,1650],[cx-15,1650]],[],4,5,'insert','insert',V(0,0,0));
+  plate(halfA,'zy',[[1050,9],[1650,9],[1650,51],[1050,51]],ih,4,cx-11,'insert','insert',V(0,0,0));
+  plate(halfA,'zy',[[1050,9],[1650,9],[1650,51],[1050,51]],ih,4,cx+15,'insert','insert',V(0,0,0));
+});
+// poprzeczki 40x40x4
+function cross(g,zc,extra){
+  const ex=V(0,-130,0);
+  plate(g,'xz',[[0,zc-20],[300,zc-20],[300,zc+20],[0,zc+20]],RX.map(x=>[x,zc,10.5]),4,-4,'cross','angle',ex);
+  plate(g,'xy',[[0,-40],[300,-40],[300,-4],[0,-4]],extra||[],4,zc+16,'cross','angle',ex);
+}
+cross(halfA,150,[[150,-22,10.5]]);cross(halfA,575);cross(halfA,1000);cross(halfB,2200);
+// belka podpory 60x60x6 + nóżki M16
+(function(){const ex=V(0,-130,0),zc=1700;
+  plate(halfB,'xz',[[0,zc-30],[300,zc-30],[300,zc+30],[0,zc+30]],[...RX.map(x=>[x,zc,10.5]),[80,zc,17],[220,zc,17]],6,-6,'leg','angle',ex);
+  plate(halfB,'xy',[[0,-60],[300,-60],[300,-6],[0,-6]],[],6,zc+24,'leg','angle',ex);
+  [80,220].forEach(x=>{const e2=V(0,-230,0);
+    cyl(halfB,'y',-86,35,[x,0,zc],8,16,'leg','bolt',e2);
+    hex(halfB,'y',0,13,[x,0,zc],24,'leg','nut',e2);hex(halfB,'y',-19,-6,[x,0,zc],24,'leg','nut',e2);hex(halfB,'y',-80,-67,[x,0,zc],24,'leg','nut',e2);
+    plate(halfB,'xz',[[x-40,zc-40],[x+40,zc-40],[x+40,zc+40],[x-40,zc+40]],[[x,zc,17]],6,-86,'leg','flat',e2);
+  });})();
+// blacha (2 kawałki)
+const meshObjs=[];
+(function(){
+  const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');g.strokeStyle='#fff';g.lineWidth=15;
+  for(const dx of [-256,0,256])for(const dy of [-128,0,128]){g.beginPath();g.moveTo(dx,dy+64);g.lineTo(dx+128,dy);g.lineTo(dx+256,dy+64);g.lineTo(dx+128,dy+128);g.closePath();g.stroke();}
+  [[halfA,0],[halfB,1350]].forEach(([grp,z0])=>{
+    const tex=new THREE.CanvasTexture(c);tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(300/62,1350/25);tex.anisotropy=8;
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(300,1350),new THREE.MeshStandardMaterial({color:0x8d9aa6,metalness:0.6,roughness:0.4,alphaMap:tex,alphaTest:0.5,side:THREE.DoubleSide}));
+    m.material.userData={kind:'mesh',key:'mesh'};mats['mesh|mesh'+z0]=m.material;
+    m.rotation.x=-PI/2;m.position.set(150,62,z0+675);reg(m,grp,'mesh',V(0,190,0));
+    const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(300,3.6,1350)),new THREE.LineBasicMaterial({color:0x5b6670}));
+    e.position.set(150,62,z0+675);reg(e,grp,'mesh',V(0,190,0));meshObjs.push(m,e);
+  });})();
+window.__meshObjs=meshObjs;
+// krawężniki 30x30x3
+[[halfA,90,1340,ZA],[halfB,1360,2570,[1700,2200]]].forEach(([g,z0,z1,zs])=>{
+  [[0,20,3],[270,280,300]].forEach(([x0,bx,vx])=>{
+    plate(g,'xz',[[x0,z0],[x0+30,z0],[x0+30,z1],[x0,z1]],zs.map(z=>[bx,z,10.5]),3,64,'curb','curb',V(0,290,0));
+    plate(g,'zy',[[z0,67],[z1,67],[z1,94],[z0,94]],[],3,vx,'curb','curb',V(0,290,0));
+  });});
+// zaczep 150x8 i listwa dolna 120x6
+plate(halfA,'xz',[[0,-70],[300,-70],[300,80],[0,80]],RX.flatMap(x=>ZH.map(z=>[x,z,10.5])),8,64,'hook','flat',V(0,290,0));
+plate(halfB,'xz',[[0,2580],[300,2580],[300,2700],[0,2700]],RX.map(x=>[x,2595,8.5]),6,64,'tip','flat',V(0,290,0));
+// śruby pionowe M10 + tulejki
+function vbolt(g,x,z,top,botFl,kind){const up=V(0,420,0),dn=V(0,-230,0);
+  ring(g,'y',3,60,[x,0,z],8,6,'sleeve','sleeve',V(0,110,0));
+  if(kind==='boltH'){ring(g,'y',top,top+2,[x,0,z],10,5.3,kind,'washer',up);hex(g,'y',top+2,top+8.4,[x,0,z],17,kind,'bolt',up);cyl(g,'y',-14,top+2,[x,0,z],5,16,kind,'bolt',up);
+    ring(g,'y',-2,0,[x,0,z],10,5.3,kind,'washer',dn);hex(g,'y',-12,-2,[x,0,z],17,kind,'nut',dn);return;}
+  ring(g,'y',top,top+2.5,[x,0,z],15,5.5,kind,'washer',up);hex(g,'y',top+2.5,top+8.9,[x,0,z],17,kind,'bolt',up);
+  cyl(g,'y',-botFl-16-4,top+2.5,[x,0,z],5,16,kind,'bolt',up);
+  ring(g,'y',-botFl-2,-botFl,[x,0,z],10,5.3,kind,'washer',dn);hex(g,'y',-botFl-12,-botFl-2,[x,0,z],17,kind,'nut',dn);}
+RX.forEach(x=>{ZH.forEach(z=>vbolt(halfA,x,z,72,0,'boltH'));ZA.forEach(z=>vbolt(halfA,x,z,67,4,'boltX'));vbolt(halfB,x,2200,67,4,'boltX');vbolt(halfB,x,1700,67,6,'boltX');});
+// wkręty krawężników
+[[halfA,[300,450,800,900]],[halfB,[1900,2050,2350,2500]]].forEach(([g,zs])=>[15,285].forEach(x=>zs.forEach(z=>{const ex=V(0,420,0);
+  hex(g,'y',67,72.5,[x,0,z],8,'screw','screw',ex);cyl(g,'y',29,67,[x,0,z],2.75,10,'screw','screw',ex);})));
+// listwa: M8x25
+RX.forEach(x=>{const up=V(0,420,0),dn=V(0,-170,0);
+  ring(halfB,'y',70,71.6,[x,0,2595],8,4.3,'boltT','washer',up);hex(halfB,'y',71.6,76.9,[x,0,2595],13,'boltT','bolt',up);cyl(halfB,'y',46.6,71.6,[x,0,2595],4,14,'boltT','bolt',up);
+  ring(halfB,'y',55.4,57,[x,0,2595],8,4.3,'boltT','washer',dn);hex(halfB,'y',47.4,55.4,[x,0,2595],13,'boltT','nut',dn);});
+// śruby wkładek (górna połowa, na stałe) i sworznie z zawleczką (dolna połowa)
+RX.forEach((cx,i)=>{const s=i?1:-1; // s: strona zewnętrzna (−x dla lewej rury, +x dla prawej)
+  const xo=cx+20*s, X=u=>xo-s*u; // u=0 na zewnętrznej ściance, rośnie do środka
+  [1150,1250].forEach(z=>{const out=V(s*200,0,0),inn=V(-s*170,0,0);
+    ring(halfA,'x',X(-2),X(0),[0,30,z],10,5.3,'boltI','washer',out);hex(halfA,'x',X(-8.4),X(-2),[0,30,z],17,'boltI','bolt',out);cyl(halfA,'x',X(-2),X(58),[0,30,z],5,16,'boltI','bolt',out);
+    ring(halfA,'x',X(40),X(42),[0,30,z],10,5.3,'boltI','washer',inn);hex(halfA,'x',X(42),X(52),[0,30,z],17,'boltI','nut',inn);});
+  [1450,1550].forEach(z=>{const out=V(s*200,0,0),inn=V(-s*170,0,0);
+    cyl(halfB,'x',X(-4),X(0),[0,30,z],9,20,'pin','bolt',out);cyl(halfB,'x',X(0),X(56),[0,30,z],5,16,'pin','bolt',out);
+    const rc=new THREE.Mesh(new THREE.TorusGeometry(12,2,8,20),mat('pin','washer'));rc.rotation.y=PI/2;rc.position.set(X(50),30,z);reg(rc,halfB,'pin',inn);});
+});
+// ucho na pas (DIN 580) na pierwszej poprzeczce
+(function(){const z=166,ex=V(0,-130,0);
+  cyl(halfA,'z',z-10,z+16,[150,-22,0],5,16,'eye','bolt',ex);hex(halfA,'z',z+4,z+14,[150,-22,0],17,'eye','nut',ex);
+  const r=new THREE.Mesh(new THREE.TorusGeometry(18,5,10,24),mat('eye','bolt'));r.rotation.y=PI/2;r.position.set(150,-22,z-30);reg(r,halfA,'eye',ex);
+  const c=new THREE.Mesh(new THREE.CylinderGeometry(11,11,6,16),mat('eye','bolt'));c.rotation.x=PI/2;c.position.set(150,-22,z-13);reg(c,halfA,'eye',ex);})();
+
+/* ---- przyczepka (fragment) i pas ---- */
+box(trailer,-600,900,24,64,-900,-10,'beam','wood',V(0,0,-40));
+box(trailer,-600,900,-56,24,-110,-10,'beam','beam',V(0,0,-40));
+for(let x=-600;x<900;x+=140){const l=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.6,880),new THREE.MeshBasicMaterial({color:0x7a5a35}));l.position.set(x,64.3,-455);reg(l,trailer,'beam',V(0,0,-40));}
+const strap=new THREE.Group();trailer.add(strap);
+(function(){const a=new THREE.Vector3(150,-22,136);pivot.rotation.x=ALPHA;pivot.updateMatrixWorld(true);ramp.localToWorld(a);pivot.rotation.x=0;pivot.updateMatrixWorld(true);
+  const b=new THREE.Vector3(150,-56,-60);const m=new THREE.Mesh(new THREE.BoxGeometry(40,3,a.distanceTo(b)),new THREE.MeshStandardMaterial({color:0xff8c1a,roughness:0.8}));
+  m.position.copy(a).add(b).multiplyScalar(0.5);m.lookAt(b);m.userData.kind='strap';strap.add(m);movables.push({obj:m,base:m.position.clone(),ex:V(0,0,0)});})();
+
+/* ---- opisy ---- */
+label(halfA,'Górna część 1350',V(150,100,400));
+label(halfB,'Dolna część 1350',V(150,100,2000));
+label(halfA,'Wkładka 50×30×4',V(300,30,1350));
+label(halfA,'Zaczep 150×8',V(150,80,-60),V(0,290,0));
+label(halfB,'Podpora M16',V(220,-90,1700),V(0,-230,0));
+label(halfB,'Sworzeń z zawleczką',V(-40,30,1500),V(-200,0,0));
+label(halfB,'Listwa 120×6',V(150,75,2650),V(0,290,0));
+label(trailer,'Podłoga przyczepki',V(400,70,-500),V(0,0,-40));
+
+/* ================= DANE ================= */
+const INFO={
+ tube:{t:'Rura nośna – profil 60×40×3, 4 × 1350 (z jednej sztangi 6 m)',
+  d:'Dwie rury w każdej części, osie 20 i 280 mm od lewej krawędzi (szerokość najazdu 300). Wysokość 60 pionowo. Dolne końce rur dolnej części ścięte skosem ~8,5° na długości 400 mm.',
+  h:['<b>Górna część (2 rury):</b> góra <b>Ø16,5 ×5</b> (20, 55, 150, 575, 1000 mm od końca przy przyczepce), dół <b>Ø10,5 ×5</b> pod nimi.',
+     'Górna część, boki: <b>Ø10,5 ×2 na każdej ściance</b> (1150 i 1250 mm, 30 mm od dołu) – śruby wkładki.',
+     '<b>Dolna część (2 rury):</b> góra <b>Ø16,5 ×2</b> (1700, 2200), dół <b>Ø10,5 ×2</b>, góra <b>Ø8,5 ×1</b> (2595 – listwa).',
+     'Dolna część, boki: <b>Ø10,5 ×2 na każdej ściance</b> (1450 i 1550, czyli 100 i 200 mm od łączenia) – sworznie.',
+     'Otwory boczne wierć RAZEM z włożoną wkładką (ściśnięte, na równej podłodze).'],
+  b:['M10×90 + tulejka 57 (poprzeczki, zaczep)','M10×60 (wkładka, górna część)','sworzeń Ø10 + zawleczka (dolna część)','M8×25 (listwa)']},
+ insert:{t:'Wkładka łącząca – profil 50×30×4, 2 × 600',
+  d:'Wsunięta 300 mm w rurę górnej części (przykręcona na stałe 2× M10×60) i 300 mm w rurę dolnej części (2 sworznie). To ona przenosi zginanie w miejscu łączenia: ok. 155 MPa przy pełnym obciążeniu bez podpory, z podporą prawie zero.',
+  h:['<b>Ø10,5 ×8</b> – na wylot przez obie ścianki boczne w 4 miejscach: 100 i 200 mm od środka w każdą stronę.'],b:['M10×60 ×2','sworzeń Ø10×60 ×2']},
+ cross:{t:'Poprzeczka – kątownik 40×40×4 × 300 (4 szt.)',d:'Pod rurami: górna część 150, 575, 1000 mm; dolna część 2200 mm. Trzyma rozstaw rur.',
+  h:['Pozioma półka: <b>Ø10,5 ×2</b> (x = 20 i 280).','Pierwsza poprzeczka (150): dodatkowo <b>Ø10,5</b> w pionowej półce na środku – ucho na pas.'],b:['M10×90 + tulejka 57 + DIN 9021']},
+ leg:{t:'Podpora pod łączeniem – kątownik 60×60×6 × 300 + 2 nóżki M16',
+  d:'Na dolnej części, 350 mm za łączeniem. Pręt gwintowany M16×130 z nakrętkami (regulacja wysokości) i stopką z płaskownika 80×6×80. Ustaw tak, żeby stopki lekko dotykały ziemi – wtedy łączenie prawie nie pracuje, a najazd nie sprężynuje.',
+  h:['Kątownik: <b>Ø10,5 ×2</b> (rury), <b>Ø17 ×2</b> (x = 80 i 220).','Stopki: <b>Ø17 ×1</b> na środku.'],b:['M10×100 ×2','pręt M16 ×2, nakrętki M16 ×6']},
+ mesh:{t:'Blacha cięto-ciągniona 2 × 300×1350',d:'Osobny kawałek na każdą część. LWD (dłuższa przekątna oczek) w poprzek.',h:['Nie wiercisz.'],b:['dociskają ją krawężniki i łby śrub']},
+ curb:{t:'Krawężnik – kątownik 30×30×3 (4 szt.)',d:'Górna część: 90–1340 (2 × 1250). Dolna: 1360–2570 (2 × 1210). Pionowa półka na zewnątrz – opona nie zjedzie.',
+  h:['<b>Ø10,5</b> w miejscach śrub poprzeczek (górne: 3, dolne: 2).'],b:['wkręty 5,5×38 ×4 na krawężnik (nie w strefie wkładki 1050–1650!)']},
+ hook:{t:'Zaczep – płaskownik 150×8 × 300',d:'Na wierzchu górnego końca, wystaje 70 mm za rury i leży na podłodze przyczepki.',h:['<b>Ø10,5 ×4</b> (20 i 55 mm od końca rur).'],b:['M10×90 ×4 + tulejki']},
+ tip:{t:'Listwa dolna – płaskownik 120×6 × 300',d:'Spina końce rur na ziemi.',h:['<b>Ø8,5 ×2</b> 15 mm od wewnętrznej krawędzi (2595 mm) – dalej skos jest za płytki na nakrętkę.'],b:['M8×25 ×2']},
+ boltX:{t:'Śruba M10×90 kl. 8.8 – poprzeczka ↔ rura (8 + 2× M10×100 na podporze)',d:'Łeb + DIN 9021 na krawężniku, tulejka 57 w rurze, nakrętka samokontrująca pod poprzeczką.',h:['Rura: góra Ø16,5, dół Ø10,5.'],b:[]},
+ boltH:{t:'Śruba M10×90 – zaczep ↔ rura (4)',d:'Łeb na zaczepie, tulejka w rurze, nakrętka od dołu.',h:[],b:[]},
+ sleeve:{t:'Tulejka 16×2 × 57 (14 szt.)',d:'Wsuwana od góry przez Ø16,5. Śruba nie zgniata rury.',h:[],b:[]},
+ boltI:{t:'Śruba M10×60 kl. 8.8 – wkładka w górnej części (4)',d:'Na stałe. Łeb na zewnątrz, nakrętka samokontrująca od środka najazdu.',h:['Przez rurę i wkładkę Ø10,5.'],b:[]},
+ pin:{t:'Sworzeń Ø10×60 z łbem + zawleczka sprężynowa (4)',d:'Łączy dolną część z wkładką. Rozkładanie bez kluczy. Zawleczki przywiąż linką, żeby nie zginęły. Sworzeń wkładaj od zewnątrz.',h:['Przez rurę i wkładkę Ø10,5 (wiercone razem).'],b:[]},
+ boltT:{t:'Śruba M8×25 – listwa dolna (2)',d:'Nakrętka od spodu przez skos.',h:[],b:[]},
+ screw:{t:'Wkręt samowiercący 5,5×38 (16)',d:'Krawężnik + blacha + rura. Nie wkręcaj w strefie wkładki.',h:[],b:[]},
+ eye:{t:'Śruba z uchem M10 (DIN 580)',d:'Na pierwszej poprzeczce – tu zaczepiasz pas, który trzyma najazd przy przyczepce.',h:['Ø10,5 w pionowej półce poprzeczki.'],b:[]},
+ strap:{t:'Pas z grzechotką',d:'Od ucha najazdu do ramy przyczepki. Najazd NIE MOŻE się zsunąć pod motocyklem.',h:[],b:[]},
+ plug:{t:'Zaślepki 60×40',d:'Końce rur przy przyczepce.',h:[],b:[]},
+ beam:{t:'Przyczepka (fragment)',d:'Podłoga 400 mm nad ziemią.',h:[],b:[]}
+};
+const HOLES=[
+ ['tube','Rury górnej części (2)','<span style="color:#1e88e5">Ø16,5</span> ×5 góra, <span style="color:#e53935">Ø10,5</span> ×5 dół, ×4 boki – każda'],
+ ['tube','Rury dolnej części (2)','<span style="color:#1e88e5">Ø16,5</span> ×2, <span style="color:#2e9d4a">Ø8,5</span> ×1 góra, <span style="color:#e53935">Ø10,5</span> ×2 dół, ×4 boki – każda'],
+ ['insert','Wkładki (2)','<span style="color:#e53935">Ø10,5</span> ×8 każda'],
+ ['cross','Poprzeczki (4)','<span style="color:#e53935">Ø10,5</span> ×2 (+1 na ucho)'],
+ ['leg','Podpora','<span style="color:#e53935">Ø10,5</span> ×2, <span style="color:#8e24aa">Ø17</span> ×2; stopki <span style="color:#8e24aa">Ø17</span> ×1'],
+ ['curb','Krawężniki (4)','<span style="color:#e53935">Ø10,5</span> ×3 (górne) / ×2 (dolne)'],
+ ['hook','Zaczep','<span style="color:#e53935">Ø10,5</span> ×4'],
+ ['tip','Listwa dolna','<span style="color:#2e9d4a">Ø8,5</span> ×2']
+];
+const HOLES_TOTAL='Razem: Ø10,5 ×71 · Ø16,5 ×14 · Ø17 ×4 · Ø8,5 ×4.';
+const BOLTS=[
+ ['boltX','M10×90 kl. 8.8 (poprzeczki + zaczep)','12'],['leg','M10×100 kl. 8.8 (podpora)','2'],['boltI','M10×60 kl. 8.8 (wkładki)','4'],
+ ['pin','Sworzeń Ø10×60 z łbem i otworem + zawleczka sprężynowa','4 + 4'],['boltT','M8×25 kl. 8.8','2'],
+ [null,'Nakrętki samokontrujące M10 / M8','18 / 2'],['boltX','Podkładki DIN 9021 M10','10'],[null,'Podkładki M10 DIN 125','27'],
+ ['sleeve','Tulejki 16×2 × 57 mm','14'],['leg','Pręt gwintowany M16 × 130 + nakrętki M16 + podkładki','2 + 6 + 4'],
+ ['eye','Śruba z uchem M10 DIN 580 + nakrętka','1'],['screw','Wkręty samowiercące 5,5×38','16'],['strap','Pas z grzechotką','1']
+];
+const STEPS=[
+ 'Z jednej sztangi 60×40×3 (6 m) utnij 4 rury po 1350. Dwie (dolna część) zetnij od dołu skosem ~8,5° na długości 400 mm.',
+ 'Utnij 2 wkładki 50×30×4 po 600. Wsuń je po 300 mm w rury górnej części.',
+ 'Ułóż rury górnej i dolnej części w linii na RÓWNEJ podłodze, wsuń dolne rury na wkładki, ściśnij, sprawdź łatą, że jest prosto.',
+ 'Wywierć boki Ø10,5 przez rurę i wkładkę razem: 100 i 200 mm od łączenia w obie strony. Oznacz lewa/prawa – otwory pasują tylko w jednym ustawieniu.',
+ 'Górna część: wkładki przykręć M10×60. Dolna część: sworznie z zawleczkami.',
+ 'Wywierć góra Ø16,5 / dół Ø10,5 pod poprzeczki i zaczep, wsuń tulejki 57.',
+ 'Poprzeczki, belka podpory, blacha, krawężniki, zaczep, listwa – przykręć jak w burcie-rampie. Wkręty krawężników NIE w strefie wkładki (1050–1650).',
+ 'Ucho M10 na pierwszej poprzeczce, nóżki M16 ze stopkami na belce podpory.',
+ 'Na przyczepce: zaczep na podłodze, pas od ucha do ramy przyczepki, nóżki podpory wykręć do lekkiego dotyku z ziemią.',
+ 'Pierwszy wjazd bez kierowcy (prowadzony obok), obserwuj ugięcie łączenia.'
+];
+
+/* ================= UI ================= */
+const pbody=document.getElementById('pbody');let tab='part',selected=null;
+function renderPanel(){
+  let h='';
+  if(tab==='part'){
+    if(!selected||!INFO[selected]) h='<h3>Dotknij dowolnej części</h3><div class="muted">Pokażę jej wymiary, wszystkie otwory i śruby. Przycisk <b>Rozłożona</b> rozdziela najazd na 2 części (widać wkładki). Suwak <b>Rozłóż</b> rozsuwa śruby i blachy, a <b>Prześwietl</b> pokazuje wkładki i tulejki w rurach.</div>';
+    else{const I=INFO[selected];h=`<h3>${I.t}</h3><div>${I.d}</div><div style="margin-top:6px"><b>Otwory:</b></div><ul>${I.h.map(x=>'<li>'+x+'</li>').join('')}</ul>`+(I.b.length?`<b>Śruby / łączniki:</b><ul>${I.b.map(x=>'<li>'+x+'</li>').join('')}</ul>`:'');}
+  }else if(tab==='holes'){
+    h='<div style="margin-bottom:6px">Kolory obwódek otworów w modelu: <span style="color:#e53935">●</span> Ø10,5 · <span style="color:#1e88e5">●</span> Ø16,5 · <span style="color:#8e24aa">●</span> Ø17 · <span style="color:#2e9d4a">●</span> Ø8,5</div><table><tr><th>Część</th><th>Otwory</th></tr>'+HOLES.map(r=>`<tr class="click" data-k="${r[0]}"><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+'</table>'+
+      '<div class="muted" style="margin-top:6px">'+HOLES_TOTAL+' Blachy cięto-ciągnionej nie wiercisz. Dotknij wiersza, żeby podświetlić część.</div>';
+  }else if(tab==='bolts'){
+    h='<table><tr><th>Łącznik</th><th>Szt.</th></tr>'+BOLTS.map(r=>`<tr class="${r[0]?'click':''}" data-k="${r[0]||''}"><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+'</table><div class="muted" style="margin-top:6px">Wszystko klasa 8.8, ocynk. Nakrętki z wkładką nylonową.</div>';
+  }else{
+    h='<ol style="padding-left:20px;margin:0">'+STEPS.map(s=>'<li style="margin:4px 0">'+s+'</li>').join('')+'</ol>';
+  }
+  pbody.innerHTML=h;
+  pbody.querySelectorAll('tr.click').forEach(tr=>tr.onclick=()=>{if(tr.dataset.k){select(tr.dataset.k,false);}});
+}
+document.querySelectorAll('#tabs button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('#tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('panel').classList.remove('min');renderPanel();});
+document.getElementById('mini').onclick=()=>{const p=document.getElementById('panel');p.classList.toggle('min');document.getElementById('mini').textContent=p.classList.contains('min')?'▴':'▾';};
+
+function select(kind,switchTab){
+  selected=kind;
+  Object.values(mats).forEach(m=>{if(m.emissive){const on=m.userData.kind===kind;m.emissive.setHex(on?0x2a5bd7:0);m.emissiveIntensity=on?0.55:0;}});
+  if(switchTab!==false){tab='part';document.querySelectorAll('#tabs button[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab==='part'));}
+  renderPanel();
+}
+
+// wybór dotknięciem
+const ray=new THREE.Raycaster();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});
+renderer.domElement.addEventListener('pointerup',e=>{
+  if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+  const r=renderer.domElement.getBoundingClientRect();
+  ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},camera);
+  const hits=ray.intersectObjects(movables.map(m=>m.obj).filter(o=>o.isMesh&&o.visible&&isVisible(o)),false).filter(h=>h.object.userData.kind);
+  if(!hits.length){select(null);return;}
+  let pick=hits[0];
+  if(pick.object.userData.kind==='mesh'){const nxt=hits.find(h=>h.object.userData.kind!=='mesh');if(nxt&&nxt.distance-pick.distance<25)pick=nxt;}
+  select(pick.object.userData.kind);
+});
+function isVisible(o){while(o){if(!o.visible)return false;o=o.parent;}return true;}
+
+// pozycja rampy
+let angTarget=ALPHA,ang=ALPHA,split=0,splitT=0;
+document.querySelectorAll('#pos button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#pos button').forEach(x=>x.classList.toggle('on',x===b));angTarget={tilt:ALPHA,flat:0,split:0}[b.dataset.p];splitT=b.dataset.p==='split'?1:0;});
+// przełączniki
+const state={xray:false,mesh:true,trailer:true,labels:true};
+document.querySelectorAll('#tog button').forEach(b=>b.onclick=()=>{const k=b.dataset.t;state[k]=!state[k];b.classList.toggle('on',state[k]);applyToggles();});
+function applyToggles(){
+  Object.values(mats).forEach(m=>{const k=m.userData.key;if(XRAY_KEYS.includes(k)){m.transparent=state.xray;m.opacity=state.xray?0.22:1;m.depthWrite=!state.xray;m.needsUpdate=true;}});
+  window.__meshObjs.forEach(o=>o.visible=state.mesh);
+  trailer.visible=state.trailer;
+  labels.forEach(l=>l.visible=state.labels);
+  lr.domElement.style.display=state.labels?'':'none';
+}
+// rozłożenie
+let ex=0;document.getElementById('explode').oninput=e=>{ex=+e.target.value;};
+// kamery
+let camAnim=null;
+const CAMS={all:[V(150,-100,1300),V(2300,700,1500),true],joint:[V(280,30,1350),V(520,230,380),true],leg:[V(150,-60,1700),V(700,30,520),true],top:[V(150,60,0),V(520,330,-420),true],tip:[V(150,40,2620),V(480,300,380),true],under:[V(150,0,1350),V(1000,-1500,700),true]};
+document.querySelectorAll('#cams button').forEach(b=>b.onclick=()=>{
+  const c=CAMS[b.dataset.c];const cur=pivot.rotation.x;pivot.rotation.x=angTarget;pivot.updateMatrixWorld(true);
+  const tgt=c[2]?ramp.localToWorld(c[0].clone()):c[0].clone();pivot.rotation.x=cur;pivot.updateMatrixWorld(true);
+  const off=c[1].clone();if(b.dataset.c==='all'||b.dataset.c==='under')off.multiplyScalar(FAR());
+  camAnim={t:0,p0:camera.position.clone(),t0:controls.target.clone(),p1:tgt.clone().add(off),t1:tgt};
+});
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);lr.setSize(innerWidth,innerHeight);});
+
+let last=performance.now();
+function loop(now){
+  const rdt=Math.min(0.25,(now-last)/1000),dt=Math.min(0.05,rdt);last=now;
+  ang+=(angTarget-ang)*Math.min(1,rdt*5);pivot.rotation.x=ang;
+  split+=(splitT-split)*Math.min(1,rdt*4);halfB.position.z=450*split;
+  strap.visible=Math.abs(ang-ALPHA)<0.01&&split<0.01;
+  const e=ex*ex*(3-2*ex);
+  movables.forEach(m=>{m.obj.position.copy(m.base).addScaledVector(m.ex,e);});
+  if(camAnim){camAnim.t=Math.min(1,camAnim.t+rdt*1.6);const k=camAnim.t*camAnim.t*(3-2*camAnim.t);
+    camera.position.lerpVectors(camAnim.p0,camAnim.p1,k);controls.target.lerpVectors(camAnim.t0,camAnim.t1,k);if(camAnim.t>=1)camAnim=null;}
+  controls.update();renderer.render(scene,camera);lr.render(scene,camera);
+  requestAnimationFrame(loop);
+}
+renderPanel();applyToggles();requestAnimationFrame(loop);
+window.__api={select,setEx:v=>{ex=v;},setAng:a=>{angTarget=a;ang=a;},cam:k=>document.querySelector(`#cams [data-c="${k}"]`).click(),state,applyToggles};
+})();
+</script>
+</body>
+</html>

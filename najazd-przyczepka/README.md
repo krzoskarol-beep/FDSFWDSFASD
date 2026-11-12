@@ -261,6 +261,42 @@ Na każdą z 2 rur 60×40×3 wypada ok. 120 MPa (stal S235 ustępuje przy 235 MP
 Najazd waży ok. **45 kg**, a materiał kosztuje ok. **450–600 zł**. Gotowy najazd aluminiowy waży ~10–15 kg,
 więc porównaj ceny przed budową.
 
+### Wersja łączona: 2 części po 1350 mm (model 3D: [`najazd-27-3d.html`](najazd-27-3d.html))
+
+Ten sam najazd 2,7 m, ale rozkładany na pół do przewozu i przechowywania. Bez spawania.
+
+- **Łączenie:** w każdą rurę wkładka z profilu **50×30×4 × 600**. W górnej części siedzi na stałe
+  (2× M10×60), w dolnej trzymają ją **2 sworznie Ø10 z zawleczką**, więc rozkładasz bez kluczy.
+  Otwory boczne Ø10,5 są 100 i 200 mm od łączenia. Wierć je **razem z włożoną wkładką**, gdy obie części
+  leżą w linii na równej podłodze. Oznacz lewą i prawą stronę.
+- **Podpora pod łączeniem:** kątownik 60×60×6 × 300, 350 mm za łączeniem, z 2 nóżkami z pręta M16
+  ze stopkami 80×80×6. Regulujesz je nakrętkami do lekkiego dotyku z ziemią. Bez podpory wkładka pracuje
+  przy ok. 155 MPa (wytrzymuje), z podporą prawie wcale, a najazd nie sprężynuje.
+- **Zaczep na podłogę:** płaskownik 150×8 × 300, wystaje 70 mm. Na pierwszej poprzeczce jest **ucho M10 (DIN 580)**
+  na pas do ramy przyczepki.
+- **Listwa dolna:** 120×6, śruby 15 mm od wewnętrznej krawędzi, bo dalej skos jest za płytki na nakrętkę.
+- **Krawężniki** dzielone (2 × 1250 + 2 × 1210). Wkrętów samowiercących nie dawaj w strefie wkładki (1050–1650 mm).
+
+| Element | Ilość |
+|---|---|
+| Profil 60×40×3 | 4 × 1350 (jedna sztanga 6 m) |
+| Profil 50×30×4 (wkładki) | 2 × 600 |
+| Kątownik 40×40×4 | 4 × 300 |
+| Kątownik 60×60×6 (podpora) | 1 × 300 |
+| Kątownik 30×30×3 | 2 × 1250 + 2 × 1210 |
+| Blacha cięto-ciągniona | 2 × 300×1350 |
+| Płaskownik 150×8 / 120×6 / 80×6 | 300 / 300 / 2 × 80 |
+| M10×90 / M10×100 / M10×60 | 12 / 2 / 4 |
+| Sworzeń Ø10×60 z łbem + zawleczka sprężynowa | 4 + 4 |
+| M8×25 | 2 |
+| Pręt M16 × 130 + 6 nakrętek M16 | 2 |
+| Śruba z uchem M10 DIN 580 | 1 |
+| Tulejki 16×2 × 57 | 14 |
+| Wkręty samowiercące 5,5×38 | 16 |
+| Wiercenia razem | Ø10,5 ×71, Ø16,5 ×14, Ø17 ×4, Ø8,5 ×4 |
+
+Waga: górna część ok. **29 kg**, dolna ok. **24 kg**. Materiał: ok. **550–650 zł**.
+
 ### ⚠️ Koniecznie
 - Najazd **przypięty pasem do przyczepki**. Zsunięcie się najazdu pod motocyklem to najczęstszy wypadek przy załadunku.
 - Przyczepka podpięta do auta.
