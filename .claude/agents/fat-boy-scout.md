@@ -45,9 +45,16 @@ NIE używaj opcji `proxy` (stealth/enhanced/auto) ani niczego, co omija zabezpie
 
 ### Facebook Marketplace (ograniczenie)
 Firecrawl nie obsługuje facebook.com, a strony Marketplace wymagają logowania. Nie obchodź tego.
-Możesz wykonać `firecrawl_search` z `site:facebook.com/marketplace/item` i nazwami modeli.
-Wyniki, których nie da się otworzyć, wpisz w osobnej sekcji „Facebook – do ręcznej weryfikacji” z wyraźną adnotacją,
-że nie zostały otwarte. W każdym raporcie jasno napisz, czy Facebook został sprawdzony.
+Korzystaj tylko z indeksu wyszukiwarki (`firecrawl_search`, `sources: ["web"]`, `domainTools: false`):
+- `site:facebook.com/marketplace/item "Fat Boy 114" OR "Fatboy 114" OR FLFBS` (limit 40),
+  `site:facebook.com/marketplace/item "Fat Bob 114" OR FXFBS`, `site:facebook.com/marketplace/item "Indian Challenger"`;
+- szczegóły jednej oferty: zapytanie z jej opisem lub miastem oraz `includeDomains: ["facebook.com"]`.
+  Fragmenty z różnych wersji językowych (`?locale=…`) często zawierają cenę, miasto i przebieg;
+- strony kategorii miast (np. `facebook.com/marketplace/athens-oh/harley-davidson/`) pokazują oferty
+  bez linku do ogłoszenia. Wtedy podaj link do strony kategorii i zaznacz to.
+Ceny typu 1 234 USD albo 1 USD to wypełniacze, a nie prawdziwe ceny.
+Wyniki wpisz w osobnej sekcji „Facebook – do ręcznej weryfikacji” z wyraźną adnotacją, że nie zostały otwarte.
+Zapisuj je w `state.json` pod kluczem `facebook_unverified`. W każdym raporcie jasno napisz, czy Facebook został sprawdzony.
 
 ## Weryfikacja każdego ogłoszenia
 Otwórz każdą kandydującą ofertę (`firecrawl_scrape`, `formats: ["query"]`, `maxAge: 0`) i ustal:
