@@ -74,74 +74,6 @@
         }
       ]
     },
-    "fb-1687282615899659": {
-      "id": "fb-1687282615899659",
-      "source": "facebook",
-      "category": "main",
-      "model": "2018 Harley-Davidson Fat Boy",
-      "year": 2018,
-      "price": 9995,
-      "miles": 31000,
-      "city": "Ormond Beach",
-      "state": "FL",
-      "verified": false,
-      "url": "https://www.facebook.com/marketplace/item/1687282615899659/",
-      "notes": "silnik nieznany (2018 może być 107); w tej samej miejscowości dealer ma 2018 FLFBS za 9 495 USD na Cycle Trader",
-      "family": "Fat Boy",
-      "score": {
-        "ref": 12500,
-        "discount": 0.17123333333333332,
-        "label": "OKAZJA",
-        "flags": [
-          "114 niepotwierdzone"
-        ]
-      },
-      "missing_runs": 0,
-      "first_seen": "2026-11-12",
-      "last_seen": "2026-11-12",
-      "status": "active",
-      "shown": true,
-      "price_history": [
-        {
-          "date": "2026-11-12",
-          "price": 9995
-        }
-      ]
-    },
-    "fb-1075545595270351": {
-      "id": "fb-1075545595270351",
-      "source": "facebook",
-      "category": "main",
-      "model": "2020 Harley-Davidson Fat Boy EX-L",
-      "year": 2020,
-      "price": 10500,
-      "miles": 26000,
-      "city": "Nellysford",
-      "state": "VA",
-      "verified": false,
-      "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
-      "notes": "rocznik 2020 – silnik prawie na pewno 114 (FLFB 107 był w USA do 2019), ale potwierdź kod FLFBS w ogłoszeniu",
-      "family": "Fat Boy",
-      "score": {
-        "ref": 14000,
-        "discount": 0.20555555555555555,
-        "label": "OKAZJA",
-        "flags": [
-          "114 niepotwierdzone"
-        ]
-      },
-      "missing_runs": 0,
-      "first_seen": "2026-11-12",
-      "last_seen": "2026-11-12",
-      "status": "active",
-      "shown": true,
-      "price_history": [
-        {
-          "date": "2026-11-12",
-          "price": 10500
-        }
-      ]
-    },
     "fb-forney-tx-2018": {
       "id": "fb-forney-tx-2018",
       "source": "facebook",
@@ -212,6 +144,30 @@
     }
   },
   "rejected": {
+    "fb-1687282615899659": {
+      "id": "fb-1687282615899659",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 9995,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Ormond Beach, FL",
+      "reason": "przebieg > 15 000 mi",
+      "url": "https://www.facebook.com/marketplace/item/1687282615899659/",
+      "date": "2026-11-12"
+    },
+    "fb-1075545595270351": {
+      "id": "fb-1075545595270351",
+      "model": "2020 Harley-Davidson Fat Boy EX-L",
+      "price": 10500,
+      "year": 2020,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Nellysford, VA",
+      "reason": "przebieg > 15 000 mi",
+      "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
+      "date": "2026-11-12"
+    },
     "fb-1656186736099711": {
       "id": "fb-1656186736099711",
       "model": "2018 Harley-Davidson Fat Boy 114",
@@ -802,23 +758,23 @@
     "site:facebook.com/marketplace/item \"2018 Harley-Davidson Fat Boy\" OR \"2019 Harley-Davidson Fat Boy\"": {
       "runs": 1,
       "results": 40,
-      "match_hits": 1,
+      "match_hits": 0,
       "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
       "unique_hits": 0,
-      "last_matches": 1,
+      "last_matches": 0,
       "last_run": "2026-11-12"
     },
     "site:facebook.com/marketplace/item \"2020 Harley-Davidson Fat Boy\" OR \"2021 Harley-Davidson Fat Boy\" OR \"2022 Harley-Davidson Fat Boy\"": {
       "runs": 1,
       "results": 40,
-      "match_hits": 1,
+      "match_hits": 0,
       "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
       "unique_hits": 0,
-      "last_matches": 1,
+      "last_matches": 0,
       "last_run": "2026-11-12"
     },
     "site:facebook.com/marketplace/item \"2023 Harley-Davidson Fat Boy\" OR \"2024 Harley-Davidson Fat Boy\"": {
@@ -934,23 +890,23 @@
     "\"2020 Harley-Davidson Fat Boy EX-L\" Nellysford Virginia miles": {
       "runs": 1,
       "results": 8,
-      "match_hits": 1,
+      "match_hits": 0,
       "zero_streak": 1,
       "origin": "experiment",
       "first_run": "2026-11-12",
       "unique_hits": 0,
-      "last_matches": 1,
+      "last_matches": 0,
       "last_run": "2026-11-12"
     },
     "\"2018 Harley-Davidson FAT BOY\" Ormond Beach Florida $9995 miles": {
       "runs": 1,
       "results": 8,
-      "match_hits": 1,
+      "match_hits": 0,
       "zero_streak": 1,
       "origin": "experiment",
       "first_run": "2026-11-12",
       "unique_hits": 0,
-      "last_matches": 1,
+      "last_matches": 0,
       "last_run": "2026-11-12"
     }
   },

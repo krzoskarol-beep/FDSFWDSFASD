@@ -288,6 +288,16 @@ class FacebookOnlyTests(unittest.TestCase):
         self.assertEqual(st["query_stats"]["a"]["match_hits"], 1)
 
 
+class MileageLimitTests(unittest.TestCase):
+    def test_max_miles(self):
+        cfg = dict(FB, categories={"main": dict(FB["categories"]["main"], max_miles=15000)})
+        mk = lambda m: scout.normalize(L(id="m", source="facebook", verified=False, model="2018 Harley-Davidson Fat Boy 114",
+                                         code=None, state="TX", miles=m), cfg)
+        self.assertTrue(scout.eligibility(mk(15000), cfg)[0])
+        self.assertEqual(scout.eligibility(mk(15001), cfg)[1], "przebieg > 15\u00a0000 mi")
+        self.assertTrue(scout.eligibility(mk(None), cfg)[0])  # nieznany przebieg zostaje z flagą
+
+
 class RankingTests(unittest.TestCase):
     def test_price_and_miles(self):
         a = dict(price=10500, miles=2000)    # 10 700

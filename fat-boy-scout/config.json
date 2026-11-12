@@ -56,7 +56,8 @@
         "Fat Boy 114",
         "Fat Boy"
       ],
-      "_note": "bez górnej granicy rocznika: 2018–2024 = 114 (2018–2020 może być 107), 2025+ = 117"
+      "_note": "bez górnej granicy rocznika: 2018–2024 = 114 (2018–2020 może być 107), 2025+ = 117; max 15 000 mil, oferty bez przebiegu zostają z flagą",
+      "max_miles": 15000
     }
   },
   "vin_model_codes": {
@@ -263,20 +264,6 @@
         "added": "2026-11-12",
         "status": "active",
         "why": "miasto z trafieniem (Caledonia, WI)"
-      },
-      {
-        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Ormond Beach\"",
-        "origin": "auto",
-        "added": "2026-11-12",
-        "status": "active",
-        "why": "miasto z trafieniem (Ormond Beach, FL)"
-      },
-      {
-        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Nellysford\"",
-        "origin": "auto",
-        "added": "2026-11-12",
-        "status": "active",
-        "why": "miasto z trafieniem (Nellysford, VA)"
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" \"Forney\"",

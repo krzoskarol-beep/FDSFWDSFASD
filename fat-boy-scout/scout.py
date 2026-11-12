@@ -166,6 +166,8 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
         excluded = rules.get("exclude_engines", ["107", "117"])
         if l.get("engine") in excluded:
             return False, f"wersja {l['engine']}"
+        if rules.get("max_miles") and l.get("miles") is not None and l["miles"] > rules["max_miles"]:
+            return False, f"przebieg > {fmt_int(rules['max_miles'])} mi"
         families = rules.get("families", ["Fat Boy 114", "Fat Bob 114", "Fat Boy", "Fat Bob"])
         if l.get("family") not in families:
             return False, f"inny model (szukamy: {rules['label']})"

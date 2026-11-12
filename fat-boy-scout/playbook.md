@@ -15,6 +15,8 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 - 2026-11-12: Zapytanie o przebieg („<model> <miasto> miles”) znalazło przy okazji nową ofertę: 2018 FLFBS za 9 000 USD, 9,9 tys. mil, Vernon Rockville, CT. Fragmenty stron kategorii miast w CT i VA podają przebieg („26K miles”). Doszukiwanie przebiegu opłaca się podwójnie.
 - 2026-11-12: Fat Boy 2025–2026 (117) na Facebooku kosztuje 22 000–25 000 USD. Do 11 000 USD praktycznie się nie trafia, ale zostaje w kryteriach na życzenie użytkownika.
 
+- 2026-11-12: Użytkownik ustawił limit 15 000 mil. Odpadły Ormond Beach (31 tys.) i Nellysford (26 tys.). Przy 2018–2020 i cenie do 11 000 USD przebieg zwykle przekracza 15 tys., więc oferty z niskim przebiegiem są najcenniejsze.
+
 ## Pomysły na eksperymenty
 - „<miasto> harley-davidson Fat Boy 114 miles” dla stanów, gdzie jeszcze nic nie znaleziono (np. NJ, MA, MD, TN, MO)
 - „fatboy 114” jako jedno słowo plus nazwa stanu

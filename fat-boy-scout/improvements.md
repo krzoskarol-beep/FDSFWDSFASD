@@ -5,8 +5,6 @@
 - Dodano zapytanie (auto): "Harley-Davidson Fat Boy 114" Hartford Michigan miles facebook marketplace – eksperyment z 1 unikalnymi trafieniami
 - Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Hartford" – miasto z trafieniem (Hartford, MI)
 - Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Caledonia" – miasto z trafieniem (Caledonia, WI)
-- Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Ormond Beach" – miasto z trafieniem (Ormond Beach, FL)
-- Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Nellysford" – miasto z trafieniem (Nellysford, VA)
 - Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Forney" – miasto z trafieniem (Forney, TX)
 - Dodano zapytanie (auto): site:facebook.com/marketplace "Fat Boy" "Vernon Rockville" – miasto z trafieniem (Vernon Rockville, CT)
 - Cena referencyjna Fat Boy 114 2018: 12 500 USD → 12 050 USD (mediana 11 595 USD z 15 ofert)
