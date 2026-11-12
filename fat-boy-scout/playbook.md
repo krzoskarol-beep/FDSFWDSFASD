@@ -17,7 +17,12 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 
 - 2026-11-12: Użytkownik ustawił limit 15 000 mil. Odpadły Ormond Beach (31 tys.) i Nellysford (26 tys.). Przy 2018–2020 i cenie do 11 000 USD przebieg zwykle przekracza 15 tys., więc oferty z niskim przebiegiem są najcenniejsze.
 
+- 2026-11-12 (runda 2): Zapytania regionalne („Fat Boy” harley 2018 OR 2019 + 5–6 stanów) są najskuteczniejsze. Zachód (CO, UT, NV, OR, WA, ID) dał 3 nowe pasujące oferty, w tym 2018 FLFBS za 10 500 USD z 1 tys. mil w Rathdrum, ID. Trzeba przejść wszystkie grupy stanów, nie tylko Midwest.
+- 2026-11-12 (runda 2): Najlepsze fragmenty pochodzą ze stron kategorii miast (`/marketplace/<miasto>/harley-davidson/`), bo podają cenę, „price drop” i przebieg („1K miles”, „6.3K miles”). Zapytania celowane „<model> <miasto> miles” znalazły przebieg w 3 z 3 przypadków.
+- 2026-11-12 (runda 2): Ta sama oferta może mieć w indeksie różne miasta (Vernon Rockville albo Madison, CT), bo Facebook podaje lokalizację przybliżoną. Przed dodaniem nowej oferty porównaj rocznik, cenę i przebieg.
+
 ## Pomysły na eksperymenty
+- Grupy stanów jeszcze nieprzeszukane: południe (LA, MS, AR, AL, GA, SC), Nowa Anglia (ME, VT, RI) i Plains (NE, SD, ND, MT, WY, NM)
 - „<miasto> harley-davidson Fat Boy 114 miles” dla stanów, gdzie jeszcze nic nie znaleziono (np. NJ, MA, MD, TN, MO)
 - „fatboy 114” jako jedno słowo plus nazwa stanu
 - Zapytania o konkretne kolory i edycje, np. „115th Anniversary” 2018 albo „30th Anniversary” 2020

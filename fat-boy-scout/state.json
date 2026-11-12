@@ -11,21 +11,19 @@
       "model": "2018 Harley-Davidson Fat Boy 114",
       "year": 2018,
       "price": 10000,
-      "miles": null,
+      "miles": 9800,
       "city": "Hartford",
       "state": "MI",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/26573702002279243/",
-      "notes": "opis w indeksie: 2018 Fat Boy 114, czarny z chromem; w jednym fragmencie indeksu cena 12 500 USD",
+      "notes": "opis w indeksie: 2018 Fat Boy 114, czarny z chromem, „9800 miles. Must see”; w jednym fragmencie indeksu cena 12 500 USD",
       "engine": "114",
       "family": "Fat Boy 114",
       "score": {
         "ref": 12500,
-        "discount": 0.2,
+        "discount": 0.25916666666666666,
         "label": "OKAZJA",
-        "flags": [
-          "przebieg do ustalenia"
-        ]
+        "flags": []
       },
       "missing_runs": 0,
       "first_seen": "2026-11-12",
@@ -46,20 +44,19 @@
       "model": "2018 Harley-Davidson Fat Boy",
       "year": 2018,
       "price": 10800,
-      "miles": null,
+      "miles": 10900,
       "city": "Caledonia",
       "state": "WI",
       "verified": false,
-      "url": "https://www.facebook.com/marketplace/milwaukee/search/?query=2018%20harley%20fat%20boy",
-      "notes": "w indeksie najpierw 11 000, potem 10 800 USD; brak bezpośredniego linku (link = wyszukiwanie). Na Craigslist (VI 2026) prawdopodobnie ten sam: Fat Boy 114, 9 950 mi, clean title: https://milwaukee.craigslist.org/mcy/d/caledonia-2018-harley-davidson-fat-boy/7938150742.html",
+      "url": "https://www.facebook.com/marketplace/caledonia-wi/harley-davidson/",
+      "notes": "w indeksie najpierw 11 000, potem 10 800 USD; przebieg 10 900 mi; brak bezpośredniego linku – link do strony Harleyów w Caledonia, na której oferta była widoczna; na Craigslist (VI 2026) jako Fat Boy 114, clean title",
       "family": "Fat Boy",
       "score": {
         "ref": 12500,
-        "discount": 0.136,
-        "label": "dobra cena",
+        "discount": 0.19058333333333333,
+        "label": "OKAZJA",
         "flags": [
-          "114 niepotwierdzone",
-          "przebieg do ustalenia"
+          "114 niepotwierdzone"
         ]
       },
       "missing_runs": 0,
@@ -85,8 +82,8 @@
       "city": "Forney",
       "state": "TX",
       "verified": false,
-      "url": "https://www.facebook.com/marketplace/item/2229927697785862/",
-      "notes": "brak bezpośredniego linku – link do ogłoszenia, przy którym oferta była widoczna; silnik nieznany",
+      "url": "https://www.facebook.com/marketplace/item/2970734959944491/",
+      "notes": "silnik nieznany; tytuł ogłoszenia: „2018 Harley Davidson Fat Boy 2500 miles”",
       "family": "Fat Boy",
       "score": {
         "ref": 12500,
@@ -120,7 +117,7 @@
       "state": "CT",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/109503062402713/harley-davidson/",
-      "notes": "w indeksie z oznaczeniem „price drop”; brak bezpośredniego linku – link do strony Harleyów w Essex, CT, na której oferta była widoczna",
+      "notes": "w indeksie „price drop”; lokalizacja raz jako Vernon Rockville, raz jako Madison, CT (Facebook podaje przybliżoną); brak bezpośredniego linku – link do strony, na której oferta była widoczna",
       "code": "FLFBS",
       "engine": "114",
       "family": "Fat Boy 114",
@@ -139,6 +136,144 @@
         {
           "date": "2026-11-12",
           "price": 9000
+        }
+      ]
+    },
+    "fb-rathdrum-id-2018-flfbs": {
+      "id": "fb-rathdrum-id-2018-flfbs",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "year": 2018,
+      "price": 10500,
+      "miles": 1000,
+      "city": "Rathdrum",
+      "state": "ID",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/kellogg-id/harley-davidson/",
+      "notes": "„price drop” z 13 000 na 10 500 USD; brak bezpośredniego linku – link do strony Harleyów w okolicy, na której oferta była widoczna",
+      "code": "FLFBS",
+      "engine": "114",
+      "family": "Fat Boy 114",
+      "score": {
+        "ref": 12500,
+        "discount": 0.25583333333333336,
+        "label": "OKAZJA",
+        "flags": []
+      },
+      "missing_runs": 0,
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10500
+        }
+      ]
+    },
+    "fb-brookings-or-2018": {
+      "id": "fb-brookings-or-2018",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 10500,
+      "miles": 6300,
+      "city": "Brookings",
+      "state": "OR",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/harbor-or/harley-davidson/",
+      "notes": "silnik nieznany; brak bezpośredniego linku – link do strony Harleyów w okolicy, na której oferta była widoczna",
+      "family": "Fat Boy",
+      "score": {
+        "ref": 12500,
+        "discount": 0.23375,
+        "label": "OKAZJA",
+        "flags": [
+          "114 niepotwierdzone"
+        ]
+      },
+      "missing_runs": 0,
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10500
+        }
+      ]
+    },
+    "fb-1124382120437379": {
+      "id": "fb-1124382120437379",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 9800,
+      "miles": null,
+      "city": "Theresa",
+      "state": "WI",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1124382120437379/",
+      "notes": "silnik i przebieg nieznane",
+      "family": "Fat Boy",
+      "score": {
+        "ref": 12500,
+        "discount": 0.216,
+        "label": "OKAZJA",
+        "flags": [
+          "114 niepotwierdzone",
+          "przebieg do ustalenia"
+        ]
+      },
+      "missing_runs": 0,
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 9800
+        }
+      ]
+    },
+    "fb-anoka-mn-2018": {
+      "id": "fb-anoka-mn-2018",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley Fat Boy („FAST”)",
+      "year": 2018,
+      "price": 9900,
+      "miles": null,
+      "city": "Anoka",
+      "state": "MN",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/beldenville-wi/search/?query=fat+boy+lo",
+      "notes": "„price drop” z 11 700 na 9 900 USD; tytuł „FAST 2018 Harley Fat Boy” – możliwy tuning; silnik i przebieg nieznane; link do wyników wyszukiwania, w których oferta była widoczna",
+      "family": "Fat Boy",
+      "score": {
+        "ref": 12500,
+        "discount": 0.208,
+        "label": "OKAZJA",
+        "flags": [
+          "114 niepotwierdzone",
+          "przebieg do ustalenia"
+        ]
+      },
+      "missing_runs": 0,
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 9900
         }
       ]
     }
@@ -695,6 +830,186 @@
       "reason": "cena > 11 000 USD",
       "url": "https://www.facebook.com/marketplace/item/1652121533075030/",
       "date": "2026-11-12"
+    },
+    "fb-1577864264363805": {
+      "id": "fb-1577864264363805",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 12999,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Bluff City, TN",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1577864264363805/",
+      "date": "2026-11-12"
+    },
+    "fb-kc-mo-2018-a": {
+      "id": "fb-kc-mo-2018-a",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 14500,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Kansas City, MO",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/997918569231279/",
+      "date": "2026-11-12"
+    },
+    "fb-kc-mo-2018-b": {
+      "id": "fb-kc-mo-2018-b",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 11500,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Kansas City, MO",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1628714898970243/",
+      "date": "2026-11-12"
+    },
+    "fb-huntsville-al-2018": {
+      "id": "fb-huntsville-al-2018",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 12750,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Huntsville, AL",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1997282387623555/",
+      "date": "2026-11-12"
+    },
+    "fb-1588982555551666": {
+      "id": "fb-1588982555551666",
+      "model": "2021 Harley-Davidson Fat Boy 114",
+      "price": 13995,
+      "year": 2021,
+      "family": "Fat Boy 114",
+      "source": "facebook",
+      "location": "Wichita, KS",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1588982555551666/",
+      "date": "2026-11-12"
+    },
+    "fb-2597786810652320": {
+      "id": "fb-2597786810652320",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 15500,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Colorado Springs, CO",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2597786810652320/",
+      "date": "2026-11-12"
+    },
+    "fb-1910314479634420": {
+      "id": "fb-1910314479634420",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 13000,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Boise, ID",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1910314479634420/",
+      "date": "2026-11-12"
+    },
+    "fb-scappoose-or-2018": {
+      "id": "fb-scappoose-or-2018",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 15500,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Scappoose, OR",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1054994817566890/",
+      "date": "2026-11-12"
+    },
+    "fb-rathdrum-id-2018-b": {
+      "id": "fb-rathdrum-id-2018-b",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 14000,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Rathdrum, ID",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2653103365125836/",
+      "date": "2026-11-12"
+    },
+    "fb-rathdrum-id-2018-c": {
+      "id": "fb-rathdrum-id-2018-c",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 12500,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Rathdrum, ID",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1818241056266315/",
+      "date": "2026-11-12"
+    },
+    "fb-blackfoot-id-2019": {
+      "id": "fb-blackfoot-id-2019",
+      "model": "2019 Harley-Davidson Fat Boy",
+      "price": 13000,
+      "year": 2019,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Blackfoot, ID",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2399534347253102/",
+      "date": "2026-11-12"
+    },
+    "fb-bountiful-ut-2019": {
+      "id": "fb-bountiful-ut-2019",
+      "model": "2019 Harley-Davidson Fat Boy",
+      "price": 13500,
+      "year": 2019,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Bountiful, UT",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2460588291090221/",
+      "date": "2026-11-12"
+    },
+    "fb-27765155483112581": {
+      "id": "fb-27765155483112581",
+      "model": "2025 Harley-Davidson Fat Boy EX-L",
+      "price": 17999,
+      "year": 2025,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Blackfoot, ID",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/27765155483112581/",
+      "date": "2026-11-12"
+    },
+    "fb-39523431513968921": {
+      "id": "fb-39523431513968921",
+      "model": "2021 Harley-Davidson Fat Boy",
+      "price": 12500,
+      "year": 2021,
+      "family": "Fat Boy 114",
+      "source": "facebook",
+      "location": "Albertville, AL",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/39523431513968921/",
+      "date": "2026-11-12"
+    },
+    "fb-asburypark-nj-2021": {
+      "id": "fb-asburypark-nj-2021",
+      "model": "2021 Harley-Davidson Fat Boy 114",
+      "price": 12995,
+      "year": 2021,
+      "family": "Fat Boy 114",
+      "source": "facebook",
+      "location": "Asbury Park, NJ",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/109374039082348/harley-davidson/",
+      "date": "2026-11-12"
     }
   },
   "watchlist": {
@@ -750,6 +1065,28 @@
       "state": null,
       "note": "brak ceny w indeksie",
       "url": "https://www.facebook.com/marketplace/item/1440646018152902/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    },
+    "fb-1877665716948810": {
+      "id": "fb-1877665716948810",
+      "model": "2019 Harley-Davidson Fat Boy 114, clean title",
+      "miles": null,
+      "city": null,
+      "state": null,
+      "note": "brak ceny i lokalizacji w indeksie (rejon zachodni)",
+      "url": "https://www.facebook.com/marketplace/item/1877665716948810/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    },
+    "fb-killen-al-2021": {
+      "id": "fb-killen-al-2021",
+      "model": "2021 Harley-Davidson Fat Boy",
+      "miles": 4000,
+      "city": "Killen",
+      "state": "AL",
+      "note": "brak ceny; link do wyników wyszukiwania, w których oferta była widoczna",
+      "url": "https://www.facebook.com/marketplace/pulaski-tn/search/?query=harley+dyna",
       "first_seen": "2026-11-12",
       "last_seen": "2026-11-12"
     }
@@ -825,10 +1162,10 @@
       "runs": 1,
       "results": 40,
       "match_hits": 1,
-      "zero_streak": 0,
+      "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
-      "unique_hits": 1,
+      "unique_hits": 0,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -847,10 +1184,10 @@
       "runs": 1,
       "results": 10,
       "match_hits": 1,
-      "zero_streak": 0,
+      "zero_streak": 1,
       "origin": "experiment",
       "first_run": "2026-11-12",
-      "unique_hits": 1,
+      "unique_hits": 0,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -880,10 +1217,10 @@
       "runs": 1,
       "results": 8,
       "match_hits": 2,
-      "zero_streak": 0,
+      "zero_streak": 1,
       "origin": "experiment",
       "first_run": "2026-11-12",
-      "unique_hits": 1,
+      "unique_hits": 0,
       "last_matches": 2,
       "last_run": "2026-11-12"
     },
@@ -907,6 +1244,94 @@
       "first_run": "2026-11-12",
       "unique_hits": 0,
       "last_matches": 0,
+      "last_run": "2026-11-12"
+    },
+    "site:facebook.com/marketplace \"Fat Boy\" harley \"low miles\" 2018 OR 2019 OR 2020 OR 2021": {
+      "runs": 1,
+      "results": 40,
+      "match_hits": 1,
+      "zero_streak": 0,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 1,
+      "last_matches": 1,
+      "last_run": "2026-11-12"
+    },
+    "site:facebook.com/marketplace \"Fat Boy 114\" \"K miles\" New Jersey OR Massachusetts OR Maryland OR Connecticut OR \"New Hampshire\"": {
+      "runs": 1,
+      "results": 1,
+      "match_hits": 0,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 0,
+      "last_run": "2026-11-12"
+    },
+    "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 Tennessee OR Missouri OR Kentucky OR Minnesota OR Kansas OR Oklahoma": {
+      "runs": 1,
+      "results": 40,
+      "match_hits": 0,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 0,
+      "last_run": "2026-11-12"
+    },
+    "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 Colorado OR Utah OR Nevada OR Oregon OR Washington OR Idaho": {
+      "runs": 1,
+      "results": 40,
+      "match_hits": 3,
+      "zero_streak": 0,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 3,
+      "last_matches": 3,
+      "last_run": "2026-11-12"
+    },
+    "\"2018 Harley-Davidson Fat Boy\" Caledonia WI miles facebook marketplace": {
+      "runs": 1,
+      "results": 10,
+      "match_hits": 1,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 1,
+      "last_run": "2026-11-12"
+    },
+    "\"2018 Harley Davidson Fat Boy 2500 miles\" Forney": {
+      "runs": 1,
+      "results": 9,
+      "match_hits": 1,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 1,
+      "last_run": "2026-11-12"
+    },
+    "\"Fat Boy 114\" Hartford MI \"miles\" harley marketplace 10,000": {
+      "runs": 1,
+      "results": 3,
+      "match_hits": 1,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 1,
+      "last_run": "2026-11-12"
+    },
+    "\"2018 Harley-Davidson fat boy 114 (flfbs)\" 9.9K miles Connecticut": {
+      "runs": 1,
+      "results": 1,
+      "match_hits": 1,
+      "zero_streak": 1,
+      "origin": "experiment",
+      "first_run": "2026-11-12",
+      "unique_hits": 0,
+      "last_matches": 1,
       "last_run": "2026-11-12"
     }
   },
