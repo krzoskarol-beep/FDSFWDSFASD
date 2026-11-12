@@ -215,6 +215,57 @@ Dodatkowo, jeśli nie masz:
   a 4,5 m zostaje.
 - Ucha i wsporniki zrób ze ścinków: wiele hurtowni i skupów złomu sprzedaje końcówki na kilogramy.
 
+## Najazd motocyklowy prosty 2,5–2,7 m (skręcany, do Fat Boya)
+
+Osobny, wąski najazd pod jedno koło, zakładany na krawędź przyczepki. Wyniki z symulacji
+(`symulacja-fat-boy.html`) dla podłogi 400 mm:
+
+| Najazd | Kąt | Prześwit, prowadzony obok (bez kierowcy) | z kierowcą | z kierowcą + dobicie |
+|---|---|---|---|---|
+| prosty 2,5 m | 9,2° | 49 mm | 29 mm | 9 mm |
+| **prosty 2,7 m** | 8,5° | ~54 mm | **34 mm** | 14 mm |
+| prosty 3,0 m | 7,7° | ~60 mm | 40 mm | 20 mm |
+
+Każde +20 mm wysokości podłogi zabiera ok. 3 mm zapasu.
+
+**Zalecenie: 2,7 m.** Obie podłużnice tniesz z jednej sztangi 6 m. Wjazd spokojnie, najlepiej prowadząc
+motocykl obok na silniku, z pomocnikiem.
+
+### Materiały (dla L = 2700)
+| Element | Profil | Ilość |
+|---|---|---|
+| Podłużnice | profil 60×40×**3** (wysokość 60 pionowo) | 2 × 2700 (z jednej sztangi 6 m) |
+| Poprzeczki pod spodem | kątownik 40×40×4 | 5 × 300 |
+| Krawężniki | kątownik 30×30×3 | 2 × 2650 |
+| Nawierzchnia | blacha cięto-ciągniona 62×25, 3–4 mm | 300 × 2700 |
+| Zaczep na podłogę | płaskownik 100×8 | 1 × 300 |
+| Listwa na dole | płaskownik 80×6 | 1 × 300 |
+| Tulejki | rurka 16×2 | 14 × 58 |
+| Śruby | M10×90 kl. 8.8 + DIN 9021 + nakrętki samokontrujące | 14 kpl. |
+| | M8×25 (listwa dolna) | 2 kpl. |
+| | wkręty samowiercące 5,5×38 (krawężniki) | ~24 |
+| Zabezpieczenie | pas z grzechotką albo łańcuch: najazd ↔ przyczepka | 1 |
+
+Rozstaw podłużnic: 300 mm na zewnątrz (220 mm światła). Opona 240 mm jedzie po blasze między nimi.
+Poprzeczki co ok. 550 mm, przykręcone jak w burcie-rampie: śruba przez rurę z tulejką.
+Dolny koniec rur ścięty skosem 8,5° na długości ok. **400 mm**, żeby leżał płasko.
+Górny koniec: płaskownik 100×8 przykręcony na wierzchu (2× M10 przez każdą rurę) wystaje **70 mm** za rury
+i opiera się na podłodze przyczepki.
+
+### Wytrzymałość
+Tylne koło Fat Boya z kierowcą: ok. 225 kg. Z zapasem na szarpnięcia przyjąłem 340 kg na środku rozpiętości.
+Na każdą z 2 rur 60×40×3 wypada ok. 120 MPa (stal S235 ustępuje przy 235 MPa), a ugięcie wynosi ok. 8 mm.
+**Rura 60×40×2 jest tu za słaba.** Przy 3 m daj 80×40×3 albo podporę pod środkiem.
+
+### Waga i koszt
+Najazd waży ok. **45 kg**, a materiał kosztuje ok. **450–600 zł**. Gotowy najazd aluminiowy waży ~10–15 kg,
+więc porównaj ceny przed budową.
+
+### ⚠️ Koniecznie
+- Najazd **przypięty pasem do przyczepki**. Zsunięcie się najazdu pod motocyklem to najczęstszy wypadek przy załadunku.
+- Przyczepka podpięta do auta.
+- Na podłodze przyczepki blokada przedniego koła i 4 pasy do mocowania motocykla.
+
 ## ⚠️ Bezpieczeństwo
 - **Przyczepka musi być podpięta do auta albo podparta pod dyszlem.** Ciężka kosiarka na końcu
   przyczepki odpinanej potrafi podnieść dyszel do góry.
