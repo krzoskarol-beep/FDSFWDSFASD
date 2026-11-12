@@ -8,7 +8,20 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scout  # noqa: E402
 
-CONFIG = json.loads((Path(__file__).resolve().parent / "config.json").read_text(encoding="utf-8"))
+REAL = json.loads((Path(__file__).resolve().parent / "config.json").read_text(encoding="utf-8"))
+# Testy reguł ogólnych używają stałego, szerokiego profilu (niezależnego od bieżących ustawień użytkownika)
+CONFIG = dict(REAL, scope="midwest", sources=["cycletrader", "facebook"], categories={
+    "main": {"label": "Fat Boy 114 / Fat Bob 114", "min_year": 2018, "require_engine": "114",
+             "families": ["Fat Boy 114", "Fat Bob 114", "Fat Boy", "Fat Bob"]},
+    "challenger": {"label": "Indian Challenger", "min_year": 2020},
+    "honda-deal": {"label": "Okazje Honda", "deal_only": True}})
+CONFIG["market_reference"] = {"Fat Boy 114": {"2018": 12500, "2019": 13000, "2020": 14000},
+                              "Fat Bob 114": {"2018": 12000, "2019": 12500},
+                              "Africa Twin": {"2017": 8000}}
+# Profil bieżący: tylko Fat Boy, tylko Facebook, cała USA
+FB = dict(REAL, scope="usa", sources=["facebook"],
+          categories={"main": {"label": "Fat Boy 114", "min_year": 2018, "require_engine": "114",
+                               "families": ["Fat Boy 114", "Fat Boy"]}})
 
 
 def L(**kw):
@@ -211,6 +224,84 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(st["listings"]["ct-x"]["state"], "IL")
         self.assertEqual(st["listings"]["ct-x"]["price"], 10999)
         self.assertIn("r", st["rejected"])
+
+
+class FacebookOnlyTests(unittest.TestCase):
+    def fb(self, **kw):
+        base = dict(id="fb-1", source="facebook", verified=False, model="2018 Harley-Davidson Fat Boy 114",
+                    code=None, state="TX", city="Forney")
+        base.update(kw)
+        return L(**base)
+
+    def test_fat_bob_rejected_fat_boy_ok(self):
+        self.assertTrue(scout.eligibility(scout.normalize(self.fb(), FB), FB)[0])
+        bob = scout.normalize(self.fb(model="2018 Harley-Davidson Fat Bob 114"), FB)
+        self.assertIn("inny model", scout.eligibility(bob, FB)[1])
+
+    def test_engine_by_year(self):
+        self.assertEqual(scout.normalize(self.fb(model="2020 Harley-Davidson Fat Boy", year=2020), FB)["engine"], "114")
+        l = scout.normalize(self.fb(model="2025 Harley-Davidson Fat Boy", year=2025), FB)
+        self.assertEqual(scout.eligibility(l, FB)[1], "wersja 117 (2025+)")
+        self.assertIsNone(scout.normalize(self.fb(model="2018 Harley-Davidson Fat Boy", year=2018), FB).get("engine"))
+
+    def test_report_lists_fb_offers_as_main_section(self):
+        st, d = scout.merge(scout.empty_state(), run([self.fb()], sources=("facebook",)), FB)
+        text = "\n".join(scout.render(d, run([self.fb()]), FB, 1))
+        self.assertIn("Pasujące oferty: 1", text)
+        self.assertIn("## Fat Boy 114 – Facebook Marketplace", text)
+        self.assertIn("[FB, nieotwarte]", text)
+
+    def test_fb_gone_after_missing_runs(self):
+        st, _ = scout.merge(scout.empty_state(), run([self.fb()], sources=("facebook",)), FB)
+        for i, d in enumerate(("2026-11-19", "2026-11-26")):
+            st, diff = scout.merge(st, run([], d=d, sources=("facebook",)), FB)
+            self.assertEqual(diff["gone"], [])
+        st, diff = scout.merge(st, run([], d="2026-12-03", sources=("facebook",)), FB)
+        self.assertEqual([l["id"] for l in diff["gone"]], ["fb-1"])
+
+
+class ImproveTests(unittest.TestCase):
+    def cfg(self):
+        c = json.loads(json.dumps(FB))
+        c["searches"]["facebook_index"] = [{"q": "seed-q", "origin": "seed", "status": "active"},
+                                           {"q": "auto-dead", "origin": "auto", "status": "active"}]
+        c["market_reference"] = {"Fat Boy 114": {"2018": 12500}}
+        return c
+
+    def test_query_stats_prune_and_promote(self):
+        cfg = self.cfg()
+        st = scout.empty_state()
+        listing = dict(id="fb-x", source="facebook", category="main", model="2018 Harley-Davidson Fat Boy 114",
+                       year=2018, price=10000, city="Hartford", state="MI", verified=False, url="u")
+        r = {"date": "2026-11-12", "sources_checked": ["facebook"], "listings": [listing], "queries": [
+            {"q": "seed-q", "results": 5, "candidates": []},
+            {"q": "auto-dead", "results": 5, "candidates": []},
+            {"q": "exp-good", "results": 3, "candidates": ["fb-x"], "origin": "experiment"}]}
+        st, _ = scout.merge(st, r, cfg)
+        for d in ("2026-11-19", "2026-11-26"):
+            st, _ = scout.merge(st, dict(r, date=d, queries=r["queries"][:2]), cfg)
+        new, log = scout.improve(st, cfg, "2026-11-26")
+        status = {q["q"]: q["status"] for q in new["searches"]["facebook_index"]}
+        self.assertEqual(status["auto-dead"], "retired")
+        self.assertEqual(status["seed-q"], "active")
+        self.assertEqual(status["exp-good"], "active")
+        self.assertIn('site:facebook.com/marketplace "Fat Boy" "Hartford"', status)
+
+    def test_price_calibration(self):
+        cfg = self.cfg()
+        st = scout.empty_state()
+        st["rejected"] = {str(i): {"family": "Fat Boy 114", "year": 2018, "price": p, "reason": "cena > 11 000 USD"}
+                          for i, p in enumerate([11500, 12000, 14500])}
+        new, log = scout.improve(st, cfg, "2026-11-12")
+        self.assertEqual(new["market_reference"]["Fat Boy 114"]["2018"], 12250)  # (12500 + 12000) / 2
+        self.assertTrue(any("Cena referencyjna" in x for x in log))
+
+    def test_107_not_used_for_calibration(self):
+        cfg = self.cfg()
+        st = scout.empty_state()
+        st["rejected"] = {str(i): {"family": "Fat Boy", "year": 2018, "price": 5000, "reason": "wersja 107"} for i in range(5)}
+        new, _ = scout.improve(st, cfg, "2026-11-12")
+        self.assertEqual(new["market_reference"]["Fat Boy 114"]["2018"], 12500)
 
 
 if __name__ == "__main__":

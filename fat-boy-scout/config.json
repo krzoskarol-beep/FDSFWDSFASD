@@ -1,5 +1,5 @@
 {
-  "scope": "midwest",
+  "scope": "usa",
   "_scope_note": "midwest = tylko states_priority; usa = cały kraj, przy czym states_priority idą pierwsze, a reszta według odległości",
   "max_price_usd": 11000,
   "home": {
@@ -47,17 +47,13 @@
   "expected_miles_per_year": 3000,
   "categories": {
     "main": {
-      "label": "Fat Boy 114 / Fat Bob 114",
+      "label": "Fat Boy 114",
       "min_year": 2018,
-      "require_engine": "114"
-    },
-    "challenger": {
-      "label": "Indian Challenger",
-      "min_year": 2020
-    },
-    "honda-deal": {
-      "label": "Okazje Honda (Africa Twin / Gold Wing)",
-      "deal_only": true
+      "require_engine": "114",
+      "families": [
+        "Fat Boy 114",
+        "Fat Boy"
+      ]
     }
   },
   "vin_model_codes": {
@@ -80,13 +76,13 @@
   "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
   "market_reference": {
     "Fat Boy 114": {
-      "2018": 12500,
+      "2018": 12250,
       "2019": 13000,
-      "2020": 14000,
-      "2021": 15000,
-      "2022": 16000,
-      "2023": 17000,
-      "2024": 18000
+      "2020": 13950,
+      "2021": 14900,
+      "2022": 15750,
+      "2023": 16150,
+      "2024": 18750
     },
     "Fat Bob 114": {
       "2018": 12000,
@@ -181,15 +177,107 @@
       }
     ],
     "facebook_index": [
-      "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
-      "site:facebook.com/marketplace/item \"Fat Bob 114\" OR FXFBS",
-      "site:facebook.com/marketplace/item \"Indian Challenger\"",
-      "site:facebook.com/marketplace/item \"Africa Twin\" Illinois OR Wisconsin OR Michigan OR Indiana OR Ohio OR Iowa",
-      "site:facebook.com/marketplace/item \"Gold Wing\" Illinois OR Wisconsin OR Michigan OR Indiana OR Ohio OR Iowa",
-      "site:facebook.com/marketplace chicago harley fat boy 114",
-      "site:facebook.com/marketplace milwaukee OR detroit OR indianapolis OR columbus OR \"des moines\" fat bob 114"
+      {
+        "q": "site:facebook.com/marketplace/item \"2018 Harley-Davidson Fat Boy\" OR \"2019 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2020 Harley-Davidson Fat Boy\" OR \"2021 Harley-Davidson Fat Boy\" OR \"2022 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2023 Harley-Davidson Fat Boy\" OR \"2024 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy 114\" Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Chicago OR Milwaukee OR Detroit OR Indianapolis OR Columbus",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Texas OR Florida OR California OR Arizona",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Pennsylvania OR \"New York\" OR Virginia OR Carolina OR Georgia",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item 2018 Harley-Davidson Fat Boy Caledonia Wisconsin",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "eksperyment z 1 trafieniami"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Hartford\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Hartford, MI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Caledonia\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Caledonia, WI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Ormond Beach\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Ormond Beach, FL)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Nellysford\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Nellysford, VA)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Forney\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Forney, TX)"
+      }
     ],
-    "usa_radius": 10000
+    "usa_radius": 10000,
+    "facebook_index_options": {
+      "limit": 40,
+      "sources": [
+        "web"
+      ],
+      "domainTools": false,
+      "tbs": null,
+      "_note": "nie używaj tbs=qdr:m z marketplace/item – zwraca śmieci (lekcja z 2026-11-12)"
+    }
   },
   "us_states": [
     "AL",
@@ -243,5 +331,18 @@
     "WV",
     "WI",
     "WY"
-  ]
+  ],
+  "sources": [
+    "facebook"
+  ],
+  "_sources_note": "facebook = indeks wyszukiwarki (ogłoszeń nie da się otworzyć bez logowania). Cycle Trader jest wyłączony; plan zostaje w searches.cycletrader na wypadek powrotu.",
+  "self_improve": {
+    "drop_after_zero_runs": 3,
+    "max_queries": 25,
+    "min_samples_for_price": 3,
+    "price_blend": 0.5,
+    "gone_after_missing_runs": 3,
+    "experiments_per_run": 3,
+    "city_query_template": "site:facebook.com/marketplace \"Fat Boy\" \"{city}\""
+  }
 }

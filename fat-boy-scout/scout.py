@@ -107,6 +107,13 @@ def engine_of(listing: dict) -> str | None:
         return "114"
     if re.search(r"\bFLFB\b|\bFXFB\b|\b107\b", text):
         return "107"
+    if re.search(r"FAT\s*BOY|FATBOY", text):
+        # Fat Boy 107 (FLFB) był tylko w latach 2018–2019; w 2020–2024 jest wyłącznie 114, od 2025 – 117
+        y = listing.get("year")
+        if y and 2020 <= y <= 2024:
+            return "114"
+        if y and y >= 2025:
+            return "117"
     return None
 
 
@@ -157,8 +164,11 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
     if cat == "main":
         if l.get("engine") == "107":
             return False, "wersja 107"
-        if l.get("family") not in ("Fat Boy 114", "Fat Bob 114", "Fat Boy", "Fat Bob"):
-            return False, "inny model"
+        if l.get("engine") == "117":
+            return False, "wersja 117 (2025+)"
+        families = rules.get("families", ["Fat Boy 114", "Fat Bob 114", "Fat Boy", "Fat Bob"])
+        if l.get("family") not in families:
+            return False, f"inny model (szukamy: {rules['label']})"
     if cat == "challenger" and l.get("family") != "Indian Challenger":
         return False, "inny model"
     if cat == "honda-deal":
@@ -289,7 +299,9 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
     diff = {"new": [], "drops": [], "gone": [], "active": [], "unverified_new": [], "unverified_all": [],
             "rejected_now": [], "first": first}
     seen_ids = set()
+    eligible_ids = set()
     checked = set(run.get("sources_checked", []))
+    si = config.get("self_improve", {})
 
     for raw in run.get("listings", []):
         l = normalize(raw, config)
@@ -304,12 +316,16 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
                 prev["last_seen"] = today
                 diff["gone"].append(prev)
             state["rejected"][lid] = {"id": lid, "model": l.get("model"), "price": l.get("price"),
-                                      "location": f"{l.get('city')}, {l.get('state')}", "reason": reason,
+                                      "year": l.get("year"), "family": l.get("family"), "source": l.get("source"),
+                                      "location": ", ".join(x for x in (l.get("city"), l.get("state")) if x) or "lokalizacja: brak danych",
+                                      "reason": reason,
                                       "url": l.get("url"), "date": today}
             diff["rejected_now"].append(state["rejected"][lid])
             continue
         state["rejected"].pop(lid, None)
+        eligible_ids.add(lid)
         l["score"] = score(l, config)
+        l["missing_runs"] = 0
         if prev is None:
             l.update(first_seen=today, last_seen=today, status="active", shown=True,
                      price_history=[{"date": today, "price": l["price"]}])
@@ -336,10 +352,20 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
     for lid, l in state["listings"].items():
         if lid in seen_ids or l.get("status") != "active":
             continue
-        if l.get("source") in checked and l.get("verified", True):
+        if l.get("source") not in checked:
+            continue
+        if l.get("verified", True):
             l["status"] = "gone"
             l["status_reason"] = "nie ma jej już w wynikach"
             diff["gone"].append(l)
+        else:
+            # indeks wyszukiwarki jest niekompletny – oferta znika dopiero po kilku pustych przebiegach
+            l["missing_runs"] = l.get("missing_runs", 0) + 1
+            limit = si.get("gone_after_missing_runs", 3)
+            if l["missing_runs"] >= limit:
+                l["status"] = "gone"
+                l["status_reason"] = f"nie pojawia się w indeksie od {limit} przebiegów"
+                diff["gone"].append(l)
 
     diff["watch_new"] = []
     wl = state.setdefault("watchlist", {})
@@ -348,6 +374,24 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             wl[w["id"]] = dict(w, first_seen=today)
             diff["watch_new"].append(wl[w["id"]])
         wl[w["id"]]["last_seen"] = today
+
+    # statystyki zapytań – paliwo dla `scout.py improve`
+    qs = state.setdefault("query_stats", {})
+    for q in run.get("queries", []):
+        rec = qs.setdefault(q["q"], {"runs": 0, "results": 0, "match_hits": 0, "zero_streak": 0,
+                                     "origin": q.get("origin", "config"), "first_run": today})
+        cand = set(q.get("candidates", []))
+        m = len(cand & eligible_ids)
+        rec["runs"] += 1
+        rec["results"] += int(q.get("results", 0))
+        rec["match_hits"] += m
+        rec["zero_streak"] = 0 if m else rec["zero_streak"] + 1
+        rec["last_matches"] = m
+        diff.setdefault("query_matches", {})[q["q"]] = m
+        rec["last_run"] = today
+        if q.get("origin"):
+            rec["origin"] = q["origin"]
+    diff["queries"] = run.get("queries", [])
 
     state["runs"].append(today)
     return state, diff
@@ -400,25 +444,31 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
 
     blocks: list[str] = []
     head = f"# Fat Boy Scout – raport nr {report_no} ({pl_date(run['date'])})"
-    summary = (f"Pasujące oferty: {len(show)}" if first else
-               f"Nowe: {len(show)} · spadki cen: {len(diff['drops'])} · zniknęły: {len(diff['gone'])}")
-    summary += f" · Facebook do weryfikacji: {len(unverified)}"
+    fb_only = "cycletrader" not in config.get("sources", ["cycletrader", "facebook"])
+    n_new = len(unverified) if fb_only else len(show)
+    summary = (f"Pasujące oferty: {n_new}" if first else
+               f"Nowe: {n_new} · spadki cen: {len(diff['drops'])} · zniknęły: {len(diff['gone'])}")
+    if not fb_only:
+        summary += f" · Facebook do weryfikacji: {len(unverified)}"
     if diff.get("watch_new"):
         summary += f" · bez ceny: {len(diff['watch_new'])}"
     blocks.append(f"{head}\n{summary}")
 
-    ranked = [l for l in diff["active"] if (l.get("score") or {}).get("discount") is not None]
+    verified_sources = [s for s in config.get("sources", ["cycletrader", "facebook"]) if s != "facebook"]
+    pool = diff["active"] + diff["unverified_all"]
+    ranked = [l for l in pool if (l.get("score") or {}).get("discount") is not None]
     ranked.sort(key=lambda l: -l["score"]["discount"])
     if ranked:
-        lines = ["## Ranking okazji (wszystkie aktywne, zweryfikowane)"]
+        lines = ["## Ranking okazji (wszystkie aktywne)"]
         for i, l in enumerate(ranked[:5], 1):
             s = l["score"]
             loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
+            tag = "" if l.get("verified", True) else " [FB, nieotwarte]"
             lines.append(f"{i}. {l.get('model')} – {fmt_price(l['price'])} – {loc} – {s['label']} "
-                         f"({round(s['discount'] * 100):+d}%)\n   {l.get('url') or 'link: brak'}")
+                         f"({round(s['discount'] * 100):+d}%){tag}\n   {l.get('url') or 'link: brak'}")
         blocks.append("\n".join(lines))
 
-    for cat, rules in config["categories"].items():
+    for cat, rules in (config["categories"].items() if verified_sources else []):
         items = by_cat.get(cat, [])
         title = f"## {rules['label']}" + ("" if first else " – nowe")
         if items:
@@ -433,10 +483,15 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
             pct = (l["old_price"] - l["price"]) / l["old_price"] * 100
             blocks.append(block(l, f" (było {fmt_int(l['old_price'])}, −{pct:.1f}%)".replace(".", ",")))
 
+    labels = " / ".join(r["label"] for r in config["categories"].values())
+    fb_title = f"## {labels} – Facebook Marketplace" + ("" if first else " – nowe")
+    fb_note = ("Oferty pochodzą z indeksu wyszukiwarki. Facebook wymaga logowania, więc ogłoszeń nie otwierano: "
+               "cenę, aktywność i title sprawdź po kliknięciu.")
     if unverified:
-        blocks.append("## Facebook – do ręcznej weryfikacji\nTe oferty pochodzą z indeksu wyszukiwarki. "
-                      "Nie zostały otwarte, więc aktywność, cena i title NIE są potwierdzone.")
+        blocks.append(f"{fb_title}\n{fb_note}")
         blocks.extend(block(l) for l in unverified)
+    elif not verified_sources:
+        blocks.append(f"{fb_title}\nBrak{'' if first else ' nowych'} ofert spełniających kryteria.")
 
     if diff.get("watch_new"):
         blocks.append("## Facebook – obserwowane bez ceny\nPasujący model, ale indeks nie podaje ceny. Sprawdź je ręcznie.")
@@ -463,6 +518,12 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         if over:
             lines.append(f"Pominięto {len(over)} ofert z ceną powyżej {fmt_int(config['max_price_usd'])} USD.")
         blocks.append("\n".join(lines))
+
+    if diff.get("queries"):
+        qm = diff.get("query_matches", {})
+        hits = sum(1 for v in qm.values() if v)
+        blocks.append(f"## Wyszukiwanie\nZapytań: {len(diff['queries'])}, w tym z pasującą ofertą: {hits}. "
+                      "Statystyki zapytań są w state.json → query_stats, zmiany planu w improvements.md.")
 
     cov = run.get("coverage")
     if cov:
@@ -516,6 +577,98 @@ def cmd_run(args) -> int:
     return 0
 
 
+def improve(state: dict, config: dict, today: str) -> tuple[dict, list[str]]:
+    """Samodoskonalenie: przycina martwe zapytania, dodaje skuteczne eksperymenty i zapytania z miast
+    z trafieniami, kalibruje ceny referencyjne na podstawie obserwacji. Zwraca (nowy_config, log)."""
+    cfg = json.loads(json.dumps(config))
+    si = cfg.get("self_improve", {})
+    log: list[str] = []
+    queries = cfg["searches"]["facebook_index"]
+    by_q = {q["q"]: q for q in queries}
+    stats = state.get("query_stats", {})
+
+    # a) przycinanie
+    for q in queries:
+        st = stats.get(q["q"])
+        if not st or q.get("status") != "active":
+            continue
+        if st["zero_streak"] >= si.get("drop_after_zero_runs", 3):
+            if q.get("origin") == "seed":
+                if not q.get("flagged"):
+                    q["flagged"] = today
+                    log.append(f"Zapytanie startowe bez trafień od {st['zero_streak']} przebiegów (zostaje, oznaczone): {q['q']}")
+            else:
+                q["status"] = "retired"
+                q["retired"] = today
+                log.append(f"Wycofano zapytanie bez trafień od {st['zero_streak']} przebiegów: {q['q']}")
+
+    def add(qtext: str, origin: str, why: str) -> None:
+        active = [x for x in queries if x.get("status") == "active"]
+        if qtext in by_q or len(active) >= si.get("max_queries", 25):
+            return
+        item = {"q": qtext, "origin": origin, "added": today, "status": "active", "why": why}
+        queries.append(item)
+        by_q[qtext] = item
+        log.append(f"Dodano zapytanie ({origin}): {qtext} – {why}")
+
+    # b) eksperymenty, które dały trafienia, wchodzą do stałego planu
+    for qtext, st in stats.items():
+        if st.get("origin") == "experiment" and st.get("match_hits", 0) > 0:
+            add(qtext, "auto", f"eksperyment z {st['match_hits']} trafieniami")
+
+    # c) zapytania dla miast, w których znaleziono pasujące oferty
+    tmpl = si.get("city_query_template", 'site:facebook.com/marketplace "Fat Boy" "{city}"')
+    for l in state.get("listings", {}).values():
+        if l.get("status") == "active" and l.get("city") and l.get("state"):
+            city = re.sub(r"\s*\(.*?\)", "", l["city"]).strip()
+            add(tmpl.format(city=city, state=l["state"]), "auto", f"miasto z trafieniem ({city}, {l['state']})")
+
+    # d) kalibracja cen referencyjnych z obserwacji (także ofert powyżej limitu)
+    obs: dict[tuple[str, int], list[int]] = {}
+    for rec in list(state.get("listings", {}).values()) + list(state.get("rejected", {}).values()):
+        fam, year, price = rec.get("family"), rec.get("year"), rec.get("price")
+        if fam in ("Fat Boy", "Fat Bob"):
+            fam += " 114"
+        if not fam or not year or not price or price <= cfg["placeholder_price_max"]:
+            continue
+        if "107" in str(rec.get("reason", "")) or "117" in str(rec.get("reason", "")):
+            continue
+        obs.setdefault((fam, int(year)), []).append(int(price))
+    for (fam, year), prices in sorted(obs.items()):
+        if len(prices) < si.get("min_samples_for_price", 3):
+            continue
+        prices.sort()
+        n = len(prices)
+        med = prices[n // 2] if n % 2 else (prices[n // 2 - 1] + prices[n // 2]) / 2
+        table = cfg["market_reference"].setdefault(fam, {})
+        old = table.get(str(year))
+        blend = si.get("price_blend", 0.5)
+        new = int(round((med if old is None else blend * old + (1 - blend) * med) / 50.0) * 50)
+        if old != new:
+            table[str(year)] = new
+            log.append(f"Cena referencyjna {fam} {year}: {fmt_price(old) if old else 'brak'} → {fmt_price(new)} "
+                       f"(mediana {fmt_price(med)} z {n} ofert)")
+    return cfg, log
+
+
+def cmd_improve(args) -> int:
+    config = load_json(CONFIG_PATH)
+    state = migrate(load_json(STATE_PATH))
+    today = state["runs"][-1] if state["runs"] else date.today().isoformat()
+    new_cfg, log = improve(state, config, today)
+    if not log:
+        print("Brak zmian – plan i ceny referencyjne są aktualne.")
+        return 0
+    print("\n".join(f"- {x}" for x in log))
+    if args.apply:
+        save_json(CONFIG_PATH, new_cfg)
+        path = BASE / "improvements.md"
+        prev = path.read_text(encoding="utf-8") if path.exists() else "# Dziennik samodoskonalenia Fat Boy Scout\n"
+        path.write_text(prev.rstrip() + f"\n\n## {today}\n" + "\n".join(f"- {x}" for x in log) + "\n", encoding="utf-8")
+        print("Zapisano config.json i improvements.md")
+    return 0
+
+
 def cmd_vin(args) -> int:
     print(json.dumps(decode_vin(args.vin, load_json(CONFIG_PATH)), ensure_ascii=False))
     return 0
@@ -525,11 +678,14 @@ def cmd_plan(args) -> int:
     cfg = load_json(CONFIG_PATH)
     usa = cfg.get("scope") == "usa"
     print(f"Zasięg: {'cała USA (radius=' + str(cfg['searches']['usa_radius']) + ')' if usa else 'Midwest (radius=500)'}")
-    for s in cfg["searches"]["cycletrader"]:
+    for s in (cfg["searches"].get("cycletrader", []) if "cycletrader" in cfg.get("sources", ["cycletrader"]) else []):
         url = s["url"].replace("radius=500", f"radius={cfg['searches']['usa_radius']}") if usa else s["url"]
         print(f"[CT/{s['category']}] {s['name']}{' (+&page=N)' if s.get('paged') else ''}\n  {url}")
     for q in cfg["searches"]["facebook_index"]:
-        print(f"[FB-index] {q}")
+        if isinstance(q, str):
+            print(f"[FB-index] {q}")
+        elif q.get("status") == "active":
+            print(f"[FB-index/{q.get('origin', 'seed')}] {q['q']}")
     return 0
 
 
@@ -556,6 +712,9 @@ def main(argv=None) -> int:
     v.set_defaults(func=cmd_vin)
     sub.add_parser("plan", help="pokaż plan wyszukiwań").set_defaults(func=cmd_plan)
     sub.add_parser("status", help="pokaż śledzone oferty").set_defaults(func=cmd_status)
+    im = sub.add_parser("improve", help="samodoskonalenie: zapytania i ceny referencyjne")
+    im.add_argument("--apply", action="store_true", help="zapisz zmiany w config.json i improvements.md")
+    im.set_defaults(func=cmd_improve)
     args = p.parse_args(argv)
     return args.func(args)
 

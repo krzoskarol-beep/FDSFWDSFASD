@@ -1,26 +1,28 @@
 # Fat Boy Scout
 
-Agent wyszukujący ogłoszenia Harley-Davidson Fat Boy 114 i Fat Bob 114 (2018+) oraz Indian Challenger do 11 000 USD
-w IL, WI, IN, MI, IA i OH, z okazjami Honda Africa Twin i Gold Wing przy okazji.
+Agent wyszukujący na **Facebook Marketplace w całych USA** ogłoszenia **Harley-Davidson Fat Boy 114** (2018+) do **11 000 USD**.
+Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skuteczne, kalibruje ceny rynkowe i zapisuje lekcje.
 
 **Uruchomienie:** w Claude Code napisz „uruchom Fat Boy Scout” (agent `.claude/agents/fat-boy-scout.md`).
 
 | Plik | Do czego służy |
 |---|---|
-| `config.json` | kryteria, kolejność stanów, plan wyszukiwań, orientacyjne ceny rynkowe do rankingu (edytuj je swobodnie) |
-| `scout.py` | silnik: kryteria, VIN, scalanie z historią, spadki cen, zniknięcia, ranking, raport w częściach |
+| `config.json` | kryteria, zasięg, źródła, plan zapytań (aktualizowany automatycznie), ceny referencyjne |
+| `playbook.md` | lekcje agenta z poprzednich przebiegów (czyta je na starcie, dopisuje na końcu) |
+| `improvements.md` | dziennik automatycznych zmian planu i cen |
+| `scout.py` | silnik: kryteria, scalanie z historią, spadki cen, ranking, raport, `improve` |
 | `runs/RRRR-MM-DD.json` | surowe obserwacje agenta z jednego przebiegu |
-| `state.json` | historia wszystkich ofert (ceny, daty, status) i lista odrzuconych |
+| `state.json` | historia ofert, statystyki zapytań, odrzucone |
 | `reports/RRRR-MM-DD.md` | gotowe raporty |
-| `test_scout.py` | testy silnika: `python3 -m unittest fat-boy-scout/test_scout.py` |
+| `archive/` | dane z poprzedniej konfiguracji (Midwest, Cycle Trader, kilka modeli) |
 
-Przydatne polecenia:
 ```
-python3 fat-boy-scout/scout.py status           # co jest śledzone
-python3 fat-boy-scout/scout.py plan             # lista wyszukiwań
-python3 fat-boy-scout/scout.py vin 1HD1YLK18JC024906
-python3 fat-boy-scout/scout.py run fat-boy-scout/runs/2026-11-19.json --dry-run
+python3 fat-boy-scout/scout.py status
+python3 fat-boy-scout/scout.py plan
+python3 fat-boy-scout/scout.py run fat-boy-scout/runs/2026-11-19.json
+python3 fat-boy-scout/scout.py improve --apply
+python3 -m unittest fat-boy-scout/test_scout.py
 ```
 
-**Ograniczenie:** Facebook Marketplace wymaga logowania. Agent przeszukuje go tylko przez indeks wyszukiwarki,
-a takie oferty oznacza jako niezweryfikowane.
+**Ograniczenie:** ogłoszenia Facebooka wymagają logowania, więc agent korzysta z indeksu wyszukiwarki.
+Ceny i dostępność trzeba potwierdzić po kliknięciu w link.
