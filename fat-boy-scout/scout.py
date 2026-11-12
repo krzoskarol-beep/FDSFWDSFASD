@@ -410,7 +410,7 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
             s = l["score"]
             loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
             lines.append(f"{i}. {l.get('model')} – {fmt_price(l['price'])} – {loc} – {s['label']} "
-                         f"({round(s['discount'] * 100):+d}%)")
+                         f"({round(s['discount'] * 100):+d}%)\n   {l.get('url') or 'link: brak'}")
         blocks.append("\n".join(lines))
 
     for cat, rules in config["categories"].items():
@@ -444,13 +444,14 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         lines = ["## Zniknęły lub wypadły z kryteriów"]
         for l in diff["gone"]:
             lines.append(f"- {l.get('model')} – {fmt_price(l.get('price'))} – "
-                         f"{l.get('city')}, {l.get('state')} – {l.get('status_reason', '')}")
+                         f"{l.get('city')}, {l.get('state')} – {l.get('status_reason', '')}\n"
+                         f"  {l.get('url') or 'link: brak'}")
         blocks.append("\n".join(lines))
 
     if diff["rejected_now"] and first:
         lines = ["## Sprawdzone i odrzucone"]
-        lines += [f"- {r['model']} – {fmt_price(r.get('price'))} – {r['location']} – {r['reason']}"
-                  for r in diff["rejected_now"]]
+        lines += [f"- {r['model']} – {fmt_price(r.get('price'))} – {r['location']} – {r['reason']}\n"
+                  f"  {r.get('url') or 'link: brak'}" for r in diff["rejected_now"]]
         blocks.append("\n".join(lines))
 
     cov = run.get("coverage")

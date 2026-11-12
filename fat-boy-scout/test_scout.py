@@ -154,6 +154,19 @@ class RenderTests(unittest.TestCase):
         nxt = text.splitlines()[text.splitlines().index(line) + 1]
         self.assertTrue(nxt.startswith("https://"))
 
+    def test_every_offer_has_link(self):
+        st = scout.empty_state()
+        ls = [L(id="a"), L(id="rej", state="MO", url="https://example.test/rej"),
+              L(id="fb", source="facebook", verified=False, url="https://example.test/fb")]
+        st, d = scout.merge(st, run(ls), CONFIG)
+        text = "\n".join(scout.render(d, run(ls), CONFIG, 1))
+        self.assertIn("https://example.test/rej", text)
+        self.assertIn("https://example.test/fb", text)
+        rank = text[text.index("## Ranking"):text.index("## Fat Boy 114")]
+        self.assertIn("https://example.test/1", rank)
+        st, d = scout.merge(st, run([], d="2026-11-19"), CONFIG)
+        self.assertIn("https://example.test/1", "\n".join(scout.render(d, run([]), CONFIG, 2)))
+
     def test_split_parts(self):
         parts = scout.split_parts(["x" * 100] * 10, 350)
         self.assertGreater(len(parts), 1)
