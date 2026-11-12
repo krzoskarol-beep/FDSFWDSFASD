@@ -11,7 +11,7 @@ Zainstalowane poleceniem `npx skills add <źródło> [--skill <nazwa>] -a claude
 | https://github.com/obra/superpowers | MIT, `LICENSE-superpowers.txt` | `brainstorming`, `diagnosing-superpowers`, `dispatching-parallel-agents`, `executing-plans`, `finishing-a-development-branch`, `receiving-code-review`, `requesting-code-review`, `subagent-driven-development`, `systematic-debugging`, `test-driven-development`, `using-git-worktrees`, `using-superpowers`, `verification-before-completion`, `writing-plans`, `writing-skills` |
 | https://github.com/tw93/Kami | MIT, `kami/LICENSE` | `kami` |
 | https://github.com/vercel-labs/skills | MIT, `LICENSE-vercel-labs-skills.txt` | `find-skills` |
-| własny (to repozytorium) | - | `android-build` |
+| własny (to repozytorium) | - | `allegro-scraper`, `android-build` |
 
 Zmiany względem oryginałów: w skillach z obra/superpowers odwołania `superpowers:<skill>` zamienione
 na `<skill>` (tu skille nie są częścią wtyczki), więc ich suma w `skills-lock.json` może się różnić.

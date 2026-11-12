@@ -11,6 +11,7 @@ w przeglądarce Chrome. W sesji w chmurze nie zadziałają.
 
 | Skill | Opis (z SKILL.md) | Źródło |
 |---|---|---|
+| `allegro-scraper` | Use when the user wants offers, prices, sellers or delivery info from Allegro (allegro.pl), wants to run, sch… | własny (to repozytorium) |
 | `android-build` | Use when building, testing, signing, releasing or delivering the Android app in gps-app/ (Moja pozycja GPS), w… | własny (to repozytorium) |
 | `brainstorming` | You MUST use this before any creative work - creating features, building components, adding functionality, mod… | obra/superpowers |
 | `canvas-design` | Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when… | anthropics/skills |
