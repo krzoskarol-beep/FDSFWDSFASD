@@ -11,6 +11,11 @@ Rysunek wektorowy: [`rysunek.svg`](rysunek.svg)
 **Podgląd 3D** z każdym otworem i każdą śrubą: [`podglad-3d.html`](podglad-3d.html)
 (otwórz w przeglądarce; obracanie palcem, suwak „Rozłóż”, „Prześwietl”, dotknięcie części pokazuje jej otwory i śruby).
 
+**Symulacja wjazdu motocykla (Fat Boy):** [`symulacja-fat-boy.html`](symulacja-fat-boy.html). Pokazuje, czy spód motocykla
+zahaczy o rampę lub krawędź przyczepki przy danej wysokości podłogi i długości najazdu.
+Wynik dla tej rampy (1,5 m, podłoga 500 mm): **zahacza** o krawędź przyczepki. Prosty najazd musi mieć ok. **3,2 m**,
+łukowy (wygięty o ~7 cm) wystarczy **2,5 m**.
+
 ---
 
 ## 1. Najpierw zmierz swoją przyczepkę

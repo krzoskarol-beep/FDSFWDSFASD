@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Symulacja wjazdu Fat Boya na przyczepkę</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef1f4;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1d2731}
+  .wrap{max-width:1100px;margin:0 auto;padding:12px}
+  h1{font-size:19px;margin:4px 0 2px}
+  .sub{font-size:13px;color:#5b6772;margin-bottom:10px}
+  .card{background:#fff;border:1px solid #d3dae0;border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  canvas{display:block;width:100%;touch-action:pan-y}
+  #verdict{font-size:16px;font-weight:700;padding:9px 12px;border-radius:10px;margin-bottom:8px}
+  .ok{background:#e3f5e8;color:#16632e;border:1px solid #9fd6ad}
+  .warn{background:#fff4dc;color:#7a5200;border:1px solid #f0cf86}
+  .bad{background:#fde6e4;color:#9b1c13;border:1px solid #f1a8a1}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;font-size:13px}
+  .stats div{background:#f5f7f9;border-radius:8px;padding:6px 8px}
+  .stats b{display:block;font-size:16px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  button{border:1px solid #c3ccd4;background:#fff;border-radius:9px;padding:7px 11px;font-size:13.5px;cursor:pointer;color:#1d2731}
+  button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
+  #play{min-width:92px;font-weight:600}
+  #pos{flex:1;min-width:140px}
+  .ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 18px}
+  .ctrl{font-size:13px}
+  .ctrl label{display:flex;justify-content:space-between}
+  .ctrl input{width:100%}
+  .ctrl small{color:#6a7681}
+  .note{font-size:12.5px;color:#5b6772;line-height:1.45}
+  h2{font-size:14.5px;margin:2px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Symulacja wjazdu Fat Boya na przyczepkę</h1>
+  <div class="sub">Widok z boku, wymiary w mm. Motocykl: 317 kg, rozstaw osi 1665, prześwit 115, koła Ø650. Kształt spodu jest przybliżony.</div>
+
+  <div class="card">
+    <div id="verdict"></div>
+    <canvas id="scene"></canvas>
+    <div class="row" style="margin-top:8px">
+      <button id="play">▶ Jedź</button>
+      <input id="pos" type="range" min="0" max="1" step="0.001" value="0">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Prześwit pod motocyklem na całej trasie</h2>
+    <canvas id="chart"></canvas>
+    <div class="note">Oś pozioma: położenie przedniego koła. Czerwone pole: spód motocykla dotyka rampy lub krawędzi przyczepki. Dotknij wykresu, żeby przejść do tego miejsca.</div>
+  </div>
+
+  <div class="card">
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="card">
+    <h2>Gotowe ustawienia</h2>
+    <div class="row" id="presets">
+      <button data-p="ours">Nasza burta-rampa 1,5 m</button>
+      <button data-p="low">Niska przyczepka 400 + 1,5 m</button>
+      <button data-p="straight">Najazd prosty 2,5 m</button>
+      <button data-p="arc">Najazd łukowy 2,5 m</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Parametry</h2>
+    <div class="ctrls" id="ctrls"></div>
+  </div>
+
+  <div class="card note">
+    <b>Jak liczone:</b> każde koło (Ø650) toczy się po profilu ziemia → najazd → podłoga przyczepki. Tylne koło jest zawsze dokładnie
+    1665 mm od przedniego. Spód motocykla to przybliżony obrys: tłumik z tyłu, rury wydechowe, dół silnika i ramy (najniżej, 115 mm nad ziemią),
+    przednie rury ramy. W każdej pozycji program szuka najmniejszego pionowego odstępu spodu od nawierzchni. Ugięcie zawieszenia
+    (kierowca, bagaż, dobicie na krawędzi) obniża cały spód. Szczelinę ok. 7 cm między rampą a podłogą pominięto, bo przy kole Ø650 nie ma znaczenia.
+    To model uproszczony: w realu zmierz najniższy punkt swojego motocykla (zwykle rama pod silnikiem albo kolektor wydechu).
+  </div>
+</div>
+
+<script>
+(function(){
+const P={H:500,L:1500,sag:0,c:115,s:20,W:1665,r:325,m:317,margin:30};
+const CTRL=[
+ ['H','Wysokość podłogi przyczepki',300,750,5,'mm'],
+ ['L','Długość najazdu',1000,3500,10,'mm'],
+ ['sag','Wygięcie najazdu (łuk)',0,150,5,'mm'],
+ ['c','Prześwit motocykla (fabryczny)',80,200,1,'mm'],
+ ['s','Ugięcie zawieszenia (kierowca, dobicie)',0,60,1,'mm'],
+ ['W','Rozstaw osi',1400,1800,5,'mm'],
+ ['m','Masa motocykla',150,450,1,'kg']
+];
+const PRESETS={ours:{H:500,L:1500,sag:0},low:{H:400,L:1500,sag:0},straight:{H:500,L:2500,sag:0},arc:{H:500,L:2500,sag:70}};
+
+/* ---------- model ---------- */
+const run=()=>Math.sqrt(Math.max(1,P.L*P.L-P.H*P.H));
+function terr(x){const d=run();if(x<=0)return 0;if(x>=d)return P.H;const t=x/d;return P.H*t+P.sag*Math.sin(Math.PI*t);}
+function axleY(xc,st){let b=-1e9;const r=P.r;for(let x=xc-r;x<=xc+r+1e-6;x+=st){const dx=x-xc;const v=terr(x)+Math.sqrt(Math.max(0,r*r-dx*dx));if(v>b)b=v;}
+  const d=run();for(const k of [0,d]){if(Math.abs(k-xc)<=r){const dx=k-xc;const v=terr(k)+Math.sqrt(r*r-dx*dx);if(v>b)b=v;}}return b;}
+function pose(xf,st){
+  const yf=axleY(xf,st);let lo=xf-P.W,hi=xf;
+  for(let i=0;i<28;i++){const m=(lo+hi)/2;const ym=axleY(m,st);const d=Math.hypot(xf-m,yf-ym);if(d>P.W)lo=m;else hi=m;}
+  const xr=(lo+hi)/2,yr=axleY(xr,st);return {xr,yr,xf,yf,th:Math.atan2(yf-yr,xf-xr)};
+}
+// spód motocykla: [x od tylnej osi (przy W=1665), wysokość nad najniższym punktem]
+const UNDER=[[-260,135],[-120,105],[150,78],[480,50],[700,14],[780,0],[1160,0],[1300,30],[1420,95],[1530,180]];
+function ylow(){return -(P.r-(P.c-P.s));}
+function underPts(){const k=P.W/1665,yl=ylow(),out=[];
+  for(let i=0;i<UNDER.length-1;i++){const a=UNDER[i],b=UNDER[i+1];const n=Math.max(1,Math.ceil((b[0]-a[0])/12));
+    for(let j=0;j<n;j++){const t=j/n;out.push([(a[0]+(b[0]-a[0])*t)*k,yl+a[1]+(b[1]-a[1])*t]);}}
+  const e=UNDER[UNDER.length-1];out.push([e[0]*k,yl+e[1]]);return out;}
+function toWorld(p,lx,ly){const c=Math.cos(p.th),s=Math.sin(p.th);return [p.xr+lx*c-ly*s,p.yr+lx*s+ly*c];}
+function clearance(p,pts){let best=1e9,bx=0,by=0;for(const q of pts){const w=toWorld(p,q[0],q[1]);const c=w[1]-terr(w[0]);if(c<best){best=c;bx=w[0];by=w[1];}}return {c:best,x:bx,y:by};}
+const xStart=()=>-700, xEnd=()=>run()+P.W+450;
+function sweep(stepX,st){const pts=underPts(),res=[];for(let x=xStart();x<=xEnd();x+=stepX){const p=pose(x,st);const c=clearance(p,pts);res.push({xf:x,c:c.c,wx:c.x});}return res;}
+function minOver(arr){let m={c:1e9};arr.forEach(a=>{if(a.c<m.c)m=a;});return m;}
+function maxSlope(){const d=run();let m=0;for(let i=0;i<200;i++){const x0=d*i/200,x1=d*(i+1)/200;m=Math.max(m,Math.atan2(terr(x1)-terr(x0),x1-x0));}return m;}
+function minLength(){
+  const save=P.L;let lo=P.H+50,hi=6000;
+  P.L=hi;if(minOver(sweep(30,5)).c<P.margin){P.L=save;return null;}
+  for(let i=0;i<14;i++){const mid=(lo+hi)/2;P.L=mid;if(minOver(sweep(30,5)).c>=P.margin)hi=mid;else lo=mid;}
+  P.L=save;return hi;
+}
+
+/* ---------- UI ---------- */
+const ctrls=document.getElementById('ctrls');
+CTRL.forEach(([k,lab,mn,mx,st,u])=>{
+  const d=document.createElement('div');d.className='ctrl';
+  d.innerHTML=`<label><span>${lab}</span><b><span id="v_${k}"></span> ${u}</b></label><input id="i_${k}" type="range" min="${mn}" max="${mx}" step="${st}">`;
+  ctrls.appendChild(d);
+  const inp=d.querySelector('input');inp.value=P[k];inp.oninput=()=>{P[k]=+inp.value;clearPreset();changed();};
+});
+function syncInputs(){CTRL.forEach(([k])=>{document.getElementById('i_'+k).value=P[k];document.getElementById('v_'+k).textContent=P[k];});}
+function clearPreset(){document.querySelectorAll('#presets button').forEach(b=>b.classList.remove('on'));}
+document.querySelectorAll('#presets button').forEach(b=>b.onclick=()=>{Object.assign(P,PRESETS[b.dataset.p]);clearPreset();b.classList.add('on');changed();u=0;playing=true;playBtn.textContent='❚❚ Pauza';});
+
+const scene=document.getElementById('scene'),chart=document.getElementById('chart');
+let data=[],gmin=null,minL=null,u=0,playing=false,timer=null;
+const playBtn=document.getElementById('play'),posIn=document.getElementById('pos');
+playBtn.onclick=()=>{if(!playing&&u>=1)u=0;playing=!playing;playBtn.textContent=playing?'❚❚ Pauza':'▶ Jedź';};
+posIn.oninput=()=>{u=+posIn.value;playing=false;playBtn.textContent='▶ Jedź';};
+chart.addEventListener('pointerdown',e=>{const r=chart.getBoundingClientRect();u=Math.min(1,Math.max(0,(e.clientX-r.left-36)/(r.width-46)));playing=false;playBtn.textContent='▶ Jedź';});
+
+function changed(){
+  syncInputs();
+  data=sweep(10,2);gmin=minOver(data);
+  clearTimeout(timer);document.getElementById('stats').innerHTML=statsHTML('…');
+  timer=setTimeout(()=>{minL=minLength();document.getElementById('stats').innerHTML=statsHTML();},60);
+  verdict();
+}
+function where(wx){const d=run();if(Math.abs(wx-d)<450)return 'na górnej krawędzi (rampa → podłoga przyczepki)';if(Math.abs(wx)<450)return 'u dołu (ziemia → rampa)';if(wx>0&&wx<d)return 'na rampie';return wx>d?'na podłodze':'na ziemi';}
+function verdict(){
+  const v=document.getElementById('verdict');const c=Math.round(gmin.c);
+  if(c<0){v.className='bad';v.textContent=`ZAHACZY: brakuje ${-c} mm, ${where(gmin.wx)}.`;}
+  else if(c<P.margin){v.className='warn';v.textContent=`NA STYK: zapas tylko ${c} mm, ${where(gmin.wx)}. Przy dobiciu zawieszenia może zaczepić.`;}
+  else{v.className='ok';v.textContent=`PRZEJEDZIE: najmniejszy zapas ${c} mm (${where(gmin.wx)}).`;}
+}
+function statsHTML(pending){
+  const a=maxSlope(),deg=a*180/Math.PI;
+  const push=P.m*Math.sin(a);
+  return `<div>Kąt najazdu (najstromiej)<b>${deg.toFixed(1)}°</b></div>
+  <div>Najmniejszy prześwit na trasie<b style="color:${gmin.c<0?'#c0392b':gmin.c<P.margin?'#b7791f':'#1e8449'}">${Math.round(gmin.c)} mm</b></div>
+  <div>Siła do wepchnięcia ręcznie<b>≈ ${Math.round(push)} kg</b></div>
+  <div>Min. długość najazdu dla zapasu ${P.margin} mm<b>${pending||(minL?(minL/1000).toFixed(2)+' m':'> 6 m')}</b></div>
+  <div>Poziomy wybieg najazdu<b>${(run()/1000).toFixed(2)} m</b></div>`;
+}
+
+/* ---------- rysowanie ---------- */
+function fit(cv,ratio){const w=cv.clientWidth,h=Math.round(w*ratio);const dpr=Math.min(2,devicePixelRatio||1);if(cv.width!==Math.round(w*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);cv.style.height=h+'px';}const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);return [g,w,h];}
+function drawScene(p,cl){
+  const narrow=scene.clientWidth<600;
+  const [g,w,h]=fit(scene,narrow?0.7:0.42);
+  const d=run();
+  // kamera: śledzi motocykl na wąskim ekranie
+  const span=narrow?Math.max(3300,P.W+1700):(xEnd()-xStart()+P.W+1200);
+  let xmin=narrow?((p.xr+p.xf)/2-span/2):(xStart()-P.W-500);
+  const k=Math.min(w/span,h/(P.H+1350));
+  const ymin=-120-(h/k-(P.H+1350))*0.3;
+  const S=(x,y)=>[(x-xmin)*k,h-(y-ymin)*k];
+  g.clearRect(0,0,w,h);
+  // niebo/ziemia
+  g.fillStyle='#f7f9fb';g.fillRect(0,0,w,h);
+  const gy=S(0,0)[1];g.fillStyle='#d9d4c7';g.fillRect(0,gy,w,h-gy);
+  g.strokeStyle='#8c8577';g.lineWidth=2;g.beginPath();g.moveTo(0,gy);g.lineTo(w,gy);g.stroke();
+  // przyczepka
+  const fx0=d, fx1=d+2300;
+  const [a0,b0]=S(fx0,P.H),[a1,b1]=S(fx1,P.H-80);
+  g.fillStyle='#c9a26b';g.fillRect(a0,b0,a1-a0,b1-b0);
+  g.fillStyle='#39434d';const [ba,bb]=S(fx0,P.H-80),[bc,bd]=S(fx1+700,P.H-150);g.fillRect(ba,bb,bc-ba,bd-bb);
+  const [wx,wy]=S(fx0+1300,280);g.fillStyle='#2b2b2b';g.beginPath();g.arc(wx,wy,280*k,0,2*PI);g.fill();g.fillStyle='#9aa3ab';g.beginPath();g.arc(wx,wy,150*k,0,2*PI);g.fill();
+  const [ha,hb]=S(fx1+700,P.H-115);g.strokeStyle='#39434d';g.lineWidth=Math.max(2,40*k);g.beginPath();g.moveTo(bc,(bb+bd)/2);g.lineTo(ha+60*k,hb);g.stroke();
+  // najazd
+  g.beginPath();for(let i=0;i<=80;i++){const x=d*i/80;const q=S(x,terr(x));i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);}
+  for(let i=80;i>=0;i--){const x=d*i/80;const q=S(x,Math.max(0,terr(x)-60));g.lineTo(q[0],q[1]);}
+  g.closePath();g.fillStyle='#b3c0cc';g.fill();g.strokeStyle='#2c3e50';g.lineWidth=1.2;g.stroke();
+  const [hx,hy]=S(d,P.H);g.fillStyle='#e67e22';g.beginPath();g.arc(hx,hy,Math.max(3,18*k),0,2*PI);g.fill();
+  // motocykl (schemat)
+  const yl=ylow(),dy=yl-(-230),kk=P.W/1665;
+  const M=(lx,ly)=>{const wv=toWorld(p,lx,ly);return S(wv[0],wv[1]);};
+  const poly=(pts,fill,stroke,lw)=>{g.beginPath();pts.forEach((q,i)=>{const s=M(q[0],q[1]);i?g.lineTo(s[0],s[1]):g.moveTo(s[0],s[1]);});g.closePath();if(fill){g.fillStyle=fill;g.fill();}if(stroke){g.strokeStyle=stroke;g.lineWidth=lw||1;g.stroke();}};
+  const line=(pts,col,lw)=>{g.beginPath();pts.forEach((q,i)=>{const s=M(q[0],q[1]);i?g.lineTo(s[0],s[1]):g.moveTo(s[0],s[1]);});g.strokeStyle=col;g.lineWidth=lw;g.lineCap='round';g.stroke();};
+  const arc=(cx,cy,r,a0,a1,col,lw)=>{const pts=[];for(let i=0;i<=24;i++){const a=a0+(a1-a0)*i/24;pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}line(pts,col,lw);};
+  const wheel=(lx)=>{const c=M(lx,0);g.fillStyle='#1f1f1f';g.beginPath();g.arc(c[0],c[1],P.r*k,0,2*PI);g.fill();g.fillStyle='#b8c0c8';g.beginPath();g.arc(c[0],c[1],229*k,0,2*PI);g.fill();g.fillStyle='#6d7680';g.beginPath();g.arc(c[0],c[1],60*k,0,2*PI);g.fill();};
+  // tylna rama i wahacz
+  line([[0,0],[520*kk,170],[700*kk,dy+60]],'#2d2d2d',Math.max(2,45*k));
+  wheel(0);wheel(P.W);
+  arc(0,0,375,0.15,2.9,'#2a2d31',Math.max(2,55*k));
+  arc(P.W,0,365,0.35,2.55,'#2a2d31',Math.max(2,45*k));
+  // silnik (V2) i skrzynia
+  poly([[700*kk,dy-225],[1170*kk,dy-225],[1230*kk,dy+30],[640*kk,dy+30]],'#5c6670','#2c3238',1);
+  poly([[760*kk,dy+30],[930*kk,dy+30],[860*kk,dy+330],[700*kk,dy+300]],'#7c8690','#2c3238',1);
+  poly([[960*kk,dy+30],[1140*kk,dy+30],[1250*kk,dy+300],[1090*kk,dy+330]],'#7c8690','#2c3238',1);
+  // rama dolna
+  line([[640*kk,dy+30],[780*kk,dy-230],[1160*kk,dy-230],[1300*kk,dy-200],[1420*kk,dy-135],[1350*kk,650]],'#222',Math.max(2,32*k));
+  // wydech
+  line([[1180*kk,dy-60],[1040*kk,dy-185],[700*kk,dy-215],[480*kk,dy-180]],'#9aa5b0',Math.max(2,42*k));
+  poly([[500*kk,dy-210],[150*kk,dy-150],[-260*kk,dy-95],[-250*kk,dy-30],[150*kk,dy-70],[520*kk,dy-130]],'#c3ccd4','#6b7580',1);
+  // bak, siedzenie, widelec, kierownica
+  line([[1350*kk,650],[1050*kk,470],[760*kk,330],[480*kk,250],[150*kk,120]],'#222',Math.max(2,30*k));
+  poly([[760*kk,430],[900*kk,540],[1120*kk,575],[1300*kk,560],[1320*kk,500],[1100*kk,470],[850*kk,420]],'#3b4148','#1c1f22',1);
+  poly([[180*kk,330],[300*kk,380],[480*kk,330],[640*kk,345],[780*kk,440],[800*kk,400],[680*kk,300],[470*kk,280],[230*kk,290]],'#151515',null);
+  line([[P.W,0],[1350*kk,650]],'#c9d0d6',Math.max(2,50*k));
+  line([[1350*kk,650],[1290*kk,800],[1150*kk,820]],'#c9d0d6',Math.max(2,20*k));
+  // spód (obrys liczony)
+  const up=underPts();g.setLineDash([5,4]);line(up,'#e67e22',2);g.setLineDash([]);
+  // punkt minimalny
+  const col=cl.c<0?'#d0261b':cl.c<P.margin?'#d68910':'#1e8449';
+  const s1=S(cl.x,cl.y),s2=S(cl.x,terr(cl.x));
+  g.strokeStyle=col;g.lineWidth=2.5;g.beginPath();g.moveTo(s1[0],s1[1]);g.lineTo(s2[0],s2[1]);g.stroke();
+  g.fillStyle=col;g.beginPath();g.arc(s1[0],s1[1],5,0,2*PI);g.fill();
+  g.font='bold 14px system-ui,sans-serif';const txt=(cl.c<0?'zahacza ':'')+Math.round(cl.c)+' mm';
+  const tw=g.measureText(txt).width;let tx=s1[0]-tw/2,ty=Math.max(s1[1],s2[1])+20;if(ty>h-6)ty=Math.min(s1[1],s2[1])-10;
+  g.fillStyle='rgba(255,255,255,.9)';g.fillRect(tx-4,ty-14,tw+8,19);g.fillStyle=col;g.fillText(txt,tx,ty);
+  if(cl.c<0){g.fillStyle='rgba(208,38,27,.18)';g.beginPath();g.arc(s1[0],s1[1],38,0,2*PI);g.fill();}
+  // podpisy
+  g.font='12px system-ui,sans-serif';g.fillStyle='#4b5560';
+  const [lx1,ly1]=S(d+150,P.H+40);g.fillText('podłoga przyczepki '+P.H+' mm',lx1,ly1-4);
+  const [lx2,ly2]=S(d*0.15,terr(d*0.15)-150);if(lx2>0)g.fillText('najazd '+P.L+' mm',lx2,ly2+18);
+}
+const PI=Math.PI;
+function drawChart(){
+  const [g,w,h]=fit(chart,chart.clientWidth<600?0.5:0.28);g.clearRect(0,0,w,h);
+  const L0=36,R0=10,T0=8,B0=22;const pw=w-L0-R0,ph=h-T0-B0;
+  const cmax=Math.max(160,P.c+40),cmin=-80;
+  const X=i=>L0+pw*i/(data.length-1),Y=c=>T0+ph*(1-(Math.max(cmin,Math.min(cmax,c))-cmin)/(cmax-cmin));
+  g.fillStyle='#fbfcfd';g.fillRect(L0,T0,pw,ph);
+  g.fillStyle='rgba(208,38,27,.12)';g.fillRect(L0,Y(0),pw,Y(cmin)-Y(0));
+  g.fillStyle='rgba(214,137,16,.10)';g.fillRect(L0,Y(P.margin),pw,Y(0)-Y(P.margin));
+  g.font='11px system-ui,sans-serif';g.fillStyle='#6a7681';
+  [cmin,0,P.margin,100,cmax].forEach(v=>{const y=Y(v);g.strokeStyle='#e3e7eb';g.beginPath();g.moveTo(L0,y);g.lineTo(L0+pw,y);g.stroke();g.fillText(v,4,y+4);});
+  g.strokeStyle='#c0392b';g.lineWidth=1.2;g.beginPath();g.moveTo(L0,Y(0));g.lineTo(L0+pw,Y(0));g.stroke();
+  // krzywa
+  g.lineWidth=2.2;for(let i=1;i<data.length;i++){const c=data[i].c;g.strokeStyle=c<0?'#d0261b':c<P.margin?'#d68910':'#1e8449';g.beginPath();g.moveTo(X(i-1),Y(data[i-1].c));g.lineTo(X(i),Y(c));g.stroke();}
+  // znaczniki: przednie koło na początku najazdu / na krawędzi
+  const d=run(),xs=xStart(),xe=xEnd();
+  [[0,'początek najazdu'],[d,'krawędź przyczepki']].forEach(([x,t])=>{const px=L0+pw*(x-xs)/(xe-xs);g.strokeStyle='#9aa5b0';g.setLineDash([3,3]);g.beginPath();g.moveTo(px,T0);g.lineTo(px,T0+ph);g.stroke();g.setLineDash([]);g.fillStyle='#6a7681';g.fillText(t,Math.min(px+3,w-95),h-6);});
+  // bieżąca pozycja
+  const cx=L0+pw*u;g.strokeStyle='#1f6feb';g.lineWidth=2;g.beginPath();g.moveTo(cx,T0);g.lineTo(cx,T0+ph);g.stroke();
+  g.fillStyle='#6a7681';g.fillText('mm',4,T0+ph+14);
+}
+
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(0.1,(now-last)/1000);last=now;
+  if(playing){u+=dt/9;if(u>=1){u=1;playing=false;playBtn.textContent='▶ Jedź';}}
+  posIn.value=u;
+  const xf=xStart()+u*(xEnd()-xStart());const p=pose(xf,2);const cl=clearance(p,underPts());
+  drawScene(p,cl);drawChart();
+  requestAnimationFrame(frame);
+}
+document.querySelector('#presets [data-p=ours]').classList.add('on');
+changed();requestAnimationFrame(frame);
+window.__sim={P,changed,setU:v=>{u=v;},getMin:()=>gmin,minLength,sweep,minOver};
+})();
+</script>
+</body>
+</html>
