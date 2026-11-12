@@ -173,6 +173,11 @@ class RenderTests(unittest.TestCase):
         self.assertTrue(parts[0].startswith("**Część 1/"))
         self.assertTrue(all(len(p) < 450 for p in parts))
 
+    def test_header_not_orphaned(self):
+        parts = scout.split_parts(["# T", "## Sekcja", "x" * 300 + " https://a"], 320)
+        self.assertTrue(all(not p.rstrip().endswith("## Sekcja") for p in parts))
+        self.assertTrue(any("## Sekcja\n\nxxx" in p for p in parts))
+
     def test_migrate_v1(self):
         v1 = {"last_report": "2026-11-12",
               "shown": [{"id": "ct-x", "model": "2018 Harley-Davidson Fat Bob 114 (FXFBS)", "url": "u",

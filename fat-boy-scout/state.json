@@ -154,23 +154,21 @@
       "id": "fb-26573702002279243",
       "source": "facebook",
       "category": "main",
-      "model": "Harley-Davidson Fat Boy 114",
-      "year": null,
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "year": 2018,
       "price": 10000,
       "city": "Hartford",
       "state": "MI",
       "verified": false,
-      "notes": "inny fragment indeksu pokazuje 12 500 USD",
+      "notes": "opis w indeksie: „2018 Harley-Davidson Fat Boy 114, black with chrome”; inny fragment indeksu pokazuje 12 500 USD",
       "url": "https://www.facebook.com/marketplace/item/26573702002279243/",
       "engine": "114",
       "family": "Fat Boy 114",
       "score": {
-        "ref": null,
-        "discount": null,
-        "label": "brak oceny",
-        "flags": [
-          "rocznik nieznany (nazwa 114 oznacza 2018+)"
-        ]
+        "ref": 12500,
+        "discount": 0.2,
+        "label": "OKAZJA",
+        "flags": []
       },
       "first_seen": "2026-11-12",
       "last_seen": "2026-11-12",
@@ -213,6 +211,39 @@
         {
           "date": "2026-11-12",
           "price": 10500
+        }
+      ]
+    },
+    "fb-caledonia-wi-2018-fatboy": {
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "id": "fb-caledonia-wi-2018-fatboy",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 10800,
+      "city": "Caledonia",
+      "state": "WI",
+      "distance_mi": 55,
+      "notes": "w indeksie najpierw 11 000, teraz 10 800 USD. Brak bezpośredniego linku, więc link prowadzi do wyszukiwania na Marketplace. Prawdopodobnie ten sam motocykl był w czerwcu 2026 na Craigslist jako 2018 Fat Boy 114, 9 950 mi, clean title: https://milwaukee.craigslist.org/mcy/d/caledonia-2018-harley-davidson-fat-boy/7938150742.html",
+      "url": "https://www.facebook.com/marketplace/milwaukee/search/?query=2018%20harley%20fat%20boy",
+      "family": "Fat Boy",
+      "score": {
+        "ref": 12500,
+        "discount": 0.136,
+        "label": "dobra cena",
+        "flags": [
+          "114 niepotwierdzone"
+        ]
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10800
         }
       ]
     }
@@ -343,6 +374,96 @@
       "reason": "cena > 11 000 USD",
       "url": "https://www.facebook.com/marketplace/item/1099225723111135/",
       "date": "2026-11-12"
+    },
+    "fb-28899266629695099": {
+      "id": "fb-28899266629695099",
+      "model": "Harley Fatboy (oferta „trade”)",
+      "price": 9000,
+      "location": "Aurora, IL",
+      "reason": "rocznik nieznany",
+      "url": "https://www.facebook.com/marketplace/item/28899266629695099/",
+      "date": "2026-11-12"
+    },
+    "fb-2270628420377500": {
+      "id": "fb-2270628420377500",
+      "model": "2023 Harley-Davidson Fat Boy 114",
+      "price": 13500,
+      "location": "Livonia, MI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2270628420377500/",
+      "date": "2026-11-12"
+    },
+    "fb-1422284473397168": {
+      "id": "fb-1422284473397168",
+      "model": "2022 Harley-Davidson Fat Boy 114 EX-L",
+      "price": 13000,
+      "location": "Williams Bay, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1422284473397168/",
+      "date": "2026-11-12"
+    },
+    "fb-28864349209912633": {
+      "id": "fb-28864349209912633",
+      "model": "2023 Harley-Davidson Fat Boy 114",
+      "price": 15750,
+      "location": "Chicago, IL",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/28864349209912633/",
+      "date": "2026-11-12"
+    },
+    "fb-charlestown-in-2018-fb114": {
+      "id": "fb-charlestown-in-2018-fb114",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "price": 12500,
+      "location": "Charlestown, IN",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1641836457540850/",
+      "date": "2026-11-12"
+    },
+    "fb-polkcity-ia-2018-fatbob114": {
+      "id": "fb-polkcity-ia-2018-fatbob114",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "price": 11500,
+      "location": "Polk City, IA",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1309427541146347/",
+      "date": "2026-11-12"
+    },
+    "fb-shellsburg-ia-2019-fatbob114": {
+      "id": "fb-shellsburg-ia-2019-fatbob114",
+      "model": "2019 Harley-Davidson Fat Bob 114",
+      "price": 11650,
+      "location": "Shellsburg, IA",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/108342309186542/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-bigbend-wi-2022-fatbob114": {
+      "id": "fb-bigbend-wi-2022-fatbob114",
+      "model": "2022 Harley-Davidson Fat Bob 114",
+      "price": 12885,
+      "location": "Big Bend, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/lomira-wi/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-greenbay-wi-2022-fatbob114": {
+      "id": "fb-greenbay-wi-2022-fatbob114",
+      "model": "2022 Harley-Davidson Fat Bob 114",
+      "price": 14194,
+      "location": "Green Bay, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/greenleaf-wi/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-2536008240200073": {
+      "id": "fb-2536008240200073",
+      "model": "2017 Honda Africa Twin DCT",
+      "price": 8900,
+      "location": "St Joseph, MI",
+      "reason": "Honda bez wyjątkowej ceny",
+      "url": "https://www.facebook.com/marketplace/item/2536008240200073/",
+      "date": "2026-11-12"
     }
   },
   "watchlist": {
@@ -365,6 +486,17 @@
       "state": null,
       "note": "brak ceny i lokalizacji w indeksie",
       "url": "https://www.facebook.com/marketplace/item/2254086322092820/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    },
+    "fb-29352052521055989": {
+      "id": "fb-29352052521055989",
+      "model": "2020 Honda Africa Twin Adventure Sports ES, bagaż Honda",
+      "miles": 3700,
+      "city": null,
+      "state": null,
+      "note": "brak ceny i lokalizacji w indeksie",
+      "url": "https://www.facebook.com/marketplace/item/29352052521055989/",
       "first_seen": "2026-11-12",
       "last_seen": "2026-11-12"
     }

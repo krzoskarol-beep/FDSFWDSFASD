@@ -461,6 +461,15 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
 
 
 def split_parts(blocks: list[str], max_chars: int) -> list[str]:
+    # nagłówek sekcji (z ewentualnym wstępem, bez linku) skleja się z następnym blokiem,
+    # żeby nie został sam na końcu części
+    glued: list[str] = []
+    for b in blocks:
+        if glued and glued[-1].startswith("## ") and "http" not in glued[-1] and not glued[-1].startswith("## Zakres"):
+            glued[-1] = f"{glued[-1]}\n\n{b}"
+        else:
+            glued.append(b)
+    blocks = glued
     parts, cur = [], ""
     for b in blocks:
         if cur and len(cur) + len(b) + 2 > max_chars:
