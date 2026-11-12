@@ -15,36 +15,36 @@ Wszystkie oferty spełniające kryteria z potwierdzonym modelem, silnikiem, cen�
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 9 000 USD [NOWA] | 9 900 mi | Madison, CT | title: brak danych
 https://www.facebook.com/marketplace/item/9000260/
-~900 mi od Des Plaines, dowóz ~540 USD · Ocena: OKAZJA (+34% vs rynek ≈ 12 500 USD)
+~900 mi od Des Plaines, dowóz ~540 USD · Ocena: OKAZJA (+34% vs rynek ≈ 12 550 USD)
 
 2018 Harley Softail | 10 200 USD [NOWA] | 6 200 mi | Rockford, IL | title: brak danych
 https://www.facebook.com/marketplace/item/9000270/
-~75 mi od Des Plaines · Potwierdzenie z opisu ogłoszenia: „Selling my 2018 Fat Boy 114 (FLFBS), Milwaukee-Eight 114, 6,200 miles, clean title” · Ocena: OKAZJA (+26% vs rynek ≈ 12 500 USD)
+~75 mi od Des Plaines · Potwierdzenie z opisu ogłoszenia: „Selling my 2018 Fat Boy 114 (FLFBS), Milwaukee-Eight 114, 6,200 miles, clean title” · Ocena: OKAZJA (+26% vs rynek ≈ 12 550 USD)
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 8 900 USD [NOWA] | 14 800 mi | Tampa, FL | title: brak danych
 https://www.facebook.com/marketplace/item/9000250/
-~1 150 mi od Des Plaines, dowóz ~690 USD · Ocena: OKAZJA (+33% vs rynek ≈ 12 500 USD)
+~1 150 mi od Des Plaines, dowóz ~690 USD · Ocena: OKAZJA (+33% vs rynek ≈ 12 550 USD)
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 10 450 USD [NOWA] | 3 100 mi | Denver, CO | title: brak danych
 https://www.facebook.com/marketplace/item/9000210/
-~1 000 mi od Des Plaines, dowóz ~600 USD · Ocena: OKAZJA (+25% vs rynek ≈ 12 500 USD)
+~1 000 mi od Des Plaines, dowóz ~600 USD · Ocena: OKAZJA (+25% vs rynek ≈ 12 550 USD)
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 10 700 USD [TANIEJ] | 7 050 mi | Naperville, IL | title: brak danych
 https://www.facebook.com/marketplace/item/9000200/
-~30 mi od Des Plaines · Ocena: OKAZJA (+21% vs rynek ≈ 12 500 USD) · Notatka: nowy link, ten sam VIN co oferta z 05.11 · VIN FLFBS = Fat Boy 114
+~30 mi od Des Plaines · Ocena: OKAZJA (+22% vs rynek ≈ 12 550 USD) · Notatka: nowy link, ten sam VIN co oferta z 05.11 · VIN FLFBS = Fat Boy 114
 Zmiana: Poprzednio 11 500 USD (05.11.2026), teraz 10 700 USD (12.11.2026). Spadek o 800 USD. Oferta weszła w Twój limit. Ten sam motocykl (identyczny VIN) co wcześniejsze ogłoszenie – powód: identyczny VIN 1HD1YGK13JC012345. Wcześniejszy link: https://www.facebook.com/marketplace/item/9000100/ · nowy link: https://www.facebook.com/marketplace/item/9000200/
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 10 500 USD [NOWA] | 1 000 mi | Rathdrum, ID | title: brak danych
 https://www.facebook.com/marketplace/item/9000220/
-~1 700 mi od Des Plaines, dowóz ~1 020 USD · Ocena: OKAZJA (+26% vs rynek ≈ 12 500 USD)
+~1 700 mi od Des Plaines, dowóz ~1 020 USD · Ocena: OKAZJA (+26% vs rynek ≈ 12 550 USD)
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 11 000 USD [NOWA] | 2 500 mi | Forney, TX | title: brak danych
 https://www.facebook.com/marketplace/item/9000230/
-~960 mi od Des Plaines, dowóz ~576 USD · Ocena: OKAZJA (+21% vs rynek ≈ 12 500 USD)
+~960 mi od Des Plaines, dowóz ~576 USD · Ocena: OKAZJA (+21% vs rynek ≈ 12 550 USD)
 
 2018 Harley-Davidson Fat Boy 114 (FLFBS) | 10 900 USD [NOWA] | 12 400 mi | Caledonia, WI | title: brak danych
 https://www.facebook.com/marketplace/item/9000201/
-~60 mi od Des Plaines · Ocena: OKAZJA (+18% vs rynek ≈ 12 500 USD)
+~60 mi od Des Plaines · Ocena: OKAZJA (+18% vs rynek ≈ 12 550 USD)
 
 ---
 

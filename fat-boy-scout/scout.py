@@ -227,7 +227,10 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
     return True, "ok"
 
 
-def is_direct_link(url: str | None) -> bool:
+def is_direct_link(url: str | None, l: dict | None = None) -> bool:
+    # link do ogłoszenia INNEGO motocykla (oferta widoczna w „related”) nie jest bezpośrednim linkiem
+    if l and l.get("link_is_other_listing"):
+        return False
     return bool(url and DIRECT_LINK_RE.search(url))
 
 
@@ -261,8 +264,9 @@ def missing_info(l: dict, config: dict) -> tuple[list[str], list[str]]:
         known.append(f"przebieg {fmt_miles(l['miles'])}")
     if l.get("state"):
         known.append(", ".join(x for x in (l.get("city"), l.get("state")) if x))
-    if not is_direct_link(l.get("url")):
-        missing.append("bezpośredni link (jest tylko strona wyników)")
+    if not is_direct_link(l.get("url"), l):
+        missing.append("bezpośredni link (jest tylko strona wyników)" if not l.get("link_is_other_listing")
+                       else "bezpośredni link (obecny link prowadzi do ogłoszenia innego motocykla)")
     return known, missing
 
 
@@ -584,6 +588,7 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             if relist:
                 rec["relist"] = relist
             state["rejected"][lid] = rec
+            wl.pop(lid, None)   # znana już cena (np. powyżej limitu) – nie jest to już „brak ceny”
             if prev_store != "listings":
                 diff["rejected_now"].append(rec)
             continue
@@ -1292,7 +1297,7 @@ def todo_items(state: dict, config: dict) -> list[str]:
             gaps.append(("przebieg", f"{base} miles facebook marketplace"))
         if l.get("engine") is None and l.get("year") and l["year"] <= 2020:
             gaps.append(("silnik 107/114", f"{base} FLFBS OR 114 OR 107"))
-        if "/marketplace/item/" not in (l.get("url") or ""):
+        if not is_direct_link(l.get("url"), l):
             gaps.append(("bezpośredni link", f'site:facebook.com/marketplace/item {base}'))
         if l.get("distance_mi") is None:
             gaps.append(("odległość", "wpisz distance_mi z własnej wiedzy o geografii"))

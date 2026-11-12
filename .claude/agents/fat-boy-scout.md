@@ -56,6 +56,7 @@ zamknięcie procesu) nie traci pracy: kolejne `/fat-boy-scout` podejmuje ją od 
    - `listing_title` – tytuł ogłoszenia (pole `title` to stan dokumentu: clean/salvage),
    - `evidence` – lista `{quote, url}` z **dosłownym** fragmentem opisu potwierdzającym model lub silnik (np. „Fat Boy 114 (FLFBS)”),
    - `basis` – gdy opis tylko wskazuje na Fat Boya (np. „solid Lakester wheels, 240 rear tire”), ale go nie potwierdza.
+   - `link_is_other_listing: true` – gdy jedyny link to ogłoszenie INNEGO motocykla, przy którym ta oferta była widoczna w „related”.
    Silnik sam rozdzieli: potwierdzone (cytat potwierdza Fat Boya i reszta kryteriów), „Do sprawdzenia” (jest `basis`
    albo brakuje ceny/silnika/przebiegu/linku), trop na liście braków (sam tytuł). Cytat o innym modelu → odrzucenie.
 5. **Ponowne wystawienia:** jeśli opis lub fragment podaje VIN, sprzedawcę, modyfikacje albo zdjęcia są charakterystyczne,

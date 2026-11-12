@@ -552,6 +552,19 @@ class MisdescribedListingTests(unittest.TestCase):
         self.assertIn("brak: bezpośredni link", "\n".join(scout.todo_items(st, FBV)))
 
 
+class HandbackFixTests(unittest.TestCase):
+    def test_watchlist_item_with_price_over_limit_leaves_watchlist(self):
+        st, _, _ = report(scout.empty_state(), frun([fbl(801, price=None)]))
+        self.assertIn("fb-801", st["watchlist"])
+        st, _, _ = report(st, frun([fbl(801, price=29000)], d="2026-11-19"), n=2)
+        self.assertNotIn("fb-801", st["watchlist"])
+        self.assertNotIn("brak: cena", "\n".join(scout.todo_items(st, FBV)))
+
+    def test_link_to_other_listing_is_not_direct(self):
+        st, d, text = report(scout.empty_state(), frun([fbl(802, link_is_other_listing=True)]))
+        self.assertIn("obecny link prowadzi do ogłoszenia innego motocykla", section(text, "## Do sprawdzenia"))
+
+
 class RelistTests(unittest.TestCase):
     """Funkcja 2: ten sam motocykl wystawiony ponownie."""
     VIN = "1HD1YGK13JC012345"
