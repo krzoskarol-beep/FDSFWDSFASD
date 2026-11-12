@@ -37,6 +37,8 @@
   .ctrl label{display:flex;justify-content:space-between}
   .ctrl input{width:100%}
   #err{position:fixed;inset:30% 10% auto;background:#fff;border:1px solid #c33;padding:14px;border-radius:10px;display:none}
+  .grp button{white-space:nowrap}
+  @media (max-width:520px){.grp button{padding:6px 7px;font-size:12px}}
   @media (min-width:900px){#bottom{left:auto;width:520px}}
 </style>
 </head>
@@ -47,10 +49,12 @@
   <div id="verdict"></div>
   <div class="bar">
     <div class="grp" id="presets">
-      <button data-p="ours">Nasza rampa 1,5 m</button>
+      <button data-p="ours">Burta-rampa 1,5 m</button>
       <button data-p="straight">Prosty 2,5 m</button>
-      <button data-p="arc">Łukowy 2,0 m</button>
+      <button data-p="straight27">Prosty 2,7 m</button>
+      <button data-p="arc">Łukowy alu 2,0 m</button>
     </div>
+    <div class="grp" id="rider"><button data-r="1">Z kierowcą</button><button data-r="0">Prowadzony obok</button></div>
     <div class="grp" id="cams">
       <button data-c="side" class="on">Z boku</button>
       <button data-c="chase">Za motocyklem</button>
@@ -69,7 +73,7 @@
     <details id="det">
       <summary>Parametry</summary>
       <div class="row" style="margin-top:6px;font-size:13px">Najazd:
-        <div class="grp" id="rtype"><button data-t="wide">burta-rampa 1,5 m szer.</button><button data-t="narrow">motocyklowy 30 cm</button></div>
+        <div class="grp" id="rtype"><button data-t="wide">burta-rampa</button><button data-t="bolted">skręcany 30 cm</button><button data-t="alu">aluminiowy</button></div>
       </div>
       <div class="ctrls" id="ctrls"></div>
     </details>
@@ -85,8 +89,8 @@
 if(!window.THREE){document.getElementById('err').style.display='block';return;}
 const PI=Math.PI;
 /* ================= MODEL (mm) ================= */
-const P={H:400,L:1500,sag:0,c:115,s:20,W:1665,r:325,m:317,margin:30,type:'wide'};
-const PRESETS={ours:{L:1500,sag:0,type:'wide'},straight:{L:2500,sag:0,type:'narrow'},arc:{L:2000,sag:50,type:'narrow'}};
+const P={H:400,L:2500,sag:0,c:115,s:20,W:1665,r:325,m:317,margin:30,type:'bolted',rider:true};
+const PRESETS={ours:{L:1500,sag:0,type:'wide'},straight:{L:2500,sag:0,type:'bolted'},straight27:{L:2700,sag:0,type:'bolted'},arc:{L:2000,sag:50,type:'alu'}};
 const run=()=>Math.sqrt(Math.max(1,P.L*P.L-P.H*P.H));
 function terr(x){const d=run();if(x<=0)return 0;if(x>=d)return P.H;const t=x/d;return P.H*t+P.sag*Math.sin(PI*t);}
 function axleY(xc,st){let b=-1e9;const r=P.r;for(let x=xc-r;x<=xc+r+1e-6;x+=st){const dx=x-xc;const v=terr(x)+Math.sqrt(Math.max(0,r*r-dx*dx));if(v>b)b=v;}
@@ -156,11 +160,26 @@ function buildWorld(){
     world.add(ribbon(0,d,80,-750,750,1,mm));
     // krawężniki
     world.add(extrudeZ(profileShape(40,d-80,31,30,60),-750,-747,MAT.steel));world.add(extrudeZ(profileShape(40,d-80,31,30,60),747,750,MAT.steel));
-  }else{
+  }else if(P.type==='alu'){
     const W2=150;world.add(extrudeZ(profileShape(0,d,0,45,80),-W2,W2,MAT.alu));
     world.add(extrudeZ(profileShape(0,d,28,30,80),-W2-6,-W2,MAT.alu));world.add(extrudeZ(profileShape(0,d,28,30,80),W2,W2+6,MAT.alu));
     const rib=new THREE.MeshStandardMaterial({color:0x9aa4ad,metalness:0.6,roughness:0.4});
     for(let x=60;x<d;x+=90){const b=new THREE.Mesh(new THREE.BoxGeometry(14,6,2*W2),rib);const a=Math.atan2(terr(x+5)-terr(x-5),10);b.position.set(x,terr(x)+3,0);b.rotation.z=a;world.add(b);}
+  }else{
+    // najazd skręcany: 2 rury 60x40x3, blacha, krawężniki, poprzeczki, zaczep, pas
+    const al=Math.atan2(P.H,d),hv=60/Math.cos(al);
+    [-1,1].forEach(sg=>{world.add(extrudeZ(profileShape(0,d,-4,hv,80),sg>0?110:-150,sg>0?150:-110,MAT.steel));
+      world.add(extrudeZ(profileShape(40,d-40,30,30,60),sg>0?147:-150,sg>0?150:-147,MAT.steel));});
+    const mm=new THREE.MeshStandardMaterial({color:0x7d8a96,metalness:0.6,roughness:0.4,alphaMap:meshTex,alphaTest:0.5,side:THREE.DoubleSide});
+    world.add(ribbon(0,d,60,-150,150,-2,mm));
+    const bev=hv/Math.tan(al);
+    for(let x=200;x<d-bev-40;x+=550){const b=new THREE.Mesh(new THREE.BoxGeometry(40,40,300),MAT.dark);b.rotation.z=al;b.position.set(x,terr(x)-4-hv-18,0);world.add(b);
+      [-130,130].forEach(z=>{const bo=new THREE.Mesh(new THREE.CylinderGeometry(15,15,8,6),MAT.chrome);bo.rotation.z=al;bo.position.set(x-3*Math.sin(al),terr(x)+2,z);world.add(bo);});}
+    const hook=new THREE.Mesh(new THREE.BoxGeometry(170,8,300),MAT.dark);hook.position.set(d-15,P.H+4,0);world.add(hook);
+    const tip=new THREE.Mesh(new THREE.BoxGeometry(80,6,300),MAT.dark);tip.rotation.z=al;tip.position.set(40*Math.cos(al),terr(40)+3,0);world.add(tip);
+    const strapM=new THREE.MeshStandardMaterial({color:0xff8c1a,roughness:0.8});
+    const a=new THREE.Vector3(d-250,terr(d-250)-hv-10,0),b=new THREE.Vector3(d+250,P.H-110,0);
+    const st=new THREE.Mesh(new THREE.BoxGeometry(a.distanceTo(b),4,40),strapM);st.position.copy(a).add(b).multiplyScalar(0.5);st.rotation.z=Math.atan2(b.y-a.y,b.x-a.x);world.add(st);
   }
   // przyczepka
   const T=new THREE.Group();world.add(T);const LEN=2600,HW=780;
@@ -224,6 +243,13 @@ function buildBike(){
   const seat=new THREE.Mesh(new THREE.SphereGeometry(1,24,14),MAT.seat);seat.scale.set(X(330),45,165);seat.position.set(X(520),330,0);seat.rotation.z=0.12;bike.add(seat);
   const pil=new THREE.Mesh(new THREE.SphereGeometry(1,20,12),MAT.seat);pil.scale.set(X(170),40,130);pil.position.set(X(180),375,0);pil.rotation.z=-0.15;bike.add(pil);
   [-1,1].forEach(s=>{const fb=new THREE.Mesh(new THREE.BoxGeometry(X(300),18,140),MAT.black);fb.position.set(X(1240),dy-95,s*330);bike.add(fb);});
+  // kierowca (schemat)
+  if(P.rider){const jk=std(0x2b3440,0.1,0.8),jn=std(0x2d4a73,0,0.9),hm=std(0x111111,0.4,0.3);
+    const hip=[X(560),400],sh=[X(690),880];bike.add(cyl([hip[0],hip[1],0],[sh[0],sh[1],0],150,jk));
+    const head=new THREE.Mesh(new THREE.SphereGeometry(125,20,14),hm);head.position.set(X(720),1060,0);bike.add(head);
+    [-1,1].forEach(s=>{bike.add(cyl([sh[0],sh[1]-40,s*200],[X(980),720,s*330],55,jk));bike.add(cyl([X(980),720,s*330],[X(1170),815,s*430],50,jk));
+      bike.add(cyl([hip[0],hip[1],s*130],[X(1000),430,s*230],75,jn));bike.add(cyl([X(1000),430,s*230],[X(1210),ylow()+230-80,s*320],60,jn));
+      const boot=new THREE.Mesh(new THREE.BoxGeometry(240,90,100),hm);boot.position.set(X(1250),ylow()+230-60,s*320);bike.add(boot);});}
   // obrys spodu (liczony)
   const up=underPts().map(q=>new THREE.Vector3(q[0],q[1],0));
   underLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(up),new THREE.LineDashedMaterial({color:0xe67e22,dashSize:25,gapSize:15}));underLine.computeLineDistances();bike.add(underLine);
@@ -247,7 +273,9 @@ CTRL.forEach(([k,lab,mn,mx,st,u])=>{const d=document.createElement('div');d.clas
   const inp=d.querySelector('input');inp.oninput=()=>{P[k]=+inp.value;clearPreset();changed();};});
 function clearPreset(){document.querySelectorAll('#presets button').forEach(b=>b.classList.remove('on'));}
 function sync(){CTRL.forEach(([k])=>{document.getElementById('i_'+k).value=P[k];document.getElementById('v_'+k).textContent=P[k];});
-  document.querySelectorAll('#rtype button').forEach(b=>b.classList.toggle('on',b.dataset.t===P.type));}
+  document.querySelectorAll('#rtype button').forEach(b=>b.classList.toggle('on',b.dataset.t===P.type));
+  document.querySelectorAll('#rider button').forEach(b=>b.classList.toggle('on',(b.dataset.r==='1')===P.rider));}
+document.querySelectorAll('#rider button').forEach(b=>b.onclick=()=>{P.rider=b.dataset.r==='1';P.s=P.rider?20:0;changed();});
 document.querySelectorAll('#rtype button').forEach(b=>b.onclick=()=>{P.type=b.dataset.t;clearPreset();changed();});
 document.querySelectorAll('#presets button').forEach(b=>b.onclick=()=>{Object.assign(P,PRESETS[b.dataset.p]);clearPreset();b.classList.add('on');changed();u=0;setPlay(true);});
 let camMode='side';
@@ -312,7 +340,7 @@ function frame(now){
   controls.update();renderer.render(scene,camera);lr.render(scene,camera);drawChart();
   requestAnimationFrame(frame);
 }
-document.querySelector('#presets [data-p=ours]').classList.add('on');
+document.querySelector('#presets [data-p=straight]').classList.add('on');
 if(innerWidth>=900)document.getElementById('det').open=true;
 changed();requestAnimationFrame(frame);
 window.__sim={P,changed,setU:v=>{u=v;},setCam,getMin:()=>gmin};

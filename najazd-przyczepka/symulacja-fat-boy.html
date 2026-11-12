@@ -60,10 +60,10 @@
   <div class="card">
     <h2>Gotowe ustawienia</h2>
     <div class="row" id="presets">
-      <button data-p="ours">Nasza burta-rampa 1,5 m</button>
-      <button data-p="low">Niska przyczepka 400 + 1,5 m</button>
-      <button data-p="straight">Najazd prosty 2,5 m</button>
-      <button data-p="arc">Najazd łukowy 2,5 m</button>
+      <button data-p="ours">Burta-rampa 1,5 m</button>
+      <button data-p="straight">Prosty 2,5 m</button>
+      <button data-p="straight27">Prosty 2,7 m</button>
+      <button data-p="arc">Łukowy 2,0 m</button>
     </div>
   </div>
 
@@ -83,7 +83,7 @@
 
 <script>
 (function(){
-const P={H:500,L:1500,sag:0,c:115,s:20,W:1665,r:325,m:317,margin:30};
+const P={H:400,L:2500,sag:0,c:115,s:20,W:1665,r:325,m:317,margin:30};
 const CTRL=[
  ['H','Wysokość podłogi przyczepki',300,750,5,'mm'],
  ['L','Długość najazdu',1000,3500,10,'mm'],
@@ -93,7 +93,7 @@ const CTRL=[
  ['W','Rozstaw osi',1400,1800,5,'mm'],
  ['m','Masa motocykla',150,450,1,'kg']
 ];
-const PRESETS={ours:{H:500,L:1500,sag:0},low:{H:400,L:1500,sag:0},straight:{H:500,L:2500,sag:0},arc:{H:500,L:2500,sag:70}};
+const PRESETS={ours:{H:400,L:1500,sag:0},straight:{H:400,L:2500,sag:0},straight27:{H:400,L:2700,sag:0},arc:{H:400,L:2000,sag:50}};
 
 /* ---------- model ---------- */
 const run=()=>Math.sqrt(Math.max(1,P.L*P.L-P.H*P.H));
@@ -271,7 +271,7 @@ function frame(now){
   drawScene(p,cl);drawChart();
   requestAnimationFrame(frame);
 }
-document.querySelector('#presets [data-p=ours]').classList.add('on');
+document.querySelector('#presets [data-p=straight]').classList.add('on');
 changed();requestAnimationFrame(frame);
 window.__sim={P,changed,setU:v=>{u=v;},getMin:()=>gmin,minLength,sweep,minOver};
 })();
