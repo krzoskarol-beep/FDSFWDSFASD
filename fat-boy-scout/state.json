@@ -1,23 +1,238 @@
 {
   "last_report": "2026-11-12",
   "shown": [
-    {"id": "ct-5042303572", "source": "cycletrader", "model": "2018 Harley-Davidson Fat Bob 114 (FXFBS)", "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-FXFBS+-+Softail+Fat+Bob+114-5042303572", "location": "Elmhurst, IL", "miles": 11903, "title": null, "seller": "dealer", "price_history": [{"date": "2026-11-12", "price": 10999}], "first_seen": "2026-11-12", "last_seen": "2026-11-12", "status": "active"},
-    {"id": "ct-5041133973", "source": "cycletrader", "model": "2018 Harley-Davidson Fat Bob 114 (FXFBS)", "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob%C2%AE+114-5041133973", "location": "Bettendorf, IA", "miles": 5445, "title": null, "seller": "dealer", "notes": "dealer site adds reconditioning $495 + doc $179 (total $11,669); VIN 1HD1YLK18JC024906", "price_history": [{"date": "2026-11-12", "price": 10995}], "first_seen": "2026-11-12", "last_seen": "2026-11-12", "status": "active"},
-    {"id": "ct-5041949485", "source": "cycletrader", "model": "2018 Harley-Davidson Fat Boy 114 (FLFBS)", "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson%C2%AE-FLFBS+-+Softail%C2%AE+Fat+Boy%C2%AE+114-5041949485", "location": "North Canton, OH", "miles": 8168, "title": null, "seller": "dealer", "price_history": [{"date": "2026-11-12", "price": 9997}], "first_seen": "2026-11-12", "last_seen": "2026-11-12", "status": "active"},
-    {"id": "ct-5042044796", "source": "cycletrader", "model": "2017 Honda Africa Twin CRF1000L DCT", "url": "https://www.cycletrader.com/listing/2017-Honda-AFRICA+TWIN+CRF1000L+DCT-5042044796", "location": "Troy, MI", "miles": 17534, "title": "clean", "seller": "private", "category": "honda-deal", "price_history": [{"date": "2026-11-12", "price": 5999}], "first_seen": "2026-11-12", "last_seen": "2026-11-12", "status": "active"}
+    {
+      "id": "ct-5042303572",
+      "source": "cycletrader",
+      "model": "2018 Harley-Davidson Fat Bob 114 (FXFBS)",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-FXFBS+-+Softail+Fat+Bob+114-5042303572",
+      "location": "Elmhurst, IL",
+      "miles": 11903,
+      "title": null,
+      "seller": "dealer",
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10999
+        }
+      ],
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "id": "ct-5041133973",
+      "source": "cycletrader",
+      "model": "2018 Harley-Davidson Fat Bob 114 (FXFBS)",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob%C2%AE+114-5041133973",
+      "location": "Bettendorf, IA",
+      "miles": 5445,
+      "title": null,
+      "seller": "dealer",
+      "notes": "dealer site adds reconditioning $495 + doc $179 (total $11,669); VIN 1HD1YLK18JC024906",
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10995
+        }
+      ],
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "id": "ct-5041949485",
+      "source": "cycletrader",
+      "model": "2018 Harley-Davidson Fat Boy 114 (FLFBS)",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson%C2%AE-FLFBS+-+Softail%C2%AE+Fat+Boy%C2%AE+114-5041949485",
+      "location": "North Canton, OH",
+      "miles": 8168,
+      "title": null,
+      "seller": "dealer",
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 9997
+        }
+      ],
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "id": "ct-5042044796",
+      "source": "cycletrader",
+      "model": "2017 Honda Africa Twin CRF1000L DCT",
+      "url": "https://www.cycletrader.com/listing/2017-Honda-AFRICA+TWIN+CRF1000L+DCT-5042044796",
+      "location": "Troy, MI",
+      "miles": 17534,
+      "title": "clean",
+      "seller": "private",
+      "category": "honda-deal",
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 5999
+        }
+      ],
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active"
+    }
   ],
   "rejected": [
-    {"id": "ct-5042513837", "model": "2018 Fat Bob FXFB", "location": "Fremont, OH", "price": 9495, "reason": "107 (VIN 1HD1YKJ11JC038349, kod YK)"},
-    {"id": "ct-5040708811", "model": "2018 Fat Bob FXFB", "location": "Mansfield, OH", "price": 10999, "reason": "107 (FXFB)"},
-    {"id": "ct-5033074497", "model": "2018 Fat Boy FLFB", "location": "Medina, OH", "price": 10999, "reason": "107 (FLFB)"},
-    {"id": "ct-5041147740", "model": "2018 Fat Bob 107", "location": "Big Bend, WI", "price": 9985, "reason": "107"},
-    {"id": "ct-5041539812", "model": "2018 Fat Bob 107", "location": "Marietta, OH", "price": 9988, "reason": "107"},
-    {"id": "ct-5042040302", "model": "2018 Fat Boy 114", "location": "Columbia, MO", "price": 10995, "reason": "poza regionem (MO)"},
-    {"id": "ct-5042813284", "model": "2018 Fat Boy 107", "location": "Georgetown, KY", "price": 10499, "reason": "107, poza regionem"},
-    {"id": "ct-5041404263", "model": "2018 Fat Boy 114", "location": "Quarryville, PA", "price": 10950, "reason": "poza regionem (PA)"},
-    {"id": "ct-5042935341", "model": "2024 Indian Challenger Dark Horse", "location": "Monroe, MI", "price": null, "reason": "brak ceny (Call for price)"},
-    {"id": "ct-5042464262", "model": "2023 Indian Challenger Elite", "location": "Westerville, OH", "price": null, "reason": "brak ceny (Call for price)"},
-    {"id": "ct-mason-oh-dealer", "model": "kilka Fat Boy/Fat Bob 114 2018-2024", "location": "Mason, OH", "price": null, "reason": "brak ceny (Call for price)"},
-    {"id": "ct-5042819607", "model": "2024 Fat Boy 114", "location": "Shorewood, IL", "price": null, "reason": "brak ceny (Call for price)"}
+    {
+      "id": "ct-5042513837",
+      "model": "2018 Fat Bob FXFB",
+      "location": "Fremont, OH",
+      "price": 9495,
+      "reason": "107 (VIN 1HD1YKJ11JC038349, kod YK)"
+    },
+    {
+      "id": "ct-5040708811",
+      "model": "2018 Fat Bob FXFB",
+      "location": "Mansfield, OH",
+      "price": 10999,
+      "reason": "107 (FXFB)"
+    },
+    {
+      "id": "ct-5033074497",
+      "model": "2018 Fat Boy FLFB",
+      "location": "Medina, OH",
+      "price": 10999,
+      "reason": "107 (FLFB)"
+    },
+    {
+      "id": "ct-5041147740",
+      "model": "2018 Fat Bob 107",
+      "location": "Big Bend, WI",
+      "price": 9985,
+      "reason": "107"
+    },
+    {
+      "id": "ct-5041539812",
+      "model": "2018 Fat Bob 107",
+      "location": "Marietta, OH",
+      "price": 9988,
+      "reason": "107"
+    },
+    {
+      "id": "ct-5042040302",
+      "model": "2018 Fat Boy 114",
+      "location": "Columbia, MO",
+      "price": 10995,
+      "reason": "poza regionem (MO)"
+    },
+    {
+      "id": "ct-5042813284",
+      "model": "2018 Fat Boy 107",
+      "location": "Georgetown, KY",
+      "price": 10499,
+      "reason": "107, poza regionem"
+    },
+    {
+      "id": "ct-5041404263",
+      "model": "2018 Fat Boy 114",
+      "location": "Quarryville, PA",
+      "price": 10950,
+      "reason": "poza regionem (PA)"
+    },
+    {
+      "id": "ct-5042935341",
+      "model": "2024 Indian Challenger Dark Horse",
+      "location": "Monroe, MI",
+      "price": null,
+      "reason": "brak ceny (Call for price)"
+    },
+    {
+      "id": "ct-5042464262",
+      "model": "2023 Indian Challenger Elite",
+      "location": "Westerville, OH",
+      "price": null,
+      "reason": "brak ceny (Call for price)"
+    },
+    {
+      "id": "ct-mason-oh-dealer",
+      "model": "kilka Fat Boy/Fat Bob 114 2018-2024",
+      "location": "Mason, OH",
+      "price": null,
+      "reason": "brak ceny (Call for price)"
+    },
+    {
+      "id": "ct-5042819607",
+      "model": "2024 Fat Boy 114",
+      "location": "Shorewood, IL",
+      "price": null,
+      "reason": "brak ceny (Call for price)"
+    },
+    {
+      "id": "fb-1497300749116594",
+      "model": "2018 Fat Bob 114",
+      "location": "Miami, FL",
+      "price": 10999,
+      "reason": "poza regionem"
+    },
+    {
+      "id": "fb-891120917356759",
+      "model": "2018 Fat Boy 114",
+      "location": "Defiance, OH",
+      "price": 12999,
+      "reason": "cena > 11 000"
+    },
+    {
+      "id": "fb-1021973676856419",
+      "model": "2018 Fat Bob 114",
+      "location": "Cleveland, OH",
+      "price": 12990,
+      "reason": "cena > 11 000"
+    },
+    {
+      "id": "fb-1099225723111135",
+      "model": "2018 Fat Boy",
+      "location": "Skokie, IL",
+      "price": 13999,
+      "reason": "cena > 11 000"
+    }
+  ],
+  "facebook_unverified": [
+    {
+      "id": "fb-26573702002279243",
+      "model": "Harley-Davidson Fat Boy 114 (rocznik brak danych)",
+      "price": 10000,
+      "location": "Hartford, MI",
+      "url": "https://www.facebook.com/marketplace/item/26573702002279243/",
+      "note": "inny fragment indeksu pokazuje 12 500 USD",
+      "first_seen": "2026-11-12"
+    },
+    {
+      "id": "fb-athens-oh-fxfbs",
+      "model": "2018 Harley-Davidson FXFBS Fat Bob 114",
+      "price": 10500,
+      "miles": 13000,
+      "location": "Athens, OH",
+      "url": "https://www.facebook.com/marketplace/athens-oh/harley-davidson/",
+      "note": "brak bezpośredniego linku do ogłoszenia, tylko strona kategorii",
+      "first_seen": "2026-11-12"
+    },
+    {
+      "id": "fb-2329941004433092",
+      "model": "2020 Indian Challenger",
+      "price": null,
+      "miles": 18000,
+      "location": "okolice Lake Wissota (Chippewa Falls), WI",
+      "url": "https://www.facebook.com/marketplace/item/2329941004433092/",
+      "note": "cena w indeksie 1 234 USD = cena-wypełniacz",
+      "first_seen": "2026-11-12"
+    },
+    {
+      "id": "fb-2254086322092820",
+      "model": "2018 Harley-Davidson Fat Boy 114 (FLFBS)",
+      "price": null,
+      "miles": 2309,
+      "location": null,
+      "url": "https://www.facebook.com/marketplace/item/2254086322092820/",
+      "note": "brak ceny i lokalizacji w indeksie",
+      "first_seen": "2026-11-12"
+    }
   ]
 }
