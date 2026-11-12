@@ -175,6 +175,40 @@ Każdy wywiercony otwór i każde cięcie pomaluj cynkiem w sprayu. Czarną stal
 
 ---
 
+## Koszt (szacunek, ceny brutto, listopad 2026)
+
+Ceny stali z cenników hurtowni (ok. 6–10 zł/kg z cięciem na wymiar). Blacha cięto-ciągniona z ofert
+na Allegro. Ceny śrub detaliczne. To orientacyjne widełki: przed zakupem zapytaj hurtownię o wycenę.
+
+| Pozycja | Ilość | Wersja tańsza (czarna stal, malowana) | Wersja ocynk |
+|---|---|---|---|
+| Profil 60×40×2 | 7,5 m | 140–160 zł | 180–200 zł |
+| Kątownik 40×40×4 | 3,0 m | 35–45 zł | 35–45 zł |
+| Kątownik 30×30×3 | 2,8 m | 20–30 zł | 20–30 zł |
+| Płaskownik 80×6 | 1,5 m | 35–45 zł | 35–45 zł |
+| Płaskownik 50×8 + kątownik 60×60×6 (ucha, wsporniki) | 0,4 m + 0,2 m | 20–60 zł ¹ | 20–60 zł ¹ |
+| Rurka 16×2 na tulejki | ~1 m | 15–25 zł | 15–25 zł |
+| **Blacha cięto-ciągniona 62×25, 3–4 mm** | 2,25 m² | **340–400 zł** (czarna, ~150 zł/m²) | **560–650 zł** (ocynk, ~250 zł/m²) |
+| Śruby, nakrętki, podkładki, wkręty (lista z pkt 2) | komplet | 110–150 zł | 140–180 zł |
+| Łańcuchy z hakami albo zamki burtowe | 2 szt. | 40–80 zł | 40–80 zł |
+| Podkład + farba / cynk w sprayu | — | 80–120 zł | 30–40 zł |
+| Pręt Ø16 do ustawienia zawiasów, zaślepki 60×40 | — | 20–30 zł | 20–30 zł |
+| **Razem** | | **≈ 850–1050 zł** | **≈ 1100–1350 zł** |
+
+¹ Dolna kwota, gdy kupisz ścinki. Górna, gdy hurtownia sprzeda tylko pełny metr.
+
+Dodatkowo, jeśli nie masz:
+- wierteł HSS 8,5 / 10,5 / 16,5 / 17 (albo wiertła stopniowego): 60–120 zł,
+- tarcz do cięcia (5 szt.): ok. 20 zł,
+- opłaty za cięcie lub transport w hurtowni: 20–50 zł.
+
+**Gdzie zaoszczędzić:**
+- Blacha to ok. 40% kosztu. Lżejsza siatka (np. 62×23×3×2, ok. 100 zł/m²) wyjdzie taniej o ok. 100–150 zł,
+  ale wtedy dodaj szóstą rurę, bo blacha mocniej się ugina.
+- Kupuj profile w pełnych sztangach 6 m tylko wtedy, gdy resztę wykorzystasz. 7,5 m to 2 sztangi,
+  a 4,5 m zostaje.
+- Ucha i wsporniki zrób ze ścinków: wiele hurtowni i skupów złomu sprzedaje końcówki na kilogramy.
+
 ## ⚠️ Bezpieczeństwo
 - **Przyczepka musi być podpięta do auta albo podparta pod dyszlem.** Ciężka kosiarka na końcu
   przyczepki odpinanej potrafi podnieść dyszel do góry.
