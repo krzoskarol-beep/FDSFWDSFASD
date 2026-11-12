@@ -214,60 +214,180 @@
         "status": "active"
       },
       {
+        "q": "site:facebook.com/marketplace/item \"Fatboy\" harley 2018 OR 2019 OR 2020 OR 2021 OR 2022 OR 2023 OR 2024",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: Fatboy"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"Fat Boy 114\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: Fat Boy 114"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item FLFBS",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: FLFBS"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2018 Harley Softail\" OR \"2018 Harley-Davidson Softail\" OR \"2019 Harley Softail\" OR \"2019 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2018–2019"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2020 Harley Softail\" OR \"2020 Harley-Davidson Softail\" OR \"2021 Harley Softail\" OR \"2021 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2020–2021"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2022 Harley Softail\" OR \"2023 Harley Softail\" OR \"2024 Harley Softail\" OR \"2022 Harley-Davidson Softail\" OR \"2023 Harley-Davidson Softail\" OR \"2024 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2022–2024"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2025 Harley Softail\" OR \"2026 Harley Softail\" OR \"2025 Harley-Davidson Softail\" OR \"2026 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2025–2026"
+      },
+      {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio OR Minnesota OR Missouri",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Midwest"
+        "region": "Midwest",
+        "states": [
+          "IL",
+          "WI",
+          "IN",
+          "MI",
+          "IA",
+          "OH",
+          "MN",
+          "MO"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Kansas OR Nebraska OR \"South Dakota\" OR \"North Dakota\" OR Montana OR Wyoming OR Colorado",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Plains i Góry"
+        "region": "Plains i Góry",
+        "states": [
+          "KS",
+          "NE",
+          "SD",
+          "ND",
+          "MT",
+          "WY",
+          "CO"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Washington OR Oregon OR Idaho OR Utah OR Nevada OR California",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Zachód"
+        "region": "Zachód",
+        "states": [
+          "WA",
+          "OR",
+          "ID",
+          "UT",
+          "NV",
+          "CA"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Texas OR Oklahoma OR \"New Mexico\" OR Arizona",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Południowy zachód"
+        "region": "Południowy zachód",
+        "states": [
+          "TX",
+          "OK",
+          "NM",
+          "AZ"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Louisiana OR Mississippi OR Arkansas OR Alabama OR Tennessee OR Kentucky",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Południe"
+        "region": "Południe",
+        "states": [
+          "LA",
+          "MS",
+          "AR",
+          "AL",
+          "TN",
+          "KY"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Florida OR Georgia OR \"South Carolina\" OR \"North Carolina\" OR Virginia OR \"West Virginia\"",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Południowy wschód"
+        "region": "Południowy wschód",
+        "states": [
+          "FL",
+          "GA",
+          "SC",
+          "NC",
+          "VA",
+          "WV"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Pennsylvania OR \"New York\" OR \"New Jersey\" OR Connecticut OR Massachusetts OR Maryland OR Delaware",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Północny wschód"
+        "region": "Północny wschód",
+        "states": [
+          "PA",
+          "NY",
+          "NJ",
+          "CT",
+          "MA",
+          "MD",
+          "DE"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Maine OR \"New Hampshire\" OR Vermont OR \"Rhode Island\"",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active",
-        "region": "Nowa Anglia"
+        "region": "Nowa Anglia",
+        "states": [
+          "ME",
+          "NH",
+          "VT",
+          "RI"
+        ]
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley \"low miles\" 2018 OR 2019 OR 2020 OR 2021",
@@ -452,7 +572,7 @@
   "_sources_note": "facebook = indeks wyszukiwarki (ogłoszeń nie da się otworzyć bez logowania). Cycle Trader jest wyłączony; plan zostaje w searches.cycletrader na wypadek powrotu.",
   "self_improve": {
     "drop_after_zero_runs": 3,
-    "max_queries": 30,
+    "max_queries": 36,
     "min_samples_for_price": 5,
     "price_blend": 0.5,
     "gone_after_missing_runs": 3,
@@ -470,5 +590,11 @@
       "_note": "szacunek dowozu/odbioru: 0,60 USD za milę drogi (transport motocykla lub paliwo + bilet powrotny); do 300 mil od Des Plaines 0 (dojazd samemu)"
     },
     "_note": "koszt całkowity = cena + 0,10 USD/milę przebiegu + dowóz; oferty bez przebiegu na końcu"
+  },
+  "relist": {
+    "min_features": 3,
+    "miles_tolerance_pct": 5,
+    "miles_max_increase": 1500,
+    "_note": "ten sam motocykl: identyczny pełny VIN albo ≥3 cechy z: te same charakterystyczne zdjęcia (photo_fingerprint, nie katalogowe), sprzedawca (seller_name), miejscowość, zgodny przebieg, te same modyfikacje (mods). Sam rocznik/kolor/zdjęcie katalogowe nie wystarczają."
   }
 }

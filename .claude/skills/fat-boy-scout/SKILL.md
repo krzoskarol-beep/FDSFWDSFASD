@@ -5,12 +5,14 @@ description: Uruchamia przebieg Fat Boy Scout – wyszukiwanie Harley-Davidson F
 
 # Fat Boy Scout – jeden przebieg
 
-1. Ustal dzisiejszą datę (RRRR-MM-DD). Jeśli przebieg z tą datą już istnieje w `fat-boy-scout/state.json` (pole `runs`),
-   użyj `run_id` z dopiskiem godziny, np. `2026-11-19-18`.
+1. Uruchom `python3 fat-boy-scout/scout.py begin`. Jeśli wynik ma `"resumed": true`, to wznowienie przerwanego
+   przebiegu – powiedz o tym użytkownikowi jednym zdaniem (ile zapytań wykonano, ile zostało).
 2. Uruchom agenta **fat-boy-scout** (narzędzie Agent, `subagent_type: "fat-boy-scout"`) z poleceniem:
-   „Zrób pełny przebieg na dzień <data> zgodnie ze swoją procedurą: plan, eksperymenty, doszukanie braków ze `scout.py todo`,
-   `scout.py check`, `scout.py run`, `scout.py improve --apply`, lekcje w playbooku, commit i push. Oddaj raport dosłownie.”
-   Jeśli użytkownik podał dodatkowe życzenia (np. tylko Midwest, inny limit), przekaż je agentowi jako jednorazowe.
+   „Przebieg <run_id> (wznowiony: tak/nie). Działaj zgodnie ze swoją procedurą: tylko zapytania z `remaining`, `record`
+   po każdym zapytaniu, szerokie trafienia potwierdzaj cytatem z opisu, `todo`, `finish`, `improve --apply`, lekcje,
+   commit i push. Przy braku kredytów zapisz błąd i zakończ bez `finish`. Oddaj raport dosłownie oraz sumę kredytów.”
+   Jeśli użytkownik podał dodatkowe życzenia, przekaż je agentowi jako jednorazowe.
 3. Pokaż użytkownikowi raport dokładnie tak, jak zwrócił go agent: każdą część osobno, z wszystkimi linkami.
    Na końcu dodaj 1–2 zdania: co nowego (nowe oferty, spadki cen) i która oferta jest najlepsza według kosztu całkowitego.
-4. Jeśli agent zgłosił problem (np. mało wyników, nieudany skan), napisz to wprost i nie przedstawiaj raportu jako pełnego.
+4. Jeśli agent zgłosił problem (brak kredytów, błąd źródła, przebieg niedokończony), napisz to wprost: przebieg jest otwarty
+   i kolejne `/fat-boy-scout` go dokończy. Nie przedstawiaj częściowych wyników jako pełnego raportu.

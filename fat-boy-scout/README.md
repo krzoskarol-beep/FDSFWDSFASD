@@ -18,6 +18,15 @@ Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skutec
 | `reports/RRRR-MM-DD.md` | gotowe raporty |
 | `archive/` | dane z poprzedniej konfiguracji (Midwest, Cycle Trader, kilka modeli) |
 
+Przebieg (te polecenia wykonuje agent przy `/fat-boy-scout`; postęp zapisywany po każdym zapytaniu):
+```
+python3 fat-boy-scout/scout.py begin                      # nowy przebieg albo wznowienie przerwanego
+python3 fat-boy-scout/scout.py record <run_id> q.json     # po KAŻDYM zapytaniu: wyniki + kredyty
+python3 fat-boy-scout/scout.py remaining <run_id>         # co zostało z planu
+python3 fat-boy-scout/scout.py finish <run_id>            # walidacja, scalenie z historią, raport
+```
+
+Pozostałe:
 ```
 python3 fat-boy-scout/scout.py status
 python3 fat-boy-scout/scout.py todo            # czego brakuje w aktywnych ofertach + gotowe zapytania
@@ -35,3 +44,10 @@ Po zwykłym przebiegu `recall` pokaże, ile z nich Scout znalazł sam (np. 7/10)
 
 **Ograniczenie:** ogłoszenia Facebooka wymagają logowania, więc agent korzysta z indeksu wyszukiwarki.
 Ceny i dostępność trzeba potwierdzić po kliknięciu w link.
+
+**Raport** zawiera wszystkie potwierdzone oferty (z bezpośrednim linkiem), sekcję „Do sprawdzenia” (co ustalono, czego brakuje),
+zmiany cen z datami (także wejście w limit z ceny powyżej 11 000 USD), ponowne wystawienia tego samego motocykla
+(VIN albo ≥3 zgodne cechy, oba linki) i pokrycie stanów: znaleziono oferty / sprawdzono, zero trafień / błąd lub blokada / jeszcze nie sprawdzono.
+
+**Symulacja:** `python3 fat-boy-scout/sim/symulacja.py` przechodzi begin → record → przerwanie → wznowienie → finish
+na zmyślonych danych w osobnym katalogu i zapisuje `sim/przykladowy_raport.md` (oznaczony jako DANE SYMULOWANE).

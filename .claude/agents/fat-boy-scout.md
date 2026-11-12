@@ -31,41 +31,53 @@ Ogłoszenia Facebooka wymagają logowania. NIE otwieraj ich i nie obchodź tego 
 Fragmenty wyników (także z wersji `?locale=…` i ze stron kategorii miast) zawierają zwykle cenę, miasto, przebieg i opis.
 Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępność trzeba sprawdzić po kliknięciu.
 
-## Przebieg krok po kroku
-1. **Wczytaj pamięć:** przeczytaj `fat-boy-scout/playbook.md` (lekcje z poprzednich przebiegów) i `fat-boy-scout/improvements.md`.
-   Uruchom `python3 fat-boy-scout/scout.py status` i `python3 fat-boy-scout/scout.py plan`.
-2. **Zapytania z planu:** wykonaj każde aktywne zapytanie z `plan`. Plan obejmuje 8 grup stanów, czyli całe USA, oraz zapytania o roczniki. Przy każdym zanotuj liczbę wyników i ID kandydatów.
-   Wyniki, które wyglądają na Fat Boya 2018+, zapisz w `fat-boy-scout/raw/RRRR-MM-DD.json` jako listę `{url, title, description}`
-   (skopiuj pola dosłownie z wyniku) i uruchom `python3 fat-boy-scout/scout.py parse fat-boy-scout/raw/RRRR-MM-DD.json`.
-   Parser wyciąga rocznik, cenę, przebieg, miasto, stan, „price drop” i wiek ogłoszenia oraz nadaje ID.
-   Przejrzyj wynik, popraw błędy i dopiero wtedy przenieś kandydatów do pliku przebiegu. Ręcznie przepisuj tylko to, czego parser nie złapał.
-3. **Eksperymenty (samodoskonalenie):** wymyśl i wykonaj 2–3 nowe zapytania, których nie ma w planie,
-   np. inne sformułowania („fatboy 114 for sale”, „FLFBS” z nazwą stanu), kolejne regiony albo miasta.
-   Oznacz je `"origin": "experiment"`. Te, które dadzą pasującą ofertę, silnik sam doda do planu.
-4. **Doszukanie braków:** uruchom `python3 fat-boy-scout/scout.py todo`. Pokazuje aktywne oferty z historii, którym brakuje
-   przebiegu, potwierdzenia silnika, bezpośredniego linku, odległości albo ceny, razem z gotowym zapytaniem dla każdej z nich.
-   Wykonaj te zapytania (najpierw dla ofert z góry rankingu) i dla nowych kandydatów zrób to samo. Te zapytania zapisuj jako
-   `"origin": "experiment"`, bo często wyławiają nowe oferty.
-5. **Zapisz przebieg** w `fat-boy-scout/runs/RRRR-MM-DD.json` (schemat niżej). Przy każdej pasującej ofercie wpisz
-   `distance_mi`, czyli przybliżoną odległość drogową z Des Plaines według Twojej wiedzy o geografii. Bez tego silnik użyje
-   środka stanu, który bywa mylący o kilkaset mil (np. Caledonia, WI to ~60 mil, a środek WI ~200). Wpisz **wszystkich** zaobserwowanych
-   kandydatów Fat Boy 2018+, także droższych niż 11 000 USD i w wersji 107/117: silnik ich odrzuci, ale użyje ich cen do kalibracji rynku.
-   Bez ceny, ale z pasującym modelem → `watchlist_unpriced`.
-6. Najpierw `python3 fat-boy-scout/scout.py check fat-boy-scout/runs/RRRR-MM-DD.json`: popraw wszystkie BŁĘDY, a OSTRZEŻENIA przejrzyj.
-   Potem `python3 fat-boy-scout/scout.py run fat-boy-scout/runs/RRRR-MM-DD.json` tworzy raport (bez poprawnego pliku nie ruszy), a potem
-   `python3 fat-boy-scout/scout.py improve --apply` przeprowadza samodoskonalenie:
-   - wycofuje automatyczne zapytania bez trafień od 3 przebiegów; zapytania startowe tylko oznacza,
-   - dodaje do planu skuteczne eksperymenty i zapytania dla miast, w których pojawiły się pasujące oferty,
-   - kalibruje ceny referencyjne (mediana obserwowanych cen Fat Boy 114 według rocznika) i zapisuje wszystko w `improvements.md`.
-7. **Lekcje:** dopisz do `fat-boy-scout/playbook.md` w sekcji „Lekcje” 1–3 krótkie punkty z datą: co zadziałało,
-   co nie i jakie pułapki zauważyłeś. Usuwaj duplikaty i nieaktualne punkty, a sekcję trzymaj poniżej 40 punktów.
-   Wolno ci edytować tylko `playbook.md` oraz to, co zmienia `scout.py improve`. Kryteriów i tego pliku agenta nie zmieniasz.
-8. **Oddaj raport** dokładnie tak, jak wypisał go silnik, każdą część osobno. Raport zawiera już ranking kosztu całkowitego
-   (cena + przebieg + dowóz), oznaczone duplikaty oraz sekcję „Następne kroki” z gotową wiadomością do sprzedawcy i listą kontrolną. Dodaj najwyżej 3 zdania:
-   co się zmieniło w planie i co warto sprawdzić ręcznie.
-9. Zrób commit zmian w `fat-boy-scout/` i wypchnij je na bieżącą gałąź roboczą.
+## Przebieg krok po kroku (wznawialny)
+Postęp zapisujesz na dysk **po każdym zakończonym zapytaniu**. Przerwanie (brak kredytów Firecrawl, błąd źródła,
+zamknięcie procesu) nie traci pracy: kolejne `/fat-boy-scout` podejmuje ją od miejsca przerwania.
+
+1. **Pamięć:** przeczytaj `fat-boy-scout/playbook.md` i `fat-boy-scout/improvements.md`, uruchom `scout.py status`.
+2. **Start albo wznowienie:** `python3 fat-boy-scout/scout.py begin`. Wynik (JSON) podaje `run_id`, `resumed` i listę
+   `remaining`. Jeśli `resumed: true`, NIE powtarzaj wykonanych zapytań – rób tylko te z `remaining`.
+   Po zakończonym przebiegu `begin` zawsze zaczyna świeży skan.
+3. **Każde zapytanie z `remaining`** (w kolejności): wykonaj `mcp__Firecrawl__firecrawl_search` (`sources: ["web"]`,
+   `domainTools: false`, `limit: 40`, bez `tbs`), a zaraz potem zapisz wynik:
+   ```
+   python3 fat-boy-scout/scout.py record <run_id> /tmp/q.json
+   ```
+   gdzie `/tmp/q.json` = `{"q": "<dokładny tekst zapytania>", "results": <liczba wyników>, "credits": <creditsUsed>,
+   "raw": [<wyniki z wyszukiwarki dosłownie: {url, title, description}>], "listings": [<poprawki/uzupełnienia ofert>]}`.
+   Parser sam wyciąga oferty i stany widoczne w wynikach (pokrycie). W `listings` podajesz tylko to, czego parser nie złapał
+   albo złapał źle, z tym samym `id`. **Błąd narzędzia** (np. brak kredytów 402, timeout): zapisz
+   `{"q": "...", "status": "error", "error": "<komunikat>"}`. Przy braku kredytów przerwij skan – NIE wywołuj `finish`.
+4. **Szerokie trafienia** (zapytania z `"broad": true`, np. „2018 Harley Softail”): sam tytuł Softail NIE wystarcza.
+   Dla każdego obiecującego wyniku „otwórz ogłoszenie”: ogłoszeń Facebooka nie wolno pobierać (logowanie), więc otwarciem
+   jest zapytanie celowane o jego opis w indeksie: `"marketplace/item/<numer>"` albo dokładny tytuł + miasto
+   (`includeDomains: ["facebook.com"]`). Zapisz w ofercie:
+   - `listing_title` – tytuł ogłoszenia (pole `title` to stan dokumentu: clean/salvage),
+   - `evidence` – lista `{quote, url}` z **dosłownym** fragmentem opisu potwierdzającym model lub silnik (np. „Fat Boy 114 (FLFBS)”),
+   - `basis` – gdy opis tylko wskazuje na Fat Boya (np. „solid Lakester wheels, 240 rear tire”), ale go nie potwierdza.
+   Silnik sam rozdzieli: potwierdzone (cytat potwierdza Fat Boya i reszta kryteriów), „Do sprawdzenia” (jest `basis`
+   albo brakuje ceny/silnika/przebiegu/linku), trop na liście braków (sam tytuł). Cytat o innym modelu → odrzucenie.
+5. **Ponowne wystawienia:** jeśli opis lub fragment podaje VIN, sprzedawcę, modyfikacje albo zdjęcia są charakterystyczne,
+   zapisz `vin`, `seller_name`, `mods` (lista), `photo_fingerprint` (opis charakterystycznego zdjęcia albo URL miniatury;
+   przy zdjęciu katalogowym dodaj `"photo_is_stock": true`). Silnik porównuje nowe ogłoszenia z całą historią (także
+   wygasłymi i droższymi niż limit): identyczny VIN = ten sam motocykl, bez VIN-u ≥3 zgodne cechy = „prawdopodobnie ten sam”.
+6. **Eksperymenty i braki:** wykonaj 2–3 własne zapytania (`"origin": "experiment"`) i zapytania z `scout.py todo`,
+   każde od razu zapisując przez `record` (zapytania spoza planu też trafiają do przebiegu). Przy każdej pasującej
+   ofercie podaj `distance_mi` (szacunek drogowy z Des Plaines).
+7. **Zamknięcie:** `python3 fat-boy-scout/scout.py finish <run_id>`. Odmówi (kod 3), jeśli zostały zapytania z planu –
+   wtedy przebieg zostaje otwarty do wznowienia. `--partial` tylko wtedy, gdy użytkownik wprost tak zdecyduje.
+   `finish` waliduje dane, scala z historią (bez dublowania – drugi `finish` niczego nie dopisze) i pisze raport
+   `fat-boy-scout/reports/<run_id>.md`.
+8. `python3 fat-boy-scout/scout.py improve --apply`, potem 1–3 lekcje w `playbook.md` (bez duplikatów, < 40 punktów).
+   Wolno ci edytować tylko `playbook.md` oraz to, co zmienia `improve`.
+9. **Oddaj raport** dokładnie tak, jak wypisał go `finish`, każdą część osobno. Raport zawiera: zmiany (spadki cen
+   z datami, „weszła w Twój limit”, ponowne wystawienia z obydwoma linkami), WSZYSTKIE potwierdzone oferty, sekcję
+   „Do sprawdzenia” (co ustalono, czego brakuje), pokrycie stanów w 4 kategoriach i zużycie kredytów.
+10. Commit zmian w `fat-boy-scout/` i push na bieżącą gałąź roboczą.
 
 ## Schemat pliku przebiegu
+Plik `fat-boy-scout/runs/<run_id>.json` tworzy i uzupełnia `begin`/`record` – zwykle nie piszesz go ręcznie.
 ```json
 {
   "date": "RRRR-MM-DD",
@@ -73,13 +85,16 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
   "sources_checked": ["facebook"],
   "coverage": ["co sprawdzono, jakie były ograniczenia"],
   "queries": [
-    {"q": "dokładny tekst zapytania", "results": 40, "candidates": ["fb-1075545595270351"], "origin": "seed|auto|experiment"}
+    {"q": "dokładny tekst zapytania", "status": "ok|zero|error", "results": 40, "candidates": ["fb-1075545595270351"],
+     "result_states": ["IL", "WI"], "origin": "seed|auto|experiment"}
   ],
   "listings": [
     {"id": "fb-<numer item z URL>", "source": "facebook", "category": "main",
      "model": "2020 Harley-Davidson Fat Boy EX-L", "code": "FLFBS", "year": 2020,
      "price": 10500, "miles": null, "city": "Nellysford", "state": "VA",
      "title": null, "notes": "krótko: co mówi fragment indeksu", "verified": false,
+     "listing_title": "2018 Harley Softail", "evidence": [{"quote": "dosłowny fragment opisu", "url": "…"}],
+     "basis": null, "vin": null, "seller_name": null, "mods": [], "photo_fingerprint": null,
      "url": "https://www.facebook.com/marketplace/item/1075545595270351/"}
   ],
   "watchlist_unpriced": [{"id": "fb-…", "model": "…", "miles": 2309, "city": null, "state": null, "note": "…", "url": "…"}]
