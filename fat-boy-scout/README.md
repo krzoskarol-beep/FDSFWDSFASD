@@ -3,7 +3,7 @@
 Agent wyszukujący na **Facebook Marketplace w całych USA** ogłoszenia **Harley-Davidson Fat Boy 114** (2018+) do **11 000 USD**.
 Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skuteczne, kalibruje ceny rynkowe i zapisuje lekcje.
 
-**Uruchomienie:** w Claude Code napisz „uruchom Fat Boy Scout” (agent `.claude/agents/fat-boy-scout.md`).
+**Uruchomienie:** wpisz `/fat-boy-scout` albo „uruchom Fat Boy Scout” (skill `.claude/skills/fat-boy-scout`, agent `.claude/agents/fat-boy-scout.md`).
 
 | Plik | Do czego służy |
 |---|---|
@@ -20,6 +20,8 @@ Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skutec
 
 ```
 python3 fat-boy-scout/scout.py status
+python3 fat-boy-scout/scout.py todo            # czego brakuje w aktywnych ofertach + gotowe zapytania
+python3 fat-boy-scout/scout.py check fat-boy-scout/runs/2026-11-19.json   # walidacja przed uruchomieniem
 python3 fat-boy-scout/scout.py plan
 python3 fat-boy-scout/scout.py run fat-boy-scout/runs/2026-11-19.json
 python3 fat-boy-scout/scout.py improve --apply

@@ -34,7 +34,7 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
 ## Przebieg krok po kroku
 1. **Wczytaj pamięć:** przeczytaj `fat-boy-scout/playbook.md` (lekcje z poprzednich przebiegów) i `fat-boy-scout/improvements.md`.
    Uruchom `python3 fat-boy-scout/scout.py status` i `python3 fat-boy-scout/scout.py plan`.
-2. **Zapytania z planu:** wykonaj każde aktywne zapytanie z `plan`. Przy każdym zanotuj liczbę wyników i ID kandydatów.
+2. **Zapytania z planu:** wykonaj każde aktywne zapytanie z `plan`. Plan obejmuje 8 grup stanów, czyli całe USA, oraz zapytania o roczniki. Przy każdym zanotuj liczbę wyników i ID kandydatów.
    Wyniki, które wyglądają na Fat Boya 2018+, zapisz w `fat-boy-scout/raw/RRRR-MM-DD.json` jako listę `{url, title, description}`
    (skopiuj pola dosłownie z wyniku) i uruchom `python3 fat-boy-scout/scout.py parse fat-boy-scout/raw/RRRR-MM-DD.json`.
    Parser wyciąga rocznik, cenę, przebieg, miasto, stan, „price drop” i wiek ogłoszenia oraz nadaje ID.
@@ -42,14 +42,17 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
 3. **Eksperymenty (samodoskonalenie):** wymyśl i wykonaj 2–3 nowe zapytania, których nie ma w planie,
    np. inne sformułowania („fatboy 114 for sale”, „FLFBS” z nazwą stanu), kolejne regiony albo miasta.
    Oznacz je `"origin": "experiment"`. Te, które dadzą pasującą ofertę, silnik sam doda do planu.
-4. **Doszukanie szczegółów:** dla obiecujących kandydatów bez ceny, miasta lub rocznika zrób 1 zapytanie celowane
-   z opisem albo miastem i `includeDomains: ["facebook.com"]`.
+4. **Doszukanie braków:** uruchom `python3 fat-boy-scout/scout.py todo`. Pokazuje aktywne oferty z historii, którym brakuje
+   przebiegu, potwierdzenia silnika, bezpośredniego linku, odległości albo ceny, razem z gotowym zapytaniem dla każdej z nich.
+   Wykonaj te zapytania (najpierw dla ofert z góry rankingu) i dla nowych kandydatów zrób to samo. Te zapytania zapisuj jako
+   `"origin": "experiment"`, bo często wyławiają nowe oferty.
 5. **Zapisz przebieg** w `fat-boy-scout/runs/RRRR-MM-DD.json` (schemat niżej). Przy każdej pasującej ofercie wpisz
    `distance_mi`, czyli przybliżoną odległość drogową z Des Plaines według Twojej wiedzy o geografii. Bez tego silnik użyje
    środka stanu, który bywa mylący o kilkaset mil (np. Caledonia, WI to ~60 mil, a środek WI ~200). Wpisz **wszystkich** zaobserwowanych
    kandydatów Fat Boy 2018+, także droższych niż 11 000 USD i w wersji 107/117: silnik ich odrzuci, ale użyje ich cen do kalibracji rynku.
    Bez ceny, ale z pasującym modelem → `watchlist_unpriced`.
-6. `python3 fat-boy-scout/scout.py run fat-boy-scout/runs/RRRR-MM-DD.json` tworzy raport, a potem
+6. Najpierw `python3 fat-boy-scout/scout.py check fat-boy-scout/runs/RRRR-MM-DD.json`: popraw wszystkie BŁĘDY, a OSTRZEŻENIA przejrzyj.
+   Potem `python3 fat-boy-scout/scout.py run fat-boy-scout/runs/RRRR-MM-DD.json` tworzy raport (bez poprawnego pliku nie ruszy), a potem
    `python3 fat-boy-scout/scout.py improve --apply` przeprowadza samodoskonalenie:
    - wycofuje automatyczne zapytania bez trafień od 3 przebiegów; zapytania startowe tylko oznacza,
    - dodaje do planu skuteczne eksperymenty i zapytania dla miast, w których pojawiły się pasujące oferty,
@@ -66,6 +69,7 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
 ```json
 {
   "date": "RRRR-MM-DD",
+  "run_id": "RRRR-MM-DD (opcjonalnie z godziną, gdy to drugi przebieg tego dnia, np. 2026-11-19-18)",
   "sources_checked": ["facebook"],
   "coverage": ["co sprawdzono, jakie były ograniczenia"],
   "queries": [

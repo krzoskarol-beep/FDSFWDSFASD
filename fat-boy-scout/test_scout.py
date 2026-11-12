@@ -363,6 +363,42 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(scout._miles("9800 miles. Must see"), 9800)
 
 
+class ToolingTests(unittest.TestCase):
+    def test_validate_run(self):
+        good = {"date": "2026-11-19", "sources_checked": ["facebook"], "queries": [{"q": "x", "results": 3, "candidates": ["fb-1"]}],
+                "listings": [L(id="fb-1", source="facebook", verified=False, distance_mi=100)]}
+        self.assertEqual(scout.validate_run(good, FB)[0], [])
+        bad = json.loads(json.dumps(good))
+        bad["listings"].append(dict(bad["listings"][0]))
+        bad["listings"][0]["price"] = "10500"
+        bad["listings"][1]["url"] = None
+        errs = " | ".join(scout.validate_run(bad, FB)[0])
+        self.assertIn("zdublowane ID", errs)
+        self.assertIn("'price' musi być liczbą", errs)
+        self.assertIn("brak linku", errs)
+
+    def test_todo(self):
+        st = scout.empty_state()
+        st["listings"]["fb-1"] = dict(L(id="fb-1", model="2018 Harley-Davidson Fat Boy", code=None, miles=None,
+                                        url="https://www.facebook.com/marketplace/x-wi/harley-davidson/"), status="active")
+        items = "\n".join(scout.todo_items(st, FB))
+        self.assertIn("brak: przebieg", items)
+        self.assertIn("brak: bezpośredni link", items)
+        self.assertIn("brak: silnik 107/114", items)
+
+    def test_dealer_detection(self):
+        o = scout.parse_snippet("2018 Harley-Davidson Fat Boy - $10500, Used, in Austin, Texas. No hidden fees, we finance!", "u")
+        self.assertEqual(o[0]["seller"], "dealer")
+
+    def test_full_list_in_followup(self):
+        boy = L(id="fb-1", source="facebook", verified=False, model="2018 Harley-Davidson Fat Boy 114", code=None)
+        st, _ = scout.merge(scout.empty_state(), run([boy], sources=("facebook",)), FB)
+        st, d = scout.merge(st, run([boy], d="2026-11-19", sources=("facebook",)), FB)
+        text = "\n".join(scout.render(d, run([], d="2026-11-19"), FB, 2))
+        self.assertIn("## Wszystkie aktywne oferty", text)
+        self.assertIn("widziana 19.11.2026", text)
+
+
 class RecallTests(unittest.TestCase):
     def test_item_id(self):
         self.assertEqual(scout.item_id("https://www.facebook.com/marketplace/item/123/?ref=x"), "fb-123")

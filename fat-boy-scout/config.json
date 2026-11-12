@@ -208,34 +208,66 @@
         "status": "active"
       },
       {
-        "q": "site:facebook.com/marketplace \"Fat Boy 114\" Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio",
-        "origin": "seed",
-        "added": "2026-11-12",
-        "status": "active"
-      },
-      {
-        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Chicago OR Milwaukee OR Detroit OR Indianapolis OR Columbus",
-        "origin": "seed",
-        "added": "2026-11-12",
-        "status": "active"
-      },
-      {
-        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Texas OR Florida OR California OR Arizona",
-        "origin": "seed",
-        "added": "2026-11-12",
-        "status": "active"
-      },
-      {
-        "q": "site:facebook.com/marketplace \"Fat Boy\" harley Pennsylvania OR \"New York\" OR Virginia OR Carolina OR Georgia",
-        "origin": "seed",
-        "added": "2026-11-12",
-        "status": "active"
-      },
-      {
         "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
         "origin": "seed",
         "added": "2026-11-12",
         "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio OR Minnesota OR Missouri",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Midwest"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Kansas OR Nebraska OR \"South Dakota\" OR \"North Dakota\" OR Montana OR Wyoming OR Colorado",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Plains i Góry"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Washington OR Oregon OR Idaho OR Utah OR Nevada OR California",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Zachód"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Texas OR Oklahoma OR \"New Mexico\" OR Arizona",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południowy zachód"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Louisiana OR Mississippi OR Arkansas OR Alabama OR Tennessee OR Kentucky",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południe"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Florida OR Georgia OR \"South Carolina\" OR \"North Carolina\" OR Virginia OR \"West Virginia\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południowy wschód"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Pennsylvania OR \"New York\" OR \"New Jersey\" OR Connecticut OR Massachusetts OR Maryland OR Delaware",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Północny wschód"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Maine OR \"New Hampshire\" OR Vermont OR \"Rhode Island\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Nowa Anglia"
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" harley \"low miles\" 2018 OR 2019 OR 2020 OR 2021",
@@ -378,7 +410,7 @@
   "_sources_note": "facebook = indeks wyszukiwarki (ogłoszeń nie da się otworzyć bez logowania). Cycle Trader jest wyłączony; plan zostaje w searches.cycletrader na wypadek powrotu.",
   "self_improve": {
     "drop_after_zero_runs": 3,
-    "max_queries": 25,
+    "max_queries": 30,
     "min_samples_for_price": 5,
     "price_blend": 0.5,
     "gone_after_missing_runs": 3,

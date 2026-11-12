@@ -470,7 +470,8 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             rec["origin"] = q["origin"]
     diff["queries"] = run.get("queries", [])
 
-    state["runs"].append(today)
+    state["runs"].append(run.get("run_id") or today)
+    state["last_run_date"] = today
     return state, diff
 
 
@@ -590,6 +591,17 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
     elif not verified_sources:
         blocks.append(f"{fb_title}\nBrak{'' if first else ' nowych'} ofert spełniających kryteria.")
 
+    if not first:
+        everything = sorted([l for l in diff["active"] + diff["unverified_all"] if not l.get("dup_of")],
+                            key=lambda l: rank_key(l, config))
+        if everything:
+            lines = ["## Wszystkie aktywne oferty (także te bez zmian)"]
+            for l in everything:
+                loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
+                lines.append(f"- {l.get('model')} – {fmt_price(l.get('price'))} – {fmt_miles(l.get('miles'))} – {loc} – "
+                             f"widziana {pl_date(l['last_seen'])}\n  {l.get('url') or 'link: brak'}")
+            blocks.append("\n".join(lines))
+
     if diff.get("watch_new"):
         blocks.append("## Facebook – obserwowane bez ceny\nPasujący model, ale indeks nie podaje ceny. Sprawdź je ręcznie.")
         for w in diff["watch_new"]:
@@ -696,7 +708,16 @@ def cmd_run(args) -> int:
     run = load_json(Path(args.run_file))
     run.setdefault("date", date.today().isoformat())
     state = migrate(load_json(STATE_PATH))
-    if run["date"] in state["runs"] and not args.dry_run:
+    run.setdefault("run_id", run["date"])
+    errors, warnings = validate_run(run, config)
+    for w in warnings:
+        print(f"OSTRZEŻENIE: {w}", file=sys.stderr)
+    if errors:
+        for e in errors:
+            print(f"BŁĄD: {e}", file=sys.stderr)
+        print("Popraw plik przebiegu (scout.py check pokaże to samo) i uruchom ponownie.", file=sys.stderr)
+        return 1
+    if run["run_id"] in state["runs"] and not args.dry_run:
         print(f"Przebieg {run['date']} jest już w state.json – użyj --dry-run albo innej daty.", file=sys.stderr)
         return 2
     report_no = len(state["runs"]) + 1
@@ -794,7 +815,7 @@ def improve(state: dict, config: dict, today: str) -> tuple[dict, list[str]]:
 def cmd_improve(args) -> int:
     config = load_json(CONFIG_PATH)
     state = migrate(load_json(STATE_PATH))
-    today = state["runs"][-1] if state["runs"] else date.today().isoformat()
+    today = state.get("last_run_date") or (state["runs"][-1][:10] if state["runs"] else date.today().isoformat())
     new_cfg, log = improve(state, config, today)
     if not log:
         print("Brak zmian – plan i ceny referencyjne są aktualne.")
@@ -859,6 +880,9 @@ def parse_snippet(text: str, url: str | None = None) -> list[dict]:
         if o.get("miles") is None and len(out) == 1:
             o["miles"] = _miles(text)
         o.update(source="facebook", category="main", verified=False, url=url)
+        if len(out) == 1 and re.search(r"dealer|stock\s*(?:#|number)|we finance|processing fee|doc fee|no hidden fees|"
+                                         r"financing|trades? welcome", text, re.I):
+            o["seller"] = "dealer"
         iid = item_id(url or "")
         o["id"] = iid if iid.startswith("fb-") and len(out) == 1 and text.lstrip().startswith(str(o["year"])) else \
             f"fb-{(o.get('city') or 'x').lower().replace(' ', '')}-{(o.get('state') or 'xx').lower()}-{o['year']}"
@@ -875,6 +899,91 @@ def cmd_parse(args) -> int:
         for o in parse_snippet(text, it.get("url")):
             found.setdefault(o["id"], o)
     print(json.dumps(list(found.values()), ensure_ascii=False, indent=2))
+    return 0
+
+
+def validate_run(run: dict, config: dict) -> tuple[list[str], list[str]]:
+    """Sprawdza plik przebiegu przed scaleniem. Zwraca (błędy, ostrzeżenia)."""
+    err, warn = [], []
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(run.get("date", ""))):
+        err.append("pole 'date' musi mieć format RRRR-MM-DD")
+    if not run.get("sources_checked"):
+        warn.append("brak 'sources_checked' – zniknięcia nie będą liczone")
+    ids = [l.get("id") for l in run.get("listings", [])]
+    dups = {i for i in ids if ids.count(i) > 1}
+    if dups:
+        err.append(f"zdublowane ID: {', '.join(sorted(map(str, dups)))}")
+    states = set(config.get("us_states", []))
+    for l in run.get("listings", []):
+        lid = l.get("id") or "?"
+        if not re.fullmatch(r"(fb|ct)-[\w-]+", str(l.get("id", ""))):
+            err.append(f"{lid}: ID musi mieć postać fb-<numer> albo fb-<miasto>-<stan>-<rocznik>")
+        if l.get("category") not in config["categories"]:
+            err.append(f"{lid}: nieznana kategoria {l.get('category')!r}")
+        for k in ("year", "price", "miles", "distance_mi"):
+            if l.get(k) is not None and not isinstance(l[k], int):
+                err.append(f"{lid}: '{k}' musi być liczbą całkowitą albo null (jest {l[k]!r})")
+        st = l.get("state")
+        if st is not None and st.upper() not in states and not geo.state_code(st):
+            warn.append(f"{lid}: nieznany stan {st!r} (oferta spoza USA zostanie odrzucona)")
+        if not l.get("url"):
+            err.append(f"{lid}: brak linku 'url' – każda oferta musi mieć link")
+        if l.get("source") == "facebook" and l.get("verified") is not False:
+            warn.append(f"{lid}: oferta z Facebooka powinna mieć \"verified\": false")
+        if isinstance(l.get("price"), int) and l["price"] <= config["max_price_usd"] and l.get("distance_mi") is None:
+            warn.append(f"{lid}: brak 'distance_mi' – silnik użyje środka stanu")
+    known = set(ids) | {w.get("id") for w in run.get("watchlist_unpriced", [])}
+    for q in run.get("queries", []):
+        if "q" not in q or not isinstance(q.get("results", 0), int):
+            err.append(f"zapytanie bez tekstu 'q' albo z nieliczbowym 'results': {q}")
+        for c in q.get("candidates", []):
+            if c not in known:
+                warn.append(f"zapytanie {q.get('q', '?')[:40]!r}: kandydat {c} nie występuje w listings/watchlist")
+    if not run.get("queries"):
+        warn.append("brak 'queries' – samodoskonalenie nie dostanie danych")
+    return err, warn
+
+
+def cmd_check(args) -> int:
+    run = load_json(Path(args.run_file))
+    errors, warnings = validate_run(run, load_json(CONFIG_PATH))
+    for w in warnings:
+        print(f"OSTRZEŻENIE: {w}")
+    for e in errors:
+        print(f"BŁĄD: {e}")
+    print("OK – plik przebiegu jest poprawny." if not errors else f"{len(errors)} błędów.")
+    return 1 if errors else 0
+
+
+def todo_items(state: dict, config: dict) -> list[str]:
+    """Lista braków w aktywnych ofertach i gotowe zapytania, które je uzupełnią."""
+    out = []
+    for l in sorted(state.get("listings", {}).values(), key=lambda l: rank_key(l, config)):
+        if l.get("status") != "active" or l.get("dup_of"):
+            continue
+        city, st, y = l.get("city") or "", l.get("state") or "", l.get("year") or ""
+        base = f'"{y} Harley-Davidson Fat Boy" {city} {st}'.strip()
+        gaps = []
+        if l.get("miles") is None:
+            gaps.append(("przebieg", f"{base} miles facebook marketplace"))
+        if l.get("engine") is None and l.get("year") and l["year"] <= 2020:
+            gaps.append(("silnik 107/114", f"{base} FLFBS OR 114 OR 107"))
+        if "/marketplace/item/" not in (l.get("url") or ""):
+            gaps.append(("bezpośredni link", f'site:facebook.com/marketplace/item {base}'))
+        if l.get("distance_mi") is None:
+            gaps.append(("odległość", "wpisz distance_mi z własnej wiedzy o geografii"))
+        for what, q in gaps:
+            out.append(f"{l['id']} ({l.get('model')}, {fmt_price(l.get('price'))}, {city} {st}) – brak: {what}\n    → {q}")
+    for w in state.get("watchlist", {}).values():
+        mq = re.split(r"[(,]", w.get("model", ""))[0].strip()
+        where = " ".join(x for x in (w.get("city"), w.get("state")) if x)
+        out.append(f"{w['id']} ({w.get('model')}) – brak: cena\n    → \"{mq}\" {where} price facebook marketplace".rstrip())
+    return out
+
+
+def cmd_todo(args) -> int:
+    items = todo_items(migrate(load_json(STATE_PATH)), load_json(CONFIG_PATH))
+    print("\n".join(items) if items else "Brak braków – wszystkie aktywne oferty są kompletne.")
     return 0
 
 
@@ -939,6 +1048,10 @@ def main(argv=None) -> int:
     v.set_defaults(func=cmd_vin)
     sub.add_parser("plan", help="pokaż plan wyszukiwań").set_defaults(func=cmd_plan)
     sub.add_parser("status", help="pokaż śledzone oferty").set_defaults(func=cmd_status)
+    ck = sub.add_parser("check", help="sprawdź plik przebiegu przed uruchomieniem")
+    ck.add_argument("run_file")
+    ck.set_defaults(func=cmd_check)
+    sub.add_parser("todo", help="braki w aktywnych ofertach i zapytania, które je uzupełnią").set_defaults(func=cmd_todo)
     pa = sub.add_parser("parse", help="wyciągnij oferty z wyników wyszukiwania (JSON: url, title, description)")
     pa.add_argument("file")
     pa.set_defaults(func=cmd_parse)
