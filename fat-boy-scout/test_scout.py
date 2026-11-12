@@ -173,6 +173,15 @@ class RenderTests(unittest.TestCase):
         self.assertTrue(parts[0].startswith("**Część 1/"))
         self.assertTrue(all(len(p) < 450 for p in parts))
 
+    def test_over_limit_never_listed(self):
+        st = scout.empty_state()
+        ls = [L(id="a"), L(id="drogi", price=12500, url="https://example.test/drogi")]
+        st, d = scout.merge(st, run(ls), CONFIG)
+        text = "\n".join(scout.render(d, run(ls), CONFIG, 1))
+        self.assertNotIn("https://example.test/drogi", text)
+        self.assertNotIn("12\u00a0500", text)
+        self.assertIn("Pominięto 1 ofert", text)
+
     def test_header_not_orphaned(self):
         parts = scout.split_parts(["# T", "## Sekcja", "x" * 300 + " https://a"], 320)
         self.assertTrue(all(not p.rstrip().endswith("## Sekcja") for p in parts))

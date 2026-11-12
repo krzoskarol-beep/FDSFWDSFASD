@@ -449,9 +449,14 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         blocks.append("\n".join(lines))
 
     if diff["rejected_now"] and first:
-        lines = ["## Sprawdzone i odrzucone"]
+        # oferty powyżej limitu ceny nie są pokazywane wcale – tylko ich liczba
+        over = [r for r in diff["rejected_now"] if r["reason"].startswith("cena >")]
+        rest = [r for r in diff["rejected_now"] if r not in over]
+        lines = ["## Sprawdzone i odrzucone (do 11 000 USD, ale niespełniające innych kryteriów)"]
         lines += [f"- {r['model']} – {fmt_price(r.get('price'))} – {r['location']} – {r['reason']}\n"
-                  f"  {r.get('url') or 'link: brak'}" for r in diff["rejected_now"]]
+                  f"  {r.get('url') or 'link: brak'}" for r in rest]
+        if over:
+            lines.append(f"Pominięto {len(over)} ofert z ceną powyżej {fmt_int(config['max_price_usd'])} USD.")
         blocks.append("\n".join(lines))
 
     cov = run.get("coverage")

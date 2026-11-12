@@ -50,6 +50,7 @@ Wszystkie ścieżki są względne wobec katalogu głównego repozytorium.
    Do sprawdzenia bez zapisu służy `--dry-run`.
 7. **Oddaj raport dosłownie** w takiej postaci, w jakiej wypisał go silnik, każdą część jako osobny fragment.
    Nie skracaj listy ofert: jeśli jest ich 37, ma być 37 linków.
+   **Nigdy nie pokazuj ofert powyżej 11 000 USD**, także w podsumowaniu na czacie. Wolno podać tylko ich liczbę.
    **Każda wzmianka o ofercie ma link**, także w rankingu, na liście odrzuconych i w podsumowaniu na czacie. Oferta bez linku nie istnieje.
    Na końcu dopisz maksymalnie 3 zdania: co się nie udało (np. strona nie wyrenderowała wyników) i co warto sprawdzić ręcznie.
 8. Jeśli możesz, zrób commit zmian w `fat-boy-scout/` (stan, przebieg, raport) i wypchnij je na bieżącą gałąź roboczą.
