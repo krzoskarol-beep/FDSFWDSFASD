@@ -1,0 +1,191 @@
+{
+  "max_price_usd": 11000,
+  "home": {
+    "city": "Des Plaines",
+    "state": "IL",
+    "zip": "60016"
+  },
+  "metro_radius_mi": 40,
+  "metro_cities": [
+    "des plaines",
+    "chicago",
+    "park ridge",
+    "niles",
+    "elk grove village",
+    "mount prospect",
+    "arlington heights",
+    "rosemont",
+    "schaumburg",
+    "skokie",
+    "evanston",
+    "elmhurst",
+    "villa park",
+    "oak brook",
+    "naperville",
+    "palatine",
+    "wheeling",
+    "glenview",
+    "northbrook",
+    "itasca",
+    "lombard",
+    "cicero",
+    "oak lawn",
+    "countryside",
+    "barrington"
+  ],
+  "states_priority": [
+    "IL",
+    "WI",
+    "IN",
+    "MI",
+    "IA",
+    "OH"
+  ],
+  "report_max_chars": 3800,
+  "expected_miles_per_year": 3000,
+  "categories": {
+    "main": {
+      "label": "Fat Boy 114 / Fat Bob 114",
+      "min_year": 2018,
+      "require_engine": "114"
+    },
+    "challenger": {
+      "label": "Indian Challenger",
+      "min_year": 2020
+    },
+    "honda-deal": {
+      "label": "Okazje Honda (Africa Twin / Gold Wing)",
+      "deal_only": true
+    }
+  },
+  "vin_model_codes": {
+    "YG": {
+      "model": "Fat Boy 114",
+      "code": "FLFBS",
+      "engine": "114"
+    },
+    "YL": {
+      "model": "Fat Bob 114",
+      "code": "FXFBS",
+      "engine": "114"
+    },
+    "YK": {
+      "model": "Fat Bob",
+      "code": "FXFB",
+      "engine": "107"
+    }
+  },
+  "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
+  "market_reference": {
+    "Fat Boy 114": {
+      "2018": 12500,
+      "2019": 13000,
+      "2020": 14000,
+      "2021": 15000,
+      "2022": 16000,
+      "2023": 17000,
+      "2024": 18000
+    },
+    "Fat Bob 114": {
+      "2018": 12000,
+      "2019": 12500,
+      "2020": 13000,
+      "2021": 13800,
+      "2022": 14500,
+      "2023": 15500,
+      "2024": 16500
+    },
+    "Indian Challenger": {
+      "2020": 14500,
+      "2021": 15500,
+      "2022": 17000,
+      "2023": 19000,
+      "2024": 21000
+    },
+    "Africa Twin": {
+      "2016": 7500,
+      "2017": 8000,
+      "2018": 8500,
+      "2019": 9000,
+      "2020": 10000,
+      "2021": 11000,
+      "2022": 12000,
+      "2023": 13000
+    },
+    "Gold Wing": {
+      "2010": 8000,
+      "2012": 9000,
+      "2013": 9500,
+      "2014": 10000,
+      "2015": 11000,
+      "2016": 12000,
+      "2017": 13000,
+      "2018": 17000,
+      "2019": 18000,
+      "2020": 19500
+    }
+  },
+  "deal_thresholds": {
+    "okazja": 0.15,
+    "dobra_cena": 0.05,
+    "drogo": -0.05,
+    "podejrzanie_tanio": 0.45
+  },
+  "placeholder_price_max": 1500,
+  "searches": {
+    "cycletrader": [
+      {
+        "name": "Harley fat (2018+, <=11k, 500 mi)",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=fat&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley FLFBS",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=FLFBS&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley FXFBS",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=FXFBS&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley fatboy",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=fatboy&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Indian Challenger",
+        "category": "challenger",
+        "paged": true,
+        "links_fallback": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-Indian/motorcycles-for-sale?keyword=Challenger&make=Indian%7C50865296&price=%2A%3A11000&zip=60016&radius=500"
+      },
+      {
+        "name": "Honda Africa Twin",
+        "category": "honda-deal",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Honda/motorcycles-for-sale?keyword=africa%20twin&make=Honda%7C2316874&price=%2A%3A11000&zip=60016&radius=500"
+      },
+      {
+        "name": "Honda Gold Wing",
+        "category": "honda-deal",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Honda/motorcycles-for-sale?keyword=gold%20wing&make=Honda%7C2316874&price=%2A%3A11000&zip=60016&radius=500"
+      }
+    ],
+    "facebook_index": [
+      "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
+      "site:facebook.com/marketplace/item \"Fat Bob 114\" OR FXFBS",
+      "site:facebook.com/marketplace/item \"Indian Challenger\"",
+      "site:facebook.com/marketplace/item \"Africa Twin\" Illinois OR Wisconsin OR Michigan OR Indiana OR Ohio OR Iowa",
+      "site:facebook.com/marketplace/item \"Gold Wing\" Illinois OR Wisconsin OR Michigan OR Indiana OR Ohio OR Iowa",
+      "site:facebook.com/marketplace chicago harley fat boy 114",
+      "site:facebook.com/marketplace milwaukee OR detroit OR indianapolis OR columbus OR \"des moines\" fat bob 114"
+    ]
+  }
+}
