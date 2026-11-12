@@ -21,6 +21,8 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 - 2026-11-12 (runda 2): Najlepsze fragmenty pochodzą ze stron kategorii miast (`/marketplace/<miasto>/harley-davidson/`), bo podają cenę, „price drop” i przebieg („1K miles”, „6.3K miles”). Zapytania celowane „<model> <miasto> miles” znalazły przebieg w 3 z 3 przypadków.
 - 2026-11-12 (runda 2): Ta sama oferta może mieć w indeksie różne miasta (Vernon Rockville albo Madison, CT), bo Facebook podaje lokalizację przybliżoną. Przed dodaniem nowej oferty porównaj rocznik, cenę i przebieg.
 
+- 2026-11-12: Ranking liczy koszt całkowity z dowozem (0,60 USD za milę powyżej 300 mil). Oferta z Idaho za 10 500 USD kosztuje realnie ~11 600 USD, czyli więcej niż oferta z Michigan za 10 000 USD. Zawsze wpisuj `distance_mi`.
+
 ## Pomysły na eksperymenty
 - Grupy stanów jeszcze nieprzeszukane: południe (LA, MS, AR, AL, GA, SC), Nowa Anglia (ME, VT, RI) i Plains (NE, SD, ND, MT, WY, NM)
 - „<miasto> harley-davidson Fat Boy 114 miles” dla stanów, gdzie jeszcze nic nie znaleziono (np. NJ, MA, MD, TN, MO)

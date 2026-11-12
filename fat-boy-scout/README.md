@@ -10,7 +10,9 @@ Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skutec
 | `config.json` | kryteria, zasięg, źródła, plan zapytań (aktualizowany automatycznie), ceny referencyjne |
 | `playbook.md` | lekcje agenta z poprzednich przebiegów (czyta je na starcie, dopisuje na końcu) |
 | `improvements.md` | dziennik automatycznych zmian planu i cen |
-| `scout.py` | silnik: kryteria, scalanie z historią, spadki cen, ranking, raport, `improve` |
+| `scout.py` | silnik: kryteria, scalanie z historią, spadki cen, duplikaty, ranking kosztu całkowitego, raport, `improve`, `parse` |
+| `geo.py` | szacunkowa odległość od Des Plaines (środki stanów, bez internetu) |
+| `raw/` | surowe wyniki wyszukiwania dla parsera |
 | `runs/RRRR-MM-DD.json` | surowe obserwacje agenta z jednego przebiegu |
 | `state.json` | historia ofert, statystyki zapytań, odrzucone |
 | `reports/RRRR-MM-DD.md` | gotowe raporty |
@@ -21,6 +23,7 @@ python3 fat-boy-scout/scout.py status
 python3 fat-boy-scout/scout.py plan
 python3 fat-boy-scout/scout.py run fat-boy-scout/runs/2026-11-19.json
 python3 fat-boy-scout/scout.py improve --apply
+python3 fat-boy-scout/scout.py parse fat-boy-scout/raw/2026-11-19.json   # wyniki wyszukiwania → kandydaci
 python3 fat-boy-scout/scout.py recall moje_linki.txt   # test skuteczności
 python3 -m unittest fat-boy-scout/test_scout.py
 ```

@@ -35,12 +35,18 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
 1. **Wczytaj pamięć:** przeczytaj `fat-boy-scout/playbook.md` (lekcje z poprzednich przebiegów) i `fat-boy-scout/improvements.md`.
    Uruchom `python3 fat-boy-scout/scout.py status` i `python3 fat-boy-scout/scout.py plan`.
 2. **Zapytania z planu:** wykonaj każde aktywne zapytanie z `plan`. Przy każdym zanotuj liczbę wyników i ID kandydatów.
+   Wyniki, które wyglądają na Fat Boya 2018+, zapisz w `fat-boy-scout/raw/RRRR-MM-DD.json` jako listę `{url, title, description}`
+   (skopiuj pola dosłownie z wyniku) i uruchom `python3 fat-boy-scout/scout.py parse fat-boy-scout/raw/RRRR-MM-DD.json`.
+   Parser wyciąga rocznik, cenę, przebieg, miasto, stan, „price drop” i wiek ogłoszenia oraz nadaje ID.
+   Przejrzyj wynik, popraw błędy i dopiero wtedy przenieś kandydatów do pliku przebiegu. Ręcznie przepisuj tylko to, czego parser nie złapał.
 3. **Eksperymenty (samodoskonalenie):** wymyśl i wykonaj 2–3 nowe zapytania, których nie ma w planie,
    np. inne sformułowania („fatboy 114 for sale”, „FLFBS” z nazwą stanu), kolejne regiony albo miasta.
    Oznacz je `"origin": "experiment"`. Te, które dadzą pasującą ofertę, silnik sam doda do planu.
 4. **Doszukanie szczegółów:** dla obiecujących kandydatów bez ceny, miasta lub rocznika zrób 1 zapytanie celowane
    z opisem albo miastem i `includeDomains: ["facebook.com"]`.
-5. **Zapisz przebieg** w `fat-boy-scout/runs/RRRR-MM-DD.json` (schemat niżej). Wpisz **wszystkich** zaobserwowanych
+5. **Zapisz przebieg** w `fat-boy-scout/runs/RRRR-MM-DD.json` (schemat niżej). Przy każdej pasującej ofercie wpisz
+   `distance_mi`, czyli przybliżoną odległość drogową z Des Plaines według Twojej wiedzy o geografii. Bez tego silnik użyje
+   środka stanu, który bywa mylący o kilkaset mil (np. Caledonia, WI to ~60 mil, a środek WI ~200). Wpisz **wszystkich** zaobserwowanych
    kandydatów Fat Boy 2018+, także droższych niż 11 000 USD i w wersji 107/117: silnik ich odrzuci, ale użyje ich cen do kalibracji rynku.
    Bez ceny, ale z pasującym modelem → `watchlist_unpriced`.
 6. `python3 fat-boy-scout/scout.py run fat-boy-scout/runs/RRRR-MM-DD.json` tworzy raport, a potem
@@ -51,7 +57,8 @@ Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępno
 7. **Lekcje:** dopisz do `fat-boy-scout/playbook.md` w sekcji „Lekcje” 1–3 krótkie punkty z datą: co zadziałało,
    co nie i jakie pułapki zauważyłeś. Usuwaj duplikaty i nieaktualne punkty, a sekcję trzymaj poniżej 40 punktów.
    Wolno ci edytować tylko `playbook.md` oraz to, co zmienia `scout.py improve`. Kryteriów i tego pliku agenta nie zmieniasz.
-8. **Oddaj raport** dokładnie tak, jak wypisał go silnik, każdą część osobno. Dodaj najwyżej 3 zdania:
+8. **Oddaj raport** dokładnie tak, jak wypisał go silnik, każdą część osobno. Raport zawiera już ranking kosztu całkowitego
+   (cena + przebieg + dowóz), oznaczone duplikaty oraz sekcję „Następne kroki” z gotową wiadomością do sprzedawcy i listą kontrolną. Dodaj najwyżej 3 zdania:
    co się zmieniło w planie i co warto sprawdzić ręcznie.
 9. Zrób commit zmian w `fat-boy-scout/` i wypchnij je na bieżącą gałąź roboczą.
 

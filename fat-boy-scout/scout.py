@@ -25,6 +25,8 @@ from datetime import date
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE))
+import geo  # noqa: E402
 CONFIG_PATH = BASE / "config.json"
 STATE_PATH = BASE / "state.json"
 REPORTS_DIR = BASE / "reports"
@@ -131,6 +133,14 @@ def normalize(listing: dict, config: dict) -> dict:
         if e:
             l["engine"] = e
     l["family"] = family(l)
+    if l.get("state") and len(l["state"]) > 2:
+        l["state"] = geo.state_code(l["state"]) or l["state"]
+    if l.get("distance_mi") is None:
+        city = (l.get("city") or "").lower()
+        metro = l.get("state") == "IL" and city in config.get("metro_cities", [])
+        est = geo.estimate_road_miles(l.get("state"), metro)
+        if est is not None:
+            l["distance_est"] = est
     return l
 
 
@@ -247,10 +257,36 @@ def effective_price(l: dict, config: dict) -> float | None:
     return l["price"] + config.get("ranking", {}).get("usd_per_mile", 0.10) * l["miles"]
 
 
-def rank_key(l: dict, config: dict) -> tuple:
+def distance_of(l: dict) -> tuple[int | None, bool]:
+    """(mile, czy_szacunek): odległość od Des Plaines – podana przez agenta albo oszacowana ze środka stanu."""
+    if l.get("distance_mi") is not None:
+        # dokładna tylko z serwisu (Cycle Trader podaje „X mi away”); odległość wpisana przez agenta to szacunek
+        return int(l["distance_mi"]), l.get("source") != "cycletrader"
+    if l.get("distance_est") is not None:
+        return int(l["distance_est"]), True
+    return None, True
+
+
+def transport_cost(l: dict, config: dict) -> float:
+    t = config.get("ranking", {}).get("transport", {})
+    d, _ = distance_of(l)
+    if not t or d is None or d <= t.get("free_within_mi", 0):
+        return 0.0
+    return max(t.get("min_usd", 0), t.get("usd_per_mile", 0.6) * d)
+
+
+def total_cost(l: dict, config: dict) -> float | None:
+    """Koszt całkowity = cena + koszt przebiegu + szacunkowy dowóz do Des Plaines."""
     eff = effective_price(l, config)
-    # najpierw oferty ze znanym przebiegiem (wg ceny efektywnej), potem bez przebiegu (wg ceny)
-    return (0, eff) if eff is not None else (1, l.get("price") or 0)
+    return None if eff is None else eff + transport_cost(l, config)
+
+
+def rank_key(l: dict, config: dict) -> tuple:
+    tot = total_cost(l, config)
+    # najpierw oferty ze znanym przebiegiem (wg kosztu całkowitego), potem bez przebiegu (wg ceny + dowóz)
+    if tot is not None:
+        return (0, tot)
+    return (1, (l.get("price") or 0) + transport_cost(l, config))
 
 
 # ---------------------------------------------------------------- region
@@ -258,7 +294,7 @@ def region_key(l: dict, config: dict) -> tuple:
     st = l.get("state")
     prio = config["states_priority"]
     city = (l.get("city") or "").lower()
-    dist = l.get("distance_mi")
+    dist, _ = distance_of(l)
     metro = (st == "IL") and (city in config["metro_cities"] or (dist is not None and dist <= config["metro_radius_mi"]))
     if config.get("scope") == "usa":
         # najpierw Des Plaines/Chicago, potem stany priorytetowe, potem reszta kraju; w grupie według odległości
@@ -407,6 +443,8 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             diff["watch_new"].append(wl[w["id"]])
         wl[w["id"]]["last_seen"] = today
 
+    mark_duplicates([l for l in state["listings"].values() if l.get("status") == "active"])
+
     # statystyki zapytań – paliwo dla `scout.py improve`.
     # Liczą się trafienia UNIKALNE: oferta pasująca, której w tym przebiegu nie znalazło żadne inne zapytanie.
     qs = state.setdefault("query_stats", {})
@@ -451,9 +489,18 @@ def offer_lines(l: dict, price_note: str = "") -> str:
     return f"{line1}\n{l.get('url') or 'link: brak'}"
 
 
-def score_line(l: dict) -> str | None:
+def score_line(l: dict, config: dict | None = None) -> str | None:
     s = l.get("score") or {}
     parts = []
+    if config is not None:
+        d, est = distance_of(l)
+        if d is not None:
+            tc = transport_cost(l, config)
+            parts.append(f"{'~' if est else ''}{fmt_int(d)} mi od Des Plaines" + (f", dowóz ~{fmt_price(tc)}" if tc else ""))
+    if l.get("dup_of"):
+        parts.append(f"Możliwy duplikat oferty {l['dup_of']} (ten sam rocznik, cena i przebieg)")
+    if l.get("listed"):
+        parts.append(f"Wystawiona: {l['listed']}")
     if s.get("discount") is not None:
         pct = round(s["discount"] * 100)
         parts.append(f"Ocena: {s['label']} ({'+' if pct >= 0 else ''}{pct}% vs rynek ≈ {fmt_price(s['ref'])})")
@@ -468,9 +515,9 @@ def score_line(l: dict) -> str | None:
     return " · ".join(parts) if parts else None
 
 
-def block(l: dict, price_note: str = "", with_score: bool = True) -> str:
+def block(l: dict, price_note: str = "", with_score: bool = True, config: dict | None = None) -> str:
     out = offer_lines(l, price_note)
-    sl = score_line(l) if with_score else None
+    sl = score_line(l, config) if with_score else None
     return f"{out}\n{sl}" if sl else out
 
 
@@ -498,23 +545,32 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
     ranked = sorted([l for l in pool if l.get("price")], key=lambda l: rank_key(l, config))
     if ranked:
         r = config.get("ranking", {})
-        lines = [f"## Ranking: cena i przebieg (cena + {r.get('usd_per_mile', 0.10):.2f} USD za każdą milę; "
-                 "oferty bez przebiegu na końcu)".replace(".", ",", 1)]
+        tr = r.get("transport", {})
+        rate = f"{r.get('usd_per_mile', 0.10):.2f}".replace(".", ",")
+        trate = f"{tr.get('usd_per_mile', 0.6):.2f}".replace(".", ",")
+        lines = [f"## Ranking: koszt całkowity = cena + {rate} USD za milę przebiegu + dowóz ~{trate} USD za milę "
+                 "odległości (oferty bez przebiegu na końcu)"]
+        ranked = [l for l in ranked if not l.get("dup_of")]
         for i, l in enumerate(ranked[:r.get("top", 10)], 1):
             loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x) or "lokalizacja: brak danych"
             tag = "" if l.get("verified", True) else " [FB, nieotwarte]"
-            eff = effective_price(l, config)
-            eff_txt = f"efektywnie {fmt_price(eff)}" if eff is not None else "przebieg do ustalenia"
+            tot = total_cost(l, config)
+            d, est = distance_of(l)
+            d_txt = f"{'~' if est else ''}{fmt_int(d)} mi od Des Plaines" if d is not None else "odległość nieznana"
+            tot_txt = f"razem ~{fmt_price(tot)}" if tot is not None else "przebieg do ustalenia"
             lines.append(f"{i}. {l.get('model')} – {fmt_price(l['price'])} – {fmt_miles(l.get('miles'))} – "
-                         f"{eff_txt} – {loc}{tag}\n   {l.get('url') or 'link: brak'}")
+                         f"{d_txt} – {tot_txt} – {loc}{tag}\n   {l.get('url') or 'link: brak'}")
         blocks.append("\n".join(lines))
+        top = ranked[:r.get("next_steps_top", 3)]
+        if top:
+            blocks.append(next_steps(top, config))
 
     for cat, rules in (config["categories"].items() if verified_sources else []):
         items = by_cat.get(cat, [])
         title = f"## {rules['label']}" + ("" if first else " – nowe")
         if items:
             blocks.append(title)
-            blocks.extend(block(l) for l in items)
+            blocks.extend(block(l, config=config) for l in items)
         else:
             blocks.append(f"{title}\nBrak{'' if first else ' nowych'} ofert spełniających kryteria.")
 
@@ -522,7 +578,7 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         blocks.append("## Spadki cen")
         for l in sorted(diff["drops"], key=lambda l: region_key(l, config)):
             pct = (l["old_price"] - l["price"]) / l["old_price"] * 100
-            blocks.append(block(l, f" (było {fmt_int(l['old_price'])}, −{pct:.1f}%)".replace(".", ",")))
+            blocks.append(block(l, f" (było {fmt_int(l['old_price'])}, −{pct:.1f}%)".replace(".", ","), config=config))
 
     labels = " / ".join(r["label"] for r in config["categories"].values())
     fb_title = f"## {labels} – Facebook Marketplace" + ("" if first else " – nowe")
@@ -530,7 +586,7 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
                "cenę, aktywność i title sprawdź po kliknięciu.")
     if unverified:
         blocks.append(f"{fb_title}\n{fb_note}")
-        blocks.extend(block(l) for l in unverified)
+        blocks.extend(block(l, config=config) for l in unverified)
     elif not verified_sources:
         blocks.append(f"{fb_title}\nBrak{'' if first else ' nowych'} ofert spełniających kryteria.")
 
@@ -573,6 +629,41 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
     if cov:
         blocks.append("## Zakres\n" + ("\n".join(f"- {c}" for c in cov) if isinstance(cov, list) else cov))
     return split_parts(blocks, config["report_max_chars"])
+
+
+def next_steps(top: list[dict], config: dict) -> str:
+    """Gotowa wiadomość do sprzedawcy i lista kontrolna dla najlepszych ofert."""
+    home = config.get("home", {})
+    lines = ["## Następne kroki – najlepsze oferty"]
+    for i, l in enumerate(top, 1):
+        loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
+        lines.append(f"{i}. {l.get('model')} – {fmt_price(l.get('price'))} – {loc} – {l.get('url') or 'link: brak'}")
+    lines.append("Wiadomość do sprzedawcy (wklej w Messengerze):\n"
+                 "„Hi! Is your Fat Boy still available? Could you send me the VIN, a photo of the odometer and of the "
+                 "title (clean and in your name?), and tell me about service history and any drops or accidents? "
+                 f"I'm in the {home.get('city', 'Des Plaines')}, {home.get('state', 'IL')} area. Thanks!”")
+    lines.append("Do sprawdzenia przed jazdą lub przelewem:")
+    lines.append("- VIN: `python3 fat-boy-scout/scout.py vin <VIN>` pokaże silnik (YG = FLFBS 114, FLFB = 107) i rocznik.")
+    lines.append("- Title: clean, na nazwisko sprzedawcy; nie salvage, rebuilt ani bonded.")
+    lines.append("- Zdjęcie licznika potwierdza przebieg do 15 000 mil; poproś też o zdjęcie VIN na ramie.")
+    lines.append("- Nigdy nie wpłacaj zaliczki „za trzymanie” przed obejrzeniem; uważaj na „wysyłka tylko z depozytem”.")
+    return "\n".join(lines)
+
+
+def mark_duplicates(listings: list[dict]) -> None:
+    """Ta sama oferta pod różnymi linkami/miastami: ten sam rocznik, cena (±1%), przebieg (±5%) i stan."""
+    seen: list[dict] = []
+    for l in sorted(listings, key=lambda x: x["id"]):
+        l.pop("dup_of", None)
+        for s in seen:
+            if (l.get("year") == s.get("year") and l.get("state") == s.get("state") and l.get("price") and s.get("price")
+                    and abs(l["price"] - s["price"]) <= 0.01 * s["price"]
+                    and l.get("miles") is not None and s.get("miles") is not None
+                    and abs(l["miles"] - s["miles"]) <= 0.05 * max(1, s["miles"])):
+                l["dup_of"] = s["id"]
+                break
+        else:
+            seen.append(l)
 
 
 def split_parts(blocks: list[str], max_chars: int) -> list[str]:
@@ -718,6 +809,75 @@ def cmd_improve(args) -> int:
     return 0
 
 
+PRICE_RE = r"(?:US)?\$\s?(?P<price>\d{1,3}(?:[.,\s\u00a0]\d{3})+|\d{4,6})"
+
+
+def _num(s: str) -> int:
+    return int(re.sub(r"[^\d]", "", s))
+
+
+def _miles(s: str) -> int | None:
+    m = re.search(r"(?P<n>\d+(?:[.,]\d+)?)\s?(?P<k>[Kk]|tys\.?|t\.)?\s?(?:miles|mi\b)", s)
+    if not m:
+        m = re.search(r"Driven (?P<n>[\d,]+) miles", s)
+        return _num(m.group("n")) if m else None
+    n = float(m.group("n").replace(",", ".")) if m.group("k") else _num(m.group("n"))
+    return int(round(n * 1000)) if m.group("k") else int(n)
+
+
+def parse_snippet(text: str, url: str | None = None) -> list[dict]:
+    """Wyciąga oferty Fat Boy z fragmentu wyniku wyszukiwania Facebooka. Zwraca kandydatów do przejrzenia."""
+    out = []
+    # A: „2018 Harley-Davidson Fat Boy - $9995, Used, in Ormond Beach, Florida.”
+    for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) - " + PRICE_RE +
+                         r",(?: Used,)? in (?P<city>[A-Z][\w .'-]+?), (?P<state>[A-Z][a-zA-Z ]+?)[.\s]", text, re.I):
+        out.append({"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
+                    "city": m.group("city").strip(), "state": geo.state_code(m.group("state"))})
+    # B: „2018 Harley-Davidson fat boy 114 flfbs for sale - Used - $10,500 in Rathdrum. ... 1K miles. Rathdrum, ID”
+    for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) for sale - Used(?: - [\w ]+?)? - "
+                         + PRICE_RE + r"(?P<rest>.{0,160})", text, re.I):
+        rest = m.group("rest")
+        locs = list(re.finditer(r"((?:[A-Z][a-z'.-]+ ?){1,3}), ([A-Z]{2})\b", rest))
+        loc = locs[0] if locs else None
+        out.append({"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
+                    "miles": _miles(rest), "city": loc.group(1).strip() if loc else None,
+                    "state": loc.group(2) if loc else None, "price_drop": "price drop" in rest.lower()})
+    # C: „2018 Harley-Davidson Fat Boy 114. $12,999. Listed 11 hours ago · Defiance, OH”
+    if not out:
+        for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^.\n$]{0,30})\.\s*" + PRICE_RE +
+                             r"\.?(?P<rest>.{0,140})", text, re.I):
+            rest = m.group("rest")
+            loc = re.search(r"·\s*((?:[A-Z][a-z'.-]+ ?){1,3}), ([A-Z]{2})\b", rest)
+            out.append({"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
+                        "miles": _miles(rest), "city": loc.group(1).strip() if loc else None,
+                        "state": loc.group(2) if loc else None})
+            break
+    listed = re.search(r"Listed ([\w ]+? ago|on \w+)", text)
+    for o in out:
+        if listed and len(out) == 1:
+            o["listed"] = listed.group(1)
+        if o.get("miles") is None and len(out) == 1:
+            o["miles"] = _miles(text)
+        o.update(source="facebook", category="main", verified=False, url=url)
+        iid = item_id(url or "")
+        o["id"] = iid if iid.startswith("fb-") and len(out) == 1 and text.lstrip().startswith(str(o["year"])) else \
+            f"fb-{(o.get('city') or 'x').lower().replace(' ', '')}-{(o.get('state') or 'xx').lower()}-{o['year']}"
+    return out
+
+
+def cmd_parse(args) -> int:
+    """Wejście: plik JSON z listą {url, title, description} (wyniki wyszukiwania). Wyjście: kandydaci do pliku przebiegu."""
+    items = json.loads(Path(args.file).read_text(encoding="utf-8"))
+    found: dict[str, dict] = {}
+    for it in items:
+        text = f"{it.get('title', '')} - {it.get('description', '')}" if " - $" not in it.get("title", "") else \
+            f"{it.get('title', '')}. {it.get('description', '')}"
+        for o in parse_snippet(text, it.get("url")):
+            found.setdefault(o["id"], o)
+    print(json.dumps(list(found.values()), ensure_ascii=False, indent=2))
+    return 0
+
+
 def item_id(s: str) -> str:
     m = re.search(r"marketplace/item/(\d+)", s)
     return f"fb-{m.group(1)}" if m else s.strip()
@@ -779,6 +939,9 @@ def main(argv=None) -> int:
     v.set_defaults(func=cmd_vin)
     sub.add_parser("plan", help="pokaż plan wyszukiwań").set_defaults(func=cmd_plan)
     sub.add_parser("status", help="pokaż śledzone oferty").set_defaults(func=cmd_status)
+    pa = sub.add_parser("parse", help="wyciągnij oferty z wyników wyszukiwania (JSON: url, title, description)")
+    pa.add_argument("file")
+    pa.set_defaults(func=cmd_parse)
     rc = sub.add_parser("recall", help="test skuteczności: ile z Twoich ręcznie znalezionych ofert Scout widział")
     rc.add_argument("file", help="plik z linkami (po jednym w linii)")
     rc.set_defaults(func=cmd_recall)

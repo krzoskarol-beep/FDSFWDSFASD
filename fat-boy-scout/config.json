@@ -388,6 +388,13 @@
   "ranking": {
     "usd_per_mile": 0.1,
     "top": 10,
-    "_note": "ranking według ceny efektywnej = cena + 0,10 USD/milę; oferty bez przebiegu na końcu"
+    "next_steps_top": 3,
+    "transport": {
+      "usd_per_mile": 0.6,
+      "free_within_mi": 300,
+      "min_usd": 300,
+      "_note": "szacunek dowozu/odbioru: 0,60 USD za milę drogi (transport motocykla lub paliwo + bilet powrotny); do 300 mil od Des Plaines 0 (dojazd samemu)"
+    },
+    "_note": "koszt całkowity = cena + 0,10 USD/milę przebiegu + dowóz; oferty bez przebiegu na końcu"
   }
 }

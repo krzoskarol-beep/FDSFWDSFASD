@@ -308,6 +308,61 @@ class RankingTests(unittest.TestCase):
         self.assertEqual(scout.effective_price(a, FB), 10700)
 
 
+class GeoAndCostTests(unittest.TestCase):
+    def test_distance_estimates(self):
+        import geo
+        self.assertEqual(geo.estimate_road_miles("IL", metro=True), 15)
+        self.assertLess(geo.estimate_road_miles("WI"), geo.estimate_road_miles("TX"))
+        self.assertGreater(geo.estimate_road_miles("OR"), 1800)
+        self.assertEqual(geo.state_code("Florida"), "FL")
+
+    def test_transport_changes_ranking(self):
+        cfg = dict(FB, ranking={"usd_per_mile": 0.10, "transport": {"usd_per_mile": 0.6, "free_within_mi": 300}})
+        near = scout.normalize(L(id="n", model="2018 Harley-Davidson Fat Boy 114", price=10500, miles=5000,
+                                 state="WI", city="Caledonia", distance_mi=60), cfg)
+        far = scout.normalize(L(id="f", model="2018 Harley-Davidson Fat Boy 114", price=10000, miles=5000,
+                                state="OR", city="Brookings"), cfg)
+        self.assertEqual(scout.transport_cost(near, cfg), 0)
+        self.assertGreater(scout.transport_cost(far, cfg), 1000)
+        self.assertEqual(sorted([far, near], key=lambda l: scout.rank_key(l, cfg))[0]["id"], "n")
+
+    def test_duplicates(self):
+        a = dict(id="fb-a", year=2018, state="CT", price=9000, miles=9900)
+        b = dict(id="fb-b", year=2018, state="CT", price=9000, miles=9900)
+        c = dict(id="fb-c", year=2018, state="CT", price=9000, miles=20000)
+        scout.mark_duplicates([a, b, c])
+        self.assertEqual(b["dup_of"], "fb-a")
+        self.assertNotIn("dup_of", c)
+
+
+class ParserTests(unittest.TestCase):
+    def test_pattern_a_title(self):
+        o = scout.parse_snippet("2018 Harley-Davidson FAT BOY - $9995, Used, in Ormond Beach, Florida. Browse similar",
+                                "https://www.facebook.com/marketplace/item/1687282615899659/")
+        self.assertEqual(len(o), 1)
+        self.assertEqual((o[0]["id"], o[0]["price"], o[0]["state"]), ("fb-1687282615899659", 9995, "FL"))
+
+    def test_pattern_b_related_with_miles(self):
+        s = ("Harley Davidson for sale in Kellogg, Idaho. 2018 Harley-Davidson fat boy 114 flfbs for sale - Used - "
+             "$10,500 in Rathdrum. Price drop. $10,500. 2018 Harley-Davidson fat boy 114 flfbs. 1K miles. Rathdrum, ID")
+        o = scout.parse_snippet(s, "https://www.facebook.com/marketplace/kellogg-id/harley-davidson/")
+        self.assertEqual((o[0]["price"], o[0]["miles"], o[0]["state"]), (10500, 1000, "ID"))
+        self.assertTrue(o[0]["price_drop"])
+        self.assertEqual(o[0]["id"], "fb-rathdrum-id-2018")
+
+    def test_pattern_c_listed(self):
+        o = scout.parse_snippet("2018 Harley-Davidson Fat Boy 114 - Motorcycles & Scooters - 2018 Harley-Davidson Fat Boy 114. "
+                                "$12,999. Listed 11 hours ago · Defiance, OH ...",
+                                "https://www.facebook.com/marketplace/item/891120917356759/")
+        self.assertEqual((o[0]["id"], o[0]["price"], o[0]["city"], o[0]["state"], o[0]["listed"]),
+                         ("fb-891120917356759", 12999, "Defiance", "OH", "11 hours ago"))
+
+    def test_miles_formats(self):
+        self.assertEqual(scout._miles("6.3K miles"), 6300)
+        self.assertEqual(scout._miles("Driven 31,000 miles."), 31000)
+        self.assertEqual(scout._miles("9800 miles. Must see"), 9800)
+
+
 class RecallTests(unittest.TestCase):
     def test_item_id(self):
         self.assertEqual(scout.item_id("https://www.facebook.com/marketplace/item/123/?ref=x"), "fb-123")

@@ -254,7 +254,8 @@
       "state": "MI",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/26573702002279243/",
-      "notes": "opis w indeksie: 2018 Fat Boy 114, czarny z chromem, „9800 miles. Must see”; w jednym fragmencie indeksu cena 12 500 USD"
+      "notes": "opis w indeksie: 2018 Fat Boy 114, czarny z chromem, „9800 miles. Must see”; w jednym fragmencie indeksu cena 12 500 USD",
+      "distance_mi": 170
     },
     {
       "id": "fb-caledonia-wi-2018",
@@ -268,7 +269,8 @@
       "state": "WI",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/caledonia-wi/harley-davidson/",
-      "notes": "w indeksie najpierw 11 000, potem 10 800 USD; przebieg 10 900 mi; brak bezpośredniego linku – link do strony Harleyów w Caledonia, na której oferta była widoczna; na Craigslist (VI 2026) jako Fat Boy 114, clean title"
+      "notes": "w indeksie najpierw 11 000, potem 10 800 USD; przebieg 10 900 mi; brak bezpośredniego linku – link do strony Harleyów w Caledonia, na której oferta była widoczna; na Craigslist (VI 2026) jako Fat Boy 114, clean title",
+      "distance_mi": 60
     },
     {
       "id": "fb-1687282615899659",
@@ -282,7 +284,8 @@
       "state": "FL",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1687282615899659/",
-      "notes": "silnik nieznany (2018 może być 107); w tej samej miejscowości dealer ma 2018 FLFBS za 9 495 USD na Cycle Trader"
+      "notes": "silnik nieznany (2018 może być 107); w tej samej miejscowości dealer ma 2018 FLFBS za 9 495 USD na Cycle Trader",
+      "distance_mi": 1150
     },
     {
       "id": "fb-1075545595270351",
@@ -296,7 +299,8 @@
       "state": "VA",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
-      "notes": "rocznik 2020 – silnik prawie na pewno 114 (FLFB 107 był w USA do 2019), ale potwierdź kod FLFBS w ogłoszeniu"
+      "notes": "rocznik 2020 – silnik prawie na pewno 114 (FLFB 107 był w USA do 2019), ale potwierdź kod FLFBS w ogłoszeniu",
+      "distance_mi": 780
     },
     {
       "id": "fb-forney-tx-2018",
@@ -310,7 +314,8 @@
       "state": "TX",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/2970734959944491/",
-      "notes": "silnik nieznany; tytuł ogłoszenia: „2018 Harley Davidson Fat Boy 2500 miles”"
+      "notes": "silnik nieznany; tytuł ogłoszenia: „2018 Harley Davidson Fat Boy 2500 miles”",
+      "distance_mi": 960
     },
     {
       "id": "fb-1656186736099711",
@@ -821,7 +826,8 @@
       "verified": false,
       "url": "https://www.facebook.com/marketplace/109503062402713/harley-davidson/",
       "notes": "w indeksie „price drop”; lokalizacja raz jako Vernon Rockville, raz jako Madison, CT (Facebook podaje przybliżoną); brak bezpośredniego linku – link do strony, na której oferta była widoczna",
-      "code": "FLFBS"
+      "code": "FLFBS",
+      "distance_mi": 900
     },
     {
       "id": "fb-williamsbay-wi-2023",
@@ -914,7 +920,8 @@
       "verified": false,
       "url": "https://www.facebook.com/marketplace/kellogg-id/harley-davidson/",
       "notes": "„price drop” z 13 000 na 10 500 USD; brak bezpośredniego linku – link do strony Harleyów w okolicy, na której oferta była widoczna",
-      "code": "FLFBS"
+      "code": "FLFBS",
+      "distance_mi": 1700
     },
     {
       "id": "fb-brookings-or-2018",
@@ -928,7 +935,8 @@
       "state": "OR",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/harbor-or/harley-davidson/",
-      "notes": "silnik nieznany; brak bezpośredniego linku – link do strony Harleyów w okolicy, na której oferta była widoczna"
+      "notes": "silnik nieznany; brak bezpośredniego linku – link do strony Harleyów w okolicy, na której oferta była widoczna",
+      "distance_mi": 2200
     },
     {
       "id": "fb-1124382120437379",
@@ -942,7 +950,8 @@
       "state": "WI",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1124382120437379/",
-      "notes": "silnik i przebieg nieznane"
+      "notes": "silnik i przebieg nieznane",
+      "distance_mi": 120
     },
     {
       "id": "fb-anoka-mn-2018",
@@ -956,7 +965,8 @@
       "state": "MN",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/beldenville-wi/search/?query=fat+boy+lo",
-      "notes": "„price drop” z 11 700 na 9 900 USD; tytuł „FAST 2018 Harley Fat Boy” – możliwy tuning; silnik i przebieg nieznane; link do wyników wyszukiwania, w których oferta była widoczna"
+      "notes": "„price drop” z 11 700 na 9 900 USD; tytuł „FAST 2018 Harley Fat Boy” – możliwy tuning; silnik i przebieg nieznane; link do wyników wyszukiwania, w których oferta była widoczna",
+      "distance_mi": 400
     },
     {
       "id": "fb-1577864264363805",
