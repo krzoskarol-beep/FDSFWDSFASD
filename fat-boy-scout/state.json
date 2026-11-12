@@ -117,14 +117,15 @@
       "state": "VA",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
-      "notes": "rocznik 2020 = zawsze silnik 114",
-      "engine": "114",
-      "family": "Fat Boy 114",
+      "notes": "rocznik 2020 – silnik prawie na pewno 114 (FLFB 107 był w USA do 2019), ale potwierdź kod FLFBS w ogłoszeniu",
+      "family": "Fat Boy",
       "score": {
         "ref": 14000,
         "discount": 0.25,
         "label": "OKAZJA",
-        "flags": []
+        "flags": [
+          "114 niepotwierdzone"
+        ]
       },
       "missing_runs": 0,
       "first_seen": "2026-11-12",
@@ -299,7 +300,7 @@
       "model": "2020 Harley-Davidson Fat Boy",
       "price": 14220,
       "year": 2020,
-      "family": "Fat Boy 114",
+      "family": "Fat Boy",
       "source": "facebook",
       "location": "El Paso, TX",
       "reason": "cena > 11 000 USD",
@@ -323,7 +324,7 @@
       "model": "2020 Harley-Davidson Fat Boy",
       "price": 13500,
       "year": 2020,
-      "family": "Fat Boy 114",
+      "family": "Fat Boy",
       "source": "facebook",
       "location": "Hollywood, SC",
       "reason": "cena > 11 000 USD",
@@ -696,6 +697,7 @@
       "zero_streak": 0,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 1,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -706,6 +708,7 @@
       "zero_streak": 0,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 1,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -716,6 +719,7 @@
       "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 0,
       "last_run": "2026-11-12"
     },
@@ -723,9 +727,10 @@
       "runs": 1,
       "results": 40,
       "match_hits": 1,
-      "zero_streak": 0,
+      "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -733,9 +738,10 @@
       "runs": 1,
       "results": 40,
       "match_hits": 1,
-      "zero_streak": 0,
+      "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -746,6 +752,7 @@
       "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 0,
       "last_run": "2026-11-12"
     },
@@ -756,6 +763,7 @@
       "zero_streak": 0,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 1,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -766,6 +774,7 @@
       "zero_streak": 1,
       "origin": "seed",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 0,
       "last_run": "2026-11-12"
     },
@@ -776,6 +785,7 @@
       "zero_streak": 0,
       "origin": "experiment",
       "first_run": "2026-11-12",
+      "unique_hits": 1,
       "last_matches": 1,
       "last_run": "2026-11-12"
     },
@@ -786,6 +796,7 @@
       "zero_streak": 1,
       "origin": "experiment",
       "first_run": "2026-11-12",
+      "unique_hits": 0,
       "last_matches": 0,
       "last_run": "2026-11-12"
     }

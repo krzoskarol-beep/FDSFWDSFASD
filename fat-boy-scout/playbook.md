@@ -8,7 +8,8 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 - 2026-11-12: Zapytania o miasta Midwestu („Chicago OR Milwaukee…”) zwracają głównie stare Fat Boye (1990–2011). Mało przydatne, ale tańsze 114 pojawiają się w sekcji „related” innych ogłoszeń.
 - 2026-11-12: Wiele ofert widać tylko jako „related items” przy innych ogłoszeniach albo na stronach kategorii miast (`/marketplace/<miasto>/harley-davidson/`). Wtedy nie ma bezpośredniego linku, więc trzeba dać link do strony, na której oferta była widoczna.
 - 2026-11-12: Cena 1 234 USD to wypełniacz Facebooka, a nie prawdziwa cena (np. 2023 Fat Boy w Davenport, IA).
-- 2026-11-12: Fat Boy 2020–2024 to zawsze 114; 2018–2019 może być 107 (FLFB) – bez potwierdzenia silnika oznaczać „114 niepotwierdzone”. 2025+ to 117.
+- 2026-11-12: Fat Boy 2021–2024 to zawsze 114. Rocznik 2020 i lata 2018–2019 bez kodu FLFBS albo „114” w ogłoszeniu oznaczać „114 niepotwierdzone” (FLFB = 107). Od 2025 silnik 117.
+- 2026-11-12 (recenzja): zapytania oceniać po unikalnych trafieniach, bo kilka zapytań często znajduje tego samego Harleya. Ceny w indeksie to ceny ofertowe, a nie transakcyjne, więc ranking jest orientacyjny.
 - 2026-11-12: Rynek (mediana z 40 ofert w USA): 2018 ok. 12 000 USD, 2020 ok. 13 900, 2022 ok. 15 500, 2024 ok. 19 500. Fat Boy 114 do 11 000 USD to rzadkość: 5 sztuk w całym kraju.
 
 ## Pomysły na eksperymenty

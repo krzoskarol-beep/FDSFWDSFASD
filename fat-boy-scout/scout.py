@@ -108,9 +108,10 @@ def engine_of(listing: dict) -> str | None:
     if re.search(r"\bFLFB\b|\bFXFB\b|\b107\b", text):
         return "107"
     if re.search(r"FAT\s*BOY|FATBOY", text):
-        # Fat Boy 107 (FLFB) był tylko w latach 2018–2019; w 2020–2024 jest wyłącznie 114, od 2025 – 117
+        # FLFB (107) w USA: 2018–2019; w 2020 dokumentacja H-D wymienia jeszcze oba kody, więc 2020 bez kodu = do potwierdzenia.
+        # 2021–2024 to wyłącznie FLFBS 114, od 2025 – 117.
         y = listing.get("year")
-        if y and 2020 <= y <= 2024:
+        if y and 2021 <= y <= 2024:
             return "114"
         if y and y >= 2025:
             return "117"
@@ -302,8 +303,19 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
     eligible_ids = set()
     checked = set(run.get("sources_checked", []))
     si = config.get("self_improve", {})
+    qlist = run.get("queries", [])
+    ok_q = [q for q in qlist if int(q.get("results", 0)) > 0]
+    # skan jest „udany”, gdy co najmniej 3 zapytania i połowa z nich zwróciła wyniki – tylko wtedy liczymy zniknięcia
+    scan_ok = not qlist or (len(ok_q) >= 3 and len(ok_q) >= len(qlist) / 2)
+    diff["scan_ok"] = scan_ok
 
     for raw in run.get("listings", []):
+        if raw.get("is_payment"):
+            # kwota to rata/zaliczka – nie wiemy, czy cała cena mieści się w limicie
+            w = {k: raw.get(k) for k in ("id", "model", "miles", "city", "state", "url")}
+            w["note"] = f"kwota w ogłoszeniu to rata/zaliczka ({fmt_price(raw.get('price'))}), cena całkowita nieznana"
+            run.setdefault("watchlist_unpriced", []).append(w)
+            continue
         l = normalize(raw, config)
         lid = l["id"]
         seen_ids.add(lid)
@@ -359,12 +371,15 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             l["status_reason"] = "nie ma jej już w wynikach"
             diff["gone"].append(l)
         else:
-            # indeks wyszukiwarki jest niekompletny – oferta znika dopiero po kilku pustych przebiegach
+            # indeks wyszukiwarki jest niekompletny – oferta znika dopiero po kilku UDANYCH skanach bez niej
+            if not scan_ok:
+                continue
             l["missing_runs"] = l.get("missing_runs", 0) + 1
             limit = si.get("gone_after_missing_runs", 3)
             if l["missing_runs"] >= limit:
                 l["status"] = "gone"
-                l["status_reason"] = f"nie pojawia się w indeksie od {limit} przebiegów"
+                l["status_reason"] = (f"niewidziana od {pl_date(l['last_seen'])} ({limit} udane skany bez niej) – "
+                                      "to nie musi znaczyć, że jest sprzedana")
                 diff["gone"].append(l)
 
     diff["watch_new"] = []
@@ -375,17 +390,24 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
             diff["watch_new"].append(wl[w["id"]])
         wl[w["id"]]["last_seen"] = today
 
-    # statystyki zapytań – paliwo dla `scout.py improve`
+    # statystyki zapytań – paliwo dla `scout.py improve`.
+    # Liczą się trafienia UNIKALNE: oferta pasująca, której w tym przebiegu nie znalazło żadne inne zapytanie.
     qs = state.setdefault("query_stats", {})
+    found_by: dict[str, int] = {}
+    for q in run.get("queries", []):
+        for c in set(q.get("candidates", [])) & eligible_ids:
+            found_by[c] = found_by.get(c, 0) + 1
     for q in run.get("queries", []):
         rec = qs.setdefault(q["q"], {"runs": 0, "results": 0, "match_hits": 0, "zero_streak": 0,
                                      "origin": q.get("origin", "config"), "first_run": today})
         cand = set(q.get("candidates", []))
         m = len(cand & eligible_ids)
+        u = sum(1 for c in cand & eligible_ids if found_by.get(c) == 1)
         rec["runs"] += 1
         rec["results"] += int(q.get("results", 0))
         rec["match_hits"] += m
-        rec["zero_streak"] = 0 if m else rec["zero_streak"] + 1
+        rec["unique_hits"] = rec.get("unique_hits", 0) + u
+        rec["zero_streak"] = 0 if u else rec["zero_streak"] + 1
         rec["last_matches"] = m
         diff.setdefault("query_matches", {})[q["q"]] = m
         rec["last_run"] = today
@@ -459,7 +481,7 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
     ranked = [l for l in pool if (l.get("score") or {}).get("discount") is not None]
     ranked.sort(key=lambda l: -l["score"]["discount"])
     if ranked:
-        lines = ["## Ranking okazji (wszystkie aktywne)"]
+        lines = ["## Ranking okazji (orientacyjny – porównanie z cenami ofertowymi, nie transakcyjnymi)"]
         for i, l in enumerate(ranked[:5], 1):
             s = l["score"]
             loc = ", ".join(x for x in (l.get("city"), l.get("state")) if x)
@@ -501,7 +523,7 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
             blocks.append(f"{line}\n{w['url']}" + (f"\nUwaga: {w['note']}" if w.get("note") else ""))
 
     if diff["gone"]:
-        lines = ["## Zniknęły lub wypadły z kryteriów"]
+        lines = ["## Niewidziane lub poza kryteriami"]
         for l in diff["gone"]:
             lines.append(f"- {l.get('model')} – {fmt_price(l.get('price'))} – "
                          f"{l.get('city')}, {l.get('state')} – {l.get('status_reason', '')}\n"
@@ -518,6 +540,9 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         if over:
             lines.append(f"Pominięto {len(over)} ofert z ceną powyżej {fmt_int(config['max_price_usd'])} USD.")
         blocks.append("\n".join(lines))
+
+    if not diff.get("scan_ok", True):
+        blocks.append("## Uwaga: skan niepełny\nMało zapytań zwróciło wyniki, więc liczniki zniknięć wstrzymano w tym przebiegu.")
 
     if diff.get("queries"):
         qm = diff.get("query_matches", {})
@@ -613,8 +638,8 @@ def improve(state: dict, config: dict, today: str) -> tuple[dict, list[str]]:
 
     # b) eksperymenty, które dały trafienia, wchodzą do stałego planu
     for qtext, st in stats.items():
-        if st.get("origin") == "experiment" and st.get("match_hits", 0) > 0:
-            add(qtext, "auto", f"eksperyment z {st['match_hits']} trafieniami")
+        if st.get("origin") == "experiment" and st.get("unique_hits", 0) > 0:
+            add(qtext, "auto", f"eksperyment z {st['unique_hits']} unikalnymi trafieniami")
 
     # c) zapytania dla miast, w których znaleziono pasujące oferty
     tmpl = si.get("city_query_template", 'site:facebook.com/marketplace "Fat Boy" "{city}"')
@@ -625,7 +650,12 @@ def improve(state: dict, config: dict, today: str) -> tuple[dict, list[str]]:
 
     # d) kalibracja cen referencyjnych z obserwacji (także ofert powyżej limitu)
     obs: dict[tuple[str, int], list[int]] = {}
+    seen_bikes: set = set()
     for rec in list(state.get("listings", {}).values()) + list(state.get("rejected", {}).values()):
+        bike = (rec.get("year"), (rec.get("city") or rec.get("location") or "").lower(), rec.get("price"))
+        if rec.get("id") in seen_bikes or (bike[1] and bike in seen_bikes):
+            continue
+        seen_bikes.update({rec.get("id"), bike})
         fam, year, price = rec.get("family"), rec.get("year"), rec.get("price")
         if fam in ("Fat Boy", "Fat Bob"):
             fam += " 114"
@@ -666,6 +696,24 @@ def cmd_improve(args) -> int:
         prev = path.read_text(encoding="utf-8") if path.exists() else "# Dziennik samodoskonalenia Fat Boy Scout\n"
         path.write_text(prev.rstrip() + f"\n\n## {today}\n" + "\n".join(f"- {x}" for x in log) + "\n", encoding="utf-8")
         print("Zapisano config.json i improvements.md")
+    return 0
+
+
+def item_id(s: str) -> str:
+    m = re.search(r"marketplace/item/(\d+)", s)
+    return f"fb-{m.group(1)}" if m else s.strip()
+
+
+def cmd_recall(args) -> int:
+    """Test skuteczności: plik z linkami ofert znalezionych ręcznie → ile z nich Scout widział."""
+    state = migrate(load_json(STATE_PATH))
+    known = set(state["listings"]) | set(state["rejected"]) | set(state.get("watchlist", {}))
+    lines = [x for x in Path(args.file).read_text(encoding="utf-8").splitlines() if x.strip() and not x.startswith("#")]
+    found = [x for x in lines if item_id(x) in known]
+    missed = [x for x in lines if item_id(x) not in known]
+    print(f"Skuteczność: {len(found)}/{len(lines)} ({round(100 * len(found) / max(1, len(lines)))}%)")
+    for x in missed:
+        print(f"  przeoczona: {x.strip()}")
     return 0
 
 
@@ -712,6 +760,9 @@ def main(argv=None) -> int:
     v.set_defaults(func=cmd_vin)
     sub.add_parser("plan", help="pokaż plan wyszukiwań").set_defaults(func=cmd_plan)
     sub.add_parser("status", help="pokaż śledzone oferty").set_defaults(func=cmd_status)
+    rc = sub.add_parser("recall", help="test skuteczności: ile z Twoich ręcznie znalezionych ofert Scout widział")
+    rc.add_argument("file", help="plik z linkami (po jednym w linii)")
+    rc.set_defaults(func=cmd_recall)
     im = sub.add_parser("improve", help="samodoskonalenie: zapytania i ceny referencyjne")
     im.add_argument("--apply", action="store_true", help="zapisz zmiany w config.json i improvements.md")
     im.set_defaults(func=cmd_improve)

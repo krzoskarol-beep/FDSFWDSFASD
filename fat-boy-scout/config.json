@@ -78,10 +78,10 @@
     "Fat Boy 114": {
       "2018": 12250,
       "2019": 13000,
-      "2020": 13950,
-      "2021": 14900,
+      "2020": 14000,
+      "2021": 15000,
       "2022": 15750,
-      "2023": 16150,
+      "2023": 17000,
       "2024": 18750
     },
     "Fat Bob 114": {
@@ -230,7 +230,7 @@
         "origin": "auto",
         "added": "2026-11-12",
         "status": "active",
-        "why": "eksperyment z 1 trafieniami"
+        "why": "eksperyment z 1 unikalnymi trafieniami"
       },
       {
         "q": "site:facebook.com/marketplace \"Fat Boy\" \"Hartford\"",
@@ -339,7 +339,7 @@
   "self_improve": {
     "drop_after_zero_runs": 3,
     "max_queries": 25,
-    "min_samples_for_price": 3,
+    "min_samples_for_price": 5,
     "price_blend": 0.5,
     "gone_after_missing_runs": 3,
     "experiments_per_run": 3,

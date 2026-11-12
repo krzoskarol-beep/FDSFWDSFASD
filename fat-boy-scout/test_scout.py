@@ -239,7 +239,12 @@ class FacebookOnlyTests(unittest.TestCase):
         self.assertIn("inny model", scout.eligibility(bob, FB)[1])
 
     def test_engine_by_year(self):
-        self.assertEqual(scout.normalize(self.fb(model="2020 Harley-Davidson Fat Boy", year=2020), FB)["engine"], "114")
+        self.assertEqual(scout.normalize(self.fb(model="2021 Harley-Davidson Fat Boy", year=2021), FB)["engine"], "114")
+        l2020 = scout.normalize(self.fb(model="2020 Harley-Davidson Fat Boy", year=2020), FB)
+        self.assertIsNone(l2020.get("engine"))
+        self.assertIn("114 niepotwierdzone", scout.score(l2020, FB)["flags"])
+        self.assertEqual(scout.normalize(self.fb(model="2018 Harley-Davidson FLFBS Fatboy", year=2018), FB)["engine"], "114")
+        self.assertEqual(scout.normalize(self.fb(model="2018 Harley-Davidson FLFB Fat Boy", year=2018), FB)["engine"], "107")
         l = scout.normalize(self.fb(model="2025 Harley-Davidson Fat Boy", year=2025), FB)
         self.assertEqual(scout.eligibility(l, FB)[1], "wersja 117 (2025+)")
         self.assertIsNone(scout.normalize(self.fb(model="2018 Harley-Davidson Fat Boy", year=2018), FB).get("engine"))
@@ -252,12 +257,39 @@ class FacebookOnlyTests(unittest.TestCase):
         self.assertIn("[FB, nieotwarte]", text)
 
     def test_fb_gone_after_missing_runs(self):
+        good = [{"q": f"q{i}", "results": 10, "candidates": []} for i in range(4)]
         st, _ = scout.merge(scout.empty_state(), run([self.fb()], sources=("facebook",)), FB)
-        for i, d in enumerate(("2026-11-19", "2026-11-26")):
-            st, diff = scout.merge(st, run([], d=d, sources=("facebook",)), FB)
+        for d in ("2026-11-19", "2026-11-26"):
+            st, diff = scout.merge(st, dict(run([], d=d, sources=("facebook",)), queries=good), FB)
             self.assertEqual(diff["gone"], [])
-        st, diff = scout.merge(st, run([], d="2026-12-03", sources=("facebook",)), FB)
+        st, diff = scout.merge(st, dict(run([], d="2026-12-03", sources=("facebook",)), queries=good), FB)
         self.assertEqual([l["id"] for l in diff["gone"]], ["fb-1"])
+        self.assertIn("niewidziana od 12.11.2026", diff["gone"][0]["status_reason"])
+
+    def test_failed_scan_does_not_count(self):
+        bad = [{"q": f"q{i}", "results": 0, "candidates": []} for i in range(4)]
+        st, _ = scout.merge(scout.empty_state(), run([self.fb()], sources=("facebook",)), FB)
+        for d in ("2026-11-19", "2026-11-26", "2026-12-03", "2026-12-10"):
+            st, diff = scout.merge(st, dict(run([], d=d, sources=("facebook",)), queries=bad), FB)
+            self.assertEqual(diff["gone"], [])
+            self.assertFalse(diff["scan_ok"])
+
+    def test_payment_goes_to_watchlist(self):
+        st, d = scout.merge(scout.empty_state(), run([self.fb(price=299, is_payment=True)], sources=("facebook",)), FB)
+        self.assertEqual(st["listings"], {})
+        self.assertIn("rata/zaliczka", d["watch_new"][0]["note"])
+
+    def test_unique_hits(self):
+        r = dict(run([self.fb()], sources=("facebook",)), queries=[
+            {"q": "a", "results": 5, "candidates": ["fb-1"]}, {"q": "b", "results": 5, "candidates": ["fb-1"]}])
+        st, _ = scout.merge(scout.empty_state(), r, FB)
+        self.assertEqual(st["query_stats"]["a"]["unique_hits"], 0)
+        self.assertEqual(st["query_stats"]["a"]["match_hits"], 1)
+
+
+class RecallTests(unittest.TestCase):
+    def test_item_id(self):
+        self.assertEqual(scout.item_id("https://www.facebook.com/marketplace/item/123/?ref=x"), "fb-123")
 
 
 class ImproveTests(unittest.TestCase):
@@ -266,6 +298,7 @@ class ImproveTests(unittest.TestCase):
         c["searches"]["facebook_index"] = [{"q": "seed-q", "origin": "seed", "status": "active"},
                                            {"q": "auto-dead", "origin": "auto", "status": "active"}]
         c["market_reference"] = {"Fat Boy 114": {"2018": 12500}}
+        c["self_improve"] = dict(c["self_improve"], min_samples_for_price=3)
         return c
 
     def test_query_stats_prune_and_promote(self):
@@ -290,7 +323,8 @@ class ImproveTests(unittest.TestCase):
     def test_price_calibration(self):
         cfg = self.cfg()
         st = scout.empty_state()
-        st["rejected"] = {str(i): {"family": "Fat Boy 114", "year": 2018, "price": p, "reason": "cena > 11 000 USD"}
+        st["rejected"] = {str(i): {"id": str(i), "family": "Fat Boy 114", "year": 2018, "price": p,
+                                   "location": f"miasto{i}", "reason": "cena > 11 000 USD"}
                           for i, p in enumerate([11500, 12000, 14500])}
         new, log = scout.improve(st, cfg, "2026-11-12")
         self.assertEqual(new["market_reference"]["Fat Boy 114"]["2018"], 12250)  # (12500 + 12000) / 2
