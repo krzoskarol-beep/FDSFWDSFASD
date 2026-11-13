@@ -565,6 +565,15 @@ class HandbackFixTests(unittest.TestCase):
         self.assertIn("obecny link prowadzi do ogłoszenia innego motocykla", section(text, "## Do sprawdzenia"))
 
 
+class LegacyStateTests(unittest.TestCase):
+    def test_legacy_old_price_without_date_does_not_crash_and_is_cleared(self):
+        st, _, _ = report(scout.empty_state(), frun([fbl(901)]))
+        st["listings"]["fb-901"]["old_price"] = 11000            # pole ze starszej wersji silnika, bez old_date
+        st, d, text = report(st, frun([fbl(902, state="TX", city="Forney")], d="2026-11-19"), n=2)
+        self.assertNotIn("old_price", st["listings"]["fb-901"])
+        self.assertIn(item(901), text)
+
+
 class RelistTests(unittest.TestCase):
     """Funkcja 2: ten sam motocykl wystawiony ponownie."""
     VIN = "1HD1YGK13JC012345"

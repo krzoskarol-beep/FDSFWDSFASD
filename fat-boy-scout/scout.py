@@ -524,6 +524,13 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
     diff["watch_new"] = []
     max_price = config["max_price_usd"]
 
+    # informacje o zmianie dotyczą tylko bieżącego przebiegu – czyścimy pozostałości (także ze starszych wersji silnika)
+    for rec in list(state["listings"].values()) + list(state["rejected"].values()):
+        for k in ("old_price", "old_date", "into_limit"):
+            rec.pop(k, None)
+        if rec.get("relist") and rec["relist"].get("date") != today:
+            rec["relist_history"] = rec.pop("relist")
+
     observed_states: dict[str, dict] = {}
     for raw in run.get("listings", []):
         if raw.get("is_payment"):
@@ -820,7 +827,7 @@ def _loc(l: dict) -> str:
 def change_line(l: dict, config: dict) -> str:
     """Opis zmiany: spadek ceny (z datami i wejściem w limit) albo ponowne wystawienie."""
     parts = []
-    if l.get("old_price") is not None:
+    if l.get("old_price") is not None and l.get("old_date"):
         d = l["old_price"] - l["price"]
         last = (l.get("price_history") or [{}])[-1]
         txt = (f"Poprzednio {fmt_price(l['old_price'])} ({pl_date(l['old_date'])}), teraz {fmt_price(l['price'])} "

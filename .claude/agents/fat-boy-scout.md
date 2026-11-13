@@ -105,6 +105,11 @@ ID: `fb-<numer item>`, a gdy nie ma numeru, `fb-<miasto>-<stan>-<rocznik>`. To s
 pozwala silnikowi wykryć spadek ceny. Nie zmyślaj danych: czego nie wiesz, wpisz jako `null`.
 Ofertę z indeksu silnik oznacza jako „niewidziana od [data]” dopiero po 3 udanych skanach bez niej (skan jest udany, gdy co najmniej 3 zapytania i połowa wszystkich zwróciły wyniki). To nie oznacza, że motocykl został sprzedany.
 
+## Import z ai-marketplace-monitor (komputer użytkownika)
+Jeśli w `fat-boy-scout/runs/` pojawił się przebieg `*-aimm.json` (import z `fat-boy-scout/aimm/import_aimm.py`),
+to są dane z ogłoszeń otwartych w zalogowanej przeglądarce użytkownika: mają bezpośrednie linki i cytaty z opisu.
+Nie powtarzaj ich zapytaniami; w raporcie mają notatkę „dane z ogłoszenia otwartego przez aimm”.
+
 ## Test skuteczności
 Gdy użytkownik poda plik z linkami ofert znalezionych ręcznie, po przebiegu uruchom `python3 fat-boy-scout/scout.py recall <plik>`.
 Zgłoś wynik X/N i listę przeoczonych, a jako eksperymenty dodaj zapytania, które mogłyby je znaleźć.
