@@ -1,0 +1,600 @@
+{
+  "scope": "usa",
+  "_scope_note": "midwest = tylko states_priority; usa = cały kraj, przy czym states_priority idą pierwsze, a reszta według odległości",
+  "max_price_usd": 11000,
+  "home": {
+    "city": "Des Plaines",
+    "state": "IL",
+    "zip": "60016"
+  },
+  "metro_radius_mi": 40,
+  "metro_cities": [
+    "des plaines",
+    "chicago",
+    "park ridge",
+    "niles",
+    "elk grove village",
+    "mount prospect",
+    "arlington heights",
+    "rosemont",
+    "schaumburg",
+    "skokie",
+    "evanston",
+    "elmhurst",
+    "villa park",
+    "oak brook",
+    "naperville",
+    "palatine",
+    "wheeling",
+    "glenview",
+    "northbrook",
+    "itasca",
+    "lombard",
+    "cicero",
+    "oak lawn",
+    "countryside",
+    "barrington"
+  ],
+  "states_priority": [
+    "IL",
+    "WI",
+    "IN",
+    "MI",
+    "IA",
+    "OH"
+  ],
+  "report_max_chars": 3800,
+  "expected_miles_per_year": 3000,
+  "categories": {
+    "main": {
+      "label": "Fat Boy (2018+)",
+      "min_year": 2018,
+      "exclude_engines": [
+        "107"
+      ],
+      "families": [
+        "Fat Boy 114",
+        "Fat Boy"
+      ],
+      "_note": "bez górnej granicy rocznika: 2018–2024 = 114 (2018–2020 może być 107), 2025+ = 117; max 15 000 mil, oferty bez przebiegu zostają z flagą",
+      "max_miles": 15000
+    }
+  },
+  "vin_model_codes": {
+    "YG": {
+      "model": "Fat Boy 114",
+      "code": "FLFBS",
+      "engine": "114"
+    },
+    "YL": {
+      "model": "Fat Bob 114",
+      "code": "FXFBS",
+      "engine": "114"
+    },
+    "YK": {
+      "model": "Fat Bob",
+      "code": "FXFB",
+      "engine": "107"
+    }
+  },
+  "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
+  "market_reference": {
+    "Fat Boy 114": {
+      "2018": 12550,
+      "2019": 13000,
+      "2020": 14950,
+      "2021": 14600,
+      "2022": 15500,
+      "2023": 16050,
+      "2024": 18100,
+      "2025": 20500,
+      "2026": 23400
+    },
+    "Fat Bob 114": {
+      "2018": 12000,
+      "2019": 12500,
+      "2020": 13000,
+      "2021": 13800,
+      "2022": 14500,
+      "2023": 15500,
+      "2024": 16500
+    },
+    "Indian Challenger": {
+      "2020": 14500,
+      "2021": 15500,
+      "2022": 17000,
+      "2023": 19000,
+      "2024": 21000
+    },
+    "Africa Twin": {
+      "2016": 7500,
+      "2017": 8000,
+      "2018": 8500,
+      "2019": 9000,
+      "2020": 10000,
+      "2021": 11000,
+      "2022": 12000,
+      "2023": 13000
+    },
+    "Gold Wing": {
+      "2010": 8000,
+      "2012": 9000,
+      "2013": 9500,
+      "2014": 10000,
+      "2015": 11000,
+      "2016": 12000,
+      "2017": 13000,
+      "2018": 17000,
+      "2019": 18000,
+      "2020": 19500
+    }
+  },
+  "deal_thresholds": {
+    "okazja": 0.15,
+    "dobra_cena": 0.05,
+    "drogo": -0.05,
+    "podejrzanie_tanio": 0.45
+  },
+  "placeholder_price_max": 1500,
+  "searches": {
+    "cycletrader": [
+      {
+        "name": "Harley fat (2018+, <=11k, 500 mi)",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=fat&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley FLFBS",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=FLFBS&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley FXFBS",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=FXFBS&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Harley fatboy",
+        "category": "main",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-2018-Any-Harley-Davidson/motorcycles-for-sale?keyword=fatboy&make=Harley-Davidson%7C2316294&price=%2A%3A11000&year=2018%3A%2A&zip=60016&radius=500"
+      },
+      {
+        "name": "Indian Challenger",
+        "category": "challenger",
+        "paged": true,
+        "links_fallback": true,
+        "url": "https://www.cycletrader.com/Des-Plaines-Indian/motorcycles-for-sale?keyword=Challenger&make=Indian%7C50865296&price=%2A%3A11000&zip=60016&radius=500"
+      },
+      {
+        "name": "Honda Africa Twin",
+        "category": "honda-deal",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Honda/motorcycles-for-sale?keyword=africa%20twin&make=Honda%7C2316874&price=%2A%3A11000&zip=60016&radius=500"
+      },
+      {
+        "name": "Honda Gold Wing",
+        "category": "honda-deal",
+        "paged": true,
+        "url": "https://www.cycletrader.com/Honda/motorcycles-for-sale?keyword=gold%20wing&make=Honda%7C2316874&price=%2A%3A11000&zip=60016&radius=500"
+      }
+    ],
+    "facebook_index": [
+      {
+        "q": "site:facebook.com/marketplace/item \"2018 Harley-Davidson Fat Boy\" OR \"2019 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2020 Harley-Davidson Fat Boy\" OR \"2021 Harley-Davidson Fat Boy\" OR \"2022 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2023 Harley-Davidson Fat Boy\" OR \"2024 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"Fatboy\" harley 2018 OR 2019 OR 2020 OR 2021 OR 2022 OR 2023 OR 2024",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: Fatboy"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"Fat Boy 114\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: Fat Boy 114"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item FLFBS",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": false,
+        "why": "wariant: FLFBS"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2018 Harley Softail\" OR \"2018 Harley-Davidson Softail\" OR \"2019 Harley Softail\" OR \"2019 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2018–2019"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2020 Harley Softail\" OR \"2020 Harley-Davidson Softail\" OR \"2021 Harley Softail\" OR \"2021 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2020–2021"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2022 Harley Softail\" OR \"2023 Harley Softail\" OR \"2024 Harley Softail\" OR \"2022 Harley-Davidson Softail\" OR \"2023 Harley-Davidson Softail\" OR \"2024 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2022–2024"
+      },
+      {
+        "q": "site:facebook.com/marketplace/item \"2025 Harley Softail\" OR \"2026 Harley Softail\" OR \"2025 Harley-Davidson Softail\" OR \"2026 Harley-Davidson Softail\"",
+        "origin": "seed",
+        "added": "2026-11-13",
+        "status": "active",
+        "broad": true,
+        "why": "szeroki tytuł: Softail 2025–2026"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio OR Minnesota OR Missouri",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Midwest",
+        "states": [
+          "IL",
+          "WI",
+          "IN",
+          "MI",
+          "IA",
+          "OH",
+          "MN",
+          "MO"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Kansas OR Nebraska OR \"South Dakota\" OR \"North Dakota\" OR Montana OR Wyoming OR Colorado",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Plains i Góry",
+        "states": [
+          "KS",
+          "NE",
+          "SD",
+          "ND",
+          "MT",
+          "WY",
+          "CO"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Washington OR Oregon OR Idaho OR Utah OR Nevada OR California",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Zachód",
+        "states": [
+          "WA",
+          "OR",
+          "ID",
+          "UT",
+          "NV",
+          "CA"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Texas OR Oklahoma OR \"New Mexico\" OR Arizona",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południowy zachód",
+        "states": [
+          "TX",
+          "OK",
+          "NM",
+          "AZ"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Louisiana OR Mississippi OR Arkansas OR Alabama OR Tennessee OR Kentucky",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południe",
+        "states": [
+          "LA",
+          "MS",
+          "AR",
+          "AL",
+          "TN",
+          "KY"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Florida OR Georgia OR \"South Carolina\" OR \"North Carolina\" OR Virginia OR \"West Virginia\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Południowy wschód",
+        "states": [
+          "FL",
+          "GA",
+          "SC",
+          "NC",
+          "VA",
+          "WV"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Pennsylvania OR \"New York\" OR \"New Jersey\" OR Connecticut OR Massachusetts OR Maryland OR Delaware",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Północny wschód",
+        "states": [
+          "PA",
+          "NY",
+          "NJ",
+          "CT",
+          "MA",
+          "MD",
+          "DE"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Maine OR \"New Hampshire\" OR Vermont OR \"Rhode Island\"",
+        "origin": "seed",
+        "added": "2026-11-12",
+        "status": "active",
+        "region": "Nowa Anglia",
+        "states": [
+          "ME",
+          "NH",
+          "VT",
+          "RI"
+        ]
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley \"low miles\" 2018 OR 2019 OR 2020 OR 2021",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "eksperyment z 1 unikalnymi trafieniami"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 Colorado OR Utah OR Nevada OR Oregon OR Washington OR Idaho",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "eksperyment z 3 unikalnymi trafieniami"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Hartford\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Hartford, MI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Caledonia\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Caledonia, WI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Forney\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Forney, TX)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Vernon Rockville\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Vernon Rockville, CT)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Rathdrum\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Rathdrum, ID)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Brookings\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Brookings, OR)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Theresa\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Theresa, WI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Anoka\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Anoka, MN)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Ridgeland\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Ridgeland, WI)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Clover\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Clover, SC)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Bellingham\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Bellingham, MA)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Uxbridge\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Uxbridge, MA)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Seymour\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Seymour, CT)"
+      },
+      {
+        "q": "site:facebook.com/marketplace \"Fat Boy\" \"Cape Coral\"",
+        "origin": "auto",
+        "added": "2026-11-12",
+        "status": "active",
+        "why": "miasto z trafieniem (Cape Coral, FL)"
+      }
+    ],
+    "usa_radius": 10000,
+    "facebook_index_options": {
+      "limit": 40,
+      "sources": [
+        "web"
+      ],
+      "domainTools": false,
+      "tbs": null,
+      "_note": "nie używaj tbs=qdr:m z marketplace/item – zwraca śmieci (lekcja z 2026-11-12)"
+    }
+  },
+  "us_states": [
+    "AL",
+    "AK",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "FL",
+    "GA",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MD",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MO",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "ND",
+    "OH",
+    "OK",
+    "OR",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VT",
+    "VA",
+    "WA",
+    "WV",
+    "WI",
+    "WY"
+  ],
+  "sources": [
+    "facebook"
+  ],
+  "_sources_note": "facebook = indeks wyszukiwarki (ogłoszeń nie da się otworzyć bez logowania). Cycle Trader jest wyłączony; plan zostaje w searches.cycletrader na wypadek powrotu.",
+  "self_improve": {
+    "drop_after_zero_runs": 3,
+    "max_queries": 36,
+    "min_samples_for_price": 5,
+    "price_blend": 0.5,
+    "gone_after_missing_runs": 3,
+    "experiments_per_run": 3,
+    "city_query_template": "site:facebook.com/marketplace \"Fat Boy\" \"{city}\""
+  },
+  "ranking": {
+    "usd_per_mile": 0.1,
+    "top": 10,
+    "next_steps_top": 3,
+    "transport": {
+      "usd_per_mile": 0.6,
+      "free_within_mi": 300,
+      "min_usd": 300,
+      "_note": "szacunek dowozu/odbioru: 0,60 USD za milę drogi (transport motocykla lub paliwo + bilet powrotny); do 300 mil od Des Plaines 0 (dojazd samemu)"
+    },
+    "_note": "koszt całkowity = cena + 0,10 USD/milę przebiegu + dowóz; oferty bez przebiegu na końcu"
+  },
+  "relist": {
+    "min_features": 3,
+    "miles_tolerance_pct": 5,
+    "miles_max_increase": 1500,
+    "_note": "ten sam motocykl: identyczny pełny VIN albo ≥3 cechy z: te same charakterystyczne zdjęcia (photo_fingerprint, nie katalogowe), sprzedawca (seller_name), miejscowość, zgodny przebieg, te same modyfikacje (mods). Sam rocznik/kolor/zdjęcie katalogowe nie wystarczają."
+  }
+}

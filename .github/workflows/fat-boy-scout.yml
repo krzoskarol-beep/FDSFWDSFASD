@@ -1,0 +1,21 @@
+name: fat-boy-scout
+
+on:
+  push:
+    paths: ["fat-boy-scout/**", ".github/workflows/fat-boy-scout.yml"]
+  pull_request:
+    paths: ["fat-boy-scout/**", ".github/workflows/fat-boy-scout.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Testy silnika
+        run: python -m unittest fat-boy-scout/test_scout.py -v
+      - name: Walidacja JSON
+        run: |
+          python -c "import json,glob; [json.load(open(f)) for f in ['fat-boy-scout/config.json','fat-boy-scout/state.json',*glob.glob('fat-boy-scout/runs/*.json')]]; print('ok')"

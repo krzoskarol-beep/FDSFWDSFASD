@@ -1,0 +1,505 @@
+{
+  "version": 2,
+  "runs": [
+    "2026-11-12"
+  ],
+  "listings": {
+    "ct-5042303572": {
+      "id": "ct-5042303572",
+      "source": "cycletrader",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "code": "FXFBS",
+      "year": 2018,
+      "price": 10999,
+      "miles": 11903,
+      "city": "Elmhurst",
+      "state": "IL",
+      "distance_mi": 12,
+      "seller": "dealer",
+      "verified": true,
+      "active": true,
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-FXFBS+-+Softail+Fat+Bob+114-5042303572",
+      "engine": "114",
+      "family": "Fat Bob 114",
+      "score": {
+        "ref": 12000,
+        "discount": 0.13382083333333333,
+        "label": "dobra cena",
+        "flags": []
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10999
+        }
+      ]
+    },
+    "ct-5041133973": {
+      "id": "ct-5041133973",
+      "source": "cycletrader",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "code": "FXFBS",
+      "vin": "1HD1YLK18JC024906",
+      "year": 2018,
+      "price": 10995,
+      "miles": 5445,
+      "city": "Bettendorf",
+      "state": "IA",
+      "distance_mi": 137,
+      "seller": "dealer",
+      "fees": "+495 USD reconditioning, +179 USD doc fee (razem 11 669 USD)",
+      "verified": true,
+      "active": true,
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob%C2%AE+114-5041133973",
+      "engine": "114",
+      "vin_check": "VIN FXFBS = Fat Bob 114",
+      "family": "Fat Bob 114",
+      "score": {
+        "ref": 12000,
+        "discount": 0.1610625,
+        "label": "OKAZJA",
+        "flags": [
+          "dopłaty dealera: +495 USD reconditioning, +179 USD doc fee (razem 11 669 USD)"
+        ]
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10995
+        }
+      ]
+    },
+    "ct-5041949485": {
+      "id": "ct-5041949485",
+      "source": "cycletrader",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "code": "FLFBS",
+      "year": 2018,
+      "price": 9997,
+      "miles": 8168,
+      "city": "North Canton",
+      "state": "OH",
+      "distance_mi": 344,
+      "seller": "dealer",
+      "verified": true,
+      "active": true,
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson%C2%AE-FLFBS+-+Softail%C2%AE+Fat+Boy%C2%AE+114-5041949485",
+      "engine": "114",
+      "family": "Fat Boy 114",
+      "score": {
+        "ref": 12500,
+        "discount": 0.26620666666666665,
+        "label": "OKAZJA",
+        "flags": []
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 9997
+        }
+      ]
+    },
+    "ct-5042044796": {
+      "id": "ct-5042044796",
+      "source": "cycletrader",
+      "category": "honda-deal",
+      "model": "2017 Honda Africa Twin CRF1000L DCT",
+      "year": 2017,
+      "price": 5999,
+      "miles": 17534,
+      "city": "Troy",
+      "state": "MI",
+      "distance_mi": 244,
+      "title": "clean",
+      "seller": "private",
+      "deal": true,
+      "why": "ok. 2–3 tys. USD taniej niż inne Africa Twin DCT 2017–2018 w wynikach (6 999–8 900 USD); czysty title, podgrzewane manetki, crash bary; kufry Caribou do dokupienia za 699 USD",
+      "verified": true,
+      "active": true,
+      "url": "https://www.cycletrader.com/listing/2017-Honda-AFRICA+TWIN+CRF1000L+DCT-5042044796",
+      "family": "Africa Twin",
+      "score": {
+        "ref": 8000,
+        "discount": 0.2851842592592592,
+        "label": "OKAZJA",
+        "flags": []
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 5999
+        }
+      ]
+    },
+    "fb-26573702002279243": {
+      "id": "fb-26573702002279243",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "year": 2018,
+      "price": 10000,
+      "city": "Hartford",
+      "state": "MI",
+      "verified": false,
+      "notes": "opis w indeksie: „2018 Harley-Davidson Fat Boy 114, black with chrome”; inny fragment indeksu pokazuje 12 500 USD",
+      "url": "https://www.facebook.com/marketplace/item/26573702002279243/",
+      "engine": "114",
+      "family": "Fat Boy 114",
+      "score": {
+        "ref": 12500,
+        "discount": 0.2,
+        "label": "OKAZJA",
+        "flags": []
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10000
+        }
+      ]
+    },
+    "fb-athens-oh-fxfbs": {
+      "id": "fb-athens-oh-fxfbs",
+      "source": "facebook",
+      "category": "main",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "code": "FXFBS",
+      "year": 2018,
+      "price": 10500,
+      "miles": 13000,
+      "city": "Athens",
+      "state": "OH",
+      "verified": false,
+      "notes": "brak bezpośredniego linku, tylko strona kategorii",
+      "url": "https://www.facebook.com/marketplace/athens-oh/harley-davidson/",
+      "engine": "114",
+      "family": "Fat Bob 114",
+      "score": {
+        "ref": 12000,
+        "discount": 0.17083333333333334,
+        "label": "OKAZJA",
+        "flags": []
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10500
+        }
+      ]
+    },
+    "fb-caledonia-wi-2018-fatboy": {
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "id": "fb-caledonia-wi-2018-fatboy",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 10800,
+      "city": "Caledonia",
+      "state": "WI",
+      "distance_mi": 55,
+      "notes": "w indeksie najpierw 11 000, teraz 10 800 USD. Brak bezpośredniego linku, więc link prowadzi do wyszukiwania na Marketplace. Prawdopodobnie ten sam motocykl był w czerwcu 2026 na Craigslist jako 2018 Fat Boy 114, 9 950 mi, clean title: https://milwaukee.craigslist.org/mcy/d/caledonia-2018-harley-davidson-fat-boy/7938150742.html",
+      "url": "https://www.facebook.com/marketplace/milwaukee/search/?query=2018%20harley%20fat%20boy",
+      "family": "Fat Boy",
+      "score": {
+        "ref": 12500,
+        "discount": 0.136,
+        "label": "dobra cena",
+        "flags": [
+          "114 niepotwierdzone"
+        ]
+      },
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12",
+      "status": "active",
+      "shown": true,
+      "price_history": [
+        {
+          "date": "2026-11-12",
+          "price": 10800
+        }
+      ]
+    }
+  },
+  "rejected": {
+    "ct-5042513837": {
+      "id": "ct-5042513837",
+      "model": "2018 Harley-Davidson Softail Fat Bob",
+      "price": 9495,
+      "location": "Fremont, OH",
+      "reason": "wersja 107",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson%C2%AE-Softail%C2%AE+Fat+Bob%C2%AE-5042513837",
+      "date": "2026-11-12"
+    },
+    "ct-5040708811": {
+      "id": "ct-5040708811",
+      "model": "2018 Harley-Davidson Fat Bob",
+      "price": 10999,
+      "location": "Mansfield, OH",
+      "reason": "wersja 107",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob-5040708811",
+      "date": "2026-11-12"
+    },
+    "ct-5033074497": {
+      "id": "ct-5033074497",
+      "model": "2018 Harley-Davidson Softail Fat Boy",
+      "price": 10999,
+      "location": "Medina, OH",
+      "reason": "wersja 107",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson%C2%AE-FLFB+-+Softail%C2%AE+Fat+Boy%C2%AE-5033074497",
+      "date": "2026-11-12"
+    },
+    "ct-5041147740": {
+      "id": "ct-5041147740",
+      "model": "2018 Harley-Davidson Fat Bob 107",
+      "price": 9985,
+      "location": "Big Bend, WI",
+      "reason": "wersja 107",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob%C2%AE-107-5041147740",
+      "date": "2026-11-12"
+    },
+    "ct-5041539812": {
+      "id": "ct-5041539812",
+      "model": "2018 Harley-Davidson Fat Bob 107",
+      "price": 9988,
+      "location": "Marietta, OH",
+      "reason": "wersja 107",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Bob%C2%AE-107-5041539812",
+      "date": "2026-11-12"
+    },
+    "ct-5042040302": {
+      "id": "ct-5042040302",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "price": 10995,
+      "location": "Columbia, MO",
+      "reason": "poza regionem (MO)",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-Fat+Boy+114-5042040302",
+      "date": "2026-11-12"
+    },
+    "ct-5041404263": {
+      "id": "ct-5041404263",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "price": 10950,
+      "location": "Quarryville, PA",
+      "reason": "poza regionem (PA)",
+      "url": "https://www.cycletrader.com/listing/2018-Harley-Davidson-FAT+BOY+114-5041404263",
+      "date": "2026-11-12"
+    },
+    "ct-5042819607": {
+      "id": "ct-5042819607",
+      "model": "2024 Harley-Davidson Fat Boy 114",
+      "price": null,
+      "location": "Shorewood, IL",
+      "reason": "brak ceny",
+      "url": "https://www.cycletrader.com/listing/2024-Harley-Davidson-Fat+Boy%C2%AE-114-5042819607",
+      "date": "2026-11-12"
+    },
+    "ct-5042935341": {
+      "id": "ct-5042935341",
+      "model": "2024 Indian Challenger Dark Horse",
+      "price": null,
+      "location": "Monroe, MI",
+      "reason": "brak ceny",
+      "url": "https://www.cycletrader.com/listing/2024-Indian-CHALLENGER+DARK+HORSE-5042935341",
+      "date": "2026-11-12"
+    },
+    "ct-5042464262": {
+      "id": "ct-5042464262",
+      "model": "2023 Indian Challenger Elite",
+      "price": null,
+      "location": "Westerville, OH",
+      "reason": "brak ceny",
+      "url": "https://www.cycletrader.com/listing/2023-Indian-Challenger+Elite-5042464262",
+      "date": "2026-11-12"
+    },
+    "fb-1497300749116594": {
+      "id": "fb-1497300749116594",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "price": 10999,
+      "location": "Miami, FL",
+      "reason": "poza regionem (FL)",
+      "url": "https://www.facebook.com/marketplace/item/1497300749116594/",
+      "date": "2026-11-12"
+    },
+    "fb-891120917356759": {
+      "id": "fb-891120917356759",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "price": 12999,
+      "location": "Defiance, OH",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/891120917356759/",
+      "date": "2026-11-12"
+    },
+    "fb-1021973676856419": {
+      "id": "fb-1021973676856419",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "price": 12990,
+      "location": "Cleveland, OH",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1021973676856419/",
+      "date": "2026-11-12"
+    },
+    "fb-1099225723111135": {
+      "id": "fb-1099225723111135",
+      "model": "2018 Harley-Davidson Fat Boy",
+      "price": 13999,
+      "location": "Skokie, IL",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1099225723111135/",
+      "date": "2026-11-12"
+    },
+    "fb-28899266629695099": {
+      "id": "fb-28899266629695099",
+      "model": "Harley Fatboy (oferta „trade”)",
+      "price": 9000,
+      "location": "Aurora, IL",
+      "reason": "rocznik nieznany",
+      "url": "https://www.facebook.com/marketplace/item/28899266629695099/",
+      "date": "2026-11-12"
+    },
+    "fb-2270628420377500": {
+      "id": "fb-2270628420377500",
+      "model": "2023 Harley-Davidson Fat Boy 114",
+      "price": 13500,
+      "location": "Livonia, MI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/2270628420377500/",
+      "date": "2026-11-12"
+    },
+    "fb-1422284473397168": {
+      "id": "fb-1422284473397168",
+      "model": "2022 Harley-Davidson Fat Boy 114 EX-L",
+      "price": 13000,
+      "location": "Williams Bay, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1422284473397168/",
+      "date": "2026-11-12"
+    },
+    "fb-28864349209912633": {
+      "id": "fb-28864349209912633",
+      "model": "2023 Harley-Davidson Fat Boy 114",
+      "price": 15750,
+      "location": "Chicago, IL",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/28864349209912633/",
+      "date": "2026-11-12"
+    },
+    "fb-charlestown-in-2018-fb114": {
+      "id": "fb-charlestown-in-2018-fb114",
+      "model": "2018 Harley-Davidson Fat Boy 114",
+      "price": 12500,
+      "location": "Charlestown, IN",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1641836457540850/",
+      "date": "2026-11-12"
+    },
+    "fb-polkcity-ia-2018-fatbob114": {
+      "id": "fb-polkcity-ia-2018-fatbob114",
+      "model": "2018 Harley-Davidson Fat Bob 114",
+      "price": 11500,
+      "location": "Polk City, IA",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/item/1309427541146347/",
+      "date": "2026-11-12"
+    },
+    "fb-shellsburg-ia-2019-fatbob114": {
+      "id": "fb-shellsburg-ia-2019-fatbob114",
+      "model": "2019 Harley-Davidson Fat Bob 114",
+      "price": 11650,
+      "location": "Shellsburg, IA",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/108342309186542/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-bigbend-wi-2022-fatbob114": {
+      "id": "fb-bigbend-wi-2022-fatbob114",
+      "model": "2022 Harley-Davidson Fat Bob 114",
+      "price": 12885,
+      "location": "Big Bend, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/lomira-wi/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-greenbay-wi-2022-fatbob114": {
+      "id": "fb-greenbay-wi-2022-fatbob114",
+      "model": "2022 Harley-Davidson Fat Bob 114",
+      "price": 14194,
+      "location": "Green Bay, WI",
+      "reason": "cena > 11 000 USD",
+      "url": "https://www.facebook.com/marketplace/greenleaf-wi/bobber-motorcycles/",
+      "date": "2026-11-12"
+    },
+    "fb-2536008240200073": {
+      "id": "fb-2536008240200073",
+      "model": "2017 Honda Africa Twin DCT",
+      "price": 8900,
+      "location": "St Joseph, MI",
+      "reason": "Honda bez wyjątkowej ceny",
+      "url": "https://www.facebook.com/marketplace/item/2536008240200073/",
+      "date": "2026-11-12"
+    }
+  },
+  "watchlist": {
+    "fb-2329941004433092": {
+      "id": "fb-2329941004433092",
+      "model": "2020 Indian Challenger",
+      "miles": 18000,
+      "city": "Lake Wissota (Chippewa Falls)",
+      "state": "WI",
+      "note": "w indeksie cena-wypełniacz 1 234 USD; ogłoszenie było świeże",
+      "url": "https://www.facebook.com/marketplace/item/2329941004433092/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    },
+    "fb-2254086322092820": {
+      "id": "fb-2254086322092820",
+      "model": "2018 Harley-Davidson Fat Boy 114 (FLFBS), 1 właściciel",
+      "miles": 2309,
+      "city": null,
+      "state": null,
+      "note": "brak ceny i lokalizacji w indeksie",
+      "url": "https://www.facebook.com/marketplace/item/2254086322092820/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    },
+    "fb-29352052521055989": {
+      "id": "fb-29352052521055989",
+      "model": "2020 Honda Africa Twin Adventure Sports ES, bagaż Honda",
+      "miles": 3700,
+      "city": null,
+      "state": null,
+      "note": "brak ceny i lokalizacji w indeksie",
+      "url": "https://www.facebook.com/marketplace/item/29352052521055989/",
+      "first_seen": "2026-11-12",
+      "last_seen": "2026-11-12"
+    }
+  },
+  "last_run": "2026-11-12"
+}
