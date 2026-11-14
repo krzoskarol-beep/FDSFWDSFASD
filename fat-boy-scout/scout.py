@@ -124,6 +124,15 @@ def family(listing: dict) -> str | None:
     return None
 
 
+def year_from_text(listing: dict) -> int | None:
+    """Rocznik z tytułu/modelu, gdy pole year jest puste („2021 Harley-Davidson Fat Boy 114” → 2021)."""
+    for k in ("model", "listing_title"):
+        m = re.match(r"\s*(20[12]\d)\b", listing.get(k) or "")
+        if m:
+            return int(m.group(1))
+    return None
+
+
 def engine_of(listing: dict) -> str | None:
     if listing.get("engine"):
         return str(listing["engine"])
@@ -146,6 +155,8 @@ def engine_of(listing: dict) -> str | None:
 def normalize(listing: dict, config: dict) -> dict:
     l = dict(listing)
     l["state"] = (l.get("state") or "").upper().strip() or None
+    if not l.get("year"):
+        l["year"] = year_from_text(l)
     v = decode_vin(l.get("vin"), config)
     if v and v.get("known"):
         l["engine"] = v["engine"]
@@ -237,6 +248,12 @@ def is_direct_link(url: str | None, l: dict | None = None) -> bool:
 def missing_info(l: dict, config: dict) -> tuple[list[str], list[str]]:
     """(ustalono, brakuje) – dla sekcji „Do sprawdzenia” i dla decyzji, czy oferta jest w pełni potwierdzona."""
     known, missing = [], []
+    if not l.get("year") or not l.get("engine"):
+        # wpisy z watchlisty nie przechodzą przez normalize – uzupełniamy rocznik i silnik z tekstu
+        l = dict(l, year=l.get("year") or year_from_text(l))
+        l["engine"] = engine_of(l)
+        if l.get("model_confirmed") is None:
+            l["model_confirmed"] = bool(MODEL_RE.search(model_text(l)))
     ev = evidence_text(l)
     if l.get("model_provisional"):
         missing.append("potwierdzenie modelu Fat Boy (tytuł jest ogólny)")
@@ -247,7 +264,8 @@ def missing_info(l: dict, config: dict) -> tuple[list[str], list[str]]:
     if l.get("engine") in ("114", "117"):
         known.append(f"silnik {l['engine']}" + (" (opis)" if re.search(r"114|117|flfbs", ev, re.I) else ""))
     else:
-        missing.append("potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)")
+        missing.append("potwierdzenie silnika 114" + (" (rocznik 2018–2020 mógł mieć 107)"
+                                                      if not l.get("year") or l["year"] <= 2020 else ""))
     if l.get("year"):
         known.append(f"rocznik {l['year']}")
     else:
@@ -529,7 +547,10 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
         for k in ("old_price", "old_date", "into_limit"):
             rec.pop(k, None)
         if rec.get("relist") and rec["relist"].get("date") != today:
-            rec["relist_history"] = rec.pop("relist")
+            hist = rec.get("relist_history")
+            hist = [hist] if isinstance(hist, dict) else list(hist or [])   # starsze wersje trzymały jeden wpis
+            hist.append(rec.pop("relist"))
+            rec["relist_history"] = hist
 
     observed_states: dict[str, dict] = {}
     for raw in run.get("listings", []):
@@ -827,11 +848,14 @@ def _loc(l: dict) -> str:
 def change_line(l: dict, config: dict) -> str:
     """Opis zmiany: spadek ceny (z datami i wejściem w limit) albo ponowne wystawienie."""
     parts = []
-    if l.get("old_price") is not None and l.get("old_date"):
+    if l.get("old_price") is not None and l.get("price") is not None:
         d = l["old_price"] - l["price"]
         last = (l.get("price_history") or [{}])[-1]
-        txt = (f"Poprzednio {fmt_price(l['old_price'])} ({pl_date(l['old_date'])}), teraz {fmt_price(l['price'])} "
-               f"({pl_date(last.get('date', l['last_seen']))}). Spadek o {fmt_price(d)}.")
+        when_new = last.get("date") or l.get("last_seen")
+        old_s = f" ({pl_date(l['old_date'])})" if l.get("old_date") else ""
+        new_s = f" ({pl_date(when_new)})" if when_new else ""
+        txt = (f"Poprzednio {fmt_price(l['old_price'])}{old_s}, teraz {fmt_price(l['price'])}{new_s}. "
+               f"Spadek o {fmt_price(d)}.")
         if l.get("into_limit"):
             txt += " Oferta weszła w Twój limit."
         parts.append(txt)
@@ -843,19 +867,35 @@ def change_line(l: dict, config: dict) -> str:
     return " ".join(parts)
 
 
-def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
-    first = diff["first"]
+def report_sets(diff: dict, config: dict) -> dict:
+    """Podział ofert na potwierdzone / do sprawdzenia / watchlistę – wspólny dla raportu tekstowego i panelu HTML."""
     pool, seen = [], set()
     for l in diff["active"] + diff["unverified_all"]:
         # duplikaty zostają w raporcie (z adnotacją) – każda znaleziona oferta ma być widoczna z linkiem
         if l["id"] not in seen:
             seen.add(l["id"])
             pool.append(l)
-    confirmed = sorted([l for l in pool if not missing_info(l, config)[1]], key=lambda l: rank_key(l, config))
-    to_check = sorted([l for l in pool if missing_info(l, config)[1]], key=lambda l: rank_key(l, config))
-    state_watch = [w for w in diff.get("watch_all", []) if w["id"] not in seen]
-    new_ids = {l["id"] for l in diff["new"] + diff["unverified_new"]}
-    drop_ids = {l["id"] for l in diff["drops"]}
+    return {"pool": pool,
+            "confirmed": sorted([l for l in pool if not missing_info(l, config)[1]], key=lambda l: rank_key(l, config)),
+            "to_check": sorted([l for l in pool if missing_info(l, config)[1]], key=lambda l: rank_key(l, config)),
+            "watch": [w for w in diff.get("watch_all", []) if w["id"] not in seen],
+            "new_ids": {l["id"] for l in diff["new"] + diff["unverified_new"]},
+            "drop_ids": {l["id"] for l in diff["drops"]}}
+
+
+def write_dashboard(sets: dict, run: dict, config: dict, report_no: int, out: Path | None = None) -> Path:
+    import dashboard   # osobny moduł – raport tekstowy działa bez niego
+    out = out or REPORTS_DIR / f"{run.get('run_id', run['date'])}.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(dashboard.build_html(sets, run, config, report_no), encoding="utf-8")
+    return out
+
+
+def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
+    first = diff["first"]
+    sets = report_sets(diff, config)
+    pool, confirmed, to_check, state_watch = sets["pool"], sets["confirmed"], sets["to_check"], sets["watch"]
+    new_ids, drop_ids = sets["new_ids"], sets["drop_ids"]
 
     blocks: list[str] = []
     head = f"# Fat Boy Scout – raport nr {report_no} ({pl_date(run['date'])}, przebieg {run.get('run_id', run['date'])})"
@@ -1055,6 +1095,24 @@ def cmd_run(args) -> int:
         save_json(STATE_PATH, state)
         REPORTS_DIR.mkdir(exist_ok=True)
         (REPORTS_DIR / f"{run['run_id']}.md").write_text(text + "\n", encoding="utf-8")
+        print(f"Panel HTML: {write_dashboard(report_sets(diff, config), run, config, report_no)}", file=sys.stderr)
+    return 0
+
+
+def cmd_html(args) -> int:
+    """Panel z bieżącego state.json – bez nowego przebiegu."""
+    config = load_json(CONFIG_PATH)
+    state = migrate(load_json(STATE_PATH))
+    active = [l for l in state["listings"].values() if l.get("status") == "active"]
+    diff = {"active": [l for l in active if l.get("verified", True)],
+            "unverified_all": [l for l in active if not l.get("verified", True)],
+            "watch_all": [w for w in state.get("watchlist", {}).values() if w.get("status", "active") == "active"],
+            "new": [], "unverified_new": [], "drops": []}
+    last = state.get("last_run") or date.today().isoformat()
+    run = {"date": last, "run_id": f"stan-{last}"}
+    out = write_dashboard(report_sets(diff, config), run, config, len(state["runs"]),
+                          Path(args.out) if args.out else REPORTS_DIR / "panel.html")
+    print(out)
     return 0
 
 
@@ -1232,7 +1290,7 @@ def validate_run(run: dict, config: dict) -> tuple[list[str], list[str]]:
     err, warn = [], []
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(run.get("date", ""))):
         err.append("pole 'date' musi mieć format RRRR-MM-DD")
-    if not run.get("sources_checked"):
+    if not run.get("sources_checked") and not run.get("partial_import"):
         warn.append("brak 'sources_checked' – zniknięcia nie będą liczone")
     ids = [l.get("id") for l in run.get("listings", [])]
     dups = {i for i in ids if ids.count(i) > 1}
@@ -1479,6 +1537,7 @@ def finish_run(run: dict, config: dict, partial: bool = False) -> tuple[int, str
     save_json_atomic(STATE_PATH, state)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     (REPORTS_DIR / f"{run['run_id']}.md").write_text(text + "\n", encoding="utf-8")
+    write_dashboard(report_sets(diff, config), run, config, report_no)
     run["status"] = "done"
     run["finished_at"] = __import__("datetime").datetime.now().isoformat(timespec="seconds")
     save_json_atomic(RUNS_DIR / f"{run['run_id']}.json", run)
@@ -1594,6 +1653,9 @@ def main(argv=None) -> int:
     fi.add_argument("run_id")
     fi.add_argument("--partial", action="store_true")
     fi.set_defaults(func=cmd_finish)
+    hm = sub.add_parser("html", help="panel HTML z aktualnym stanem ofert (wykres cena–przebieg, tabela z linkami)")
+    hm.add_argument("--out", default=None)
+    hm.set_defaults(func=cmd_html)
     im = sub.add_parser("improve", help="samodoskonalenie: zapytania i ceny referencyjne")
     im.add_argument("--apply", action="store_true", help="zapisz zmiany w config.json i improvements.md")
     im.set_defaults(func=cmd_improve)

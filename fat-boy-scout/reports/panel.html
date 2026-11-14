@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fat Boy Scout – raport nr 2</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface-1: #fcfcfb; --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --series-1: #2a78d6; --series-2: #eb6834; --good-text: #006300;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --text-primary: #f0efec; --text-secondary: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2: #d95926; --good-text: #0ca30c;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+body { font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-variant-numeric: tabular-nums; }
+.viz-root { background: var(--page); color: var(--text-primary); min-height: 100vh; padding: 16px; }
+.wrap { max-width: 1080px; margin: 0 auto; }
+h1 { font-size: 20px; margin: 0 0 2px; }
+.sub { color: var(--text-secondary); margin: 0 0 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.tile, .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.tile .k { color: var(--text-secondary); font-size: 12px; }
+.tile .v { font-size: 24px; font-weight: 600; margin-top: 2px; }
+.tile .s { color: var(--muted); font-size: 12px; }
+.card { margin-bottom: 16px; }
+.card h2 { font-size: 15px; margin: 0 0 4px; }
+.note { color: var(--text-secondary); font-size: 12px; margin: 0 0 8px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+#chart { display: block; width: 100%; height: auto; overflow: visible; }
+.legend svg { width: 12px; height: 12px; flex: none; }
+.tick { fill: var(--muted); font-size: 11px; }
+.ref { fill: var(--text-secondary); font-size: 11px; }
+#tip { position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.15); display: none; z-index: 10; }
+#tip b { display: block; margin-bottom: 2px; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.filters button, .filters select { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; color: var(--text-secondary); font-weight: 500; border-bottom: 1px solid var(--axis);
+  padding: 6px 8px; cursor: pointer; white-space: nowrap; user-select: none; }
+th.num, td.num { text-align: right; white-space: nowrap; }
+td { border-bottom: 1px solid var(--grid); padding: 7px 8px; vertical-align: top; }
+td .miss { color: var(--muted); font-size: 12px; }
+.tag { display: inline-block; font-size: 11px; border: 1px solid var(--axis); border-radius: 4px; padding: 0 4px;
+  margin-left: 4px; color: var(--text-secondary); }
+.dot { display: inline-block; width: 10px; height: 10px; vertical-align: -1px; margin-right: 6px; }
+.dot.ok { background: var(--series-1); border-radius: 50%; }
+.dot.check { background: var(--series-2); transform: rotate(45deg) scale(.85); }
+a { color: var(--series-1); }
+.foot { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="viz-root"><div class="wrap">
+  <h1 id="h"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="tiles" id="tiles"></div>
+  <div class="card">
+    <h2>Cena a przebieg</h2>
+    <p class="note" id="chartnote"></p>
+    <div class="legend">
+      <span><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="var(--series-1)"/></svg>Potwierdzone</span>
+      <span><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 0.5 11.5 6 6 11.5 0.5 6Z" fill="var(--series-2)"/></svg>Do sprawdzenia</span>
+    </div>
+    <svg id="chart" role="img" aria-label="Wykres punktowy: cena ogłoszenia względem przebiegu"></svg>
+  </div>
+  <div class="card">
+    <h2>Wszystkie oferty</h2>
+    <div class="filters" id="filters">
+      <button data-f="all" aria-pressed="true">Wszystkie</button>
+      <button data-f="ok" aria-pressed="false">Potwierdzone</button>
+      <button data-f="check" aria-pressed="false">Do sprawdzenia</button>
+      <button data-f="new" aria-pressed="false">Nowe i tańsze</button>
+    </div>
+    <div class="tablewrap"><table id="tbl"><thead><tr>
+      <th data-k="model">Model</th><th data-k="price" class="num">Cena</th><th data-k="miles" class="num">Przebieg</th>
+      <th data-k="loc">Lokalizacja</th><th data-k="dist" class="num">Odl.</th><th data-k="total" class="num">Koszt całk.</th>
+      <th>Link</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  <p class="foot">Dane z indeksu wyszukiwarki (lub z aimm) – cenę i dostępność potwierdź po kliknięciu.
+    Koszt całkowity = cena + koszt przebiegu + szacunkowy dowóz do Des Plaines. Odległość szacunkowa.</p>
+</div>
+<div id="tip" role="tooltip"></div></div>
+<script id="data" type="application/json">{"rows": [{"id": "fb-26573702002279243", "kind": "ok", "model": "2018 Harley-Davidson Fat Boy 114", "year": 2018, "price": 10000, "miles": 9800, "loc": "Hartford, MI", "state": "MI", "dist": 170, "total": 10980, "url": "https://www.facebook.com/marketplace/item/26573702002279243/", "direct": true, "title": null, "missing": [], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-vernonrockville-ct-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy 114", "year": 2018, "price": 9000, "miles": 9900, "loc": "Vernon Rockville, CT", "state": "CT", "dist": 900, "total": 10530, "url": "https://www.facebook.com/marketplace/109503062402713/harley-davidson/", "direct": false, "title": null, "missing": ["bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1124382120437379", "kind": "check", "model": "2018 Harley-Davidson Fat Boy", "year": 2018, "price": 9800, "miles": 9500, "loc": "Theresa, WI", "state": "WI", "dist": 120, "total": 10750, "url": "https://www.facebook.com/marketplace/item/1124382120437379/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-brookings-or-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy", "year": 2018, "price": 9300, "miles": 6300, "loc": "Brookings, OR", "state": "OR", "dist": 2200, "total": 11250, "url": "https://www.facebook.com/marketplace/brookings-or/atvs/?locale=nb_NO", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": 10500, "change": "Poprzednio 10 500 USD, teraz 9 300 USD (12.11.2026). Spadek o 1 200 USD.", "dup_of": null}, {"id": "fb-forney-tx-2018", "kind": "check", "model": "2018 Harley Davidson Fat Boy 2500 miles", "year": 2018, "price": 10500, "miles": 2500, "loc": "Forney, TX", "state": "TX", "dist": 960, "total": 11326, "url": "https://www.facebook.com/marketplace/item/2970734959944491/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)"], "tags": [], "old_price": 11000, "change": "Poprzednio 11 000 USD, teraz 10 500 USD (12.11.2026). Spadek o 500 USD.", "dup_of": null}, {"id": "fb-2068477271205206", "kind": "check", "model": "2019 Harley Davidson Fat Boy 2600 miles", "year": 2019, "price": 10500, "miles": 2600, "loc": "Forney, TX", "state": "TX", "dist": 960, "total": 11336, "url": "https://www.facebook.com/marketplace/item/2068477271205206/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-rathdrum-id-2018-flfbs", "kind": "check", "model": "2018 Harley-Davidson Fat Boy 114", "year": 2018, "price": 10500, "miles": 1000, "loc": "Rathdrum, ID", "state": "ID", "dist": 1700, "total": 11620, "url": "https://www.facebook.com/marketplace/kellogg-id/harley-davidson/", "direct": false, "title": null, "missing": ["bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-caledonia-wi-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy 114", "year": 2018, "price": 10800, "miles": 10900, "loc": "Caledonia, WI", "state": "WI", "dist": 60, "total": 11890, "url": "https://www.facebook.com/marketplace/caledonia-wi/harley-davidson/?locale=eu_ES", "direct": false, "title": null, "missing": ["bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-bellingham-ma-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy®", "year": 2018, "price": 10999, "miles": 6700, "loc": "Bellingham, MA", "state": "MA", "dist": 1000, "total": 12269, "url": "https://www.facebook.com/marketplace/harwinton-ct/harley-davidson/?locale=fr_FR", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-clover-sc-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy", "year": 2018, "price": 11000, "miles": 8800, "loc": "Clover, SC", "state": "SC", "dist": 790, "total": 12354, "url": "https://www.facebook.com/marketplace/clover-sc/harley-davidson/", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-capecoral-fl-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy", "year": 2018, "price": 11000, "miles": 15000, "loc": "Cape Coral, FL", "state": "FL", "dist": 1300, "total": 13280, "url": "https://www.facebook.com/marketplace/aqui-esta-fl/search/?query=fury+125", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-anoka-mn-2018", "kind": "check", "model": "2018 Harley Fat Boy („FAST”)", "year": 2018, "price": 9900, "miles": null, "loc": "Anoka, MN", "state": "MN", "dist": 400, "total": null, "url": "https://www.facebook.com/marketplace/beldenville-wi/search/?query=fat+boy+lo", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "przebieg (limit 15 000 mi)", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1106129825440917", "kind": "check", "model": "2019 Harley-Davidson Fat Boy", "year": 2019, "price": 10000, "miles": null, "loc": "Seymour, CT", "state": "CT", "dist": 860, "total": null, "url": "https://www.facebook.com/marketplace/item/1106129825440917/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-uxbridge-ma-2018", "kind": "check", "model": "2018 Harley-Davidson Fat Boy", "year": 2018, "price": 10500, "miles": null, "loc": "Uxbridge, MA", "state": "MA", "dist": 980, "total": null, "url": "https://www.facebook.com/marketplace/item/329712526878721/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1053984610503866", "kind": "check", "model": "2018 Harley Davidson Fat Boy", "year": 2018, "price": 10800, "miles": null, "loc": "Ridgeland, WI", "state": "WI", "dist": 370, "total": null, "url": "https://www.facebook.com/marketplace/item/1053984610503866/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1881480979206197", "kind": "check", "model": "2023 Harley-Davidson Fat Boy", "year": null, "price": null, "miles": null, "loc": "Davenport, IA", "state": "IA", "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1881480979206197/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-2254086322092820", "kind": "check", "model": "2018 Harley-Davidson Fat Boy 114 (FLFBS), 1 właściciel", "year": null, "price": null, "miles": 2309, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/2254086322092820/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1079592621529133", "kind": "check", "model": "2021 Harley-Davidson Fat Boy 114 (FLFBS), niski przebieg", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1079592621529133/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1112249858374182", "kind": "check", "model": "2019 Harley-Davidson Fat Boy 114 (FLFBS)", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1112249858374182/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1440646018152902", "kind": "check", "model": "2022 Harley-Davidson Fat Boy 114 (dealer)", "year": null, "price": null, "miles": 15510, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1440646018152902/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1877665716948810", "kind": "check", "model": "2019 Harley-Davidson Fat Boy 114, clean title", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1877665716948810/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-killen-al-2021", "kind": "check", "model": "2021 Harley-Davidson Fat Boy", "year": null, "price": null, "miles": 4000, "loc": "Killen, AL", "state": "AL", "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/pulaski-tn/search/?query=harley+dyna", "direct": false, "title": null, "missing": ["cena", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1122957733578321", "kind": "check", "model": "2018 Harley-Davidson Fat Boy 114, Vivid Black", "year": null, "price": null, "miles": 6688, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1122957733578321/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-26375059065469495", "kind": "check", "model": "2019 Harley-Davidson Fat Boy 114, clean title", "year": null, "price": null, "miles": 5700, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/26375059065469495/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-3019587481712817", "kind": "check", "model": "2019 Harley-Davidson Fat Boy 114 (dealer)", "year": null, "price": null, "miles": 3665, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/3019587481712817/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-2114817565866671", "kind": "check", "model": "2024 Harley-Davidson Fat Boy 114", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/2114817565866671/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1173645024708940", "kind": "check", "model": "2020 Harley-Davidson Fat Boy 114 30th Anniversary", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1173645024708940/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-2290211495144398", "kind": "check", "model": "2021 Harley-Davidson Fat Boy 114", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/2290211495144398/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1104723235505895", "kind": "check", "model": "2019 Harley-Davidson Fat Boy 114", "year": null, "price": null, "miles": null, "loc": "CA", "state": "CA", "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1104723235505895/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-850750337869137", "kind": "check", "model": "2023 Harley-Davidson Fat Boy 114 (FLFBS)", "year": null, "price": null, "miles": 5700, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/850750337869137/", "direct": true, "title": null, "missing": ["cena"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-belgrade-mt-2020", "kind": "check", "model": "2020 Harley-Davidson Fat Boy", "year": null, "price": null, "miles": 12000, "loc": "Belgrade, MT", "state": "MT", "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/belgrade-mt/harley-davidson/", "direct": false, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "cena", "bezpośredni link (jest tylko strona wyników)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1330036662531934", "kind": "check", "model": "2021 Harley-Davidson Fat Boy", "year": null, "price": null, "miles": null, "loc": "Widefield, CO", "state": "CO", "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1330036662531934/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1997627797503579", "kind": "check", "model": "2021 Harley Davidson Fatboy", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1997627797503579/", "direct": true, "title": null, "missing": ["cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}, {"id": "fb-1738705247347339", "kind": "check", "model": "2020 Harley Davidson Fatboy", "year": null, "price": null, "miles": null, "loc": "lokalizacja: brak danych", "state": null, "dist": null, "total": null, "url": "https://www.facebook.com/marketplace/item/1738705247347339/", "direct": true, "title": null, "missing": ["potwierdzenie silnika 114 (rocznik 2018–2020 mógł mieć 107)", "cena", "przebieg (limit 15 000 mi)"], "tags": [], "old_price": null, "change": null, "dup_of": null}], "meta": {"title": "Fat Boy Scout – raport nr 2", "date": "12.11.2026", "run_id": "stan-2026-11-12", "max_price": 11000, "max_miles": 15000}}</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const rows = D.rows, M = D.meta;
+  const nf = new Intl.NumberFormat("pl-PL");
+  const usd = v => v == null ? "–" : nf.format(v) + " USD";
+  const mi = v => v == null ? "brak" : nf.format(v) + " mi";
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const safeUrl = u => /^https?:\/\//.test(u || "") ? u : null;
+  const css = n => getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(n).trim();
+
+  document.getElementById("h").textContent = M.title;
+  document.getElementById("sub").textContent = M.date + " · przebieg " + M.run_id +
+    " · limit " + usd(M.max_price) + (M.max_miles ? " i " + mi(M.max_miles) : "");
+
+  const ok = rows.filter(r => r.kind === "ok"), chk = rows.filter(r => r.kind === "check");
+  const priced = rows.filter(r => r.price != null);
+  const best = ok.filter(r => r.total != null).sort((a, b) => a.total - b.total)[0];
+  const cheapest = priced.slice().sort((a, b) => a.price - b.price)[0];
+  const nNew = rows.filter(r => r.tags.includes("NOWA")).length, nDrop = rows.filter(r => r.tags.includes("TANIEJ")).length;
+  const tiles = [
+    ["Potwierdzone", ok.length, "spełniają wszystkie kryteria"],
+    ["Do sprawdzenia", chk.length, "czegoś brakuje"],
+    ["Nowe / tańsze", nNew + " / " + nDrop, "od poprzedniego przebiegu"],
+    ["Najlepszy koszt całk.", best ? usd(best.total) : "–", best ? best.loc : "brak potwierdzonych"],
+    ["Najniższa cena", cheapest ? usd(cheapest.price) : "–", cheapest ? cheapest.loc : ""],
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(t =>
+    `<div class="tile"><div class="k">${esc(t[0])}</div><div class="v">${esc(t[1])}</div><div class="s">${esc(t[2])}</div></div>`).join("");
+
+  // ---------- wykres punktowy
+  const tip = document.getElementById("tip");
+  function showTip(e, r) {
+    tip.innerHTML = `<b>${esc(r.model)}</b>${usd(r.price)} · ${mi(r.miles)}<br>${esc(r.loc)}` +
+      (r.total != null ? `<br>Koszt całk.: ${usd(r.total)}` : "") +
+      (r.missing.length ? `<br>Brakuje: ${esc(r.missing.join("; "))}` : "") +
+      (r.change ? `<br>${esc(r.change)}` : "") + `<br><i>kliknij, aby otworzyć ogłoszenie</i>`;
+    tip.style.display = "block";
+    const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8), y = Math.min(e.clientY + 14, innerHeight - tip.offsetHeight - 8);
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  const hideTip = () => { tip.style.display = "none"; };
+
+  function drawChart() {
+    const svg = document.getElementById("chart");
+    const W = Math.max(320, svg.parentNode.clientWidth - 28), H = 300, P = {l: 64, r: 16, t: 14, b: 38};
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const pts = rows.filter(r => r.price != null && r.miles != null);
+    const noMiles = rows.filter(r => r.price != null && r.miles == null).length;
+    const noPrice = rows.filter(r => r.price == null).length;
+    document.getElementById("chartnote").textContent = `Każdy punkt to jedna oferta (${pts.length}). ` +
+      (noMiles ? `${noMiles} bez przebiegu i ` : "") + (noPrice ? `${noPrice} bez ceny ` : "") +
+      ((noMiles || noPrice) ? "są tylko w tabeli. " : "") + "Najlepsze oferty są w lewym dolnym rogu.";
+    const xMax = Math.max(M.max_miles || 0, ...pts.map(r => r.miles), 1000);
+    const yMin = Math.min(...pts.map(r => r.price), M.max_price) , yLo = Math.max(0, Math.floor((yMin - 500) / 1000) * 1000);
+    const yHi = Math.max(M.max_price, ...pts.map(r => r.price));
+    const X = v => P.l + v / xMax * (W - P.l - P.r), Y = v => H - P.b - (v - yLo) / (yHi - yLo || 1) * (H - P.t - P.b);
+    let g = "";
+    const xStep = xMax > 10000 ? 5000 : 2500, yStep = (yHi - yLo) > 6000 ? 2000 : 1000;
+    for (let v = 0; v <= xMax; v += xStep)
+      g += `<line x1="${X(v)}" x2="${X(v)}" y1="${P.t}" y2="${H - P.b}" stroke="var(--grid)" stroke-width="1"/>` +
+           `<text class="tick" x="${X(v)}" y="${H - P.b + 16}" text-anchor="middle">${nf.format(v)}</text>`;
+    for (let v = Math.ceil(yLo / yStep) * yStep; v <= yHi; v += yStep)
+      g += `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)" stroke-width="1"/>` +
+           `<text class="tick" x="${P.l - 8}" y="${Y(v) + 4}" text-anchor="end">${nf.format(v)}</text>`;
+    g += `<line x1="${P.l}" x2="${W - P.r}" y1="${H - P.b}" y2="${H - P.b}" stroke="var(--axis)" stroke-width="1"/>`;
+    g += `<text class="tick" x="${(P.l + W - P.r) / 2}" y="${H - 4}" text-anchor="middle">przebieg (mi)</text>`;
+    g += `<text class="tick" x="12" y="${(P.t + H - P.b) / 2}" transform="rotate(-90 12 ${(P.t + H - P.b) / 2})" text-anchor="middle">cena (USD)</text>`;
+    g += `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(M.max_price)}" y2="${Y(M.max_price)}" stroke="var(--text-secondary)" stroke-dasharray="4 4"/>` +
+         `<text class="ref" x="${W - P.r}" y="${Y(M.max_price) - 5}" text-anchor="end">limit ${nf.format(M.max_price)} USD</text>`;
+    if (M.max_miles)
+      g += `<line x1="${X(M.max_miles)}" x2="${X(M.max_miles)}" y1="${P.t}" y2="${H - P.b}" stroke="var(--text-secondary)" stroke-dasharray="4 4"/>` +
+           `<text class="ref" x="${X(M.max_miles) - 5}" y="${H - P.b - 6}" text-anchor="end">limit ${nf.format(M.max_miles)} mi</text>`;
+    const ring = css("--surface-1");
+    pts.forEach((r, i) => {
+      const x = X(r.miles), y = Y(r.price);
+      const mark = r.kind === "ok"
+        ? `<circle cx="${x}" cy="${y}" r="5.5" fill="var(--series-1)" stroke="${ring}" stroke-width="2"/>`
+        : `<path d="M${x} ${y - 7}L${x + 7} ${y}L${x} ${y + 7}L${x - 7} ${y}Z" fill="var(--series-2)" stroke="${ring}" stroke-width="2"/>`;
+      g += `<g class="pt" data-i="${rows.indexOf(r)}" style="cursor:pointer">${mark}<circle cx="${x}" cy="${y}" r="12" fill="transparent"/></g>`;
+    });
+    svg.innerHTML = g;
+    svg.querySelectorAll(".pt").forEach(el => {
+      const r = rows[+el.dataset.i];
+      el.addEventListener("mousemove", e => showTip(e, r));
+      el.addEventListener("mouseleave", hideTip);
+      el.addEventListener("click", () => { const u = safeUrl(r.url); if (u) window.open(u, "_blank", "noopener"); });
+    });
+  }
+
+  // ---------- tabela
+  let filter = "all", sortK = null, sortDir = 1;
+  function drawTable() {
+    let list = rows.filter(r => filter === "all" || (filter === "new" ? (r.tags.includes("NOWA") || r.tags.includes("TANIEJ")) : r.kind === filter));
+    if (sortK) list = list.slice().sort((a, b) => {
+      const va = a[sortK], vb = b[sortK];
+      if (va == null) return 1; if (vb == null) return -1;
+      return (typeof va === "number" ? va - vb : String(va).localeCompare(String(vb), "pl")) * sortDir;
+    });
+    document.querySelector("#tbl tbody").innerHTML = list.map(r => {
+      const u = safeUrl(r.url);
+      const tags = r.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("") + (r.title && r.title !== "clean" ? `<span class="tag">${esc(r.title)}</span>` : "");
+      const miss = r.missing.length ? `<div class="miss">Brakuje: ${esc(r.missing.join("; "))}</div>` : "";
+      const ch = r.change ? `<div class="miss">${esc(r.change)}</div>` : "";
+      const link = u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${r.direct ? "ogłoszenie" : "strona z ofertą"}</a>` : "brak";
+      return `<tr><td><span class="dot ${r.kind}"></span>${esc(r.model)}${tags}${miss}${ch}</td>` +
+        `<td class="num">${usd(r.price)}</td><td class="num">${mi(r.miles)}</td><td>${esc(r.loc)}</td>` +
+        `<td class="num">${r.dist == null ? "–" : nf.format(r.dist) + " mi"}</td><td class="num">${usd(r.total)}</td><td>${link}</td></tr>`;
+    }).join("") || `<tr><td colspan="7">Brak ofert w tym widoku.</td></tr>`;
+  }
+  document.getElementById("filters").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    filter = b.dataset.f;
+    document.querySelectorAll("#filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    drawTable();
+  });
+  document.querySelectorAll("#tbl th[data-k]").forEach(th => th.addEventListener("click", () => {
+    sortDir = sortK === th.dataset.k ? -sortDir : 1; sortK = th.dataset.k; drawTable();
+  }));
+  drawChart(); drawTable();
+  addEventListener("resize", drawChart);
+})();
+</script>
+</body>
+</html>

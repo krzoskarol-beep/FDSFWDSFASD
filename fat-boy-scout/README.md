@@ -11,11 +11,14 @@ Z każdym przebiegiem sam się ulepsza: przycina martwe zapytania, dodaje skutec
 | `playbook.md` | lekcje agenta z poprzednich przebiegów (czyta je na starcie, dopisuje na końcu) |
 | `improvements.md` | dziennik automatycznych zmian planu i cen |
 | `scout.py` | silnik: kryteria, scalanie z historią, spadki cen, duplikaty, ranking kosztu całkowitego, raport, `improve`, `parse` |
+| `dashboard.py` | panel HTML: kafelki, wykres cena–przebieg z limitami, tabela wszystkich ofert z linkami i filtrami (jasny/ciemny) |
+| `aimm/` | import z ai-marketplace-monitor uruchamianego na Twoim komputerze |
 | `geo.py` | szacunkowa odległość od Des Plaines (środki stanów, bez internetu) |
 | `raw/` | surowe wyniki wyszukiwania dla parsera |
 | `runs/RRRR-MM-DD.json` | surowe obserwacje agenta z jednego przebiegu |
 | `state.json` | historia ofert, statystyki zapytań, odrzucone |
-| `reports/RRRR-MM-DD.md` | gotowe raporty |
+| `reports/<run_id>.md`, `reports/<run_id>.html` | gotowe raporty: tekst i panel HTML |
+| `reports/panel.html` | panel z bieżącym stanem (`scout.py html`) |
 | `archive/` | dane z poprzedniej konfiguracji (Midwest, Cycle Trader, kilka modeli) |
 
 Przebieg (te polecenia wykonuje agent przy `/fat-boy-scout`; postęp zapisywany po każdym zapytaniu):
@@ -29,6 +32,7 @@ python3 fat-boy-scout/scout.py finish <run_id>            # walidacja, scalenie 
 Pozostałe:
 ```
 python3 fat-boy-scout/scout.py status
+python3 fat-boy-scout/scout.py html            # panel HTML z bieżącym stanem → reports/panel.html
 python3 fat-boy-scout/scout.py todo            # czego brakuje w aktywnych ofertach + gotowe zapytania
 python3 fat-boy-scout/scout.py check fat-boy-scout/runs/2026-11-19.json   # walidacja przed uruchomieniem
 python3 fat-boy-scout/scout.py plan
@@ -36,7 +40,7 @@ python3 fat-boy-scout/scout.py run fat-boy-scout/runs/2026-11-19.json
 python3 fat-boy-scout/scout.py improve --apply
 python3 fat-boy-scout/scout.py parse fat-boy-scout/raw/2026-11-19.json   # wyniki wyszukiwania → kandydaci
 python3 fat-boy-scout/scout.py recall moje_linki.txt   # test skuteczności
-python3 -m unittest fat-boy-scout/test_scout.py
+python3 -m unittest fat-boy-scout/test_scout.py fat-boy-scout/test_aimm.py
 ```
 
 **Test skuteczności:** znajdź ręcznie na Marketplace kilka (np. 10) pasujących ofert i wklej ich linki do pliku, po jednym w linii.

@@ -69,12 +69,13 @@ zamknięcie procesu) nie traci pracy: kolejne `/fat-boy-scout` podejmuje ją od 
 7. **Zamknięcie:** `python3 fat-boy-scout/scout.py finish <run_id>`. Odmówi (kod 3), jeśli zostały zapytania z planu –
    wtedy przebieg zostaje otwarty do wznowienia. `--partial` tylko wtedy, gdy użytkownik wprost tak zdecyduje.
    `finish` waliduje dane, scala z historią (bez dublowania – drugi `finish` niczego nie dopisze) i pisze raport
-   `fat-boy-scout/reports/<run_id>.md`.
+   `fat-boy-scout/reports/<run_id>.md` oraz panel `reports/<run_id>.html` (wykres cena–przebieg, tabela z linkami).
 8. `python3 fat-boy-scout/scout.py improve --apply`, potem 1–3 lekcje w `playbook.md` (bez duplikatów, < 40 punktów).
    Wolno ci edytować tylko `playbook.md` oraz to, co zmienia `improve`.
 9. **Oddaj raport** dokładnie tak, jak wypisał go `finish`, każdą część osobno. Raport zawiera: zmiany (spadki cen
    z datami, „weszła w Twój limit”, ponowne wystawienia z obydwoma linkami), WSZYSTKIE potwierdzone oferty, sekcję
    „Do sprawdzenia” (co ustalono, czego brakuje), pokrycie stanów w 4 kategoriach i zużycie kredytów.
+   Na końcu podaj ścieżkę panelu HTML `fat-boy-scout/reports/<run_id>.html`.
 10. Commit zmian w `fat-boy-scout/` i push na bieżącą gałąź roboczą.
 
 ## Schemat pliku przebiegu

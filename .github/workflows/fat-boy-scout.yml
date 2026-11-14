@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Testy silnika
-        run: python -m unittest fat-boy-scout/test_scout.py -v
+        run: python -m unittest fat-boy-scout/test_scout.py fat-boy-scout/test_aimm.py -v
       - name: Walidacja JSON
         run: |
           python -c "import json,glob; [json.load(open(f)) for f in ['fat-boy-scout/config.json','fat-boy-scout/state.json',*glob.glob('fat-boy-scout/runs/*.json')]]; print('ok')"
