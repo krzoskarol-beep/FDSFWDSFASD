@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "3a1a51e5-9fff-4e03-a465-21338422261a",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/user/FDSFWDSFASD/.archify/architecture-skraper-20261114-133956/candidate.json",
+  "output": "/home/user/FDSFWDSFASD/.archify/architecture-skraper-20261114-133956/skraper.html",
+  "specification": {
+    "sha256": "299601c9449d20df59ee02dd46a08b455df5601045d6589689af3e508582b659",
+    "bytes": 4581
+  },
+  "artifact": {
+    "sha256": "9444fdb7c4b279dd50241aa3ece9797c0e6705f8331944ea8a3915422c0fc64e",
+    "bytes": 849209
+  }
+}

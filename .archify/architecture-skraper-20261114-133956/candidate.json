@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Skraper cen: Allegro z fallbackiem na Ceneo i Morele",
+    "locale": "pl",
+    "output": ".archify/architecture-skraper-20261114-133956/skraper.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/krzoskarol-beep/FDSFWDSFASD",
+      "provider": "github",
+      "revision": "ad7237bb84c3f99944122f7c024aa469da47f411"
+    }
+  },
+  "components": [
+    { "id": "user", "type": "external", "label": "Użytkownik", "sublabel": "curl / przeglądarka", "pos": [40, 60], "size": [130, 60],
+      "sources": [{ "path": "README.md", "line": 18, "end_line": 20 }] },
+    { "id": "api", "type": "backend", "label": "API Flask", "sublabel": "gunicorn :5000", "tag": "GET /scan/latest", "pos": [320, 54], "size": [150, 72],
+      "sources": [{ "path": "scraper/api.py", "line": 17, "end_line": 43 }, { "path": "docker-compose.yml", "line": 24, "end_line": 39 }] },
+    { "id": "lastscan", "type": "database", "label": "last_scan.json", "sublabel": "wynik skanu", "pos": [590, 60], "size": [150, 60],
+      "sources": [{ "path": "scraper/config.py", "line": 35 }, { "path": "scraper/runner.py", "line": 123, "end_line": 134 }] },
+    { "id": "cookies", "type": "database", "label": "cookies.json", "sublabel": "cookies + User-Agent", "pos": [590, 262], "size": [150, 60],
+      "sources": [{ "path": "scraper/config.py", "line": 33 }, { "path": "scraper/http_client.py", "line": 165, "end_line": 228 }] },
+    { "id": "runner", "type": "backend", "label": "runner --loop", "sublabel": "co SCAN_INTERVAL ±10%", "tag": "parsery HTML → oferty", "pos": [880, 54], "size": [170, 72],
+      "sources": [{ "path": "scraper/runner.py", "line": 62, "end_line": 120 }, { "path": "scraper/runner.py", "line": 158, "end_line": 166 }, { "path": "docker-compose.yml", "line": 5, "end_line": 21 }] },
+    { "id": "http", "type": "backend", "label": "PersistentSession", "sublabel": "pauza 2–8 s", "tag": "403/429 → 3× → BlockedError", "pos": [880, 252], "size": [170, 80],
+      "sources": [{ "path": "scraper/http_client.py", "line": 120, "end_line": 134 }, { "path": "scraper/http_client.py", "line": 310, "end_line": 351 }] },
+    { "id": "allegro", "type": "external", "label": "allegro.pl", "sublabel": "DataDome", "pos": [1180, 264], "size": [150, 56],
+      "sources": [{ "path": "scraper/parsers/allegro.py", "line": 27, "end_line": 34 }] },
+    { "id": "ceneo", "type": "external", "label": "ceneo.pl", "sublabel": "fallback", "pos": [1180, 372], "size": [150, 56],
+      "sources": [{ "path": "scraper/parsers/ceneo.py", "line": 16, "end_line": 21 }] },
+    { "id": "morele", "type": "external", "label": "morele.net", "sublabel": "fallback", "pos": [1180, 462], "size": [150, 56],
+      "sources": [{ "path": "scraper/parsers/morele.py", "line": 13, "end_line": 16 }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "kontener api", "wraps": ["api"] },
+    { "kind": "region", "label": "volume scraper-data (/data)", "wraps": ["lastscan", "cookies"] },
+    { "kind": "region", "label": "kontener scraper", "wraps": ["runner", "http"] }
+  ],
+  "connections": [
+    { "id": "user-api", "from": "user", "to": "api", "label": "HTTP GET", "variant": "emphasis" },
+    { "id": "api-read", "from": "api", "to": "lastscan", "label": "czyta (ro)" },
+    { "id": "runner-write", "from": "runner", "to": "lastscan", "label": "zapis atomowy" },
+    { "id": "runner-http", "from": "runner", "to": "http", "label": "get(url)" },
+    { "id": "http-cookies", "from": "http", "to": "cookies", "label": "cookies + UA" },
+    { "id": "http-allegro", "from": "http", "to": "allegro", "label": "1. wybór", "variant": "emphasis" },
+    { "id": "http-ceneo", "from": "http", "to": "ceneo", "label": "po blokadzie" },
+    { "id": "http-morele", "from": "http", "to": "morele", "label": "po blokadzie" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Przebieg skanu", "items": ["Dla każdego zapytania najpierw Allegro", "Po BlockedError Allegro jest pomijane do końca skanu", "Te same zapytania idą wtedy do Ceneo i Morele", "0 ofert z Allegro też uruchamia fallback"] },
+    { "dot": "amber", "title": "Odporność", "items": ["Losowa pauza 2–8 s przed każdym żądaniem", "Po 403/429 lub captchy: 30–90 s, maks. 3 ponowienia", "Cookies zapisywane po każdej odpowiedzi"] },
+    { "dot": "emerald", "title": "Wdrożenie", "items": ["Dwa kontenery z jednego obrazu (docker-compose)", "API montuje /data tylko do odczytu", "Logi w osobnym volume scraper-logs"] }
+  ]
+}
