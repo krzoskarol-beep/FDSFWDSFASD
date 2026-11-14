@@ -11,6 +11,7 @@ Zainstalowane poleceniem `npx skills add <źródło> [--skill <nazwa>] -a claude
 | https://github.com/Graphify-Labs/graphify | Apache 2.0, `graphify/LICENSE` i `graphify/NOTICE` | `graphify` |
 | https://github.com/himself65/finance-skills | MIT, `LICENSE-himself65-finance-skills.txt` | `company-valuation`, `discord-reader`, `earnings-preview`, `earnings-recap`, `estimate-analysis`, `etf-premium`, `finance-sentiment`, `fintel-data`, `generative-ui`, `hormuz-strait`, `hyperliquid-reader`, `linkedin-reader`, `opencli-reader`, `options-payoff`, `saas-valuation-compression`, `sepa-strategy`, `startup-analysis`, `stock-correlation`, `stock-liquidity`, `telegram-reader`, `tradingview-mcp`, `tradingview-reader`, `twitter-reader`, `yc-reader`, `yfinance-data` |
 | https://github.com/JuliusBrussee/caveman | Apache 2.0, `LICENSE-caveman.txt`, `NOTICE-caveman.txt` | `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review`, `ultracave` |
+| https://github.com/K-Dense-AI/scientific-agent-skills | MIT, `LICENSE-scientific-agent-skills.txt` | `citation-management`, `exploratory-data-analysis`, `literature-review`, `markitdown`, `matplotlib`, `networkx`, `peer-review`, `polars`, `pymc`, `scientific-writing`, `scikit-learn`, `seaborn`, `statistical-analysis`, `statsmodels`, `sympy` |
 | https://github.com/mattpocock/skills | MIT, `LICENSE-mattpocock-skills.txt` | `grill-me` |
 | https://github.com/multica-ai/andrej-karpathy-skills | MIT (zadeklarowana w `SKILL.md`, repozytorium nie ma pliku licencji) | `karpathy-guidelines` |
 | https://github.com/mvanhorn/last30days-skill | MIT, `LICENSE-last30days-skill.txt` | `last30days` |
@@ -29,6 +30,8 @@ Zmiany względem oryginałów:
   (tak samo jak `graphify claude install --project`). Nie ma go w `skills-lock.json`; aktualizacja: powtórz kopiowanie.
 - `last30days`: usunięty katalog `assets/` (14 MB obrazków i mp3 z README, skill ich nie używa), więc suma w
   `skills-lock.json` się różni. Po `npx skills update` usuń go ponownie.
+- Z K-Dense-AI/scientific-agent-skills wybrane 15 z 177 skilli (ogólne: statystyka, wykresy, pisanie
+  naukowe, literatura). Pełny zbiór: `npx skills add K-Dense-AI/scientific-agent-skills --skill '*' -a claude-code -y --copy`.
 - W skillach z obra/superpowers odwołania `superpowers:<skill>` zamienione
 na `<skill>` (tu skille nie są częścią wtyczki), więc ich suma w `skills-lock.json` może się różnić.
 Po `npx skills update` trzeba tę zamianę powtórzyć.

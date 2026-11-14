@@ -36,6 +36,7 @@ Inne skille z dodatkowymi wymaganiami:
 | `caveman-help` | Quick-reference card for the three caveman skills and their commands. Trigger: /caveman-help or "caveman help"… | JuliusBrussee/caveman |
 | `caveman-review` | Compressed code review - one line per finding with location, problem and fix. Use for /caveman-review, "review… | JuliusBrussee/caveman |
 | `churn-prevention` | When the user wants to reduce churn, or asks why customers cancel, whether to offer a discount or pause: cance… | coreyhaines31/marketingskills |
+| `citation-management` | Comprehensive citation management for academic research. Search OpenAlex, PubMed, and Google Scholar for paper… | K-Dense-AI/scientific-agent-skills |
 | `co-marketing` | When the user wants co-marketing partners or joint campaigns, or asks whether a partner fits, a size mismatch … | coreyhaines31/marketingskills |
 | `cold-email` | When the user wants to write or run B2B cold outbound, or asks whether an opener, reason to reach out, or emai… | coreyhaines31/marketingskills |
 | `community-marketing` | When the user wants to build or grow an online community, or asks whether a community is worth it, where to ho… | coreyhaines31/marketingskills |
@@ -64,6 +65,7 @@ Inne skille z dodatkowymi wymaganiami:
 | `etf-premium` | > | himself65/finance-skills |
 | `events` | When the user wants to plan, run, sponsor, or speak at events, or asks whether an event or booth is worth the … | coreyhaines31/marketingskills |
 | `executing-plans` | Use when executing an implementation plan in the current session as the implementer yourself — your human part… | obra/superpowers |
+| `exploratory-data-analysis` | Performs bounded, local exploratory analysis of explicitly supported scientific files. Supports redacted CSV/T… | K-Dense-AI/scientific-agent-skills |
 | `finance-sentiment` | > | himself65/finance-skills |
 | `find-skills` | Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for … | vercel-labs/skills |
 | `finishing-a-development-branch` | Use when implementation is complete, all tests pass, and you need to decide how to integrate the work | obra/superpowers |
@@ -89,11 +91,15 @@ Inne skille z dodatkowymi wymaganiami:
 | `lead-magnets` | When the user wants to plan or improve a lead magnet, or asks what to give away for emails or how much to ask … | coreyhaines31/marketingskills |
 | `link-building` | When the user wants backlinks and mentions that lift rankings and AI citations, or asks how to get sites to li… | coreyhaines31/marketingskills |
 | `linkedin-reader` | > | himself65/finance-skills |
+| `literature-review` | Conducts systematic, scoping, and narrative literature reviews using PubMed, arXiv, bioRxiv, Semantic Scholar,… | K-Dense-AI/scientific-agent-skills |
 | `marketing-council` | When the user wants several expert takes on a marketing decision, or asks what a famous marketer would say abo… | coreyhaines31/marketingskills |
 | `marketing-ideas` | When the user wants marketing ideas or growth tactics for a software product, or asks what to try to get atten… | coreyhaines31/marketingskills |
 | `marketing-loops` | When the user wants a recurring marketing job an AI agent runs on a cadence or trigger, or asks what a weekly … | coreyhaines31/marketingskills |
 | `marketing-plan` | When the user wants a full marketing or go-to-market plan for a client, an advised company, or their own produ… | coreyhaines31/marketingskills |
 | `marketing-psychology` | When the user wants to apply psychology to marketing, or asks why buyers behave or value things as they do, or… | coreyhaines31/marketingskills |
+| `markitdown` | Converts heterogeneous documents and selected URIs to Markdown with Microsoft MarkItDown for text analysis, se… | K-Dense-AI/scientific-agent-skills |
+| `matplotlib` | Creates and customizes scientific plots with Matplotlib. Used for fine-grained control over plot elements, nov… | K-Dense-AI/scientific-agent-skills |
+| `networkx` | Creates, analyzes, and visualizes complex networks and graphs in Python with NetworkX. Use when working with n… | K-Dense-AI/scientific-agent-skills |
 | `obsidian-bases` | Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working wi… | obsidianmd/obsidian-skills |
 | `obsidian-cli` | Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, propert… | obsidianmd/obsidian-skills |
 | `obsidian-headless` | Sync and publish Obsidian vaults from the command line with Obsidian Headless (`ob`), without the desktop app.… | obsidianmd/obsidian-skills |
@@ -104,6 +110,8 @@ Inne skille z dodatkowymi wymaganiami:
 | `options-payoff` | > | himself65/finance-skills |
 | `paywalls` | When the user wants to create or improve in-app paywalls and upgrade moments, or asks when or how hard to ask … | coreyhaines31/marketingskills |
 | `pdf` | Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text… | anthropics/skills |
+| `peer-review` | Prepares evidence-bounded, constructive peer-review drafts and structured manuscript assessments. Supports aut… | K-Dense-AI/scientific-agent-skills |
+| `polars` | High-performance DataFrame library for Python ETL, analytics, and pandas migration. It supports expression-bas… | K-Dense-AI/scientific-agent-skills |
 | `popups` | When the user wants to create or improve popups, modals, slide-ins, sticky bars, and banners, or asks whether … | coreyhaines31/marketingskills |
 | `pptx` | Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This include… | anthropics/skills |
 | `pricing` | When the user wants to set pricing and packaging, or asks what to charge, whether to raise prices, or how to m… | coreyhaines31/marketingskills |
@@ -111,6 +119,7 @@ Inne skille z dodatkowymi wymaganiami:
 | `programmatic-seo` | When the user wants SEO pages at scale from templates and data, or asks whether a page set will rank or look t… | coreyhaines31/marketingskills |
 | `prospecting` | When the user wants to find and qualify prospects for outbound, or asks who to target first, which signal to p… | coreyhaines31/marketingskills |
 | `public-relations` | When the user wants press and media coverage, or asks what to say to a reporter, whether a story is newsworthy… | coreyhaines31/marketingskills |
+| `pymc` | Builds and checks Bayesian models with PyMC, including hierarchical models, NUTS MCMC, variational inference, … | K-Dense-AI/scientific-agent-skills |
 | `receiving-code-review` | Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear… | obra/superpowers |
 | `referrals` | When the user wants referral and affiliate programs or word of mouth, or asks what to reward, how much to pay,… | coreyhaines31/marketingskills |
 | `requesting-code-review` | Use when completing tasks, implementing major features, or before merging to verify work meets requirements | obra/superpowers |
@@ -119,6 +128,9 @@ Inne skille z dodatkowymi wymaganiami:
 | `saas-valuation-compression` | > | himself65/finance-skills |
 | `sales-enablement` | When the user wants sales collateral, or asks what to give a champion or rep, or how to answer an objection or… | coreyhaines31/marketingskills |
 | `schema` | When the user wants to add, fix, or validate schema markup (JSON-LD), or asks which type fits a page or whethe… | coreyhaines31/marketingskills |
+| `scientific-writing` | Drafts, revises, and audits scientific manuscripts or reports with explicit evidence provenance, reporting-gui… | K-Dense-AI/scientific-agent-skills |
+| `scikit-learn` | Supports machine learning in Python with scikit-learn. Applies when working with supervised learning (classifi… | K-Dense-AI/scientific-agent-skills |
+| `seaborn` | Creates Seaborn statistical visualizations with pandas integration for distributions, relationships, categoric… | K-Dense-AI/scientific-agent-skills |
 | `seo-audit` | When the user wants to audit or diagnose SEO, or asks why traffic dropped, a page won't rank, or whether a set… | coreyhaines31/marketingskills |
 | `sepa-strategy` | > | himself65/finance-skills |
 | `signup` | When the user wants better signup, registration, and trial start flows, or asks which fields or steps to cut o… | coreyhaines31/marketingskills |
@@ -128,9 +140,12 @@ Inne skille z dodatkowymi wymaganiami:
 | `sms` | When the user wants SMS, MMS, or WhatsApp marketing, or asks whether texting is worth it or a message is allow… | coreyhaines31/marketingskills |
 | `social` | When the user wants organic social content for LinkedIn, X, Instagram, TikTok, or Facebook, or asks what to po… | coreyhaines31/marketingskills |
 | `startup-analysis` | > | himself65/finance-skills |
+| `statistical-analysis` | Guided statistical analysis for research data - test selection, assumption checking, effect sizes, power analy… | K-Dense-AI/scientific-agent-skills |
+| `statsmodels` | Fits and diagnoses Python statistical models including OLS, GLM, discrete and mixed models, ARIMA and SARIMAX.… | K-Dense-AI/scientific-agent-skills |
 | `stock-correlation` | > | himself65/finance-skills |
 | `stock-liquidity` | > | himself65/finance-skills |
 | `subagent-driven-development` | Use when executing implementation plans with independent tasks in the current session | obra/superpowers |
+| `sympy` | Performs exact symbolic mathematics with SymPy for algebra, calculus, equation solving, symbolic linear algebr… | K-Dense-AI/scientific-agent-skills |
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | obra/superpowers |
 | `telegram-reader` | > | himself65/finance-skills |
 | `test-driven-development` | Use when implementing any feature or bugfix, before writing implementation code | obra/superpowers |

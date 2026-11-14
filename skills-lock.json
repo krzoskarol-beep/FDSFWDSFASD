@@ -127,6 +127,13 @@
       "computedHash": "f064235830e3cfd938876aa5c0a46a23e86f34ad455d1a8745e5aa67a11addcc",
       "installMode": "copy"
     },
+    "citation-management": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/citation-management/SKILL.md",
+      "computedHash": "3b3bb7b57f41f5e6fdab85f7f3081df0cceedf37b377e3125cd87c14552e8650",
+      "installMode": "copy"
+    },
     "co-marketing": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -323,6 +330,13 @@
       "computedHash": "58b364f6e3f64602c7cfd0b34ceaad9de95d41fe7e4b46b274843ba19fc01ccc",
       "installMode": "copy"
     },
+    "exploratory-data-analysis": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/exploratory-data-analysis/SKILL.md",
+      "computedHash": "7ae5e1e2736eb50620e00a07286a6b210217f0923b9780d15ac64f1f959cf58b",
+      "installMode": "copy"
+    },
     "finance-sentiment": {
       "source": "himself65/finance-skills",
       "sourceType": "github",
@@ -491,6 +505,13 @@
       "computedHash": "5bc076a302957c113b817889ec869b9c2a8829cf255d499e62848da3d8facf08",
       "installMode": "copy"
     },
+    "literature-review": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/literature-review/SKILL.md",
+      "computedHash": "0bb3bac7e11a08edf1b9deb29db7eca3e33c61b00b9394e0f9b383b9bc55b5c3",
+      "installMode": "copy"
+    },
     "marketing-council": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -524,6 +545,27 @@
       "sourceType": "github",
       "skillPath": "skills/marketing-psychology/SKILL.md",
       "computedHash": "9542dca644cf683b8d171b962054679a51b2e740bfad0692c2edcfd85d129c9c",
+      "installMode": "copy"
+    },
+    "markitdown": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/markitdown/SKILL.md",
+      "computedHash": "21486f7b424766f70bb2891257adbd23302d85f959ae84e0f7217c28885d7c97",
+      "installMode": "copy"
+    },
+    "matplotlib": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/matplotlib/SKILL.md",
+      "computedHash": "d158b5acb8d907abbeea88f2b32914d88a07ac212b5396a8ba50f5082e971c97",
+      "installMode": "copy"
+    },
+    "networkx": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/networkx/SKILL.md",
+      "computedHash": "02872c9ba1bc3d51a59083b99573d2d84de7dd2994983455fb7ba2cc495a29fe",
       "installMode": "copy"
     },
     "obsidian-bases": {
@@ -596,6 +638,20 @@
       "computedHash": "48032992527f297b532782a85f9d4132417805eff1630944009bceb990d93f9a",
       "installMode": "copy"
     },
+    "peer-review": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/peer-review/SKILL.md",
+      "computedHash": "b626fbbbb2de1eabc016c9426481a7abfb87d76753fd41fd5b143a26d8059ca1",
+      "installMode": "copy"
+    },
+    "polars": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/polars/SKILL.md",
+      "computedHash": "50a5e4cc0b51b17399a074276bd0ab2fe9f1f98871a6dd4867b4bec064e81db3",
+      "installMode": "copy"
+    },
     "popups": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -643,6 +699,13 @@
       "sourceType": "github",
       "skillPath": "skills/public-relations/SKILL.md",
       "computedHash": "67f6f9d2f7d1fa49601a5c196a31a397b2bf72a48e31e76c02e060292f3632c4",
+      "installMode": "copy"
+    },
+    "pymc": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pymc/SKILL.md",
+      "computedHash": "80e39c9b1fac1dcb8c9037cd9909271a5d474effed83794b022a777a4b76a694",
       "installMode": "copy"
     },
     "receiving-code-review": {
@@ -699,6 +762,27 @@
       "sourceType": "github",
       "skillPath": "skills/schema/SKILL.md",
       "computedHash": "f8704ea70fc7d7ff985b9d902e52bac2d455baa6678b803b4306c8afb99997b1",
+      "installMode": "copy"
+    },
+    "scientific-writing": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-writing/SKILL.md",
+      "computedHash": "2b98539c10a4a176bf98659a8437c0b6d195e8c18be79f19bbe4cd8395efd064",
+      "installMode": "copy"
+    },
+    "scikit-learn": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scikit-learn/SKILL.md",
+      "computedHash": "072badf63201170ce6ffde828585222bca78b5551cf8e02e10bb8430ab602f1b",
+      "installMode": "copy"
+    },
+    "seaborn": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/seaborn/SKILL.md",
+      "computedHash": "8a71ef90453132e9db69d9cabf54303aa943b676ca98b213b4506b25ff0d94e5",
       "installMode": "copy"
     },
     "seo-audit": {
@@ -764,6 +848,20 @@
       "computedHash": "0bb6e28048f0aedde325296e1be9bc968a4ccc4189c7d181cf2cac1257ecfb11",
       "installMode": "copy"
     },
+    "statistical-analysis": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/statistical-analysis/SKILL.md",
+      "computedHash": "7428d347cfe2f52324cba1aaf30031fc480d47a65dfb932879ec25ca5c7eac7f",
+      "installMode": "copy"
+    },
+    "statsmodels": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/statsmodels/SKILL.md",
+      "computedHash": "be462bb27fd17f7f13a7db82011686a333f8aaedd308412bc2406b6f5a289e49",
+      "installMode": "copy"
+    },
     "stock-correlation": {
       "source": "himself65/finance-skills",
       "sourceType": "github",
@@ -783,6 +881,13 @@
       "sourceType": "github",
       "skillPath": "skills/subagent-driven-development/SKILL.md",
       "computedHash": "da0ad5e635b6ff70c2b6dbf25e51ae6ca1cad6beebfc61a791195675468c492e",
+      "installMode": "copy"
+    },
+    "sympy": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/sympy/SKILL.md",
+      "computedHash": "65dff85e76002972ec9edec94641bd69390613fdaae7e51eac9e5b1d79850295",
       "installMode": "copy"
     },
     "systematic-debugging": {
