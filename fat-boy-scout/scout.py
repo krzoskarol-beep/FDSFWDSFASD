@@ -999,9 +999,12 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
     if diff.get("queries"):
         qm = diff.get("query_matches", {})
         cr = diff.get("credits")
+        ref = int(run.get("credits_refunded") or 0)
+        cr_txt = (f". Kredyty Firecrawl: {cr}" + (f" (zwrot za oceny wyników: {ref}, netto {cr - ref})" if ref else "") + "."
+                  if cr is not None else ". Kredyty Firecrawl: nie zmierzono.")
         blocks.append(f"## Wyszukiwanie\nZapytań: {len(diff['queries'])}, w tym z pasującą ofertą: {sum(1 for v in qm.values() if v)}"
                       + (f", błędów: {sum(1 for q in diff['queries'] if q.get('status') == 'error')}" )
-                      + (f". Kredyty Firecrawl: {cr}." if cr is not None else ". Kredyty Firecrawl: nie zmierzono."))
+                      + cr_txt)
     cvg = run.get("coverage")
     if cvg:
         blocks.append("## Zakres\n" + ("\n".join(f"- {c}" for c in cvg) if isinstance(cvg, list) else cvg))
@@ -1467,6 +1470,42 @@ def _upsert(items: list[dict], new: dict) -> bool:
     return True
 
 
+FB_ITEM_RE = re.compile(r"facebook\.com/marketplace/", re.I)
+
+
+def search_feedback(payload: dict, listings: list[dict]) -> dict | None:
+    """Gotowa ocena wyników dla firecrawl_search_feedback (pierwsza ocena wyszukiwania zwraca 1 kredyt).
+    Pozycje liczone od 1 w kolejności `raw` (= kolejność data.web z odpowiedzi wyszukiwarki)."""
+    sid = payload.get("search_id")
+    if not sid or payload.get("status") == "error":
+        return None
+    raw = payload.get("raw") or []
+    found_urls = {l.get("url") for l in listings if l.get("url")}
+    valuable, fb_hits = [], 0
+    for i, it in enumerate(raw, 1):
+        url, text = it.get("url") or "", f"{it.get('title', '')} {it.get('description', '')}"
+        if not FB_ITEM_RE.search(url):
+            continue
+        fb_hits += 1
+        if url in found_urls or (MODEL_RE.search(text) and re.search(r"\$\s?\d", text)):
+            valuable.append({"source": "web", "position": i, "reason": "ogłoszenie Fat Boy z ceną"})
+    missing = []
+    gaps = [l for l in listings if l.get("price") is None or l.get("miles") is None]
+    if gaps:
+        missing.append({"topic": "Facebook Marketplace listing details",
+                        "description": f"{len(gaps)} Harley-Davidson Fat Boy listing(s) in results lack price or mileage in the snippet"})
+    if not valuable:
+        missing.append({"topic": "Facebook Marketplace Harley-Davidson Fat Boy listings",
+                        "description": "Expected individual marketplace/item pages with price, mileage and location"})
+    rating = "good" if valuable and not gaps else ("partial" if valuable or fb_hits else "bad")
+    fb = {"searchId": sid, "rating": rating}
+    if valuable:
+        fb["valuableResults"] = valuable[:50]
+    if missing and rating != "good":
+        fb["missingContent"] = missing
+    return fb
+
+
 def record_query(run: dict, payload: dict, config: dict) -> dict:
     """Zapisuje JEDNO zakończone zapytanie z jego wynikami. Ponowne zapisanie tego samego zapytania nie dubluje danych."""
     q = {"q": payload["q"], "origin": payload.get("origin") or next(
@@ -1495,6 +1534,10 @@ def record_query(run: dict, payload: dict, config: dict) -> dict:
         results = int(payload.get("results", len(raw)))
         q.update(status="ok" if results else "zero", results=results, candidates=[l["id"] for l in listings],
                  result_states=sorted(rstates))
+        fb = search_feedback(payload, listings)
+        if fb and not run.get("feedback_cap_reached"):
+            q["search_id"] = payload["search_id"]
+            run["_last_feedback"] = fb
         for l in listings:
             _upsert(run["listings"], l)
         for w in payload.get("watchlist_unpriced") or []:
@@ -1564,11 +1607,33 @@ def cmd_record(args) -> int:
         print(f"Brak otwartego przebiegu {args.run_id}.", file=sys.stderr)
         return 1
     payload = load_json(Path(args.payload))
+    feedback = []
     for p in (payload if isinstance(payload, list) else [payload]):
         run = record_query(run, p, load_json(CONFIG_PATH))
+        if run.get("_last_feedback"):
+            feedback.append(run.pop("_last_feedback"))
     save_json_atomic(path, run)
     print(f"Zapisano. Wykonane zapytania: {len(run['queries'])}, pozostało z planu: {len(remaining_queries(run))}, "
           f"ofert w przebiegu: {len(run['listings'])}, kredyty: {run.get('credits_used', 0)}")
+    for fb in feedback:
+        # agent przekazuje to od razu do mcp__Firecrawl__firecrawl_search_feedback (okno ~2 minuty od wyszukiwania)
+        print("FEEDBACK " + json.dumps(fb, ensure_ascii=False))
+    return 0
+
+
+def cmd_refund(args) -> int:
+    """Zapisuje wynik firecrawl_search_feedback: zwrócone kredyty i ewentualny dzienny limit zwrotów."""
+    path = _run_path(args.run_id)
+    run = load_json(path)
+    if not run:
+        print(f"Brak przebiegu {args.run_id}.", file=sys.stderr)
+        return 1
+    run["credits_refunded"] = int(run.get("credits_refunded") or 0) + int(args.credits)
+    if args.cap_reached:
+        run["feedback_cap_reached"] = True
+    save_json_atomic(path, run)
+    print(f"Zwroty w przebiegu: {run['credits_refunded']} kredytów"
+          + (" · dzienny limit zwrotów osiągnięty – nie wysyłaj kolejnych ocen dziś" if run.get("feedback_cap_reached") else ""))
     return 0
 
 
@@ -1646,6 +1711,11 @@ def main(argv=None) -> int:
     rd.add_argument("run_id")
     rd.add_argument("payload")
     rd.set_defaults(func=cmd_record)
+    rf = sub.add_parser("refund", help="zapisz zwrot kredytów za ocenę wyników (firecrawl_search_feedback)")
+    rf.add_argument("run_id")
+    rf.add_argument("credits", type=int)
+    rf.add_argument("--cap-reached", action="store_true", help="dzienny limit zwrotów osiągnięty")
+    rf.set_defaults(func=cmd_refund)
     rm = sub.add_parser("remaining", help="zapytania z planu, których jeszcze nie wykonano")
     rm.add_argument("run_id")
     rm.set_defaults(func=cmd_remaining)

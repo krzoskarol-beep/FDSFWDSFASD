@@ -134,5 +134,38 @@ class DashboardTests(unittest.TestCase):
         self.assertNotIn("</script><b>", html)
 
 
+class SearchFeedbackTests(unittest.TestCase):
+    """Ocena wyników dla firecrawl_search_feedback (zwrot 1 kredytu za wyszukiwanie)."""
+    RAW = [{"url": "https://example.com/blog", "title": "Harley news", "description": "x"},
+           {"url": "https://www.facebook.com/marketplace/item/123/", "title": "2019 Harley-Davidson Fat Boy 114",
+            "description": "2019 Harley-Davidson Fat Boy 114 - $10,500, Used, in Joliet, IL. 8K miles"}]
+
+    def test_valuable_position_is_one_indexed_web(self):
+        fb = scout.search_feedback({"search_id": "abc", "raw": self.RAW},
+                                   [{"url": "https://www.facebook.com/marketplace/item/123/", "price": 10500, "miles": 8000}])
+        self.assertEqual(fb["searchId"], "abc")
+        self.assertEqual(fb["rating"], "good")
+        self.assertEqual([v["position"] for v in fb["valuableResults"]], [2])
+
+    def test_no_listings_is_bad_with_missing_content(self):
+        fb = scout.search_feedback({"search_id": "abc", "raw": self.RAW[:1]}, [])
+        self.assertEqual(fb["rating"], "bad")
+        self.assertTrue(fb["missingContent"])
+
+    def test_no_search_id_no_feedback(self):
+        self.assertIsNone(scout.search_feedback({"raw": self.RAW}, []))
+
+    def test_record_keeps_search_id_and_report_shows_refund(self):
+        run = {"run_id": "r", "date": "2026-11-14", "plan": [], "queries": [], "listings": [], "watchlist_unpriced": []}
+        run = scout.record_query(run, {"q": "fat boy", "search_id": "abc", "raw": self.RAW, "results": 2, "credits": 7}, FB)
+        self.assertEqual(run["queries"][0]["search_id"], "abc")
+        self.assertEqual(run.pop("_last_feedback")["rating"], "good")
+        run["credits_refunded"] = 1
+        diff = {"queries": run["queries"], "query_matches": {}, "credits": 7}
+        blocks = " ".join(scout.render(dict(diff, first=True, active=[], unverified_all=[], new=[], unverified_new=[],
+                                            drops=[], gone=[], relists=[], rejected_now=[], leads_new=[]), run, FB, 1))
+        self.assertIn("zwrot za oceny wyników: 1, netto 6", blocks)
+
+
 if __name__ == "__main__":
     unittest.main()

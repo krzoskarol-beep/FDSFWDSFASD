@@ -33,3 +33,4 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 - „fatboy 114” jako jedno słowo plus nazwa stanu
 - Zapytania o konkretne kolory i edycje, np. „115th Anniversary” 2018 albo „30th Anniversary” 2020
 - Strony kategorii miast: `site:facebook.com/marketplace "<miasto>" harley-davidson "Fat Boy 114"`
+- (14.11) Oficjalny skill firecrawl/skills: ocena wyników wyszukiwania (search feedback) zwraca 1 kredyt za wyszukiwanie, do 100 dziennie. Wysyłaj ją po każdym `record` – `record` drukuje gotowy JSON.

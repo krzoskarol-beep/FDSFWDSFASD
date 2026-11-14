@@ -25,6 +25,7 @@ Przebieg (te polecenia wykonuje agent przy `/fat-boy-scout`; postęp zapisywany 
 ```
 python3 fat-boy-scout/scout.py begin                      # nowy przebieg albo wznowienie przerwanego
 python3 fat-boy-scout/scout.py record <run_id> q.json     # po KAŻDYM zapytaniu: wyniki + kredyty
+python3 fat-boy-scout/scout.py refund <run_id> 1       # zwrot kredytu za ocenę wyników (firecrawl_search_feedback)
 python3 fat-boy-scout/scout.py remaining <run_id>         # co zostało z planu
 python3 fat-boy-scout/scout.py finish <run_id>            # walidacja, scalenie z historią, raport
 ```
