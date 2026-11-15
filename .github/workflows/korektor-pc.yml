@@ -1,0 +1,67 @@
+# Buduje Korektor na Windows (katalog korektor-pc/) jako jeden plik Korektor.exe.
+# Gotowy plik: zakładka Actions → ostatnie uruchomienie → Artifacts → „Korektor-Windows”.
+name: Windows – Korektor PC
+
+on:
+  push:
+    paths:
+      - "korektor-pc/**"
+      - ".github/workflows/korektor-pc.yml"
+  pull_request:
+    paths:
+      - "korektor-pc/**"
+      - ".github/workflows/korektor-pc.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: korektor-pc-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: korektor-pc
+    shell: pwsh
+
+jobs:
+  build:
+    name: Testy i Korektor.exe
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Narzędzia
+        run: python -m pip install pytest pyinstaller pillow
+
+      - name: Testy (w tym okno tkinter)
+        run: python -m pytest -q tests
+
+      - name: Ikona
+        run: python tools/make_icon.py korektor.ico
+
+      - name: Korektor.exe
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name Korektor --icon korektor.ico Korektor.pyw
+
+      - name: Test gotowego pliku .exe
+        run: |
+          $apo = Join-Path $env:RUNNER_TEMP "apo"
+          New-Item -ItemType Directory -Force $apo | Out-Null
+          Set-Content -Path (Join-Path $apo "config.txt") -Value "Preamp: -1 dB"
+          $env:KOREKTOR_APO_DIR = $apo
+          $p = Start-Process -FilePath dist\Korektor.exe -ArgumentList "--self-test" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "self-test: kod $($p.ExitCode)" }
+          Get-Content (Join-Path $apo "korektor.txt")
+          if (-not (Select-String -Path (Join-Path $apo "config.txt") -Pattern "Include: korektor.txt" -Quiet)) { throw "brak Include" }
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Korektor-Windows
+          path: korektor-pc/dist/Korektor.exe
+          if-no-files-found: error
