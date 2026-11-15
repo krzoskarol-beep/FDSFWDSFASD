@@ -588,6 +588,18 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
                 prev, prev_store = rec, store
                 seen_ids.add(lid)
 
+        if prev:
+            # stałe cechy motocykla znane z historii (przebieg, VIN, kod, title) nie giną, gdy nowy fragment ich nie podaje
+            inherited = []
+            for k in ("miles", "vin", "code", "engine", "title", "year", "city", "state"):
+                if l.get(k) in (None, "") and prev.get(k) not in (None, ""):
+                    l[k] = prev[k]
+                    inherited.append(k)
+            if inherited:
+                l = normalize(l, config)
+                l["id"] = lid
+                l["inherited"] = inherited
+
         ok, reason = eligibility(l, config)
         if not ok and reason.startswith("trop:"):
             lead = state["leads"].get(orig_id)
@@ -612,7 +624,11 @@ def merge(state: dict, run: dict, config: dict) -> tuple[dict, dict]:
                 prev["status"] = "gone" if l.get("active") is False else "dropped"
                 prev["status_reason"] = reason
                 prev["last_seen"] = today
-                diff["gone"].append(prev)
+                if reason.startswith("cena >"):
+                    # ofert powyżej limitu nie pokazujemy – tylko liczba
+                    diff["raised_over_limit"] = diff.get("raised_over_limit", 0) + 1
+                else:
+                    diff["gone"].append(prev)
             old = state["rejected"].get(lid) or (prev if prev_store == "listings" else None) or {}
             rec = {**old, **{k: v for k, v in l.items() if v is not None}, "id": lid, "reason": reason, "date": today,
                    "location": ", ".join(x for x in (l.get("city"), l.get("state")) if x) or "lokalizacja: brak danych",
@@ -957,6 +973,9 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
                 lines.append(l["region_note"])
             blocks.append("\n".join(lines))
 
+    if diff.get("raised_over_limit"):
+        blocks.append(f"## Podwyżki ponad limit\n{diff['raised_over_limit']} wcześniej pokazanych ofert ma teraz cenę powyżej "
+                      f"{fmt_price(config['max_price_usd'])} – nie pokazuję ich. Gdy cena spadnie do limitu, wrócą jako [TANIEJ].")
     if diff["gone"]:
         lines = ["## Niewidziane lub poza kryteriami"]
         for l in diff["gone"]:
@@ -1237,12 +1256,27 @@ def _miles(s: str) -> int | None:
     return int(round(n * 1000)) if m.group("k") else int(n)
 
 
+NEIGHBOUR_RE = re.compile(r"\bphoto \d+\b|\b(?:19|20)\d\d\b", re.I)
+
+
+def _clean_title(title: str, year: str) -> str | None:
+    """Tytuł nie może zawierać sąsiedniego ogłoszenia („…Fat Boy 114 photo 3. 2017 Harley Sportster 883”).
+    Gdy zawiera, cena po nim należy do innego motocykla – zwraca None."""
+    rest = title[title.find(year) + len(year):]
+    for m in NEIGHBOUR_RE.finditer(rest):
+        if m.group() != year:   # ten sam rocznik = powtórzony tytuł („tytuł - opis”), inny rocznik lub „photo N” = sąsiad
+            return None
+    return title.strip()
+
+
 def parse_snippet(text: str, url: str | None = None) -> list[dict]:
     """Wyciąga oferty Fat Boy z fragmentu wyniku wyszukiwania Facebooka. Zwraca kandydatów do przejrzenia."""
     out = []
     # A: „2018 Harley-Davidson Fat Boy - $9995, Used, in Ormond Beach, Florida.”
     for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) - " + PRICE_RE +
                          r",(?: Used,)? in (?P<city>[A-Z][\w .'-]+?), (?P<state>[A-Z][a-zA-Z ]+?)[.\s]", text, re.I):
+        if not _clean_title(m.group("title"), m.group("year")):
+            continue
         o = {"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
              "city": m.group("city").strip(), "state": geo.state_code(m.group("state"))}
         if geo.is_non_us_region(m.group("state")):
@@ -1251,6 +1285,8 @@ def parse_snippet(text: str, url: str | None = None) -> list[dict]:
     # B: „2018 Harley-Davidson fat boy 114 flfbs for sale - Used - $10,500 in Rathdrum. ... 1K miles. Rathdrum, ID”
     for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) for sale - Used(?: - [\w ]+?)? - "
                          + PRICE_RE + r"(?P<rest>.{0,160})", text, re.I):
+        if not _clean_title(m.group("title"), m.group("year")):
+            continue
         rest = m.group("rest")
         locs = list(re.finditer(r"((?:[A-Z][a-z'.-]+ ?){1,3}), ([A-Z]{2})\b", rest))
         loc = locs[0] if locs else None
@@ -1261,6 +1297,8 @@ def parse_snippet(text: str, url: str | None = None) -> list[dict]:
     if not out:
         for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^.\n$]{0,30})\.\s*" + PRICE_RE +
                              r"\.?(?P<rest>.{0,140})", text, re.I):
+            if not _clean_title(m.group("title"), m.group("year")):
+                continue
             rest = m.group("rest")
             loc = re.search(r"·\s*((?:[A-Z][a-z'.-]+ ?){1,3}), ([A-Z]{2})\b", rest)
             out.append({"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),

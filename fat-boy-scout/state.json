@@ -627,47 +627,6 @@
       ],
       "last_missing_run": "2026-11-15"
     },
-    "fb-1687282615899659": {
-      "id": "fb-1687282615899659",
-      "model": "2018 Harley-Davidson FAT BOY - 2018 Harley-Davidson FAT BOY",
-      "price": 9995,
-      "year": 2018,
-      "family": "Fat Boy",
-      "source": "facebook",
-      "location": "Ormond Beach, FL",
-      "url": "https://www.facebook.com/marketplace/item/1687282615899659/?locale=sk_SK",
-      "date": "2026-11-12",
-      "city": "Ormond Beach",
-      "state": "FL",
-      "category": "main",
-      "verified": false,
-      "model_confirmed": true,
-      "distance_est": 1170,
-      "score": {
-        "ref": 12550,
-        "discount": 0.20358565737051793,
-        "label": "OKAZJA",
-        "flags": [
-          "114 niepotwierdzone",
-          "przebieg do ustalenia"
-        ]
-      },
-      "missing_runs": 0,
-      "urls": [
-        "https://www.facebook.com/marketplace/item/1687282615899659/",
-        "https://www.facebook.com/marketplace/item/1687282615899659/?locale=sk_SK"
-      ],
-      "price_history": [
-        {
-          "date": "2026-11-15",
-          "price": 9995,
-          "run": "2026-11-15"
-        }
-      ],
-      "last_seen": "2026-11-15",
-      "status": "active",
-      "first_seen": "2026-11-15"
-    },
     "fb-1324145406268709": {
       "model": "2018 Harley-Davidson Fat Boy",
       "year": 2018,
@@ -694,46 +653,6 @@
       "missing_runs": 0,
       "urls": [
         "https://www.facebook.com/marketplace/item/1324145406268709/"
-      ],
-      "price_history": [
-        {
-          "date": "2026-11-15",
-          "price": 10500,
-          "run": "2026-11-15"
-        }
-      ],
-      "last_seen": "2026-11-15",
-      "status": "active",
-      "first_seen": "2026-11-15"
-    },
-    "fb-1075545595270351": {
-      "id": "fb-1075545595270351",
-      "model": "2020 Harley-Davidson Fat Boy EX-L - 2020 Harley-Davidson Fat Boy EX-L",
-      "price": 10500,
-      "year": 2020,
-      "family": "Fat Boy",
-      "source": "facebook",
-      "location": "Nellysford, VA",
-      "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
-      "date": "2026-11-12",
-      "city": "Nellysford",
-      "state": "VA",
-      "category": "main",
-      "verified": false,
-      "model_confirmed": true,
-      "distance_est": 680,
-      "score": {
-        "ref": 14950,
-        "discount": 0.2976588628762542,
-        "label": "OKAZJA",
-        "flags": [
-          "114 niepotwierdzone",
-          "przebieg do ustalenia"
-        ]
-      },
-      "missing_runs": 0,
-      "urls": [
-        "https://www.facebook.com/marketplace/item/1075545595270351/"
       ],
       "price_history": [
         {
@@ -856,48 +775,6 @@
         {
           "date": "2026-11-15",
           "price": 11000,
-          "run": "2026-11-15"
-        }
-      ],
-      "last_seen": "2026-11-15",
-      "status": "active",
-      "first_seen": "2026-11-15"
-    },
-    "fb-1531297678396449": {
-      "id": "fb-1531297678396449",
-      "model": "2018 Harley Davidson Fat Boy 114 photo 3. 2017 Harley Sportster 883",
-      "price": 5700,
-      "year": 2018,
-      "family": "Fat Boy 114",
-      "source": "facebook",
-      "location": "New Orleans, LA",
-      "url": "https://www.facebook.com/marketplace/item/1531297678396449/",
-      "date": "2026-11-12",
-      "city": "Mandeville",
-      "state": "LA",
-      "price_drop": false,
-      "category": "main",
-      "verified": false,
-      "engine": "114",
-      "model_confirmed": true,
-      "distance_est": 950,
-      "score": {
-        "ref": 12550,
-        "discount": 0.545816733067729,
-        "label": "OKAZJA",
-        "flags": [
-          "przebieg do ustalenia",
-          "podejrzanie tanio – sprawdź, czy to nie oszustwo"
-        ]
-      },
-      "missing_runs": 0,
-      "urls": [
-        "https://www.facebook.com/marketplace/item/1531297678396449/"
-      ],
-      "price_history": [
-        {
-          "date": "2026-11-15",
-          "price": 5700,
           "run": "2026-11-15"
         }
       ],
@@ -7416,6 +7293,89 @@
           "run": "2026-11-15"
         }
       ]
+    },
+    "fb-1075545595270351": {
+      "id": "fb-1075545595270351",
+      "model": "2020 Harley-Davidson Fat Boy EX-L - 2020 Harley-Davidson Fat Boy EX-L",
+      "price": 10500,
+      "year": 2020,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Nellysford, VA",
+      "url": "https://www.facebook.com/marketplace/item/1075545595270351/",
+      "date": "2026-11-15",
+      "city": "Nellysford",
+      "state": "VA",
+      "category": "main",
+      "verified": false,
+      "model_confirmed": true,
+      "distance_est": 680,
+      "score": {
+        "ref": 14950,
+        "discount": 0.2976588628762542,
+        "label": "OKAZJA",
+        "flags": [
+          "114 niepotwierdzone",
+          "przebieg do ustalenia"
+        ]
+      },
+      "urls": [
+        "https://www.facebook.com/marketplace/item/1075545595270351/"
+      ],
+      "price_history": [
+        {
+          "date": "2026-11-15",
+          "price": 10500,
+          "run": "2026-11-15"
+        }
+      ],
+      "last_seen": "2026-11-15",
+      "status": "dropped",
+      "first_seen": "2026-11-15",
+      "miles": 26000,
+      "reason": "przebieg > 15 000 mi (26 000 mi z przebiegu 12.11)"
+    },
+    "fb-1687282615899659": {
+      "id": "fb-1687282615899659",
+      "model": "2018 Harley-Davidson FAT BOY - 2018 Harley-Davidson FAT BOY",
+      "price": 9995,
+      "year": 2018,
+      "family": "Fat Boy",
+      "source": "facebook",
+      "location": "Ormond Beach, FL",
+      "url": "https://www.facebook.com/marketplace/item/1687282615899659/?locale=sk_SK",
+      "date": "2026-11-15",
+      "city": "Ormond Beach",
+      "state": "FL",
+      "category": "main",
+      "verified": false,
+      "model_confirmed": true,
+      "distance_est": 1170,
+      "score": {
+        "ref": 12550,
+        "discount": 0.20358565737051793,
+        "label": "OKAZJA",
+        "flags": [
+          "114 niepotwierdzone",
+          "przebieg do ustalenia"
+        ]
+      },
+      "urls": [
+        "https://www.facebook.com/marketplace/item/1687282615899659/",
+        "https://www.facebook.com/marketplace/item/1687282615899659/?locale=sk_SK"
+      ],
+      "price_history": [
+        {
+          "date": "2026-11-15",
+          "price": 9995,
+          "run": "2026-11-15"
+        }
+      ],
+      "last_seen": "2026-11-15",
+      "status": "dropped",
+      "first_seen": "2026-11-15",
+      "miles": 31000,
+      "reason": "przebieg > 15 000 mi (31 000 mi z przebiegu 12.11)"
     }
   },
   "watchlist": {
@@ -7614,6 +7574,43 @@
       "url": "https://www.facebook.com/marketplace/item/1738705247347339/",
       "first_seen": "2026-11-12",
       "last_seen": "2026-11-12"
+    },
+    "fb-1531297678396449": {
+      "id": "fb-1531297678396449",
+      "model": "2018 Harley Davidson Fat Boy 114",
+      "price": null,
+      "year": 2018,
+      "family": "Fat Boy 114",
+      "source": "facebook",
+      "location": "New Orleans, LA",
+      "url": "https://www.facebook.com/marketplace/item/1531297678396449/",
+      "date": "2026-11-12",
+      "city": "Mandeville",
+      "state": "LA",
+      "price_drop": false,
+      "category": "main",
+      "verified": false,
+      "engine": "114",
+      "model_confirmed": true,
+      "distance_est": 950,
+      "score": {
+        "ref": 12550,
+        "discount": 0.545816733067729,
+        "label": "OKAZJA",
+        "flags": [
+          "przebieg do ustalenia",
+          "podejrzanie tanio – sprawdź, czy to nie oszustwo"
+        ]
+      },
+      "missing_runs": 0,
+      "urls": [
+        "https://www.facebook.com/marketplace/item/1531297678396449/"
+      ],
+      "price_history": [],
+      "last_seen": "2026-11-15",
+      "status": "active",
+      "first_seen": "2026-11-15",
+      "note": "cena nieznana – 5 700 USD we fragmencie należała do sąsiedniego ogłoszenia (2017 Sportster 883)"
     }
   },
   "query_stats": {

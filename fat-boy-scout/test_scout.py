@@ -147,7 +147,8 @@ class MergeTests(unittest.TestCase):
         st = scout.empty_state()
         st, _ = scout.merge(st, run([L(id="a")]), CONFIG)
         st, d = scout.merge(st, run([L(id="a", price=11500)], d="2026-11-19"), CONFIG)
-        self.assertEqual([l["id"] for l in d["gone"]], ["a"])
+        self.assertEqual(d["gone"], [])                 # oferty powyżej limitu nie pokazujemy (bez linku i ceny)
+        self.assertEqual(d.get("raised_over_limit"), 1)  # tylko liczba
         self.assertIn("a", st["rejected"])
 
     def test_rejected_then_price_drop_becomes_new(self):

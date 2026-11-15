@@ -8,7 +8,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "aimm"))
 import import_aimm as ia  # noqa: E402
 import scout  # noqa: E402
-from test_scout import FB  # noqa: E402
+from test_scout import FB, FBV  # noqa: E402
 
 
 def A(**kw):
@@ -214,6 +214,26 @@ class ScanFixTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         run = json.loads((Path(d) / "runs" / f"{rid}.json").read_text())
         self.assertEqual(run["listings"][0]["id"], "fb-5")
+
+
+class Run1115FixTests(unittest.TestCase):
+    def test_neighbour_listing_price_not_taken(self):
+        t = "2018 Harley Davidson Fat Boy 114 photo 3. 2017 Harley Sportster 883 - $5,700, Used, in Mandeville, Louisiana."
+        self.assertEqual(scout.parse_snippet(t, "https://www.facebook.com/marketplace/item/1531297678396449/"), [])
+
+    def test_repeated_title_still_parsed(self):
+        t = "2019 Harley-Davidson Fat Boy 114 - 2019 Harley-Davidson Fat Boy 114 - $10,500, Used, in Joliet, Illinois."
+        self.assertEqual(scout.parse_snippet(t, "https://www.facebook.com/marketplace/item/5/")[0]["price"], 10500)
+
+    def test_known_mileage_inherited_and_rejected(self):
+        base = {"id": "fb-1075545595270351", "source": "facebook", "category": "main", "model": "2020 Harley-Davidson Fat Boy",
+                "year": 2020, "price": 10500, "city": "Nellysford", "state": "VA", "verified": False,
+                "url": "https://www.facebook.com/marketplace/item/1075545595270351/"}
+        st, _ = scout.merge(scout.empty_state(), {"date": "2026-11-12", "sources_checked": ["facebook"],
+                                                  "listings": [dict(base, miles=26000)]}, FBV)
+        st, d = scout.merge(st, {"date": "2026-11-15", "sources_checked": ["facebook"], "listings": [dict(base)]}, FBV)
+        self.assertNotIn("fb-1075545595270351", [l["id"] for l in d["active"] + d["unverified_all"]])
+        self.assertIn("przebieg", st["rejected"]["fb-1075545595270351"]["reason"])
 
 
 if __name__ == "__main__":
