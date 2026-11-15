@@ -25,7 +25,6 @@ Przebieg (te polecenia wykonuje agent przy `/fat-boy-scout`; postęp zapisywany 
 ```
 python3 fat-boy-scout/scout.py begin                      # nowy przebieg albo wznowienie przerwanego
 python3 fat-boy-scout/scout.py record <run_id> q.json     # po KAŻDYM zapytaniu: wyniki + kredyty
-python3 fat-boy-scout/scout.py refund <run_id> 1       # zwrot kredytu za ocenę wyników (firecrawl_search_feedback)
 python3 fat-boy-scout/scout.py remaining <run_id>         # co zostało z planu
 python3 fat-boy-scout/scout.py finish <run_id>            # walidacja, scalenie z historią, raport
 ```
@@ -47,7 +46,9 @@ python3 -m unittest fat-boy-scout/test_scout.py fat-boy-scout/test_aimm.py
 **Test skuteczności:** znajdź ręcznie na Marketplace kilka (np. 10) pasujących ofert i wklej ich linki do pliku, po jednym w linii.
 Po zwykłym przebiegu `recall` pokaże, ile z nich Scout znalazł sam (np. 7/10) i które przeoczył.
 
-**Ograniczenie:** ogłoszenia Facebooka wymagają logowania, więc agent korzysta z indeksu wyszukiwarki.
+**Narzędzia:** szukanie – wbudowane WebSearch; zwykłe strony – Jina; strony dynamiczne i z logowaniem – Playwright (`.mcp.json`). Firecrawl nie jest używany.
+
+**Ograniczenie:** ogłoszenia Facebooka wymagają logowania, więc bez zalogowanej przeglądarki użytkownika agent korzysta z wyników wyszukiwarki.
 Ceny i dostępność trzeba potwierdzić po kliknięciu w link.
 
 **Raport** zawiera wszystkie potwierdzone oferty (z bezpośrednim linkiem), sekcję „Do sprawdzenia” (co ustalono, czego brakuje),

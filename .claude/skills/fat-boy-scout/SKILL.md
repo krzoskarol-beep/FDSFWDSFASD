@@ -10,9 +10,11 @@ description: Uruchamia przebieg Fat Boy Scout – wyszukiwanie Harley-Davidson F
 2. Uruchom agenta **fat-boy-scout** (narzędzie Agent, `subagent_type: "fat-boy-scout"`) z poleceniem:
    „Przebieg <run_id> (wznowiony: tak/nie). Działaj zgodnie ze swoją procedurą: tylko zapytania z `remaining`, `record`
    po każdym zapytaniu, szerokie trafienia potwierdzaj cytatem z opisu, `todo`, `finish`, `improve --apply`, lekcje,
-   commit i push. Przy braku kredytów zapisz błąd i zakończ bez `finish`. Oddaj raport dosłownie oraz sumę kredytów.”
+   commit i push. Szukasz przez wbudowane WebSearch, strony czytasz przez Jina, strony dynamiczne/z logowaniem przez Playwright –
+   bez Firecrawl. Przed każdym narzędziem napisz krótko, którego używasz i dlaczego. Przy limicie wyszukiwań zapisz błąd
+   i zakończ bez `finish`. Oddaj raport dosłownie.”
    Jeśli użytkownik podał dodatkowe życzenia, przekaż je agentowi jako jednorazowe.
 3. Pokaż użytkownikowi raport dokładnie tak, jak zwrócił go agent: każdą część osobno, z wszystkimi linkami.
    Na końcu dodaj 1–2 zdania: co nowego (nowe oferty, spadki cen) i która oferta jest najlepsza według kosztu całkowitego.
-4. Jeśli agent zgłosił problem (brak kredytów, błąd źródła, przebieg niedokończony), napisz to wprost: przebieg jest otwarty
+4. Jeśli agent zgłosił problem (limit wyszukiwań, błąd źródła, przebieg niedokończony), napisz to wprost: przebieg jest otwarty
    i kolejne `/fat-boy-scout` go dokończy. Nie przedstawiaj częściowych wyników jako pełnego raportu.

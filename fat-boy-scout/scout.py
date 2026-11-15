@@ -1024,8 +1024,11 @@ def render(diff: dict, run: dict, config: dict, report_no: int) -> list[str]:
         qm = diff.get("query_matches", {})
         cr = diff.get("credits")
         ref = int(run.get("credits_refunded") or 0)
-        cr_txt = (f". Kredyty Firecrawl: {cr}" + (f" (zwrot za oceny wyników: {ref}, netto {cr - ref})" if ref else "") + "."
-                  if cr is not None else ". Kredyty Firecrawl: nie zmierzono.")
+        if not cr and not ref:
+            cr_txt = ". Wyszukiwanie: wbudowane WebSearch (bez kredytów Firecrawl)."
+        else:
+            cr_txt = (f". Kredyty Firecrawl: {cr}" + (f" (zwrot za oceny wyników: {ref}, netto {cr - ref})" if ref else "") + "."
+                      if cr is not None else ". Kredyty Firecrawl: nie zmierzono.")
         blocks.append(f"## Wyszukiwanie\nZapytań: {len(diff['queries'])}, w tym z pasującą ofertą: {sum(1 for v in qm.values() if v)}"
                       + (f", błędów: {sum(1 for q in diff['queries'] if q.get('status') == 'error')}" )
                       + cr_txt)
