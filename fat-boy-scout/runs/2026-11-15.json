@@ -1,0 +1,334 @@
+{
+  "date": "2026-11-15",
+  "run_id": "2026-11-15",
+  "status": "in_progress",
+  "sources_checked": [
+    "facebook"
+  ],
+  "plan": [
+    {
+      "q": "site:facebook.com/marketplace/item \"2018 Harley-Davidson Fat Boy\" OR \"2019 Harley-Davidson Fat Boy\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2020 Harley-Davidson Fat Boy\" OR \"2021 Harley-Davidson Fat Boy\" OR \"2022 Harley-Davidson Fat Boy\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2023 Harley-Davidson Fat Boy\" OR \"2024 Harley-Davidson Fat Boy\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"Fatboy\" harley 2018 OR 2019 OR 2020 OR 2021 OR 2022 OR 2023 OR 2024",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": false,
+      "why": "wariant: Fatboy"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"Fat Boy 114\"",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": false,
+      "why": "wariant: Fat Boy 114"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item FLFBS",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": false,
+      "why": "wariant: FLFBS"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2018 Harley Softail\" OR \"2018 Harley-Davidson Softail\" OR \"2019 Harley Softail\" OR \"2019 Harley-Davidson Softail\"",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": true,
+      "why": "szeroki tytuł: Softail 2018–2019"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2020 Harley Softail\" OR \"2020 Harley-Davidson Softail\" OR \"2021 Harley Softail\" OR \"2021 Harley-Davidson Softail\"",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": true,
+      "why": "szeroki tytuł: Softail 2020–2021"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2022 Harley Softail\" OR \"2023 Harley Softail\" OR \"2024 Harley Softail\" OR \"2022 Harley-Davidson Softail\" OR \"2023 Harley-Davidson Softail\" OR \"2024 Harley-Davidson Softail\"",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": true,
+      "why": "szeroki tytuł: Softail 2022–2024"
+    },
+    {
+      "q": "site:facebook.com/marketplace/item \"2025 Harley Softail\" OR \"2026 Harley Softail\" OR \"2025 Harley-Davidson Softail\" OR \"2026 Harley-Davidson Softail\"",
+      "origin": "seed",
+      "added": "2026-11-13",
+      "status": "active",
+      "broad": true,
+      "why": "szeroki tytuł: Softail 2025–2026"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Illinois OR Wisconsin OR Indiana OR Michigan OR Iowa OR Ohio OR Minnesota OR Missouri",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Midwest",
+      "states": [
+        "IL",
+        "WI",
+        "IN",
+        "MI",
+        "IA",
+        "OH",
+        "MN",
+        "MO"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Kansas OR Nebraska OR \"South Dakota\" OR \"North Dakota\" OR Montana OR Wyoming OR Colorado",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Plains i Góry",
+      "states": [
+        "KS",
+        "NE",
+        "SD",
+        "ND",
+        "MT",
+        "WY",
+        "CO"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Washington OR Oregon OR Idaho OR Utah OR Nevada OR California",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Zachód",
+      "states": [
+        "WA",
+        "OR",
+        "ID",
+        "UT",
+        "NV",
+        "CA"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Texas OR Oklahoma OR \"New Mexico\" OR Arizona",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Południowy zachód",
+      "states": [
+        "TX",
+        "OK",
+        "NM",
+        "AZ"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Louisiana OR Mississippi OR Arkansas OR Alabama OR Tennessee OR Kentucky",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Południe",
+      "states": [
+        "LA",
+        "MS",
+        "AR",
+        "AL",
+        "TN",
+        "KY"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Florida OR Georgia OR \"South Carolina\" OR \"North Carolina\" OR Virginia OR \"West Virginia\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Południowy wschód",
+      "states": [
+        "FL",
+        "GA",
+        "SC",
+        "NC",
+        "VA",
+        "WV"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Pennsylvania OR \"New York\" OR \"New Jersey\" OR Connecticut OR Massachusetts OR Maryland OR Delaware",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Północny wschód",
+      "states": [
+        "PA",
+        "NY",
+        "NJ",
+        "CT",
+        "MA",
+        "MD",
+        "DE"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 OR 2020 Maine OR \"New Hampshire\" OR Vermont OR \"Rhode Island\"",
+      "origin": "seed",
+      "added": "2026-11-12",
+      "status": "active",
+      "region": "Nowa Anglia",
+      "states": [
+        "ME",
+        "NH",
+        "VT",
+        "RI"
+      ]
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley \"low miles\" 2018 OR 2019 OR 2020 OR 2021",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "eksperyment z 1 unikalnymi trafieniami"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" harley 2018 OR 2019 Colorado OR Utah OR Nevada OR Oregon OR Washington OR Idaho",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "eksperyment z 3 unikalnymi trafieniami"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Hartford\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Hartford, MI)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Caledonia\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Caledonia, WI)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Forney\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Forney, TX)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Vernon Rockville\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Vernon Rockville, CT)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Rathdrum\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Rathdrum, ID)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Brookings\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Brookings, OR)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Theresa\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Theresa, WI)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Anoka\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Anoka, MN)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Ridgeland\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Ridgeland, WI)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Clover\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Clover, SC)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Bellingham\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Bellingham, MA)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Uxbridge\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Uxbridge, MA)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Seymour\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Seymour, CT)"
+    },
+    {
+      "q": "site:facebook.com/marketplace \"Fat Boy\" \"Cape Coral\"",
+      "origin": "auto",
+      "added": "2026-11-12",
+      "status": "active",
+      "why": "miasto z trafieniem (Cape Coral, FL)"
+    }
+  ],
+  "queries": [],
+  "listings": [],
+  "watchlist_unpriced": [],
+  "coverage": [],
+  "credits_used": 0,
+  "started_at": "2026-11-15T00:37:20"
+}
