@@ -1,0 +1,29 @@
+# Konfiguracja ai-marketplace-monitor dla Fat Boy Scout.
+# Uruchamiasz ją na SWOIM komputerze:  aimm --config fat-boy-scout/aimm/config.toml
+# Otworzy się przeglądarka – zaloguj się do Facebooka ręcznie (hasła nie wpisujemy do pliku).
+# UWAGA: automatyczne przeglądanie Marketplace jest niezgodne z regulaminem Facebooka – ryzyko dla konta jest po Twojej stronie.
+# Znalezione oferty trafiają do pamięci podręcznej aimm; import do Fat Boy Scout: fat-boy-scout/aimm/import_aimm.py
+
+[marketplace.facebook]
+# aimm szuka tylko po zalogowaniu: login i hasło bierze ze zmiennych środowiskowych na TWOIM komputerze
+# (np. w PowerShell: $env:FACEBOOK_USERNAME="..."; $env:FACEBOOK_PASSWORD="..."). Nie wpisuj ich do tego pliku.
+username = "${FACEBOOK_USERNAME}"
+password = "${FACEBOOK_PASSWORD}"
+search_region = "usa"          # 8 punktów po 500 mil (bez AK i HI); Midwest = Boscobel, WI
+condition = ["used_like_new", "used_good", "used_fair"]
+date_listed = [30, 7]          # pierwsze wyszukiwanie: 30 dni, kolejne: 7 dni
+search_interval = "12h"        # rzadko – mniej obciążenia i mniejsze ryzyko dla konta
+
+[item.fatboy]
+# warianty nazw i szerokie tytuły (Softail) – potwierdzenie modelu robi potem silnik Fat Boy Scout z opisu ogłoszenia
+search_phrases = ["harley fat boy", "fatboy harley", "fat boy 114", "flfbs", "harley softail"]
+keywords = "(fat AND boy) OR fatboy OR flfbs OR softail"
+antikeywords = "seat OR exhaust OR pipes OR wheel OR wheels OR rims OR parts OR toy OR model OR jacket OR fender OR (fat AND bob)"
+min_price = 2000               # odcina części i „ceny-wypełniacze”
+max_price = 11000              # Twój limit zakupu
+
+[user.me]
+# Powiadomienia na telefon (opcjonalnie). Najprościej ntfy: zainstaluj aplikację ntfy, wymyśl losowy temat
+# i odkomentuj dwie linie poniżej. Bez tego oferty i tak trafiają do pamięci podręcznej i do importu.
+# ntfy_server = "https://ntfy.sh"
+# ntfy_topic = "wpisz-tu-wlasny-losowy-temat"

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--headless", "--isolated", "--browser", "chromium",
+               "--executable-path", "/opt/pw-browsers/chromium"]
+    },
+    "jina": {
+      "command": "npx",
+      "args": ["-y", "jina-mcp-tools"],
+      "env": { "JINA_API_KEY": "${JINA_API_KEY}" }
+    }
+  }
+}
