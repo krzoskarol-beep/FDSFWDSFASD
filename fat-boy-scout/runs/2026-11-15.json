@@ -325,10 +325,169 @@
       "why": "miasto z trafieniem (Cape Coral, FL)"
     }
   ],
-  "queries": [],
-  "listings": [],
+  "queries": [
+    {
+      "q": "site:facebook.com/marketplace/item \"2018 Harley-Davidson Fat Boy\" OR \"2019 Harley-Davidson Fat Boy\"",
+      "origin": "seed",
+      "source": "facebook",
+      "status": "ok",
+      "results": 40,
+      "candidates": [
+        "fb-1793799569127594",
+        "fb-1658081249008714",
+        "fb-1099225723111135",
+        "fb-1687282615899659",
+        "fb-959907836767002",
+        "fb-1066421739380775",
+        "fb-2185420285724322",
+        "fb-1324145406268709",
+        "fb-1124738153448828",
+        "fb-1907055037400396"
+      ],
+      "result_states": [
+        "CA",
+        "FL",
+        "NY",
+        "TX"
+      ],
+      "search_id": "01a1dca3-7d8b-70e7-8a75-cdbaab4c2ecf"
+    }
+  ],
+  "listings": [
+    {
+      "model": "2019 Harley-Davidson Fat Boy",
+      "year": 2019,
+      "price": 14888,
+      "city": "Winnipeg",
+      "state": null,
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1793799569127594/",
+      "id": "fb-1793799569127594"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 12750,
+      "city": "Riverside",
+      "state": "CA",
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1658081249008714/",
+      "id": "fb-1658081249008714"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy photo 4. +3. 2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 13999,
+      "miles": null,
+      "city": null,
+      "state": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1099225723111135/",
+      "id": "fb-1099225723111135"
+    },
+    {
+      "model": "2018 Harley-Davidson FAT BOY",
+      "year": 2018,
+      "price": 9995,
+      "city": "Ormond Beach",
+      "state": "FL",
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1687282615899659/?locale=tr_TR",
+      "id": "fb-1687282615899659"
+    },
+    {
+      "model": "2019 Harley-Davidson Fat Boy",
+      "year": 2019,
+      "price": 18800,
+      "city": "Lakeside",
+      "state": "CA",
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/959907836767002/",
+      "id": "fb-959907836767002"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 16000,
+      "city": "Bay Shore",
+      "state": null,
+      "miles": 2500,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1066421739380775/",
+      "id": "fb-1066421739380775"
+    },
+    {
+      "model": "2019 Harley-Davidson Fat Boy",
+      "year": 2019,
+      "price": 28500,
+      "city": "Mannum",
+      "state": null,
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/2185420285724322/",
+      "id": "fb-2185420285724322"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 10500,
+      "city": "Houston",
+      "state": "TX",
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1324145406268709/",
+      "id": "fb-1324145406268709"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 22000,
+      "city": "Penhold",
+      "state": null,
+      "miles": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1124738153448828/",
+      "id": "fb-1124738153448828"
+    },
+    {
+      "model": "2018 Harley-Davidson Fat Boy photo 1. 2018 Harley-Davidson Fat Boy",
+      "year": 2018,
+      "price": 11000,
+      "miles": null,
+      "city": null,
+      "state": null,
+      "source": "facebook",
+      "category": "main",
+      "verified": false,
+      "url": "https://www.facebook.com/marketplace/item/1907055037400396/",
+      "id": "fb-1907055037400396"
+    }
+  ],
   "watchlist_unpriced": [],
   "coverage": [],
-  "credits_used": 0,
-  "started_at": "2026-11-15T00:37:20"
+  "credits_used": 8,
+  "started_at": "2026-11-15T00:37:20",
+  "credits_refunded": 1
 }
