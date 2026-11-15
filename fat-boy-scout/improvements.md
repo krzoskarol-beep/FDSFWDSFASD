@@ -31,3 +31,25 @@
 - Cena referencyjna Fat Boy 114 2023: 15 950 USD → 16 050 USD (mediana 16 172 USD z 8 ofert)
 - Cena referencyjna Fat Boy 114 2024: 18 750 USD → 18 100 USD (mediana 17 500 USD z 11 ofert)
 - Cena referencyjna Fat Boy 114 2026: 23 100 USD → 23 400 USD (mediana 23 699 USD z 5 ofert)
+
+## 2026-11-15
+- Zapytanie startowe bez trafień od 3 przebiegów (zostaje, oznaczone): site:facebook.com/marketplace/item "2020 Harley-Davidson Fat Boy" OR "2021 Harley-Davidson Fat Boy" OR "2022 Harley-Davidson Fat Boy"
+- Zapytanie startowe bez trafień od 3 przebiegów (zostaje, oznaczone): site:facebook.com/marketplace/item "2023 Harley-Davidson Fat Boy" OR "2024 Harley-Davidson Fat Boy"
+- Zapytanie startowe bez trafień od 3 przebiegów (zostaje, oznaczone): site:facebook.com/marketplace/item "2025 Harley-Davidson Fat Boy" OR "2026 Harley-Davidson Fat Boy"
+- Cena referencyjna Fat Boy 114 2001: brak → 5 000 USD (mediana 5 000 USD z 5 ofert)
+- Cena referencyjna Fat Boy 114 2002: brak → 6 000 USD (mediana 6 000 USD z 9 ofert)
+- Cena referencyjna Fat Boy 114 2003: brak → 7 250 USD (mediana 7 250 USD z 6 ofert)
+- Cena referencyjna Fat Boy 114 2004: brak → 5 400 USD (mediana 5 400 USD z 7 ofert)
+- Cena referencyjna Fat Boy 114 2006: brak → 6 750 USD (mediana 6 745 USD z 6 ofert)
+- Cena referencyjna Fat Boy 114 2007: brak → 6 000 USD (mediana 6 000 USD z 11 ofert)
+- Cena referencyjna Fat Boy 114 2008: brak → 5 500 USD (mediana 5 500 USD z 11 ofert)
+- Cena referencyjna Fat Boy 114 2010: brak → 6 750 USD (mediana 6 750 USD z 6 ofert)
+- Cena referencyjna Fat Boy 114 2014: brak → 10 000 USD (mediana 10 000 USD z 7 ofert)
+- Cena referencyjna Fat Boy 114 2018: 12 550 USD → 12 500 USD (mediana 12 500 USD z 71 ofert)
+- Cena referencyjna Fat Boy 114 2019: 13 000 USD → 13 050 USD (mediana 13 100 USD z 26 ofert)
+- Cena referencyjna Fat Boy 114 2020: 14 950 USD → 16 000 USD (mediana 17 100 USD z 16 ofert)
+- Cena referencyjna Fat Boy 114 2021: 14 600 USD → 15 200 USD (mediana 15 750 USD z 14 ofert)
+- Cena referencyjna Fat Boy 114 2023: 16 050 USD → 15 900 USD (mediana 15 750 USD z 9 ofert)
+- Cena referencyjna Fat Boy 114 2024: 18 100 USD → 17 900 USD (mediana 17 750 USD z 14 ofert)
+- Cena referencyjna Fat Boy 114 2025: 20 500 USD → 20 750 USD (mediana 21 000 USD z 8 ofert)
+- Cena referencyjna Fat Boy 114 2026: 23 400 USD → 23 750 USD (mediana 24 121 USD z 10 ofert)

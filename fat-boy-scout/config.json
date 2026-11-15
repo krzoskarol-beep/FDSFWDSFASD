@@ -80,15 +80,24 @@
   "_market_reference_note": "Orientacyjne ceny rynkowe (USD) dla prywatnej sprzedaży lub dealera w regionie, przy przebiegu około 3000 mil rocznie. Służą tylko do rankingu okazji. Popraw je, gdy rynek się zmieni. Klucz to model, potem rocznik; brakujący rocznik bierze najbliższy znany.",
   "market_reference": {
     "Fat Boy 114": {
-      "2018": 12550,
-      "2019": 13000,
-      "2020": 14950,
-      "2021": 14600,
+      "2018": 12500,
+      "2019": 13050,
+      "2020": 16000,
+      "2021": 15200,
       "2022": 15500,
-      "2023": 16050,
-      "2024": 18100,
-      "2025": 20500,
-      "2026": 23400
+      "2023": 15900,
+      "2024": 17900,
+      "2025": 20750,
+      "2026": 23750,
+      "2001": 5000,
+      "2002": 6000,
+      "2003": 7250,
+      "2004": 5400,
+      "2006": 6750,
+      "2007": 6000,
+      "2008": 5500,
+      "2010": 6750,
+      "2014": 10000
     },
     "Fat Bob 114": {
       "2018": 12000,
@@ -193,13 +202,15 @@
         "q": "site:facebook.com/marketplace/item \"2020 Harley-Davidson Fat Boy\" OR \"2021 Harley-Davidson Fat Boy\" OR \"2022 Harley-Davidson Fat Boy\"",
         "origin": "seed",
         "added": "2026-11-12",
-        "status": "active"
+        "status": "active",
+        "flagged": "2026-11-15"
       },
       {
         "q": "site:facebook.com/marketplace/item \"2023 Harley-Davidson Fat Boy\" OR \"2024 Harley-Davidson Fat Boy\"",
         "origin": "seed",
         "added": "2026-11-12",
-        "status": "active"
+        "status": "active",
+        "flagged": "2026-11-15"
       },
       {
         "q": "site:facebook.com/marketplace/item \"Fat Boy 114\" OR \"Fatboy 114\" OR FLFBS",
@@ -211,7 +222,8 @@
         "q": "site:facebook.com/marketplace/item \"2025 Harley-Davidson Fat Boy\" OR \"2026 Harley-Davidson Fat Boy\"",
         "origin": "seed",
         "added": "2026-11-12",
-        "status": "active"
+        "status": "active",
+        "flagged": "2026-11-15"
       },
       {
         "q": "site:facebook.com/marketplace/item \"Fatboy\" harley 2018 OR 2019 OR 2020 OR 2021 OR 2022 OR 2023 OR 2024",

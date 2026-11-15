@@ -27,6 +27,10 @@ Pamięć agenta między przebiegami. Agent czyta ten plik na początku każdego 
 - 2026-11-12 (runda 3): Pułapka: ta sama oferta ma w indeksie różne ceny, np. Rathdrum 13 000/11 900/10 500, a Seymour 15 000/13 500/12 000/10 000. Niższa cena to zwykle nowsza obniżka, ale trzeba to opisać w notatce. Parser przypisuje cenę i przebieg z sąsiednich ogłoszeń w „related”: Seymour dostał 8000 mil od Fat Boba, a Hartford cenę z Grand Rapids. Wynik `parse` zawsze sprawdzaj ręcznie.
 - 2026-11-12 (runda 3): Ograniczenia silnika: raport zapisuje się pod samą datą, więc drugi przebieg tego samego dnia nadpisuje `reports/RRRR-MM-DD.md`. Oferta z watchlisty, która dostała cenę (Killen, 29 000 USD), zostaje w watchliście i dalej figuruje w todo. Przebieg za 49 zapytań kosztuje ~350 kredytów, a po nim Firecrawl ostrzega o niskim saldzie.
 
+- 2026-11-15: Zapytania o samo miasto ("Fat Boy" "<miasto>") działają tylko wtedy, gdy miasto jest unikalne (Caledonia WI i Rathdrum ID dały przebieg 10,9 tys. i 1 082 mil ze stron kategorii). Dla nazw wieloznacznych (Hartford, Ridgeland, Clover, Uxbridge, Bellingham) wychodzą inne stany lub Kanada, więc dodawaj stan albo rocznik do zapytania.
+- 2026-11-15: Parser przy `record` produkuje śmieciowe oferty: ID typu fb-boy.fortwayne-in-2018 (finish je odrzuca jako błąd), ceny z sąsiednich ogłoszeń "related" (Mandeville 5 700 USD to Sportster) i duplikaty. Przed `finish` przejrzyj plik przebiegu: usuń oferty z błędnym ID i duplikaty. Poprawki z `listings` dla ID spoza bieżącego przebiegu tworzą kikuty bez kategorii i linku, więc podawaj pełny rekord (category, url, model, year, price).
+- 2026-11-15: Zapytania "Softail" po roczniku nie dały żadnego potwierdzonego Fat Boya w opisie (same Slim, Street Bob, Deluxe i części), więc 4 zapytania broad (ok. 32 kredyty) nie są warte powtarzania. Lepiej celować w "Fat Boy" + grupa stanów.
+
 ## Pomysły na eksperymenty
 - Grupy stanów jeszcze nieprzeszukane: południe (LA, MS, AR, AL, GA, SC), Nowa Anglia (ME, VT, RI) i Plains (NE, SD, ND, MT, WY, NM)
 - „<miasto> harley-davidson Fat Boy 114 miles” dla stanów, gdzie jeszcze nic nie znaleziono (np. NJ, MA, MD, TN, MO)
