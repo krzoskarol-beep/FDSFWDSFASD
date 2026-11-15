@@ -167,5 +167,54 @@ class SearchFeedbackTests(unittest.TestCase):
         self.assertIn("zwrot za oceny wyników: 1, netto 6", blocks)
 
 
+class ScanFixTests(unittest.TestCase):
+    """Błędy wykryte w przebiegu 2026-11-15."""
+
+    def test_canadian_listing_is_non_us(self):
+        o = scout.parse_snippet("2019 Harley-Davidson Fat Boy - $14888, Used, in Winnipeg, Manitoba.",
+                                "https://www.facebook.com/marketplace/item/1793799569127594/")[0]
+        self.assertTrue(o["non_us"])
+        ok, reason = scout.eligibility(scout.normalize(dict(o, price=9000), FB), FB)
+        self.assertFalse(ok)
+        self.assertIn("poza USA", reason)
+
+    def test_foreign_currency_is_non_us(self):
+        out = scout.parse_snippet("2019 Harley-Davidson Fat Boy - CA$9,800, Used, in Calgary, AB.", None)
+        out += scout.parse_snippet("2019 Harley-Davidson Fat Boy for sale - Used - $9,800 CA$ in Calgary. Calgary, AB", None)
+        self.assertFalse([o for o in out if not o.get("non_us")])   # żadna nie przechodzi jako oferta z USA
+
+    def test_related_items_get_distinct_ids_and_other_listing_flag(self):
+        url = "https://www.facebook.com/marketplace/item/1620401672569465/?locale=te_IN"
+        text = ("Related: 2020 Harley-Davidson Fat Boy - $27,000, Used, in Brooklyn, NY. "
+                "2021 Harley-Davidson Fat Boy for sale - Used - $22,000 nice bike")
+        out = scout.parse_snippet(text, url)
+        ids = [o["id"] for o in out]
+        self.assertEqual(len(set(ids)), len(ids))
+        self.assertFalse(any("xx" in i or "-x-" in i for i in ids))
+        self.assertTrue(all(o.get("link_is_other_listing") for o in out))
+
+    def test_unknown_state_goes_to_check_not_rejected(self):
+        l = scout.normalize({"id": "fb-77", "source": "facebook", "category": "main", "model": "2021 Harley-Davidson Fat Boy 114",
+                             "year": 2021, "price": 10900, "miles": 5000, "state": None, "verified": False,
+                             "url": "https://www.facebook.com/marketplace/item/77/"}, FB)
+        self.assertTrue(scout.eligibility(l, FB)[0], scout.eligibility(l, FB))
+        self.assertIn("lokalizacja (stan)", scout.missing_info(l, FB)[1])
+
+    def test_record_from_stdin(self):
+        import json, os, subprocess, tempfile
+        d = tempfile.mkdtemp()
+        env = dict(os.environ, FBS_DATA_DIR=d)
+        rid = json.loads(subprocess.run([sys.executable, str(HERE / "scout.py"), "begin"], env=env, capture_output=True,
+                                        text=True, check=True).stdout)["run_id"]
+        payload = {"q": "test", "results": 1, "credits": 2, "raw": [
+            {"url": "https://www.facebook.com/marketplace/item/5/", "title": "2019 Harley-Davidson Fat Boy 114",
+             "description": "2019 Harley-Davidson Fat Boy 114 - $10,500, Used, in Joliet, Illinois."}]}
+        r = subprocess.run([sys.executable, str(HERE / "scout.py"), "record", rid, "-"], env=env, input=json.dumps(payload),
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        run = json.loads((Path(d) / "runs" / f"{rid}.json").read_text())
+        self.assertEqual(run["listings"][0]["id"], "fb-5")
+
+
 if __name__ == "__main__":
     unittest.main()

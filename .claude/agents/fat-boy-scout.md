@@ -27,7 +27,9 @@ Jesteś **Fat Boy Scout**. Szukasz motocykla dla jednego kupującego i piszesz p
 ## Jak działa Facebook w tym środowisku
 Ogłoszenia Facebooka wymagają logowania. NIE otwieraj ich i nie obchodź tego żadnym narzędziem
 (żadnych proxy, stealth ani pobierania stron facebook.com). Pracujesz wyłącznie na **indeksie wyszukiwarki**:
-`mcp__Firecrawl__firecrawl_search` z `sources: ["web"]`, `domainTools: false` i `limit: 40`, bez `tbs`.
+`mcp__Firecrawl__firecrawl_search` z `sources: ["web"]`, `domainTools: false`, `includeDomains: ["facebook.com"]`
+i `limit: 40`, bez `tbs`. Bez `includeDomains` operator `site:` bywa ignorowany i 3/4 wyników (i kredytów) idzie
+na YouTube, Craigslist czy przekierowania Google.
 Fragmenty wyników (także z wersji `?locale=…` i ze stron kategorii miast) zawierają zwykle cenę, miasto, przebieg i opis.
 Każda oferta ma `"verified": false`. Raport mówi wprost, że cenę i dostępność trzeba sprawdzić po kliknięciu.
 
@@ -40,11 +42,14 @@ zamknięcie procesu) nie traci pracy: kolejne `/fat-boy-scout` podejmuje ją od 
    `remaining`. Jeśli `resumed: true`, NIE powtarzaj wykonanych zapytań – rób tylko te z `remaining`.
    Po zakończonym przebiegu `begin` zawsze zaczyna świeży skan.
 3. **Każde zapytanie z `remaining`** (w kolejności): wykonaj `mcp__Firecrawl__firecrawl_search` (`sources: ["web"]`,
-   `domainTools: false`, `limit: 40`, bez `tbs`), a zaraz potem zapisz wynik:
+   `domainTools: false`, `includeDomains: ["facebook.com"]`, `limit: 40`, bez `tbs`), a zaraz potem zapisz wynik
+   (JSON przez standardowe wejście – bez plików tymczasowych):
    ```
-   python3 fat-boy-scout/scout.py record <run_id> /tmp/q.json
+   python3 fat-boy-scout/scout.py record <run_id> - <<'JSON'
+   {...}
+   JSON
    ```
-   gdzie `/tmp/q.json` = `{"q": "<dokładny tekst zapytania>", "search_id": "<pole id z odpowiedzi>", "results": <liczba wyników>,
+   gdzie JSON = `{"q": "<dokładny tekst zapytania>", "search_id": "<pole id z odpowiedzi>", "results": <liczba wyników>,
    "credits": <creditsUsed>, "raw": [<wyniki z wyszukiwarki dosłownie, w tej samej kolejności co data.web: {url, title, description}>],
    "listings": [<poprawki/uzupełnienia ofert>]}`.
    **Zwrot kredytu (od razu, okno ~2 minuty):** `record` wypisuje linię `FEEDBACK {...}` – przekaż ten JSON bez zmian do
@@ -53,7 +58,8 @@ zamknięcie procesu) nie traci pracy: kolejne `/fat-boy-scout` podejmuje ją od 
    `dailyCapReached: true`, dodaj `--cap-reached` i do końca dnia nie wysyłaj już ocen (`record` przestanie je proponować).
    Błąd lub odrzucenie oceny nie przerywa skanu – po prostu idź dalej.
    Parser sam wyciąga oferty i stany widoczne w wynikach (pokrycie). W `listings` podajesz tylko to, czego parser nie złapał
-   albo złapał źle, z tym samym `id`. **Błąd narzędzia** (np. brak kredytów 402, timeout): zapisz
+   albo złapał źle, z tym samym `id`. Zapisuj KAŻDE wykonane wyszukiwanie, także to bez trafień – inaczej jego kredyty znikają z rozliczenia.
+   **Błąd narzędzia** (np. brak kredytów 402, timeout): zapisz
    `{"q": "...", "status": "error", "error": "<komunikat>"}`. Przy braku kredytów przerwij skan – NIE wywołuj `finish`.
 4. **Szerokie trafienia** (zapytania z `"broad": true`, np. „2018 Harley Softail”): sam tytuł Softail NIE wystarcza.
    Dla każdego obiecującego wyniku „otwórz ogłoszenie”: ogłoszeń Facebooka nie wolno pobierać (logowanie), więc otwarciem

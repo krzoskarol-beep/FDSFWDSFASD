@@ -45,6 +45,16 @@ def haversine_mi(a: tuple, b: tuple) -> float:
     return 3958.8 * 2 * math.asin(math.sqrt(h))
 
 
+CA_PROVINCES = {"alberta", "british columbia", "manitoba", "new brunswick", "newfoundland and labrador", "nova scotia",
+                "ontario", "prince edward island", "quebec", "québec", "saskatchewan", "yukon", "northwest territories",
+                "nunavut", "ab", "bc", "mb", "nb", "nl", "ns", "on", "pe", "qc", "sk", "yt", "nt", "nu"}
+
+
+def is_non_us_region(name: str | None) -> bool:
+    """Prowincja kanadyjska (pełna nazwa lub skrót) – oferta spoza USA."""
+    return bool(name) and name.strip().lower() in CA_PROVINCES and not state_code(name)
+
+
 def state_code(name: str | None) -> str | None:
     if not name:
         return None

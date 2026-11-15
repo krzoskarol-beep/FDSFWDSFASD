@@ -194,8 +194,11 @@ def eligibility(l: dict, config: dict) -> tuple[bool, str]:
     price = l.get("price")
     if price is not None and price > config["max_price_usd"]:
         return False, f"cena > {fmt_int(config['max_price_usd'])} USD"
+    if l.get("non_us"):
+        return False, f"poza USA ({l.get('region_raw') or l.get('city') or 'waluta inna niż USD'})"
     allowed = config["us_states"] if config.get("scope") == "usa" else config["states_priority"]
-    if l.get("state") not in allowed:
+    if l.get("state") not in allowed and not (l.get("state") is None and config.get("scope") == "usa"):
+        # przy zasięgu „cała USA” brak stanu nie odrzuca oferty – trafia do „Do sprawdzenia” z brakiem lokalizacji
         return False, f"poza regionem ({l.get('state') or 'stan nieznany'})"
     cat = l.get("category")
     rules = config["categories"].get(cat)
@@ -282,6 +285,8 @@ def missing_info(l: dict, config: dict) -> tuple[list[str], list[str]]:
         known.append(f"przebieg {fmt_miles(l['miles'])}")
     if l.get("state"):
         known.append(", ".join(x for x in (l.get("city"), l.get("state")) if x))
+    else:
+        missing.append("lokalizacja (stan)" + (f" – w ogłoszeniu tylko „{l['city']}”" if l.get("city") else ""))
     if not is_direct_link(l.get("url"), l):
         missing.append("bezpośredni link (jest tylko strona wyników)" if not l.get("link_is_other_listing")
                        else "bezpośredni link (obecny link prowadzi do ogłoszenia innego motocykla)")
@@ -1238,8 +1243,11 @@ def parse_snippet(text: str, url: str | None = None) -> list[dict]:
     # A: „2018 Harley-Davidson Fat Boy - $9995, Used, in Ormond Beach, Florida.”
     for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) - " + PRICE_RE +
                          r",(?: Used,)? in (?P<city>[A-Z][\w .'-]+?), (?P<state>[A-Z][a-zA-Z ]+?)[.\s]", text, re.I):
-        out.append({"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
-                    "city": m.group("city").strip(), "state": geo.state_code(m.group("state"))})
+        o = {"model": m.group("title").strip(), "year": int(m.group("year")), "price": _num(m.group("price")),
+             "city": m.group("city").strip(), "state": geo.state_code(m.group("state"))}
+        if geo.is_non_us_region(m.group("state")):
+            o.update(non_us=True, region_raw=m.group("state").strip())
+        out.append(o)
     # B: „2018 Harley-Davidson fat boy 114 flfbs for sale - Used - $10,500 in Rathdrum. ... 1K miles. Rathdrum, ID”
     for m in re.finditer(r"(?P<title>(?P<year>20\d\d)[^\n]{0,60}?fat\s?boy[^\n]{0,40}?) for sale - Used(?: - [\w ]+?)? - "
                          + PRICE_RE + r"(?P<rest>.{0,160})", text, re.I):
@@ -1270,8 +1278,18 @@ def parse_snippet(text: str, url: str | None = None) -> list[dict]:
                                          r"financing|trades? welcome", text, re.I):
             o["seller"] = "dealer"
         iid = item_id(url or "")
-        o["id"] = iid if iid.startswith("fb-") and len(out) == 1 and text.lstrip().startswith(str(o["year"])) else \
-            f"fb-{(o.get('city') or 'x').lower().replace(' ', '')}-{(o.get('state') or 'xx').lower()}-{o['year']}"
+        if re.search(r"\b(?:CA|C|A|AU|MX)\$|€|£", text):
+            o["non_us"] = True   # cena w walucie innej niż USD – ogłoszenie spoza USA
+        if iid.startswith("fb-") and len(out) == 1 and text.lstrip().startswith(str(o["year"])):
+            o["id"] = iid
+        else:
+            # oferta widoczna na cudzej stronie (sekcja „related”) – ID z cech; cena odróżnia motocykle bez miasta i stanu
+            parts = [(o.get("city") or "").lower().replace(" ", ""), (o.get("state") or "").lower(), str(o["year"])]
+            if not (o.get("city") and o.get("state")):
+                parts.append(str(o.get("price") or "bezceny"))
+            o["id"] = "fb-" + "-".join(x for x in parts if x)
+            if iid.startswith("fb-"):
+                o["link_is_other_listing"] = True
     return out
 
 
@@ -1606,7 +1624,7 @@ def cmd_record(args) -> int:
     if not run or run.get("status") != "in_progress":
         print(f"Brak otwartego przebiegu {args.run_id}.", file=sys.stderr)
         return 1
-    payload = load_json(Path(args.payload))
+    payload = json.load(sys.stdin) if args.payload == "-" else load_json(Path(args.payload))
     feedback = []
     for p in (payload if isinstance(payload, list) else [payload]):
         run = record_query(run, p, load_json(CONFIG_PATH))
@@ -1709,7 +1727,7 @@ def main(argv=None) -> int:
     bg.set_defaults(func=cmd_begin)
     rd = sub.add_parser("record", help="zapisz jedno zakończone zapytanie (JSON: q, status, raw, listings, credits)")
     rd.add_argument("run_id")
-    rd.add_argument("payload")
+    rd.add_argument("payload", help="plik JSON albo „-” (JSON ze standardowego wejścia, bez pliku tymczasowego)")
     rd.set_defaults(func=cmd_record)
     rf = sub.add_parser("refund", help="zapisz zwrot kredytów za ocenę wyników (firecrawl_search_feedback)")
     rf.add_argument("run_id")

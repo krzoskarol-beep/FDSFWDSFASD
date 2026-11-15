@@ -374,8 +374,8 @@
         "fb-1345685457350497",
         "fb-1858404885794960",
         "fb-1957423324982213",
-        "fb-brooklyn-xx-2020",
-        "fb-x-xx-2021"
+        "fb-brooklyn-2020-27000",
+        "fb-2021-22000"
       ],
       "result_states": [
         "AL",
@@ -406,7 +406,9 @@
       "category": "main",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1793799569127594/",
-      "id": "fb-1793799569127594"
+      "id": "fb-1793799569127594",
+      "non_us": true,
+      "region_raw": "Manitoba"
     },
     {
       "model": "2018 Harley-Davidson Fat Boy",
@@ -732,7 +734,8 @@
       "category": "main",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1620401672569465/?locale=te_IN",
-      "id": "fb-brooklyn-xx-2020"
+      "id": "fb-brooklyn-2020-27000",
+      "link_is_other_listing": true
     },
     {
       "model": "2021 Harley-Davidson Fat Boy",
@@ -746,12 +749,15 @@
       "category": "main",
       "verified": false,
       "url": "https://www.facebook.com/marketplace/item/1620401672569465/?locale=te_IN",
-      "id": "fb-x-xx-2021"
+      "id": "fb-2021-22000",
+      "link_is_other_listing": true
     }
   ],
   "watchlist_unpriced": [],
-  "coverage": [],
-  "credits_used": 16,
+  "coverage": [
+    "Zapytanie o roczniki 2023–2024 wykonano w przerwanej sesji (8 kredytów), ale wyniku nie zapisano – zostanie powtórzone przy wznowieniu."
+  ],
+  "credits_used": 24,
   "started_at": "2026-11-15T00:37:20",
   "credits_refunded": 1
 }
