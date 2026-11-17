@@ -1,0 +1,26 @@
+﻿złącze;sekcja;s [mm];x [mm];rozciąganie PRZED [kN];rozciąganie PO [kN];przypadek (po)
+skrzyżowanie;A;340;-125;3.21;3.74;koło x=+45, przy przyczepie
+skrzyżowanie;A;340;+45;5.12;5.12;koło x=+45, przy zawiasie (A)
+skrzyżowanie;A;340;+125;9.51;5.59;koło x=+45, przy przyczepie
+skrzyżowanie;A;340;+305;1.94;3.71;stopa x=+305, przy zawiasie (A)
+skrzyżowanie;A;340;+465;1.94;0.08;stopa x=+305, środek A
+skrzyżowanie;A;830;-125;3.51;4.45;koło x=+45, przy zawiasie (A)
+skrzyżowanie;A;830;+45;4.12;4.12;koło x=+45, przy przyczepie
+skrzyżowanie;A;830;+125;10.45;6.63;koło x=+45, przy zawiasie (A)
+skrzyżowanie;A;830;+305;1.54;0.0;
+skrzyżowanie;A;830;+465;1.54;2.59;stopa x=+305, przy zawiasie (A)
+skrzyżowanie;B;260;-125;2.84;5.08;koło x=+45, przy zawiasie (B)
+skrzyżowanie;B;260;+45;3.43;0.0;
+skrzyżowanie;B;260;+125;14.08;7.54;koło x=+45, przy zawiasie (B)
+skrzyżowanie;B;260;+465;0.0;2.31;stopa x=+305, przy zawiasie (B)
+skrzyżowanie;B;650;-125;0.0;0.22;stopa x=+465, przy zawiasie (B)
+nity listwy T;B;650;-125;5.77;0.0;
+nity listwy T;B;650;-45;0.53;0.0;
+skrzyżowanie;B;650;-45;0.0;3.18;koło x=+45, środek B
+nity listwy T;B;650;+45;3.94;0.0;
+skrzyżowanie;B;650;+45;0.0;6.08;koło x=+45, przy zawiasie (B)
+nity listwy T;B;650;+125;4.05;0.0;
+skrzyżowanie;B;650;+305;0.0;2.74;stopa x=+305, przy zawiasie (B)
+nity listwy T;B;650;+305;4.28;0.0;
+skrzyżowanie;B;650;+465;0.0;0.31;stopa x=+305, środek B
+nity listwy T;B;650;+465;2.15;0.0;

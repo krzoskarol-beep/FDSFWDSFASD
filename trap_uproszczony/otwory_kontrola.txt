@@ -1,0 +1,6 @@
+otworów: 96, złączy: 90
+otwory bez śruby: brak
+śruby bez otworu: brak
+otwory wspólne dla kilku części (wiercić razem / zgrać): 82
+śruby przechodzące przez materiał (zły otwór): brak
+kolizje po złożeniu do jazdy (sekcja A ↔ B): brak

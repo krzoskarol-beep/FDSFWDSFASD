@@ -1,0 +1,19 @@
+﻿nr;nazwa;szt.;materiał;wymiar;masa szt. [kg];otwory;gdzie
+L1;"Rura jezdna zewnętrzna sekcji A – OBIE IDENTYCZNE (lewa i prawa; prawa niesie płytę S sprężyny, w lewej te 2 otwory zaślepione śrubą)";2;S355J2H;RHS 100×40×2 S355J2H, L = 1250;5.34;22;x = ±125
+L2;Rura jezdna wewnętrzna sekcji A;2;S355J2H;RHS 100×40×2 S355J2H, L = 1250;5.34;4;x = ±45
+L3;Rura jezdna zewnętrzna sekcji B (zawias Z, skos przy ziemi);2;S355J2H;RHS 100×40×2 S355J2H, L = 1250, skos 516;4.2;12;x = ±125
+L4;Rura jezdna wewnętrzna sekcji B (skos przy ziemi);2;S355J2H;RHS 100×40×2 S355J2H, L = 1250, skos 516;4.2;4;x = ±45
+C1;Podłużnica chodnika sekcji A (z płytą sprężyny S);1;S235JRH;RHS 100×40×1,5 S235JRH, L = 1250;4.03;8;x = +305
+C2;Podłużnica krawędzi sekcji A (lewa krawędź, z płytą Z zawiasu chodnika);1;S235JRH;RHS 100×40×1,5 S235JRH, L = 1250;4.03;8;x = +465
+C3;"Podłużnica chodnika / krawędzi sekcji B (skos; obie identyczne – na krawędzi płyta Z, w drugiej zaślepka)";2;S235JRH;RHS 100×40×1,5 S235JRH, L = 1250, skos 516;3.18;8;x = +305, +465
+P;Poprzeczka – rura NA PŁASKO (40 mm wysokości), ścianka 3 mm;4;S235JRH;RHS 60×40×3 S235JRH (na płasko), L = 630;2.79;12;A: s = [340.0, 830.0], B: s = [260.0, 650.0]
+G1;Prowadnica koła sekcji A (na siatce nad rurą ±125);2;S235;kątownik 40×40×3, L = 1095;1.99;5;
+G2;Prowadnica koła sekcji B;2;S235;kątownik 40×40×3, L = 715;1.3;4;
+WL-P;Wysięgnik prawy lamp i tablicy (część PRZYCZEPY);1;S235;kątownik 40×40×4, L = 345 + płyta 320×370×3;2.4;6;"tablica dwurzędowa 305×214 (300–514 mm nad ziemią), lampa 530–600, odblask 525–655; płyta 345 mm za belką"
+WL-L;Wysięgnik lewy lamp (część PRZYCZEPY);1;S235;kątownik 40×40×4, L = 345 + płyta 140×230×3;1.6;4;"lampa 400–470 mm, odblask 255–385 mm nad ziemią; x +530…+670 (poza obrysem trapu)"
+O;Oparcie chodnika przy przyczepie (część PRZYCZEPY);2;S235;kątownik 100×100×10, L = 40 + guma EPDM 5 mm;0.6;2;"pod końcami rur C1 i C2 (x +305, +465); rura tylko się opiera – DOPASUJ wysokość do belki"
+H;Płyta zawiasu przy przyczepie;2;S235;płaskownik 80×6, L = 200;0.75;4;1 na każdą rurę L1, po stronie zewnętrznej
+Z;Płyta zawiasu środkowego (A i B – ta sama);6;S235;płaskownik 100×6, L = 170;0.8;3;1 na każdą rurę L1 i L3 + 1 na C2 i C3 krawędzi chodnika (x +465), po stronie zewnętrznej
+S;Płyta zaczepu sprężyny (oczko Ø13);2;S235;płaskownik 80×8, L = 150;0.75;3;lewa na C1, prawa na prawej L1
+K;Wspornik na belce przyczepy (oczko sprężyny Ø13);3;S235;kątownik 100×100×10, L = 130;1.94;5;"2 × zawias (x ±152…162; prawy trzyma też sprężynę), 1 × sprężyna lewa (x +329…339)"
+SIATKA;Siatka stalowa cięto-ciągniona ocynk (pokład);2;stal ocynk;630 × 1250 (LWD w poprzek);3.15;0;z 1 arkusza 1250×2500
