@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pozycja: Polska</string>
+    <string name="subtitle">Ustawia lokalizację telefonu w wybranym miejscu w Polsce</string>
+
+    <string name="status_off">Wyłączone</string>
+    <string name="status_off_detail">Telefon pokazuje prawdziwą lokalizację</string>
+    <string name="status_on">Jesteś w: %1$s</string>
+
+    <string name="setup_title">Jednorazowa konfiguracja</string>
+    <string name="setup_steps">1. Włącz Opcje programisty: Ustawienia → Informacje o telefonie → stuknij 7 razy „Numer kompilacji”.\n2. W Opcjach programisty, w części „Debugowanie”, znajdź „Wybierz aplikację do pozorowania lokalizacji” (po angielsku „Select mock location app”) i wybierz „Pozycja: Polska”. To nie jest „Select debug app”.\n3. Wróć tutaj i stuknij „Włącz”.</string>
+    <string name="setup_open_dev">Otwórz Opcje programisty</string>
+    <string name="setup_open_about">Informacje o telefonie</string>
+    <string name="setup_no_dev">Opcje programisty są wyłączone. Najpierw wykonaj krok 1.</string>
+
+    <string name="adb_title">Nie ma tej opcji w Opcjach programisty?</string>
+    <string name="adb_steps">Niektórzy producenci ją ukrywają. Zgodę da się wtedy nadać raz z komputera (zostaje po restarcie telefonu):\n1. W Opcjach programisty włącz „Debugowanie USB” (USB debugging).\n2. Podłącz telefon kablem do komputera z narzędziem adb (Android SDK Platform-Tools) i zezwól na debugowanie na ekranie telefonu.\n3. Na komputerze wpisz polecenie:</string>
+    <string name="adb_copy">Kopiuj polecenie</string>
+    <string name="adb_copied">Skopiowano polecenie</string>
+
+    <string name="label_place">MIEJSCE</string>
+    <string name="label_custom">WŁASNE WSPÓŁRZĘDNE</string>
+    <string name="custom_hint">np. 52.2297, 21.0122</string>
+    <string name="custom_help">Skopiuj współrzędne z Map Google: przytrzymaj palec na mapie i stuknij liczby u góry.</string>
+    <string name="custom_set">Ustaw</string>
+    <string name="custom_name">Własne miejsce</string>
+    <string name="custom_bad">Nie rozpoznaję współrzędnych. Wpisz np. 52.2297, 21.0122</string>
+    <string name="custom_outside">Uwaga: ten punkt leży poza Polską.</string>
+
+    <string name="btn_start">Włącz</string>
+    <string name="btn_stop">Wyłącz</string>
+
+    <string name="label_check">SPRAWDZENIE</string>
+    <string name="btn_check">Sprawdź, co widzi telefon</string>
+    <string name="check_wait">Pytam system o pozycję…</string>
+    <string name="check_result">Telefon widzi: %1$s\n%2$s</string>
+    <string name="check_in_pl">To jest w Polsce ✓</string>
+    <string name="check_not_pl">To NIE jest w Polsce</string>
+    <string name="check_none">System nie podał pozycji. Włącz lokalizację w telefonie.</string>
+    <string name="check_denied">Bez zgody na lokalizację nie da się sprawdzić pozycji.</string>
+
+    <string name="note">Zmienia lokalizację GPS, którą widzą aplikacje (mapy, pogoda, aplikacje z ofertami w Polsce). Nie zmienia adresu IP — serwisy, które sprawdzają kraj po IP (np. streaming), wymagają VPN. Niektóre aplikacje (banki, gry) wykrywają pozorowaną lokalizację i mogą jej nie przyjąć.</string>
+
+    <string name="err_not_allowed">Aplikacja nie jest wybrana jako „aplikacja do pozorowania lokalizacji”. Wykonaj konfigurację powyżej.</string>
+    <string name="err_generic">Nie udało się włączyć: %1$s</string>
+
+    <string name="channel_name">Pozycja w Polsce</string>
+    <string name="channel_desc">Widoczne, gdy telefon pokazuje pozycję wybraną w aplikacji.</string>
+    <string name="notif_title">Lokalizacja: %1$s</string>
+    <string name="notif_stop">Wyłącz</string>
+</resources>

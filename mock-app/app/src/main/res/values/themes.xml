@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Biel i czerwień flagi: jasne, ciepłe tło, karmazynowy akcent. -->
+    <color name="bg">#F5F3EF</color>
+    <color name="panel">#FFFFFF</color>
+    <color name="line">#E3DED6</color>
+    <color name="text">#1C1B1F</color>
+    <color name="text_dim">#5E5A57</color>
+    <color name="accent">#D4213D</color>
+    <color name="accent_dark">#A8172E</color>
+    <color name="accent_soft">#FCE8EB</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="ok">#1E7F43</color>
+    <color name="warn_soft">#FFF4DC</color>
+    <color name="warn_line">#EFCB7A</color>
+    <color name="off">#9C958E</color>
+
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorControlActivated">@color/accent</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/text_dim</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="Text.Dim">
+        <item name="android:textColor">@color/text_dim</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Text.Label">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_dim</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Panel">
+        <item name="android:background">@drawable/panel_bg</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">18dp</item>
+    </style>
+
+    <style name="Btn" parent="android:Widget.Material.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Btn.Primary">
+        <item name="android:background">@drawable/btn_primary</item>
+        <item name="android:textColor">@color/on_accent</item>
+        <item name="android:minHeight">60dp</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="Btn.Outlined">
+        <item name="android:background">@drawable/btn_outlined</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+</resources>
