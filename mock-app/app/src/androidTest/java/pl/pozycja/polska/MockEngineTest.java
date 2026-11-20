@@ -9,11 +9,14 @@ import static org.junit.Assert.fail;
 import android.Manifest;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Looper;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import android.os.SystemClock;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -27,6 +30,9 @@ import org.junit.runner.RunWith;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Prawdziwa podmiana pozycji na urządzeniu: zgoda „aplikacja do pozorowania lokalizacji”
@@ -63,31 +69,60 @@ public class MockEngineTest {
         }
     }
 
-    @SuppressWarnings({"MissingPermission", "deprecation"})
-    @Test public void systemReportsWarsaw() throws IOException {
+    /**
+     * Pozycję odczytujemy tak jak inne aplikacje: nasłuchując dostawcy GPS przy otwartym
+     * ekranie. Android 10+ nie podaje pozycji procesowi w tle bez uprawnienia „zawsze”,
+     * więc ekran aplikacji musi być na wierzchu (jak przy przycisku „Sprawdź”).
+     */
+    @SuppressWarnings("MissingPermission")
+    @Test public void systemReportsWarsaw() throws Exception {
         shell("appops set " + ctx.getPackageName() + " android:mock_location allow");
         assertTrue(MockEngine.isAllowed(ctx));
 
-        engine.start();
-        assertTrue(engine.isStarted());
-        Places.Place w = Places.byName("Warszawa");
-        engine.push(w.lat, w.lon, 4f);
-        SystemClock.sleep(500);
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            engine.start();
+            assertTrue(engine.isStarted());
+            Places.Place w = Places.byName("Warszawa");
 
-        LocationManager lm = ctx.getSystemService(LocationManager.class);
-        Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        assertNotNull("system nie zwrócił pozycji GPS", l);
-        assertEquals(w.lat, l.getLatitude(), 1e-6);
-        assertEquals(w.lon, l.getLongitude(), 1e-6);
-        assertTrue(Coords.inPoland(l.getLatitude(), l.getLongitude()));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            assertTrue(l.isMock());
-        } else {
-            assertTrue(l.isFromMockProvider());
+            LocationManager lm = ctx.getSystemService(LocationManager.class);
+            AtomicReference<Location> got = new AtomicReference<>();
+            CountDownLatch latch = new CountDownLatch(1);
+            LocationListener listener = new LocationListener() {
+                @Override public void onLocationChanged(Location l) {
+                    got.compareAndSet(null, l);
+                    latch.countDown();
+                }
+                @Override public void onStatusChanged(String p, int s, Bundle b) { }
+                @Override public void onProviderEnabled(String p) { }
+                @Override public void onProviderDisabled(String p) { }
+            };
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener,
+                    Looper.getMainLooper());
+            try {
+                // Jak usługa: wysyłamy pozycję co chwilę, aż system ją dostarczy.
+                for (int i = 0; i < 20 && latch.getCount() > 0; i++) {
+                    engine.push(w.lat, w.lon, 4f);
+                    latch.await(500, TimeUnit.MILLISECONDS);
+                }
+            } finally {
+                lm.removeUpdates(listener);
+            }
+
+            Location l = got.get();
+            assertNotNull("system nie dostarczył pozycji GPS", l);
+            assertEquals(w.lat, l.getLatitude(), 1e-6);
+            assertEquals(w.lon, l.getLongitude(), 1e-6);
+            assertTrue(Coords.inPoland(l.getLatitude(), l.getLongitude()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                assertTrue(l.isMock());
+            } else {
+                //noinspection deprecation
+                assertTrue(l.isFromMockProvider());
+            }
+
+            engine.stop();
+            assertFalse(engine.isStarted());
         }
-
-        engine.stop();
-        assertFalse(engine.isStarted());
     }
 
     private static void shell(String cmd) throws IOException {
