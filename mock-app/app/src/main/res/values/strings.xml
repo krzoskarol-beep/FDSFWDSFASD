@@ -8,10 +8,15 @@
     <string name="status_on">Jesteś w: %1$s</string>
 
     <string name="setup_title">Jednorazowa konfiguracja</string>
-    <string name="setup_steps">1. Włącz Opcje programisty: Ustawienia → Informacje o telefonie → stuknij 7 razy „Numer kompilacji”.\n2. W Opcjach programisty znajdź „Wybierz aplikację do pozorowania lokalizacji” i wybierz „Pozycja: Polska”.\n3. Wróć tutaj i stuknij „Włącz”.</string>
+    <string name="setup_steps">1. Włącz Opcje programisty: Ustawienia → Informacje o telefonie → stuknij 7 razy „Numer kompilacji”.\n2. W Opcjach programisty, w części „Debugowanie”, znajdź „Wybierz aplikację do pozorowania lokalizacji” (po angielsku „Select mock location app”) i wybierz „Pozycja: Polska”. To nie jest „Select debug app”.\n3. Wróć tutaj i stuknij „Włącz”.</string>
     <string name="setup_open_dev">Otwórz Opcje programisty</string>
     <string name="setup_open_about">Informacje o telefonie</string>
     <string name="setup_no_dev">Opcje programisty są wyłączone. Najpierw wykonaj krok 1.</string>
+
+    <string name="adb_title">Nie ma tej opcji w Opcjach programisty?</string>
+    <string name="adb_steps">Niektórzy producenci ją ukrywają. Zgodę da się wtedy nadać raz z komputera (zostaje po restarcie telefonu):\n1. W Opcjach programisty włącz „Debugowanie USB” (USB debugging).\n2. Podłącz telefon kablem do komputera z narzędziem adb (Android SDK Platform-Tools) i zezwól na debugowanie na ekranie telefonu.\n3. Na komputerze wpisz polecenie:</string>
+    <string name="adb_copy">Kopiuj polecenie</string>
+    <string name="adb_copied">Skopiowano polecenie</string>
 
     <string name="label_place">MIEJSCE</string>
     <string name="label_custom">WŁASNE WSPÓŁRZĘDNE</string>

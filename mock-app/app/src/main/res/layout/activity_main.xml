@@ -3,7 +3,8 @@
     android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -143,6 +144,49 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/setup_open_about" />
+
+            <!-- Gdy producent ukrył wybór aplikacji: zgoda jednym poleceniem z komputera -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="18dp"
+                android:background="@color/warn_line" />
+
+            <TextView
+                style="@style/Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/adb_title"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/adb_steps"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/adbCommand"
+                style="@style/Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/panel_bg"
+                android:fontFamily="monospace"
+                android:padding="12dp"
+                android:textIsSelectable="true"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/copyAdb"
+                style="@style/Btn.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/adb_copy" />
         </LinearLayout>
 
         <!-- Wybór miejsca -->

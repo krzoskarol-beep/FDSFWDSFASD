@@ -2,6 +2,8 @@ package pl.pozycja.polska;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -75,6 +77,13 @@ public class MainActivity extends Activity {
         findViewById(R.id.openAbout).setOnClickListener(v ->
                 openSettings(Settings.ACTION_DEVICE_INFO_SETTINGS));
         findViewById(R.id.customSet).setOnClickListener(v -> applyCustom());
+        String adb = adbCommand(getPackageName());
+        ((TextView) findViewById(R.id.adbCommand)).setText(adb);
+        findViewById(R.id.copyAdb).setOnClickListener(v -> {
+            ClipboardManager cm = getSystemService(ClipboardManager.class);
+            if (cm != null) cm.setPrimaryClip(ClipData.newPlainText("adb", adb));
+            Toast.makeText(this, R.string.adb_copied, Toast.LENGTH_SHORT).show();
+        });
         customInput.setOnEditorActionListener((v, actionId, e) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 applyCustom();
@@ -124,6 +133,11 @@ public class MainActivity extends Activity {
             row.addView(chip, lp);
             chips.add(chip);
         }
+    }
+
+    /** Polecenie adb nadające zgodę na pozorowanie lokalizacji (jak wybór w Opcjach programisty). */
+    static String adbCommand(String packageName) {
+        return "adb shell appops set " + packageName + " android:mock_location allow";
     }
 
     /** Przycisk-kafelek miasta (używany też przez test zrzutu ekranu). */

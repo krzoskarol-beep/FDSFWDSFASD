@@ -23,6 +23,19 @@ Korzysta z oficjalnego mechanizmu Androida: **aplikacji do pozorowania lokalizac
 2. Opcje programisty → „Wybierz aplikację do pozorowania lokalizacji” → „Pozycja: Polska”.
 3. Otwórz aplikację, wybierz miasto i stuknij „Włącz”.
 
+Uwaga: to nie jest „Wybierz aplikację do debugowania” (Select debug app).
+
+### Gdy telefon nie ma tej opcji
+
+Część producentów ukrywa wybór aplikacji do pozorowania lokalizacji. Zgodę nadaje się wtedy
+raz z komputera (zostaje po restarcie): włącz „Debugowanie USB”, podłącz telefon i wpisz
+
+```bash
+adb shell appops set pl.pozycja.polska android:mock_location allow
+```
+
+Aplikacja pokazuje to polecenie z przyciskiem „Kopiuj polecenie”.
+
 ## Ograniczenia
 
 - Zmienia **lokalizację GPS**, a nie adres IP. Serwisy, które ustalają kraj po IP
