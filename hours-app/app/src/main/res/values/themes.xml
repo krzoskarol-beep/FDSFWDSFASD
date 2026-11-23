@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Karta czasu pracy: papierowe tło, atrament, zieleń pieniędzy i czerwień „stop”. -->
+    <color name="bg">#F3F0E8</color>
+    <color name="panel">#FFFFFF</color>
+    <color name="line">#E3DED1</color>
+    <color name="chip">#ECE7DA</color>
+    <color name="ink">#1D232E</color>
+    <color name="ink_dim">#6B7280</color>
+    <color name="green">#17805A</color>
+    <color name="red">#C2412D</color>
+    <color name="on_color">#FFFFFF</color>
+
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorAccent">@color/green</item>
+        <item name="android:colorPrimary">@color/ink</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink_dim</item>
+        <item name="android:alertDialogTheme">@style/DialogTheme</item>
+    </style>
+
+    <style name="DialogTheme" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/green</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:textColor">@color/ink</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Text.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/ink_dim</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Hero">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Num">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="Panel">
+        <item name="android:background">@drawable/panel_bg</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">18dp</item>
+    </style>
+
+    <style name="Btn" parent="android:Widget.Material.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Btn.Ghost">
+        <item name="android:background">@drawable/btn_ghost</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+
+    <style name="Btn.Dark">
+        <item name="android:background">@drawable/btn_dark</item>
+        <item name="android:textColor">@color/on_color</item>
+    </style>
+</resources>

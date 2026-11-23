@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Godziny Pracy</string>
+    <string name="header_sub">Clock In · Clock Out · wypłata</string>
+    <string name="clock_in">Clock In</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="status_off">Nie jesteś w pracy</string>
+    <string name="earned_label">zarobione na tej zmianie</string>
+    <string name="week_title">TYDZIEŃ</string>
+    <string name="this_week">Wróć do bieżącego tygodnia</string>
+    <string name="hours_label">GODZINY</string>
+    <string name="pay_label">DO WYPŁATY</string>
+    <string name="entries_title">WPISY</string>
+    <string name="no_entries">Brak wpisów w tym tygodniu. Naciśnij Clock In albo dodaj wpis ręcznie.</string>
+    <string name="add_entry">+ Dodaj wpis ręcznie</string>
+    <string name="report">Raport tygodnia</string>
+    <string name="prev_week">Poprzedni tydzień</string>
+    <string name="next_week">Następny tydzień</string>
+    <string name="settings">Ustawienia stawki</string>
+    <string name="date">Data</string>
+    <string name="start">Początek</string>
+    <string name="end">Koniec</string>
+    <string name="rate_label">Stawka godzinowa (USD)</string>
+    <string name="week_start_label">Tydzień zaczyna się w</string>
+    <string name="monday">poniedziałek</string>
+    <string name="sunday">niedzielę</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ikona: tarcza zegara z dolarem, zielona na papierowym tle -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#F3F0E8"
+        android:pathData="M20,8h68a12,12 0,0 1,12 12v68a12,12 0,0 1,-12 12h-68a12,12 0,0 1,-12 -12v-68a12,12 0,0 1,12 -12z" />
+    <path android:fillColor="#17805A"
+        android:pathData="M54,22a32,32 0,1 1,0 64a32,32 0,1 1,0 -64z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M54,29a25,25 0,1 1,0 50a25,25 0,1 1,0 -50z" />
+    <path android:fillColor="#1D232E"
+        android:pathData="M52,36h4v18.2l11,6.4l-2,3.4l-13,-7.6z" />
+    <path android:fillColor="#C2412D"
+        android:pathData="M54,51a3,3 0,1 1,0 6a3,3 0,1 1,0 -6z" />
+</vector>
