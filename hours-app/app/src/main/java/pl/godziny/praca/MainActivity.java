@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import java.util.TimeZone;
  */
 public class MainActivity extends Activity {
 
+    private static final String K_WEEK = "week_start";
+
     private EntryStore store;
     private TimeZone tz;
     private long weekStart;
@@ -54,12 +57,21 @@ public class MainActivity extends Activity {
     };
 
     @Override
+    protected void attachBaseContext(Context base) {
+        // Motyw wybrany w aplikacji (jak w telefonie / jasny / ciemny), patrz ThemePrefs.
+        super.attachBaseContext(ThemePrefs.wrap(base));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         store = new EntryStore(this);
         tz = TimeZone.getDefault();
         weekStart = currentWeekStart();
+        if (savedInstanceState != null) {
+            weekStart = savedInstanceState.getLong(K_WEEK, weekStart);   // np. po zmianie motywu
+        }
 
         // Android 15+ rysuje pod paskami systemu: odsuń treść o ich wysokość.
         View root = findViewById(R.id.root);
@@ -92,6 +104,11 @@ public class MainActivity extends Activity {
         thisWeek.setOnClickListener(v -> { weekStart = currentWeekStart(); refresh(); });
         findViewById(R.id.addEntry).setOnClickListener(v -> showEntryDialog(null));
         findViewById(R.id.reportBtn).setOnClickListener(v -> showReport());
+    }
+
+    @Override protected void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putLong(K_WEEK, weekStart);
     }
 
     @Override protected void onResume() {
@@ -423,6 +440,10 @@ public class MainActivity extends Activity {
         input.setText(WorkMath.rateForInput(store.rateCents()));
         input.setSelection(input.getText().length());
         group.check(store.firstDay() == Calendar.SUNDAY ? R.id.startSun : R.id.startMon);
+        RadioGroup themeGroup = v.findViewById(R.id.themeMode);
+        int theme = ThemePrefs.get(this);
+        themeGroup.check(theme == ThemePrefs.MODE_DARK ? R.id.themeDark
+                : theme == ThemePrefs.MODE_LIGHT ? R.id.themeLight : R.id.themeSystem);
 
         AlertDialog dlg = new AlertDialog.Builder(this)
                 .setTitle("Ustawienia")
@@ -441,7 +462,15 @@ public class MainActivity extends Activity {
             int first = group.getCheckedRadioButtonId() == R.id.startSun ? Calendar.SUNDAY : Calendar.MONDAY;
             store.setFirstDay(first);
             weekStart = WorkMath.weekStart(weekStart, first, tz);
+            int id = themeGroup.getCheckedRadioButtonId();
+            int chosen = id == R.id.themeDark ? ThemePrefs.MODE_DARK
+                    : id == R.id.themeLight ? ThemePrefs.MODE_LIGHT : ThemePrefs.MODE_SYSTEM;
             dlg.dismiss();
+            if (chosen != ThemePrefs.get(this)) {
+                ThemePrefs.set(this, chosen);
+                recreate();   // nowy motyw wymaga ponownego utworzenia ekranu
+                return;
+            }
             refresh();
         }));
         dlg.show();

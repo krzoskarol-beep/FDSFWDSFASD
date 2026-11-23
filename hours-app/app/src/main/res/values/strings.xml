@@ -24,4 +24,8 @@
     <string name="week_start_label">Tydzień zaczyna się w</string>
     <string name="monday">poniedziałek</string>
     <string name="sunday">niedzielę</string>
+    <string name="theme_label">Wygląd</string>
+    <string name="theme_system">jak w telefonie</string>
+    <string name="theme_light">jasny</string>
+    <string name="theme_dark">ciemny</string>
 </resources>

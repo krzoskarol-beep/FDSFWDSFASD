@@ -20,7 +20,7 @@ import java.util.TimeZone;
 
 /**
  * Zrzut ekranu do przeglądu wyglądu (nie sprawdza niczego automatycznie): prawdziwy ekran
- * z przykładowym tygodniem i trwającą zmianą.
+ * z przykładowym tygodniem i trwającą zmianą, w motywie jasnym i ciemnym.
  * Uruchomienie: ./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'
  */
 @RunWith(RobolectricTestRunner.class)
@@ -29,6 +29,15 @@ import java.util.TimeZone;
 public class ScreenshotTest {
 
     @Test public void mainScreen() throws Exception {
+        render("godziny.png");
+    }
+
+    @Test @Config(qualifiers = "+night")
+    public void mainScreenDark() throws Exception {
+        render("godziny-ciemny.png");
+    }
+
+    private void render(String fileName) throws Exception {
         Context ctx = ApplicationProvider.getApplicationContext();
         TimeZone tz = TimeZone.getDefault();
         long now = System.currentTimeMillis();
@@ -57,7 +66,7 @@ public class ScreenshotTest {
         File dir = new File(System.getProperty("screenshots.dir", "screenshots"));
         //noinspection ResultOfMethodCallIgnored
         dir.mkdirs();
-        try (FileOutputStream out = new FileOutputStream(new File(dir, "godziny.png"))) {
+        try (FileOutputStream out = new FileOutputStream(new File(dir, fileName))) {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         }
     }

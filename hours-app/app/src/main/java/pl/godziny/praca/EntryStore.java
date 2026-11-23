@@ -12,6 +12,8 @@ public final class EntryStore {
 
     public static final long DEFAULT_RATE_CENTS = 3400; // $34.00/h
 
+    static final String PREFS = "godziny";
+
     private static final String K_ENTRIES = "entries";
     private static final String K_NEXT_ID = "next_id";
     private static final String K_RATE = "rate_cents";
@@ -20,7 +22,7 @@ public final class EntryStore {
     private final SharedPreferences sp;
 
     public EntryStore(Context ctx) {
-        sp = ctx.getSharedPreferences("godziny", Context.MODE_PRIVATE);
+        sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
     public List<Entry> all() {
