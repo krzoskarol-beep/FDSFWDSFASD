@@ -68,6 +68,13 @@
         <item name="android:textColor">@color/ink</item>
     </style>
 
+    <style name="Btn.Ghost.Small">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
     <style name="Btn.Dark">
         <item name="android:background">@drawable/btn_dark</item>
         <item name="android:textColor">@color/on_strong</item>

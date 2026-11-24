@@ -130,4 +130,22 @@ public class WorkMathTest {
         assertNull(WorkMath.validate(one, 7, s + WorkMath.HOUR, s + 2 * WorkMath.HOUR, now, WAW)); // sam siebie
         assertNull(WorkMath.validate(one, -1, s + 8 * WorkMath.HOUR, s + 9 * WorkMath.HOUR, now, WAW)); // styk
     }
+
+    @Test public void adjustShortensAndExtends() {
+        long h = WorkMath.HOUR, m = WorkMath.MINUTE;
+        long s = t(WAW, 2026, 11, 24, 8, 0);
+        long now = s + 12 * h;
+        long[] r = WorkMath.adjust(s, s + 8 * h, -15 * m, now);           // 8:00 -> 7:45
+        assertEquals(s, r[0]);
+        assertEquals(s + 7 * h + 45 * m, r[1]);
+        r = WorkMath.adjust(s, s + 8 * h, h, now);                        // +1 h
+        assertEquals(s + 9 * h, r[1]);
+        assertNull(WorkMath.adjust(s, s + 10 * m, -h, now));              // zostałoby < 0
+        assertNull(WorkMath.adjust(s, now - 10 * m, 15 * m, now));        // koniec w przyszłości
+
+        r = WorkMath.adjust(s, 0, -h, s + 3 * h);                         // trwająca: początek później
+        assertEquals(s + h, r[0]);
+        assertEquals(0, r[1]);
+        assertNull(WorkMath.adjust(s, 0, -h, s + 30 * m));                // odjęłoby więcej niż trwa
+    }
 }

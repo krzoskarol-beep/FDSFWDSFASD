@@ -28,4 +28,10 @@
     <string name="theme_system">jak w telefonie</string>
     <string name="theme_light">jasny</string>
     <string name="theme_dark">ciemny</string>
+    <string name="adjust_label">Odejmij / dodaj czas</string>
+    <string name="minus_60">−1 h</string>
+    <string name="minus_15">−15 min</string>
+    <string name="plus_15">+15 min</string>
+    <string name="plus_60">+1 h</string>
+    <string name="tap_to_edit">Dotknij wpis, aby go zmienić.</string>
 </resources>

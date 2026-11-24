@@ -201,6 +201,7 @@ public class MainActivity extends Activity {
     private void buildList(List<Entry> week, long rate, long now) {
         entryList.removeAllViews();
         emptyMsg.setVisibility(week.isEmpty() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.editHint).setVisibility(week.isEmpty() ? View.GONE : View.VISIBLE);
         SimpleDateFormat hm = fmt("HH:mm");
         SimpleDateFormat dm = fmt("dd.MM");
 
@@ -314,7 +315,8 @@ public class MainActivity extends Activity {
                 start[0] = Math.max(WorkMath.dayStart(now, tz), end[0] - 8 * WorkMath.HOUR);
             }
         }
-        final boolean running = entry != null && entry.isRunning();
+        // Trwająca zmiana: koniec = „teraz”, dopóki nie ustawisz końca (to ją zakończy).
+        final boolean[] running = {entry != null && entry.isRunning()};
 
         View v = getLayoutInflater().inflate(R.layout.dialog_entry, null);
         Button dateBtn = v.findViewById(R.id.dateBtn);
@@ -329,17 +331,18 @@ public class MainActivity extends Activity {
             Calendar c = cal(start[0]);
             dateBtn.setText(Report.dayShort(start[0], tz) + " " + fmt("dd.MM.yyyy").format(start[0]));
             startBtn.setText(fmt("HH:mm").format(c.getTime()));
-            endBtn.setText(running ? "trwa…" : fmt("HH:mm").format(end[0]));
+            endBtn.setText(running[0] ? "trwa… ✎" : fmt("HH:mm").format(end[0]));
             Entry probe = new Entry(-1, start[0], end[0]);
             long min = WorkMath.minutes(probe, n);
             summary.setText(WorkMath.formatHm(min) + " h  ·  "
                     + WorkMath.formatMoney(WorkMath.payCents(min, store.rateCents())));
-            if (!running && WorkMath.dayStart(end[0], tz) != WorkMath.dayStart(start[0], tz)) {
+            if (!running[0] && WorkMath.dayStart(end[0], tz) != WorkMath.dayStart(start[0], tz)) {
                 hint.setText("Koniec następnego dnia: " + Report.dayShort(end[0], tz) + " "
                         + fmt("dd.MM").format(end[0]) + " (zmiana przez północ)");
                 hint.setVisibility(View.VISIBLE);
-            } else if (running) {
-                hint.setText("Zmiana trwa. Koniec ustawi przycisk Clock Out.");
+            } else if (running[0]) {
+                hint.setText("Zmiana trwa. Odejmowanie czasu przesuwa początek. "
+                        + "Ustaw koniec, aby zakończyć zmianę.");
                 hint.setVisibility(View.VISIBLE);
             } else {
                 hint.setVisibility(View.GONE);
@@ -355,7 +358,7 @@ public class MainActivity extends Activity {
                 Calendar oldEnd = cal(end[0]);
                 s.set(y, m, d);
                 start[0] = s.getTimeInMillis();
-                if (!running) end[0] = WorkMath.endAfter(start[0], oldEnd.get(Calendar.HOUR_OF_DAY),
+                if (!running[0]) end[0] = WorkMath.endAfter(start[0], oldEnd.get(Calendar.HOUR_OF_DAY),
                         oldEnd.get(Calendar.MINUTE), oldEnd.get(Calendar.SECOND), tz);
                 update.run();
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -374,20 +377,39 @@ public class MainActivity extends Activity {
                 s.set(Calendar.SECOND, 0);
                 s.set(Calendar.MILLISECOND, 0);
                 start[0] = s.getTimeInMillis();
-                if (!running) end[0] = WorkMath.endAfter(start[0], oldEnd.get(Calendar.HOUR_OF_DAY),
+                if (!running[0]) end[0] = WorkMath.endAfter(start[0], oldEnd.get(Calendar.HOUR_OF_DAY),
                         oldEnd.get(Calendar.MINUTE), oldEnd.get(Calendar.SECOND), tz);
                 update.run();
             }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
         });
 
-        endBtn.setEnabled(!running);
         endBtn.setOnClickListener(b -> {
-            Calendar c = cal(end[0]);
+            Calendar c = cal(running[0] ? System.currentTimeMillis() : end[0]);
             new TimePickerDialog(this, (picker, h, m) -> {
                 end[0] = WorkMath.endAfter(start[0], h, m, 0, tz);
+                running[0] = false;
                 update.run();
             }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
         });
+
+        long[] deltas = {-WorkMath.HOUR, -15 * WorkMath.MINUTE, 15 * WorkMath.MINUTE, WorkMath.HOUR};
+        int[] ids = {R.id.minus60, R.id.minus15, R.id.plus15, R.id.plus60};
+        for (int i = 0; i < ids.length; i++) {
+            long delta = deltas[i];
+            v.findViewById(ids[i]).setOnClickListener(b -> {
+                long[] r = WorkMath.adjust(start[0], running[0] ? 0 : end[0], delta,
+                        System.currentTimeMillis());
+                if (r == null) {
+                    error.setText(delta < 0 ? "Nie można odjąć więcej, niż trwa wpis."
+                            : "Koniec nie może być w przyszłości.");
+                    error.setVisibility(View.VISIBLE);
+                    return;
+                }
+                start[0] = r[0];
+                if (!running[0]) end[0] = r[1];
+                update.run();
+            });
+        }
 
         AlertDialog.Builder b = new AlertDialog.Builder(this)
                 .setTitle(entry == null ? "Nowy wpis" : "Edytuj wpis")
@@ -399,15 +421,17 @@ public class MainActivity extends Activity {
         dlg.setOnShowListener(d -> {
             dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(x -> {
                 long n = System.currentTimeMillis();
+                long e = running[0] ? 0 : end[0];
                 String err = WorkMath.validate(store.all(), entry == null ? -1 : entry.id,
-                        start[0], end[0], n, tz);
+                        start[0], e, n, tz);
                 if (err != null) {
                     error.setText(err);
                     error.setVisibility(View.VISIBLE);
                     return;
                 }
-                if (entry == null) store.add(start[0], end[0]);
-                else store.update(entry.withTimes(start[0], end[0]));
+                if (entry == null) store.add(start[0], e);
+                else store.update(entry.withTimes(start[0], e));
+                lastTickMinute = -1;
                 weekStart = WorkMath.weekStart(start[0], store.firstDay(), tz);
                 dlg.dismiss();
                 refresh();

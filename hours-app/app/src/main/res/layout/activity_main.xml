@@ -263,6 +263,16 @@
                 android:text="@string/entries_title" />
 
             <TextView
+                android:id="@+id/editHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/tap_to_edit"
+                android:textColor="@color/ink_dim"
+                android:textSize="12sp" />
+
+            <TextView
                 android:id="@+id/emptyMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

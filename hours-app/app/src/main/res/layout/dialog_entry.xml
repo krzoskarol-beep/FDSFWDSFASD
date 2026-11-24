@@ -35,6 +35,26 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView android:id="@+id/adjustLabel" style="@style/Text.Title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="14dp"
+        android:text="@string/adjust_label" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" android:orientation="horizontal">
+        <Button android:id="@+id/minus60" style="@style/Btn.Ghost.Small" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="@string/minus_60" />
+        <Button android:id="@+id/minus15" style="@style/Btn.Ghost.Small" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="@string/minus_15" />
+        <Button android:id="@+id/plus15" style="@style/Btn.Ghost.Small" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="@string/plus_15" />
+        <Button android:id="@+id/plus60" style="@style/Btn.Ghost.Small" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/plus_60" />
+    </LinearLayout>
+
     <TextView android:id="@+id/summary" style="@style/Text.Num"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="14dp" android:textColor="@color/ink" android:textSize="16sp" />

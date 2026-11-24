@@ -37,6 +37,44 @@ public class ScreenshotTest {
         render("godziny-ciemny.png");
     }
 
+    @Test public void editDialog() throws Exception {
+        renderDialog("edycja.png");
+    }
+
+    @Test @Config(qualifiers = "+night")
+    public void editDialogDark() throws Exception {
+        renderDialog("edycja-ciemny.png");
+    }
+
+    private void renderDialog(String fileName) throws Exception {
+        Context ctx = ApplicationProvider.getApplicationContext();
+        long now = System.currentTimeMillis();
+        long s = now - now % WorkMath.MINUTE - 10 * WorkMath.HOUR;
+        new EntryStore(ctx).add(s, s + 8 * WorkMath.HOUR + 30 * WorkMath.MINUTE);
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        long week = WorkMath.weekStart(now, java.util.Calendar.MONDAY, TimeZone.getDefault());
+        if (s < week) a.findViewById(R.id.prevWeek).performClick();
+        ((android.view.ViewGroup) a.findViewById(R.id.entryList)).getChildAt(1).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        android.app.Dialog dlg = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        dlg.findViewById(R.id.minus15).performClick();
+        View d = dlg.getWindow().getDecorView();
+        int w = a.findViewById(R.id.root).getWidth() * 88 / 100;
+        d.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        d.layout(0, 0, w, d.getMeasuredHeight());
+        Bitmap bmp = Bitmap.createBitmap(w, d.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(a.getColor(R.color.bg));
+        d.draw(canvas);
+        File dir = new File(System.getProperty("screenshots.dir", "screenshots"));
+        //noinspection ResultOfMethodCallIgnored
+        dir.mkdirs();
+        try (FileOutputStream out = new FileOutputStream(new File(dir, fileName))) {
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+        }
+    }
+
     private void render(String fileName) throws Exception {
         Context ctx = ApplicationProvider.getApplicationContext();
         TimeZone tz = TimeZone.getDefault();

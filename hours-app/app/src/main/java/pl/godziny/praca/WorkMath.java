@@ -179,6 +179,22 @@ public final class WorkMath {
     }
 
     /**
+     * Skraca (delta &lt; 0) albo wydłuża wpis o {@code deltaMs}. Zakończony wpis zmienia koniec;
+     * trwająca zmiana ({@code end == 0}) zmienia początek, bo koniec to „teraz”.
+     * Zwraca {start, end} albo null, gdy wpis trwałby krócej niż minutę lub wyszedłby w przyszłość.
+     */
+    public static long[] adjust(long start, long end, long deltaMs, long now) {
+        if (end == 0) {
+            long s = start - deltaMs;
+            if (s > now - MINUTE) return null;
+            return new long[]{s, 0};
+        }
+        long e = end + deltaMs;
+        if (e - start < MINUTE || e > now) return null;
+        return new long[]{start, e};
+    }
+
+    /**
      * Sprawdza wpis przed zapisem. Zwraca opis błędu albo null, gdy wpis jest poprawny.
      * {@code end == 0} to zmiana w trakcie. {@code selfId} — id edytowanego wpisu (pomijany
      * przy sprawdzaniu nakładania), -1 dla nowego.

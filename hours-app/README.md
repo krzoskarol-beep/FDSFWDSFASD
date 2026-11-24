@@ -11,7 +11,9 @@ Stawka domyślna: **$34.00/h** (można zmienić).
 - **Podsumowanie tygodnia** — suma godzin (8:30 h oraz dziesiętnie 8.50 h),
   kwota do wypłaty i liczba dni pracy. Strzałkami przechodzisz do poprzednich tygodni.
 - **Edycja wpisów** — dotknij wpisu, aby zmienić datę, początek lub koniec, albo go
-  usunąć. „+ Dodaj wpis ręcznie” dodaje zapomnianą zmianę. Aplikacja nie pozwala
+  usunąć. Przyciski **−1 h / −15 min / +15 min / +1 h** szybko odejmują lub dodają czas
+  (w zakończonej zmianie przesuwają koniec, w trwającej — początek). Trwającej zmianie
+  można też ustawić koniec, co ją kończy. „+ Dodaj wpis ręcznie” dodaje zapomnianą zmianę. Aplikacja nie pozwala
   zapisać wpisów nakładających się na siebie, dłuższych niż 24 h ani w przyszłości.
 - **Raport tygodnia** — czytelne zestawienie dzień po dniu z sumą godzin i wypłatą;
   można je skopiować albo udostępnić (SMS, e-mail, WhatsApp…).
@@ -40,7 +42,7 @@ Projekt samodzielny (Java, bez bibliotek, minSdk 24, targetSdk 36), w układzie 
 ```bash
 cd hours-app
 ./gradlew testDebugUnitTest lintDebug assembleDebug
-./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'   # godziny.png i godziny-ciemny.png w hours-app/screenshots/
+./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'   # ekran główny i okno edycji (jasny i ciemny) w hours-app/screenshots/
 ```
 
 Logika (tydzień, wypłata, walidacja, raport) jest w `WorkMath` i `Report` i ma testy JUnit.
