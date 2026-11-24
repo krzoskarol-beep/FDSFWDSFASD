@@ -126,7 +126,7 @@ def hexa(axis, c1, c2, a0, a1, af, out):
                      for k in range(6)], min(a0, a1), max(a0, a1), out)
 
 
-def bolt(out, axis, c1, c2, face0, dirn, Lb, size, grip, head="hex", washer_head=True):
+def bolt(out, axis, c1, c2, face0, dirn, Lb, size, grip, head="hex", washer_head=True, nut="hex"):
     """śruba: łeb przy face0 (po stronie -dirn), trzpień Lb w kierunku dirn, podkładka + nakrętka po `grip` mm"""
     d, af, k, dw, tw, hn = BOLT[size]
     if head == "carriage":                    # śruba zamkowa: łeb grzybkowy Ø20 × 4,4
@@ -154,6 +154,9 @@ def bolt(out, axis, c1, c2, face0, dirn, Lb, size, grip, head="hex", washer_head
             solid("sz", [(c1 - 2, c2 - q - 4), (c1 + 2, c2 - q - 4), (c1 + 2, c2 + q + 4), (c1 - 2, c2 + q + 4)], min(zc - 2, zc + 2), max(zc - 2, zc + 2), out)
         return s0, s0 + dirn * Lb, g1 + dirn * (tw + 5.0)
     hexa(axis, c1, c2, g1 + dirn * tw, g1 + dirn * (tw + hn), af, out)
+    if nut == "cap":                          # nakrętka kołpakowa DIN 986: kopułka zakrywa koniec śruby
+        cyl(axis, c1, c2, g1 + dirn * (tw + hn), g1 + dirn * (tw + hn + 0.85 * d), 0.42 * af, out, 12)
+        return s0, s0 + dirn * Lb, g1 + dirn * (tw + hn + 0.85 * d)
     return s0, s0 + dirn * Lb, g1 + dirn * (tw + hn)
 
 
@@ -273,7 +276,7 @@ def build(layout=None):
         (ga, gb), _ = guides[grp]
         for xc in XS:
             taken = [s for (s, w, z, d, n) in Ly["holes_long"](pid_at[(grp, xc)]) if w == "g/d"]
-            for s in (60.0, 300.0, 560.0, 800.0, 1060.0, 1200.0):
+            for s in (100.0, 300.0, 560.0, 800.0, 1060.0, 1200.0):     # 1. wkręt ≥ 100 mm od końca: łby nie wchodzą w szczelinę przy belce
                 if any(abs(s - q) < 45 for q in taken) or (xc in lane_outer and ga - 20 <= s <= gb + 20):
                     continue
                 cyl("z", s, xc, 103, 106, 8.0, scr, 10)
@@ -314,7 +317,7 @@ def build(layout=None):
                 b = M.mesh(f"{grp}:M8x:{sc:g}:{x:+.0f}", grp, C_BOLT, "śruba",
                            f"śruba zamkowa M8×160 DIN 603 kl. 8.8 + podkładka + nakrętka samohamowna\n"
                            f"{pid} (x={x:+.0f}) + poprzeczka P, s={fmt(sc)} {SFROM[grp]}\ntuleja Ø12×1,5 dł. 139,5 na wylot (rura 100 + poprzeczka 40 na płasko)")
-                bolt(b, "z", sc, x, top, -1, 160, 8, top + g.CROSS_H)
+                bolt(b, "z", sc, x, top, -1, 160, 8, top + g.CROSS_H, nut="cap" if Ly.get("cap_nuts") else "hex")
                 cyl("z", sc, x, 99.75, -g.CROSS_H + 0.25, 6.0, M.mesh(f"{grp}:tul140", grp, C_SLEEVE, "tuleja", "tuleje Ø12×1,5 dł. 139,5 (skrzyżowania)"), 12)
                 M.bolt_axes.append((f"{grp}v:{sc:g}:{x:+.0f}", "M8"))
 
@@ -491,6 +494,35 @@ def build(layout=None):
 
     # ---------------------------------------------------------- przyczepa (poglądowo) + wsporniki K z otworami
     T = "T"
+    SF = Ly.get("safety")
+    if SF:
+        # odbojnik kątowy EPDM na tylnym górnym narożniku belki: szczelina pokład–narożnik 15 → 4 mm (EN ISO 13854 / 13857)
+        for (xa_, xb_) in SF["bumper"]:
+            solid("sx", [(0.0, xa_), (SF["bumper_t"], xa_), (SF["bumper_t"], xb_), (0.0, xb_)], -20.0, 0.0,
+                  M.mesh(f"T:odbojnik:{xa_:.0f}", T, "#1e1e1e", "przyczepa",
+                         f"ODBOJNIK EPDM {SF['bumper_t']:.0f} mm na tylnym narożniku belki, x {xa_:+.0f}…{xb_:+.0f}\n"
+                         "pokład w pionie zostaje 4 mm od gumy – palec nie wejdzie (szczelina ≤ 4 mm)"))
+        for (grp_, plane, w0, w1, cu, cv, sz, txt) in SF["labels"]:      # naklejki ISO 7010 W024 (trójkąt, bok sz)
+            h_ = sz * 0.866
+            tri = [(cu - sz / 2, cv - h_ / 3), (cu + sz / 2, cv - h_ / 3), (cu, cv + 2 * h_ / 3)]
+            solid(plane, tri, w0, w1, M.mesh(f"{grp_}:W024:{cu:.0f}:{cv:.0f}:{w0:.0f}", grp_, "#f2c200", "płyta",
+                                             f"NAKLEJKA ISO 7010 W024 – zgniecenie dłoni, bok {sz:.0f} mm\n{txt}"))
+        for (sg_, s0_, s1_) in SF["grips"]:                       # strefy chwytu na pionowej półce prowadnicy G1
+            xg_ = sg_ * XO
+            solid("sz", [(s0_, 108.0), (s1_, 108.0), (s1_, 140.0), (s0_, 140.0)], *sorted((xg_, xg_ + sg_ * 1.0)),
+                  M.mesh(f"A:chwyt:{sg_}", "A", "#f2c200", "płyta",
+                         f"STREFA CHWYTU (taśma żółto-czarna) na prowadnicy G1, {L - s1_:.0f}–{L - s0_:.0f} mm od zawiasu\n"
+                         "dłoń ≥ 100 mm od styku rur (EN ISO 13854); tu podnosisz sekcję A"))
+        st = SF.get("strap")
+        if st:                                                    # pas transportowy – widoczny tylko w pozycji do jazdy
+            P = M.mesh("L:pas", "L", "#e07020", "przyczepa", "PAS Z GRZECHOTKĄ 25 mm, LC 400 daN – druga blokada do jazdy\n"
+                       f"opasuje złożony trap na poprzeczce P (s = {st['s']:.0f}), haki do uch z przodu przyczepy")
+            yb, s_r, s_f = st["y"], st["s_rear"], st["s_front"]
+            solid("sx", [(s_r, st["x0"] - 3), (s_r + 2, st["x0"] - 3), (s_r + 2, st["x1"] + 3), (s_r, st["x1"] + 3)], yb, yb + 25, P)
+            for xs_ in (st["x0"] - 3, st["x1"] + 1):
+                solid("sx", [(s_f, xs_), (s_r + 2, xs_), (s_r + 2, xs_ + 2), (s_f, xs_ + 2)], yb, yb + 25, P)
+            for (xl_, xa_) in ((st["x0"], st["anchor_x"][0]), (st["x1"] - 25, st["anchor_x"][1] - 25)):
+                solid("sz", [(s_f, yb), (s_f, yb + 25), (st["anchor_s"], 25.0), (st["anchor_s"], 0.0)], xl_, xl_ + 2, P)
     for lh in Ly.get("light_holders", []):    # wysięgniki lamp i tablicy (część przyczepy), wysokości od ziemi
         Y = lambda h: h - g.H_FLOOR
         d = lh["depth"]

@@ -56,7 +56,8 @@ Ręka na końcu sekcji A. V to wysokość dłoni z geometrii, H = 40 cm (trap pr
 | miejsce | szczelina | wymagane | ocena | co zrobić |
 |---|---|---|---|---|
 | Styk rur A | B na zawiasie środkowym (góra) | 0 mm przy rozkładaniu | palec 25 / dłoń 100 | nie do spełnienia konstrukcyjnie (styk przenosi ściskanie) | chwyt tylko za uchwyty / rurę ≥ 250 mm od zawiasu; naklejka ISO 7010 W024 (zgniecenie dłoni) przy zawiasie |
-| Pokład A ↔ krawędź podłogi przy trapie w pionie | 15 mm | palec 25 | za mało – palec może wejść i zostać ściśnięty | nie trzymać krawędzi podłogi przy domykaniu; naklejka W024 na krawędzi; zderzak gumowy 15 mm na krawędzi podłogi zostawia ≤ 4 mm (palec nie wejdzie) |
+| Pokład A ↔ tylny narożnik belki przy trapie w pionie | 15 mm (zmierzone w modelu) | palec 25 | za mało bez osłony | ODBOJNIK EPDM 11 mm na narożniku: zostaje 4 mm do rur i 1 mm do siatki (model 3D) – palec nie wejdzie ✅ |
+| Płyta H ↔ tylna ściana belki w trakcie obrotu (60–85 % ruchu) | 5 mm (zmierzone w modelu) | ≤ 4 albo ≥ 25 | opuszek palca może wejść | ryzyko resztkowe: naklejka W024 na belce, ręce z dala od zawiasów przy przyczepie ⚠ |
 | Płyta H ↔ wspornik K (oś zawiasu przy przyczepie) | 1 mm | palec 25 | szczelina ≤ 4 mm – palec nie wejdzie (EN ISO 13857) | bez zmian |
 | Sekcja B wlecze się po ziemi (koniec ze skosem) | 0 mm do podłoża | palce stopy 50, stopa 120 | stopa pod końcem B | stać z boku, nie przed końcem B; buty z noskiem |
 | Sprężyna gazowa: tłoczysko / oczko przy wsporniku K | zmienna | palec 25 | ręka na sprężynie przy składaniu | nie chwytać za sprężyny; przy przeglądzie tylko trap zablokowany sworzniami |

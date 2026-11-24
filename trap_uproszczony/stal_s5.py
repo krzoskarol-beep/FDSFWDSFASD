@@ -50,6 +50,16 @@ Z_M12 = [(d, z) for (n, d, z, dd) in g.Z_PL["holes"] if n == "M12"]
 # po analizie dróg sił (sily.py): 4 poprzeczki (B: 260 i 650 zamiast listwy T), śruby prowadnic omijają nakrętki po złożeniu
 CROSS_B_S5 = [260.0, 650.0]
 # wysięgniki lamp/tablicy: poza obrysem złożonego trapu (−212…+522 mm w poprzek, do 328 mm za belką) – ZA nim, więc nic nie zasłania
+# bezpieczeństwo z analiz (EN ISO 13854, FMEA): odbojnik na belce, naklejki W024, strefy chwytu, pas transportowy
+SAFETY = dict(
+    bumper=[(-140.0, 140.0), (170.0, 320.0), (345.0, 485.0)], bumper_t=11.0,
+    labels=[("B", "sz", -158.0, -157.0, 80.0, -25.0, 50.0, "płyta Z zawiasu środkowego (prawa) – styk rur zamyka się do 0 mm"),
+            ("B", "sz", 497.0, 498.0, 80.0, -25.0, 50.0, "płyta Z zawiasu chodnika (lewa) – styk rur zamyka się do 0 mm"),
+            ("T", "xz", -1.0, 0.0, 240.0, -48.0, 45.0, "tylna ściana belki – krawędź przy trapie w pionie"),
+            ("T", "xz", -1.0, 0.0, -60.0, -48.0, 45.0, "tylna ściana belki – krawędź przy trapie w pionie")],
+    grips=[(-1, 1050.0, 1145.0), (1, 1050.0, 1145.0)],
+    strap=dict(s=830.0, y=860.0, s_rear=177.0, s_front=-30.0, x0=-153.0, x1=491.0, anchor_s=-1000.0, anchor_x=(-153.0, 491.0)),
+)
 LH_DEPTH = 345.0
 LIGHT_HOLDERS = [
     dict(key="P", depth=LH_DEPTH, arm_x=-255.0, arm_h=455.0, x0=-225.0, x1=-545.0, y0=295.0, y1=665.0,
@@ -104,7 +114,9 @@ def layout():
         walk_hinge=dict(x=XE, key=lambda grp, s, z: f"{grp}h:{s:g}:{z:g}:1:C{XE:.0f}"),
         walk_plugs=[dict(grp="B", x=XW, key=lambda s, z: f"Bh:{s:g}:{z:g}:1:C{XW:.0f}")],
         walk_rest=[XW, XE],
-        light_holders=LIGHT_HOLDERS, tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
+        light_holders=LIGHT_HOLDERS,
+        cap_nuts=True,
+        safety=SAFETY, tie_txt="płaskownik stal 40×5", mesh_txt="siatka stal ocynk cięto-ciągniona ~30×12×2×1,5",
         guide=(40.0, 3.0, "kątownik stal 40×40×3"),
         single_plates=V["single_plates"],
         s_plates=[dict(sg=1, face=XW + 20, inner=XW - 20, tube="C1"),
@@ -510,6 +522,8 @@ def bom():
              "tablica dwurzędowa 305×214 (300–514 mm nad ziemią), lampa 530–600, odblask 525–655; płyta 345 mm za belką"],
             ["WL-L", "Wysięgnik lewy lamp (część PRZYCZEPY)", 1, "S235", "kątownik 40×40×4, L = 345 + płyta 140×230×3", 1.6, 4,
              "lampa 400–470 mm, odblask 255–385 mm nad ziemią; x +530…+670 (poza obrysem trapu)"],
+            ["OD", "Odbojnik kątowy EPDM 11 mm na tylnym narożniku belki (część PRZYCZEPY)", 3, "EPDM", "280 + 150 + 140 mm, 11 × 20", 0.1, 0,
+             "x −140…+140, +170…+320, +345…+485 – omija wsporniki K; klej + 2 nity z podkładką na odcinek"],
             ["O", "Oparcie chodnika przy przyczepie (część PRZYCZEPY)", 2, "S235", "kątownik 100×100×10, L = 40 + guma EPDM 5 mm", 0.6, 2,
              f"pod końcami rur C1 i C2 (x +{XW:.0f}, +{XE:.0f}); rura tylko się opiera – DOPASUJ wysokość do belki"],
             ["H", "Płyta zawiasu przy przyczepie", 2, "S235", "płaskownik 80×6, L = 200", 0.75, 4, "1 na każdą rurę L1, po stronie zewnętrznej"],
@@ -574,6 +588,9 @@ def buy():
         ("Odblask trójkątny czerwony z homologacją E, bok 150 mm", "2", "na wysięgnikach, 250–900 mm nad ziemią"),
         ("Kątownik 40×40×4 + blacha 3 mm (płyty wysięgników)", "0,7 m + 0,15 m²", "wysięgniki WL-L / WL-P – po wierceniu cynk ogniowy"),
         ("Przewód 5–7 żył + dławiki, wtyczka 7- lub 13-pin", "wg przyczepy", "zasilanie lamp na wysięgnikach"),
+        ("Profil odbojowy EPDM 11 × 20 mm (np. listwa odbojowa samoprzylepna)", "0,6 m", "odbojnik na narożniku belki – szczelina przy trapie w pionie 4 mm"),
+        ("Naklejka ISO 7010 W024 (zgniecenie dłoni), bok 50 mm", "4", "płyty Z zawiasu środkowego (L i P) + tylna ściana belki (2)"),
+        ("Taśma ostrzegawcza żółto-czarna 30 mm", "0,3 m", "strefy chwytu na prowadnicach G1, 100–200 mm od zawiasu"),
         ("Pas z grzechotką 25 mm, LC ≥ 400 daN, z hakami", "1", "DRUGA blokada do jazdy (gdyby sworznie Ø12 zostały w kieszeni)"),
         ("Pręt stalowy gładki Ø20 h9 (lub sworzeń M20 z gładkim trzpieniem), dł. ok. 400 mm", "1", "PRZYRZĄD: przekładasz przez oba wsporniki K przy ich przykręcaniu – osie zawiasu współosiowe"),
         ("Rozwiertak / wiertło Ø13 i Ø18,5", "po 1", "przetarcie otworów po cynkowaniu"),
@@ -677,16 +694,23 @@ def _main():
         # model 3D
         M = p3.build(layout())
         ok = p3.check(M)
+        import kontrola3d
+        K3 = kontrola3d.run(M, layout())
+        ok3 = K3['sprezyny']['ok'] and not K3['przyczepa'] and all(not x['zasloniete'] for x in K3['swiatla']) and K3['szczeliny']['ok']
+        print('kontrola 3D w ruchu:', 'OK' if ok3 else K3)
         p3.write_gltf(os.path.join(OUT, "trap_s5.glb"), M=M)
         p3.export_holes(M, os.path.join(OUT, "otwory_z_modelu.csv"))
-        for t, name, view, kw in ((0.0, "podglad_rozlozony.png", ((-2600, 1500, -4300), (200, -150, -1100)), {}),
+        for t, name, view, kw in ((1.0, "podglad_jazda_tyl.png", ((300, 300, -3200), (100, 150, -200)), {}),
+                                  (1.0, "podglad_odbojnik.png", ((700, 450, -700), (100, 0, -20)), {}),
+                                  (0.0, "podglad_strefa_chwytu.png", ((1200, 700, -2500), (150, -150, -1250)), {}),
+                                  (0.0, "podglad_rozlozony.png", ((-2600, 1500, -4300), (200, -150, -1100)), {}),
                                   (1.0, "podglad_do_jazdy.png", ((-1900, 900, -3600), (200, 400, -300)), {}),
                                   (0.0, "podglad_sprezyna_prawa.png", ((-900, -50, -650), (-185, -150, -170)), {}),
                                   (0.0, "podglad_przezroczysty.png", ((900, 250, -1100), (150, -130, -300)), dict(transparent=True))):
             plt.imsave(os.path.join(OUT, name), p3.render(M, t, view, 1300, 880, **kw))
         summary = dict(wariant="S5", masa=round(mA + mB, 1), masa_A=round(mA, 1), masa_B=round(mB, 1), sprezyny=SPR,
                        wysilek_bez_sprezyn=max(r["user_kg"] for r in LIFT0), najwieksze_wytezenie=dict(element=worst["nazwa"], wartosc=worst["wytezenie"]),
-                       otwory=len(M.hole_dia), zlacza=len(M.bolt_axes), kontrola_ok=ok)
+                       otwory=len(M.hole_dia), zlacza=len(M.bolt_axes), kontrola_ok=bool(ok and ok3), kontrola_3d=dict(sprezyny_mm=[round(K3['sprezyny']['min']), round(K3['sprezyny']['max'])], kolizje_z_przyczepa=len(K3['przyczepa']), promienie_swiatel=sum(x['promienie'] for x in K3['swiatla']), zasloniete=sum(len(x['zasloniete']) for x in K3['swiatla']), szczelina_odbojnik_mm=round(K3['szczeliny']['szczelina'], 1)))
         with open(os.path.join(OUT, "dane_S5.json"), "w", encoding="utf-8") as f:
             json.dump(dict(podsumowanie=summary, obliczenia=ROWS, podnoszenie=LIFT, podnoszenie_bez=LIFT0), f, ensure_ascii=False, indent=1)
         print(json.dumps(summary, ensure_ascii=False, indent=1))

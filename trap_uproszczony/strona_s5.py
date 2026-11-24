@@ -36,7 +36,7 @@ chodnik 340 mm, poprzeczki i siatka 630 mm. Model pokazuje każdy otwór, śrub�
 </div>
 <div class="bar">
   <button data-f="A:pinTr:1" data-v="1,0.3,-0.6">Zawias przy przyczepie</button><button data-f="A:pinMid:-1" data-v="-1,0.2,-0.4">Zawias środkowy</button><button data-f="A:M8x:340:+125">Skrzyżowanie</button>
-  <button data-f="A:M12oko:1" data-v="1,-0.25,-0.6">Sprężyna lewa</button><button data-f="A:M12oko:-1" data-v="-1,-0.25,-0.6">Sprężyna prawa</button><button data-f="B:P:650">Poprzeczka B2</button><button data-f="A:pinMid:chodnik" data-v="1,0.2,-0.4">Zawias chodnika</button><button id="b-all">Cały trap</button>
+  <button data-f="A:M12oko:1" data-v="1,-0.25,-0.6">Sprężyna lewa</button><button data-f="A:M12oko:-1" data-v="-1,-0.25,-0.6">Sprężyna prawa</button><button data-f="B:P:650">Poprzeczka B2</button><button data-f="T:odbojnik:170" data-v="0.8,0.5,-1">Odbojnik i naklejki</button><button data-f="A:chwyt:1" data-v="1,0.4,-0.4">Strefa chwytu</button><button data-f="T:wl:P:tablica" data-v="0.3,0.2,-1">Światła i tablica</button><button data-f="A:pinMid:chodnik" data-v="1,0.2,-0.4">Zawias chodnika</button><button id="b-all">Cały trap</button>
 </div>
 <div class="bar">
   <button class="lay" data-k="śruba" aria-pressed="true">Śruby</button><button class="lay" data-k="tuleja" aria-pressed="true">Tuleje</button>
@@ -107,8 +107,9 @@ Otwór przechodzący przez kilka części wierć razem albo przez płytę jako s
 <tr><td>Ergonomia – równanie NIOSH</td><td>wskaźnik LI ≈ 2,4 (ryzyko podwyższone); bez sprężyn 5,2</td><td><span class="pill warn">zimą we dwóch</span></td></tr>
 <tr><td>Trap złożony w jeździe (2 g, 0,8 g, 0,5 g)</td><td>sworzeń blokady 9,7 kN ≈ 30 % nośności; pas usuwa stukanie w luzie</td><td><span class="pill ok">OK</span></td></tr>
 <tr><td>Prześwit Fat Boya na krawędzi podłogi (dane producenta)</td><td>traci 80 z 115 mm – zapas 35 mm; z kierowcą prawie zero</td><td><span class="pill warn">bez kierowcy</span></td></tr>
-<tr><td>Miejsca zgniecenia (EN ISO 13854)</td><td>styk rur na zawiasie, krawędź podłogi 15 mm (&lt; 25 mm)</td><td><span class="pill warn">naklejki, zderzak</span></td></tr>
-<tr><td>Testy automatyczne modelu (podręcznik, równowaga, kolizje)</td><td>9 / 9 zaliczonych; znalazły 2 błędy, oba poprawione</td><td><span class="pill ok">OK</span></td></tr>
+<tr><td>Miejsca zgniecenia (EN ISO 13854)</td><td>narożnik belki 15 mm → odbojnik EPDM zostawia 4 mm; styk rur na zawiasie i płyta H przy belce (5 mm) – naklejki W024 i strefy chwytu ≥ 100 mm od zawiasu</td><td><span class="pill ok">w modelu</span></td></tr>
+<tr><td>Kontrole modelu 3D w całym ruchu (kontrola3d.py)</td><td>sprężyny 276–373 mm (skok 262–458); 0 kolizji z przyczepą w 41 położeniach; 312 promieni z lamp i tablicy (kąty EKG ONZ R48) – żaden nie trafia w złożony trap; odbojnik: szczelina 4 mm</td><td><span class="pill ok">OK</span></td></tr>
+<tr><td>Testy automatyczne (podręcznik, równowaga, kolizje, ruch, światła)</td><td>10 / 10 zaliczonych; znalazły 2 błędy, oba poprawione</td><td><span class="pill ok">OK</span></td></tr>
 </tbody></table></div>
 <p class="note">Dowód jakości poza obliczeniami: próba prototypu wg stal_S5/protokol_badan_S5.pdf (ugięcia czujnikiem w 6 punktach vs model, próba 1,5 ×, masa, siła podnoszenia), atesty 3.1 stali,
 niezależne sprawdzenie przez inżyniera i badanie w stacji kontroli. Szczegóły: analizy_dodatkowe.md, fmea_S5.md, metodyka_weryfikacji.md.</p></div>

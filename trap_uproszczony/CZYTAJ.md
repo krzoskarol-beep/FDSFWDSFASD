@@ -250,3 +250,23 @@ i 697 mm nad podłogą – to dane do przeliczenia nacisku na hak.
 - `stal_S5/protokol_badan_S5.pdf` – próba prototypu z wartościami z modelu i kryteriami.
 - `testy/test_trap_s5.py` (`python3 -m pytest testy`) – 9 testów. Znalazły dwa błędy: zawias w modelu rusztu był półsztywny
   (ugięcia zawyżone o 17 %), a otwór sprężyny z pierwszej optymalizacji łamał warunek w upale.
+
+## Model 3D według wniosków z weryfikacji
+
+Model S5 (`stal_S5/trap_s5.glb`, strona) zawiera teraz:
+- nakrętki kołpakowe DIN 986 w skrzyżowaniach;
+- odbojnik EPDM 11 mm na tylnym narożniku belki (szczelina przy trapie w pionie 15 → 4 mm);
+- naklejki ISO 7010 W024 na płytach Z i belce;
+- strefy chwytu na prowadnicach G1 (100–200 mm od zawiasu);
+- pas transportowy (widoczny w pozycji do jazdy);
+- wysięgniki lamp i tablicy;
+- pierwszy wkręt siatki przesunięty na s = 100, żeby łby nie wchodziły w szczelinę przy belce.
+
+`kontrola3d.py` sprawdza model w całym ruchu (wynik w `dane_S5.json` → `kontrola_3d`):
+- sprężyny mieszczą się w skoku (276–373 mm);
+- 0 kolizji z przyczepą w 41 położeniach;
+- 312 promieni z lamp i tablicy w kątach EKG ONZ R48 – żaden nie trafia w złożony trap;
+- szczelina przy odbojniku ≤ 4 mm.
+
+Test 10 w `testy/` pilnuje tego automatycznie. Pomiar w modelu wykazał też szczelinę 5 mm między płytą H a belką w trakcie obrotu.
+To ryzyko resztkowe, oznaczone naklejką.

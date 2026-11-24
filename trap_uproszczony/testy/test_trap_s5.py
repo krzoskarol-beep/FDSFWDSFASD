@@ -94,3 +94,15 @@ def test_9_sprezyny_rozlozony_lezy_pion_nie_pcha_takze_w_upale():
         assert r["ok_pion"], r["przypadek"]
         if not r["przypadek"].startswith(("jedna", "obie")):
             assert r["rozlozony"] < -60.0, r["przypadek"]          # rozłożony dociśnięty do ziemi z zapasem, także w upale
+
+
+def test_10_model_3d_ruch_swiatla_szczeliny():
+    import kontrola3d as k
+    M = s5.model()
+    with s5.s5_globals():
+        r = k.run(M, s5.layout())
+    assert r["sprezyny"]["ok"], r["sprezyny"]                    # sprężyny w skoku w całym ruchu
+    assert r["przyczepa"] == []                                  # trap nie wchodzi w przyczepę w 41 położeniach
+    for x in r["swiatla"]:
+        assert x["zasloniete"] == [], x                           # lampy i tablica widoczne w kątach EKG ONZ R48
+    assert r["szczeliny"]["ok"], r["szczeliny"]                   # odbojnik: ≤ 4 mm albo ≥ 25 mm

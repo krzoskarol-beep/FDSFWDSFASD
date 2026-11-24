@@ -18,7 +18,17 @@
   },
   "otwory": 82,
   "zlacza": 79,
-  "kontrola_ok": true
+  "kontrola_ok": true,
+  "kontrola_3d": {
+   "sprezyny_mm": [
+    276,
+    373
+   ],
+   "kolizje_z_przyczepa": 0,
+   "promienie_swiatel": 312,
+   "zasloniete": 0,
+   "szczelina_odbojnik_mm": 1.0
+  }
  },
  "obliczenia": [
   {
