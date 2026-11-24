@@ -34,9 +34,6 @@
     <string name="tap_to_edit">Dotknij wpis, aby go zmienić. Dotknij datę dnia, aby usunąć cały dzień.</string>
     <string name="break_label">Przerwa bezpłatna (min)</string>
     <string name="rate_this_week">Nowa stawka także dla wpisów z bieżącego tygodnia</string>
-    <string name="overtime_label">Nadgodziny</string>
-    <string name="overtime_switch">×1.5 ponad 40 h w tygodniu (FLSA)</string>
-    <string name="overtime_help">Federalne prawo USA dla pracowników godzinowych: ½ stawki regularnej dopłaty za każdą godzinę ponad 40. Wyłącz, jeśli Twoja umowa tego nie obejmuje.</string>
     <string name="backup_label">Kopia danych (CSV)</string>
     <string name="backup_help">Plik otworzysz w Excelu/Arkuszach. Ten sam plik przywraca wszystkie wpisy, np. na nowym telefonie.</string>
     <string name="export_csv">Eksportuj</string>

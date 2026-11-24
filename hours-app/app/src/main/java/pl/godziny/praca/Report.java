@@ -46,7 +46,7 @@ public final class Report {
         return sb.toString();
     }
 
-    public static String build(List<Entry> week, long weekStart, boolean overtime, long now, TimeZone tz) {
+    public static String build(List<Entry> week, long weekStart, long now, TimeZone tz) {
         SimpleDateFormat day = fmt("dd.MM", tz);
         SimpleDateFormat hm = fmt("HH:mm", tz);
         StringBuilder sb = new StringBuilder();
@@ -76,26 +76,19 @@ public final class Report {
             sb.append('\n');
         }
 
-        WorkMath.Summary s = WorkMath.summarize(week, overtime, now, tz);
+        WorkMath.Summary s = WorkMath.summarize(week, now, tz);
         sb.append("\n");
-        sb.append("Dni pracy:        ").append(s.days).append('\n');
-        sb.append("Razem:            ").append(WorkMath.formatHm(s.minutes)).append(" h (")
+        sb.append("Dni pracy:   ").append(s.days).append('\n');
+        sb.append("Razem:       ").append(WorkMath.formatHm(s.minutes)).append(" h (")
                 .append(WorkMath.formatDecimalHours(s.minutes)).append(" h)\n");
-        if (s.overtimeMinutes > 0) {
-            sb.append("  zwykłe:         ").append(WorkMath.formatHm(s.regularMinutes)).append(" h\n");
-            sb.append("  nadgodziny:     ").append(WorkMath.formatHm(s.overtimeMinutes)).append(" h (ponad 40 h, ×1.5)\n");
+        if (!week.isEmpty()) {
+            sb.append(s.mixedRates ? "Śr. stawka:  " : "Stawka:      ")
+                    .append(WorkMath.formatMoney(s.averageRateCents)).append("/h")
+                    .append(s.mixedRates ? " (różne stawki)\n" : "\n");
         }
-        sb.append("Stawka regularna: ").append(WorkMath.formatMoney(s.regularRateCents)).append("/h\n");
-        sb.append("Podstawa:         ").append(WorkMath.formatMoney(s.straightCents)).append('\n');
-        if (s.overtimeMinutes > 0) {
-            sb.append("Dopłata za nadg.: ").append(WorkMath.formatMoney(s.overtimePremiumCents))
-                    .append(" (½ × ").append(WorkMath.formatMoney(s.regularRateCents)).append(" × ")
-                    .append(WorkMath.formatDecimalHours(s.overtimeMinutes)).append(" h)\n");
-        }
-        sb.append("DO WYPŁATY:       ").append(WorkMath.formatMoney(s.payCents)).append(" brutto\n");
+        sb.append("DO WYPŁATY:  ").append(WorkMath.formatMoney(s.payCents)).append(" brutto\n");
         sb.append('\n');
-        sb.append(overtime ? "Nadgodziny wg FLSA: ponad 40 h w tygodniu, ×1.5 stawki regularnej.\n"
-                : "Nadgodziny nie są liczone (wyłączone w ustawieniach).\n");
+        sb.append("Każda godzina po stawce wpisu, bez nadgodzin.\n");
         sb.append("Czas liczony co do minuty, bez zaokrąglania. Przerwy odjęte.\n");
         if (anyEdited) sb.append("Wpisy poprawione ręcznie są oznaczone wraz z godzinami z zegara.\n");
         return sb.toString();

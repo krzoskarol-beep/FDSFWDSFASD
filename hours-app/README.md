@@ -17,8 +17,6 @@ Stawka domyślna: **$34.00/h** (można zmienić).
   zapisać wpisów nakładających się na siebie, dłuższych niż 24 h ani w przyszłości.
 - **Usuwanie całego dnia** — dotknij datę dnia na liście: podgląd wpisów i sumy, „Usuń dzień”
   albo „Dodaj” wpis w tym dniu. Po usunięciu (dnia lub wpisu) przez 15 s działa „Cofnij”.
-- **Nadgodziny (FLSA)** — ponad 40 h w tygodniu dopłata ½ stawki regularnej (czyli ×1.5);
-  przy kilku stawkach w tygodniu stawka regularna to średnia ważona. Można wyłączyć.
 - **Przerwa bezpłatna** (0/15/30/45/60 min) przy każdym wpisie — odejmowana od czasu.
 - **Stawka zapisana przy wpisie** — zmiana stawki nie przelicza wstecz starych tygodni.
 - **Ślad zmian** — każdy wpis pamięta godziny z zegara (Clock In/Out); lista, raport i CSV
@@ -27,21 +25,21 @@ Stawka domyślna: **$34.00/h** (można zmienić).
 - **Ostrzeżenie** przy zmianie trwającej ponad 12 h (zapomniany Clock Out).
 - **Raport tygodnia** — czytelne zestawienie dzień po dniu z sumą godzin i wypłatą;
   można je skopiować albo udostępnić (SMS, e-mail, WhatsApp…).
-- **Ustawienia** (przycisk ze stawką): stawka godzinowa, nadgodziny, dzień początku
+- **Ustawienia** (przycisk ze stawką): stawka godzinowa, dzień początku
   tygodnia roboczego (dowolny, jak u pracodawcy), wygląd, kopia CSV.
 - **Tryb ciemny** — domyślnie aplikacja jest jasna albo ciemna tak jak telefon;
   w Ustawieniach można wymusić motyw jasny lub ciemny.
 
 ## Zasady liczenia
 
-Reguły i ich źródła (przepisy FLSA, 29 CFR) oraz sposób weryfikacji opisuje
+Reguły, ich podstawy i sposób weryfikacji opisuje
 [docs/ZRODLA-I-WERYFIKACJA.md](docs/ZRODLA-I-WERYFIKACJA.md). W skrócie:
 
 - czas wpisu w pełnych minutach, minus przerwa; bez zaokrąglania,
-- podstawa = Σ minuty × stawka wpisu; nadgodziny ponad 40 h: + ½ stawki regularnej,
+- wypłata = Σ minuty × stawka wpisu / 60 — **bez nadgodzin** (każda godzina po tej samej stawce),
 - zmiana przez północ należy do dnia, w którym się zaczęła,
 - zmiana krótsza niż minuta (przypadkowe Clock In → Clock Out) nie jest zapisywana,
-- kwoty są brutto (bez podatków); przepisy stanowe (np. nadgodziny dzienne w Kalifornii) nie są liczone.
+- kwoty są brutto (bez podatków).
 
 ## Prywatność
 

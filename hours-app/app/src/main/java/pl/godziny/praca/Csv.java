@@ -18,7 +18,7 @@ import java.util.TimeZone;
  *   <li>kopia zapasowa — kolumny *_ms przechowują dokładne znaczniki czasu, więc import
  *       odtwarza wpisy 1:1, łącznie ze śladem zegara.</li>
  * </ul>
- * Kwota w wierszu = minuty × stawka / 60 (bez nadgodzin, które zależą od całego tygodnia).
+ * Kwota w wierszu = minuty × stawka / 60.
  */
 public final class Csv {
 

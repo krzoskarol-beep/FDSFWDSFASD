@@ -100,58 +100,44 @@ public final class WorkMath {
         return (minutes * rateCents + 30) / 60;
     }
 
-    /** Próg nadgodzin FLSA: 40 godzin w tygodniu roboczym (29 U.S.C. 207(a), 29 CFR 778.110). */
-    public static final long OVERTIME_THRESHOLD_MIN = 40 * 60;
-
     public static final class Summary {
-        /** Płatne minuty w tygodniu. */
+        /** Płatne minuty w tygodniu (po odjęciu przerw). */
         public final long minutes;
-        /** Minuty do 40 h i ponad 40 h (te drugie = 0, gdy nadgodziny są wyłączone). */
-        public final long regularMinutes, overtimeMinutes;
-        /** Wynagrodzenie za wszystkie godziny po stawkach wpisów (straight time). */
-        public final long straightCents;
-        /** Dopłata za nadgodziny: ½ stawki regularnej × godziny ponad 40 (29 CFR 778.110). */
-        public final long overtimePremiumCents;
-        /** Stawka regularna tygodnia: średnia ważona stawek (29 CFR 778.115), centy/h. */
-        public final long regularRateCents;
-        /** Razem brutto = straight + dopłata. */
+        /** Do wypłaty brutto = Σ minuty × stawka wpisu / 60. */
         public final long payCents;
+        /** Średnia stawka tygodnia (ważona godzinami), centy/h; przy jednej stawce = ta stawka. */
+        public final long averageRateCents;
+        /** Czy w tygodniu są wpisy z różnymi stawkami. */
+        public final boolean mixedRates;
         public final int days;
 
-        Summary(long minutes, long overtimeMinutes, long straightCents, long premiumCents,
-                long regularRateCents, int days) {
+        Summary(long minutes, long payCents, long averageRateCents, boolean mixedRates, int days) {
             this.minutes = minutes;
-            this.overtimeMinutes = overtimeMinutes;
-            this.regularMinutes = minutes - overtimeMinutes;
-            this.straightCents = straightCents;
-            this.overtimePremiumCents = premiumCents;
-            this.regularRateCents = regularRateCents;
-            this.payCents = straightCents + premiumCents;
+            this.payCents = payCents;
+            this.averageRateCents = averageRateCents;
+            this.mixedRates = mixedRates;
             this.days = days;
         }
     }
 
     /**
-     * Podsumowanie tygodnia roboczego. Liczone na całych minutach i centach (bez float):
-     * straight = Σ minuty_i × stawka_i / 60; stawka regularna = straight / godziny;
-     * dopłata = ½ × stawka regularna × godziny ponad 40. Jedna stawka ⇒ to samo co ×1.5.
+     * Podsumowanie tygodnia, na całych minutach i centach (bez float):
+     * wypłata = Σ minuty_i × stawka_i / 60, zaokrąglona raz, do centa. Bez nadgodzin.
      */
-    public static Summary summarize(List<Entry> week, boolean overtime, long now, TimeZone tz) {
+    public static Summary summarize(List<Entry> week, long now, TimeZone tz) {
         long total = 0;
         long centMinutes = 0;   // Σ minuty × centy/h
         java.util.Set<Long> days = new java.util.HashSet<>();
+        java.util.Set<Long> rates = new java.util.HashSet<>();
         for (Entry e : week) {
             long m = minutes(e, now);
             total += m;
             centMinutes += m * e.rateCents;
             days.add(dayStart(e.start, tz));
+            rates.add(e.rateCents);
         }
-        long straight = divRound(centMinutes, 60);
-        long rate = total == 0 ? 0 : divRound(centMinutes, total);
-        long ot = overtime ? Math.max(0, total - OVERTIME_THRESHOLD_MIN) : 0;
-        // dopłata = ½ × (centMinutes / total) × ot / 60  =  centMinutes × ot / (120 × total)
-        long premium = ot == 0 ? 0 : divRound(centMinutes * ot, 120 * total);
-        return new Summary(total, ot, straight, premium, rate, days.size());
+        long avg = total == 0 ? 0 : divRound(centMinutes, total);
+        return new Summary(total, divRound(centMinutes, 60), avg, rates.size() > 1, days.size());
     }
 
     /** Dzielenie z zaokrągleniem do najbliższej (połówki w górę), dla liczb nieujemnych. */

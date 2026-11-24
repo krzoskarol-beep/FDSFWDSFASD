@@ -18,7 +18,6 @@ public final class EntryStore {
     private static final String K_NEXT_ID = "next_id";
     private static final String K_RATE = "rate_cents";
     private static final String K_FIRST_DAY = "first_day";
-    private static final String K_OVERTIME = "overtime";
 
     private final SharedPreferences sp;
 
@@ -133,14 +132,5 @@ public final class EntryStore {
 
     public void setFirstDay(int day) {
         sp.edit().putInt(K_FIRST_DAY, day).apply();
-    }
-
-    /** Nadgodziny FLSA (×1.5 ponad 40 h tygodniowo). Domyślnie włączone. */
-    public boolean overtime() {
-        return sp.getBoolean(K_OVERTIME, true);
-    }
-
-    public void setOvertime(boolean on) {
-        sp.edit().putBoolean(K_OVERTIME, on).apply();
     }
 }

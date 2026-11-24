@@ -1,43 +1,38 @@
-# Źródła reguł i weryfikacja obliczeń
+# Zasady liczenia i weryfikacja
 
-Aplikacja liczy wypłatę pracownika godzinowego w USA (stawka domyślna $34/h). Każda reguła
-poniżej pochodzi z federalnych przepisów o płacy (FLSA). Teksty pobrano z eCFR
-(stan na 20.11.2026, https://www.ecfr.gov/current/title-29).
+Aplikacja liczy wypłatę godzinową **bez nadgodzin**: każda przepracowana minuta jest płatna
+według stawki zapisanej przy wpisie (domyślnie $34/h). Kwoty są **brutto** (bez podatków).
 
-| Reguła w aplikacji | Przepis | Cytat (skrót) |
-|---|---|---|
-| Tydzień roboczy = stałe 7 × 24 h od wybranego dnia, nie musi być od poniedziałku | 29 CFR 778.105 | „fixed and regularly recurring period of 168 hours… may begin on any day” |
-| Nadgodziny: dopłata ½ stawki za każdą godzinę ponad 40 w tygodniu | 29 CFR 778.110(a) | „$12 hourly rate … 46 hours … total weekly wage of $588” |
-| Różne stawki w tygodniu ⇒ stawka regularna = średnia ważona | 29 CFR 778.115 | „total earnings … divided by the total number of hours worked” |
-| Bezpłatna przerwa na posiłek nie jest czasem pracy (zwykle ≥ 30 min) | 29 CFR 785.19 | „Bona fide meal periods are not worktime” |
-| Brak zaokrąglania — czas co do minuty | 29 CFR 785.48(b) | zaokrąglanie jest dopuszczalne tylko, jeśli „averages out”; dokładne minuty są zawsze zgodne |
+| Reguła w aplikacji | Podstawa |
+|---|---|
+| Tydzień roboczy = stałe 7 dni od wybranego dnia, 00:00 (nie musi być od poniedziałku) | jak u pracodawcy; por. 29 CFR 778.105 |
+| Bezpłatna przerwa na posiłek nie jest czasem pracy | 29 CFR 785.19 („Bona fide meal periods are not worktime”) |
+| Brak zaokrąglania — czas co do minuty | 29 CFR 785.48(b): zaokrąglanie dopuszczalne tylko, gdy „averages out” |
+| Stawka zapisana przy wpisie — zmiana stawki nie przelicza wstecz | zasada aplikacji |
 
-Nadgodziny można wyłączyć w Ustawieniach (np. pracownik zwolniony z FLSA albo umowa poza USA).
-Nie są liczone przepisy stanowe (np. Kalifornia: nadgodziny dzienne > 8 h) ani podatki — kwoty są **brutto**.
+Teksty przepisów pobrano z eCFR (https://www.ecfr.gov/current/title-29, stan na 20.11.2026).
+Nadgodziny (np. federalne ×1.5 ponad 40 h) zostały celowo usunięte z aplikacji.
 
 ## Jak liczy aplikacja (bez liczb zmiennoprzecinkowych)
 
 - minuty wpisu = ⌊(koniec − początek) / 1 min⌋ − przerwa,
-- podstawa = Σ minuty × stawka wpisu / 60 (zaokrąglenie do centa),
-- stawka regularna = Σ minuty × stawka / Σ minuty,
-- dopłata = ½ × stawka regularna × minuty ponad 2400 / 60,
-- do wypłaty = podstawa + dopłata.
+- do wypłaty = Σ minuty × stawka wpisu / 60, zaokrąglone raz, do centa,
+- średnia stawka (przy kilku stawkach w tygodniu) = do wypłaty / godziny.
 
 ## Dowody jakości (poza samym kodem)
 
-1. **Przykłady z przepisów jako testy** (`WorkMathTest`): $12 × 46 h = $588 (§ 778.110),
-   średnia ważona $585 / 45 h = $13 ⇒ $617.50 (§ 778.115), $34 × 42 h = $1,462.00.
+1. **Testy z przykładami liczbowymi** (`WorkMathTest`): $12 × 46 h = $552, 30 h × $12 + 15 h × $15
+   = $585 (średnio $13/h), $34 × 42 h = $1,428.00, oraz sprawdzenie „minuty × stawka / 60”
+   dla ~570 długości tygodnia.
 2. **Niezależne przeliczenie** (`tools/sprawdz_csv.py`, Python + `Decimal`, bez kodu aplikacji):
    CI generuje próbkę 12 tygodni (różne stawki, przerwy, zmiany nocne, przejście na czas
-   zimowy, nadgodziny), eksportuje CSV i porównuje sumy skryptu z sumami aplikacji co do
-   minuty i centa. Różnica ⇒ czerwone CI.
+   zimowy, tygodnie ponad 40 h), eksportuje CSV i porównuje sumy skryptu z sumami aplikacji
+   co do minuty i centa. Różnica ⇒ czerwone CI.
 3. **Ślad zmian**: każdy wpis pamięta godziny z zegara; raport i CSV pokazują, co poprawiono ręcznie.
 4. **Twój pasek wypłaty (najmocniejszy dowód)** — porównaj dla 2–3 tygodni:
-   - „Hours” / „Regular” na pasku ↔ „Razem” i „zwykłe” w raporcie,
-   - „Overtime” ↔ „nadgodziny”, kwota OT ↔ (podstawa za nadgodziny + dopłata),
-   - „Gross pay” ↔ „DO WYPŁATY … brutto”.
-   Jeśli pracodawca zaokrągla czas (np. do 15 min) albo inaczej wyznacza tydzień, różnice
-   będą małe i systematyczne; ustaw w aplikacji ten sam dzień początku tygodnia.
+   „Hours” ↔ „Razem”, „Gross pay” ↔ „DO WYPŁATY … brutto”. Jeśli pasek pokazuje „Overtime”,
+   kwoty będą się różnić o dopłatę, której aplikacja nie liczy. Jeśli pracodawca zaokrągla
+   czas (np. do 15 min), różnice będą małe i systematyczne.
 
 Własny plik możesz przeliczyć tak samo:
 

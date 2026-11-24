@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -211,14 +210,11 @@ public class MainActivity extends Activity {
         nextWeek.setAlpha(current ? 0.35f : 1f);
 
         List<Entry> week = WorkMath.inRange(all, weekStart, WorkMath.addWeeks(weekStart, 1, tz));
-        WorkMath.Summary s = WorkMath.summarize(week, store.overtime(), now, tz);
+        WorkMath.Summary s = WorkMath.summarize(week, now, tz);
         weekHours.setText(WorkMath.formatHm(s.minutes) + " h");
-        weekHoursDec.setText("= " + WorkMath.formatDecimalHours(s.minutes) + " h"
-                + (s.overtimeMinutes > 0 ? " · nadgodziny " + WorkMath.formatHm(s.overtimeMinutes) + " h" : ""));
+        weekHoursDec.setText("= " + WorkMath.formatDecimalHours(s.minutes) + " h");
         weekPay.setText(WorkMath.formatMoney(s.payCents));
-        weekDays.setText(s.overtimeMinutes > 0
-                ? "brutto, w tym " + WorkMath.formatMoney(s.overtimePremiumCents) + " dopłaty"
-                : "brutto · dni pracy: " + s.days);
+        weekDays.setText("brutto · dni pracy: " + s.days);
 
         buildList(week, now);
     }
@@ -552,7 +548,7 @@ public class MainActivity extends Activity {
                 .setMessage(sb.toString())
                 .setPositiveButton("Usuń dzień", (d, w) -> deleteWithUndo(entries,
                         "Usunięto " + Report.dayShort(day, tz) + " " + fmt("dd.MM").format(day) + ": "
-                                + WorkMath.formatHm(WorkMath.summarize(entries, false, now, tz).minutes) + " h"))
+                                + WorkMath.formatHm(WorkMath.summarize(entries, now, tz).minutes) + " h"))
                 .setNeutralButton("Dodaj", (d, w) -> {
                     if (day <= now) showEntryDialog(null, day);
                 })
@@ -606,12 +602,10 @@ public class MainActivity extends Activity {
         View v = getLayoutInflater().inflate(R.layout.dialog_settings, null);
         EditText input = v.findViewById(R.id.rateInput);
         CheckBox rateThisWeek = v.findViewById(R.id.rateThisWeek);
-        Switch overtime = v.findViewById(R.id.overtime);
         Spinner weekDay = v.findViewById(R.id.weekStart);
         TextView err = v.findViewById(R.id.rateError);
         input.setText(WorkMath.rateForInput(store.rateCents()));
         input.setSelection(input.getText().length());
-        overtime.setChecked(store.overtime());
 
         String[] names = new String[WEEK_DAYS.length];
         int selected = 0;
@@ -654,7 +648,6 @@ public class MainActivity extends Activity {
                 // Historia zostaje przy starej stawce; bieżący tydzień — według wyboru.
                 store.setRateCents(cents, rateThisWeek.isChecked() ? currentWeekStart() : Long.MAX_VALUE);
             }
-            store.setOvertime(overtime.isChecked());
             int first = WEEK_DAYS[weekDay.getSelectedItemPosition()];
             store.setFirstDay(first);
             weekStart = WorkMath.weekStart(weekStart, first, tz);
@@ -749,7 +742,7 @@ public class MainActivity extends Activity {
     private void showReport() {
         long now = System.currentTimeMillis();
         List<Entry> week = WorkMath.inRange(store.all(), weekStart, WorkMath.addWeeks(weekStart, 1, tz));
-        String report = Report.build(week, weekStart, store.overtime(), now, tz);
+        String report = Report.build(week, weekStart, now, tz);
 
         TextView t = text(report, 12, R.color.ink);
         t.setTypeface(Typeface.MONOSPACE);

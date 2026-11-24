@@ -2,14 +2,13 @@
 """Niezależne przeliczenie wypłaty z pliku CSV aplikacji „Godziny Pracy”.
 
 Nie używa kodu aplikacji. Liczy od surowych znaczników czasu (start_ms, end_ms),
-przerwy i stawki każdego wpisu, arytmetyką dziesiętną (Decimal), według FLSA:
-  * 29 CFR 778.105 — tydzień roboczy: stałe 168 h od wybranego dnia, 00:00,
-  * 29 CFR 778.115 — stawka regularna = średnia ważona stawek w tygodniu,
-  * 29 CFR 778.110 — dopłata za nadgodziny = ½ stawki regularnej × godziny ponad 40,
-  * 29 CFR 785.19  — bezpłatna przerwa na posiłek nie jest czasem pracy.
+przerwy i stawki każdego wpisu, arytmetyką dziesiętną (Decimal):
+  * tydzień roboczy: stałe 7 dni od wybranego dnia, 00:00 (29 CFR 778.105),
+  * minuty wpisu = pełne minuty od początku do końca − bezpłatna przerwa (29 CFR 785.19),
+  * wypłata tygodnia = Σ minuty × stawka wpisu / 60, bez nadgodzin.
 
 Użycie:
-  python3 sprawdz_csv.py godziny.csv [--tydzien-od pn|wt|sr|cz|pt|sb|nd] [--bez-nadgodzin]
+  python3 sprawdz_csv.py godziny.csv [--tydzien-od pn|wt|sr|cz|pt|sb|nd]
   python3 sprawdz_csv.py godziny.csv --porownaj oczekiwane.txt   # kod wyjścia 1 przy różnicy
 """
 import argparse
@@ -26,7 +25,7 @@ def tydzien(data: dt.date, od: int) -> dt.date:
     return data - dt.timedelta(days=(data.weekday() - od) % 7)
 
 
-def przelicz(sciezka, od, nadgodziny, teraz_ms=None):
+def przelicz(sciezka, od):
     tygodnie = {}
     with open(sciezka, encoding="utf-8-sig", newline="") as f:
         for w in csv.DictReader(f):
@@ -39,15 +38,10 @@ def przelicz(sciezka, od, nadgodziny, teraz_ms=None):
             m, kwota = tygodnie.get(t, (0, Decimal(0)))
             tygodnie[t] = (m + minuty, kwota + Decimal(minuty) * stawka / 60)
     wynik = {}
-    for t, (m, podstawa) in sorted(tygodnie.items()):
-        nadg = max(0, m - 40 * 60) if nadgodziny else 0
-        stawka_reg = podstawa * 60 / m if m else Decimal(0)
-        doplata = stawka_reg / 2 * Decimal(nadg) / 60
-        wynik[t] = dict(minuty=m, nadg=nadg,
-                        podstawa=podstawa.quantize(CENT, ROUND_HALF_UP),
-                        stawka=stawka_reg.quantize(CENT, ROUND_HALF_UP),
-                        doplata=doplata.quantize(CENT, ROUND_HALF_UP))
-        wynik[t]["razem"] = wynik[t]["podstawa"] + wynik[t]["doplata"]
+    for t, (m, kwota) in sorted(tygodnie.items()):
+        srednia = kwota * 60 / m if m else Decimal(0)
+        wynik[t] = dict(minuty=m, stawka=srednia.quantize(CENT, ROUND_HALF_UP),
+                        razem=kwota.quantize(CENT, ROUND_HALF_UP))
     return wynik
 
 
@@ -55,14 +49,12 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("csv")
     p.add_argument("--tydzien-od", default="pn", choices=DNI)
-    p.add_argument("--bez-nadgodzin", action="store_true")
     p.add_argument("--porownaj", help="plik z liniami: YYYY-MM-DD minuty centy_razem")
     a = p.parse_args()
-    wynik = przelicz(a.csv, DNI[a.tydzien_od], not a.bez_nadgodzin)
+    wynik = przelicz(a.csv, DNI[a.tydzien_od])
 
     for t, w in wynik.items():
-        print(f"{t}  {w['minuty'] // 60}:{w['minuty'] % 60:02d} h  nadg. {w['nadg'] // 60}:{w['nadg'] % 60:02d} h  "
-              f"stawka reg. ${w['stawka']}  podstawa ${w['podstawa']}  dopłata ${w['doplata']}  "
+        print(f"{t}  {w['minuty'] // 60}:{w['minuty'] % 60:02d} h  śr. stawka ${w['stawka']}  "
               f"RAZEM ${w['razem']}")
 
     if a.porownaj:

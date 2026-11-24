@@ -61,7 +61,7 @@ public class WorkMathTest {
                 new Entry(1, mon, mon + 8 * WorkMath.HOUR),
                 new Entry(2, mon + 9 * WorkMath.HOUR, mon + 10 * WorkMath.HOUR + 15 * WorkMath.MINUTE),
                 new Entry(3, mon + 24 * WorkMath.HOUR, mon + 32 * WorkMath.HOUR + 30 * WorkMath.MINUTE));
-        WorkMath.Summary s = WorkMath.summarize(week, true, 0, WAW);
+        WorkMath.Summary s = WorkMath.summarize(week, 0, WAW);
         assertEquals(8 * 60 + 75 + 8 * 60 + 30, s.minutes);       // 17:45
         assertEquals(60350, s.payCents);                            // 17.75 h * 34
         assertEquals(2, s.days);
@@ -165,55 +165,40 @@ public class WorkMathTest {
         return out;
     }
 
-    /** 29 CFR 778.110(a): $12/h, 46 h ⇒ $588 (46 × $12 + 6 × $6). */
-    @Test public void cfr778_110_singleRate() {
-        WorkMath.Summary s = WorkMath.summarize(week(46, 1200, 1), true, 0, WAW);
+    /** Bez nadgodzin: $12/h × 46 h = $552 (każda godzina po tej samej stawce). */
+    @Test public void noOvertime46Hours() {
+        WorkMath.Summary s = WorkMath.summarize(week(46, 1200, 1), 0, WAW);
         assertEquals(46 * 60, s.minutes);
-        assertEquals(6 * 60, s.overtimeMinutes);
-        assertEquals(40 * 60, s.regularMinutes);
-        assertEquals(55200, s.straightCents);          // 46 × $12
-        assertEquals(3600, s.overtimePremiumCents);    // 6 × $6
-        assertEquals(1200, s.regularRateCents);
-        assertEquals(58800, s.payCents);               // $588
+        assertEquals(55200, s.payCents);
+        assertEquals(1200, s.averageRateCents);
+        assertTrue(!s.mixedRates);
     }
 
-    /**
-     * 29 CFR 778.115: kilka stawek w tygodniu ⇒ stawka regularna = średnia ważona.
-     * 30 h × $12 + 15 h × $15 = $585; 585 / 45 = $13; dopłata 5 × $6.50 = $32.50; razem $617.50.
-     */
-    @Test public void cfr778_115_weightedAverage() {
+    /** Dwie stawki: 30 h × $12 + 15 h × $15 = $585; średnia $13/h. */
+    @Test public void twoRates() {
         List<Entry> w = new java.util.ArrayList<>(week(30, 1200, 1));
         for (Entry e : week(15, 1500, 100)) {                // te same dni, inne godziny
             long shift = 12 * WorkMath.HOUR;
             w.add(new Entry(e.id, e.start + shift, e.end + shift, 0, 1500, 0, 0, true));
         }
-        WorkMath.Summary s = WorkMath.summarize(w, true, 0, WAW);
+        WorkMath.Summary s = WorkMath.summarize(w, 0, WAW);
         assertEquals(45 * 60, s.minutes);
-        assertEquals(58500, s.straightCents);
-        assertEquals(1300, s.regularRateCents);
-        assertEquals(3250, s.overtimePremiumCents);
-        assertEquals(61750, s.payCents);
+        assertEquals(58500, s.payCents);
+        assertEquals(1300, s.averageRateCents);
+        assertTrue(s.mixedRates);
     }
 
-    /** $34/h: 40 h bez dopłaty, 42 h ⇒ 2 h × $17 dopłaty; wyłączone nadgodziny ⇒ brak dopłaty. */
-    @Test public void overtimeAt34() {
-        assertEquals(136000, WorkMath.summarize(week(40, 3400, 1), true, 0, WAW).payCents);
-        assertEquals(0, WorkMath.summarize(week(40, 3400, 1), true, 0, WAW).overtimeMinutes);
-        WorkMath.Summary s = WorkMath.summarize(week(42, 3400, 1), true, 0, WAW);
-        assertEquals(3400, s.overtimePremiumCents);
-        assertEquals(146200, s.payCents);              // $1,462.00 = 40 × 34 + 2 × 51
-        WorkMath.Summary off = WorkMath.summarize(week(42, 3400, 1), false, 0, WAW);
-        assertEquals(0, off.overtimeMinutes);
-        assertEquals(142800, off.payCents);
+    /** $34/h: 40 h = $1,360.00, 42 h = $1,428.00 (bez dopłat). */
+    @Test public void at34() {
+        assertEquals(136000, WorkMath.summarize(week(40, 3400, 1), 0, WAW).payCents);
+        assertEquals(142800, WorkMath.summarize(week(42, 3400, 1), 0, WAW).payCents);
     }
 
-    /** Niezmiennik: dla jednej stawki wynik = zwykłe × stawka + nadgodziny × 1.5 stawki (±1 cent). */
-    @Test public void overtimeEqualsTimeAndAHalfForSingleRate() {
-        for (int min = 2300; min <= 3600; min += 7) {
-            WorkMath.Summary s = WorkMath.summarize(week(min / 60.0, 3400, 1), true, 0, WAW);
-            long reg = Math.min(min, 2400), ot = Math.max(0, min - 2400);
-            double expected = reg * 3400 / 60.0 + ot * 5100 / 60.0;
-            assertTrue(min + " min", Math.abs(s.payCents - expected) <= 1.0);
+    /** Niezmiennik: wypłata = minuty × stawka / 60 (±½ centa), dla dowolnej liczby minut. */
+    @Test public void payIsMinutesTimesRate() {
+        for (int min = 1; min <= 4000; min += 7) {
+            WorkMath.Summary s = WorkMath.summarize(week(min / 60.0, 3400, 1), 0, WAW);
+            assertTrue(min + " min", Math.abs(s.payCents - min * 3400 / 60.0) <= 0.5);
         }
     }
 

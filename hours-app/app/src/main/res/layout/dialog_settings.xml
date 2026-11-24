@@ -31,18 +31,6 @@
 
     <TextView style="@style/Text.Title" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_marginTop="16dp"
-        android:text="@string/overtime_label" />
-
-    <Switch android:id="@+id/overtime" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:minHeight="48dp"
-        android:text="@string/overtime_switch" />
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/overtime_help" android:textColor="@color/ink_dim"
-        android:textSize="12sp" />
-
-    <TextView style="@style/Text.Title" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginTop="16dp"
         android:labelFor="@+id/weekStart" android:text="@string/week_start_label" />
 
     <Spinner android:id="@+id/weekStart" android:layout_width="match_parent"

@@ -19,7 +19,7 @@ import java.util.TimeZone;
 
 /**
  * Próbka do niezależnej weryfikacji: ~12 tygodni losowych (ale powtarzalnych) zmian z różnymi
- * stawkami, przerwami, zmianami przez północ i nadgodzinami. Zapisuje eksport CSV oraz sumy
+ * stawkami, przerwami, zmianami przez północ i tygodniami ponad 40 h. Zapisuje eksport CSV oraz sumy
  * tygodni policzone przez aplikację; skrypt tools/sprawdz_csv.py przelicza CSV po swojemu
  * i porównuje (w CI krok „Niezależne przeliczenie”).
  */
@@ -55,16 +55,16 @@ public class VerificationSampleTest {
         }
         SimpleDateFormat iso = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         iso.setTimeZone(tz);
-        int overtimeWeeks = 0;
+        int longWeeks = 0;
         try (Writer out = new OutputStreamWriter(new FileOutputStream(new File(dir, "oczekiwane.txt")), StandardCharsets.UTF_8)) {
             for (int week = 0; week < 12; week++) {
                 long ws = WorkMath.addWeeks(w0, week, tz);
                 List<Entry> wk = WorkMath.inRange(all, ws, WorkMath.addWeeks(ws, 1, tz));
-                WorkMath.Summary s = WorkMath.summarize(wk, true, 0, tz);
-                if (s.overtimeMinutes > 0) overtimeWeeks++;
+                WorkMath.Summary s = WorkMath.summarize(wk, 0, tz);
+                if (s.minutes > 40 * 60) longWeeks++;
                 out.write(iso.format(ws) + " " + s.minutes + " " + s.payCents + "\n");
             }
         }
-        assertTrue("próbka musi zawierać tygodnie z nadgodzinami", overtimeWeeks >= 3);
+        assertTrue("próbka musi zawierać tygodnie ponad 40 h", longWeeks >= 3);
     }
 }
