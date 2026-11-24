@@ -1,0 +1,12 @@
+﻿pozycja;aluminium V2 [zł];stal ciężka S1 [zł];stal lekka S2 [zł];uwagi (S2)
+Rury jezdne;1042;492;384;2 sztangi RHS 100×40×2 S355J2H
+Podłużnice chodnika;599;333;252;2 sztangi RHS 100×40×1,5 S235JRH
+Poprzeczki;405;118;118;RHS 60×40×2 S235JRH (na płasko)
+Prowadnice + listwa T;189;83;83;kątownik 40×40×3, płaskownik 40×5
+Siatka;344;234;203;siatka stal ocynk ~30×12×2×1,5
+Ochrona przed korozją;0;583;460;cynkowanie ogniowe po wierceniu
+Sprężyny gazowe;180;460;460;2 × 3700 N Ø40
+Wspólne (płyty, wsporniki K, tuleje, śruby, sworznie, nity, zapięcia);750;790;790;sworznie blokady 8.8
+RAZEM (netto, orientacyjnie);3510;3094;2749;z farbą zamiast cynku: S2 ok. 2470 zł
+
+założone ceny netto (zmień w stal.py → CENY);al_6082_kg=40;al_6060_kg=34;st_s235_kg=6.5;st_s355_kg=7.5;cynk_ogniowy_kg=4.5;farba_kpl=180;siatka_al_m2=110;siatka_st_m2=75;siatka_st_lekka_m2=65;sprezyna_28=90;sprezyna_40=230;wspolne=750

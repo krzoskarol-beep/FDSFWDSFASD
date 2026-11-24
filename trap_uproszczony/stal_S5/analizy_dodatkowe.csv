@@ -1,0 +1,25 @@
+﻿obszar;przypadek;wynik 1;wynik 2;wynik 3;wynik 4
+sprężyny;-20 °C, siła nominalna;siła 2140 N;podnoszenie max 26,5 kg;rozłożony -210 N·m (leży);pion 20 N·m (OK)
+sprężyny;-20 °C, siła −5 %;siła 2033 N;podnoszenie max 27,7 kg;rozłożony -230 N·m (leży);pion 16 N·m (OK)
+sprężyny;-20 °C, siła +5 %;siła 2247 N;podnoszenie max 25,4 kg;rozłożony -190 N·m (leży);pion 24 N·m (OK)
+sprężyny;+0 °C, siła nominalna;siła 2320 N;podnoszenie max 24,6 kg;rozłożony -176 N·m (leży);pion 26 N·m (OK)
+sprężyny;+20 °C, siła nominalna;siła 2500 N;podnoszenie max 22,7 kg;rozłożony -142 N·m (leży);pion 33 N·m (OK)
+sprężyny;+40 °C, siła nominalna;siła 2680 N;podnoszenie max 20,7 kg;rozłożony -108 N·m (leży);pion 39 N·m (OK)
+sprężyny;+50 °C, siła nominalna;siła 2770 N;podnoszenie max 19,8 kg;rozłożony -92 N·m (leży);pion 42 N·m (OK)
+sprężyny;+50 °C, siła −5 %;siła 2632 N;podnoszenie max 21,3 kg;rozłożony -118 N·m (leży);pion 37 N·m (OK)
+sprężyny;+50 °C, siła +5 %;siła 2909 N;podnoszenie max 18,3 kg;rozłożony -66 N·m (leży);pion 47 N·m (OK)
+sprężyny;jedna sprężyna zepsuta (20 °C);siła 2500 N;podnoszenie max 36,1 kg;rozłożony -377 N·m (leży);pion -12 N·m (OK)
+sprężyny;obie zepsute / zdjęte;siła 0 N;podnoszenie max 50,3 kg;rozłożony -612 N·m (leży);pion -56 N·m (OK)
+NIOSH;ze sprężynami;max LI 2,36 przy 45°;V = 135 cm, L = 22,7 kg;RWL = 9,6 kg;LI ≤ 1 bez ryzyka, 1–3 podwyższone, > 3 wysokie
+NIOSH;bez sprężyn;max LI 5,16 przy 45°;L = 49,5 kg;RWL = 9,6 kg;
+jazda;podskok 2,0 g w pionie;moment 207 N·m;sworzeń blokady 5,18 kN (nośność 32,6);sworzeń zawiasu 5,35 kN (nośność 90,5);wytężenie 16 %
+jazda;hamowanie 0,8 g + ciężar;moment -390 N·m;sworzeń blokady 9,74 kN (nośność 32,6);sworzeń zawiasu 9,78 kN (nośność 90,5);wytężenie 30 %
+jazda;ruszanie / cofanie 0,5 g + ciężar;moment 439 N·m;sworzeń blokady 10,96 kN (nośność 32,6);sworzeń zawiasu 10,99 kN (nośność 90,5);wytężenie 34 %
+jazda;zakręt 0,5 g w bok;0,66 kN wzdłuż sworzni;przenoszą łby, podkładki i zawleczki;;
+motocykl;Harley-Davidson Fat Boy 114;utrata prześwitu na krawędzi podłogi 80 mm;zapas 35 mm z 115;opona tył 240: luz 21 mm/stronę;przód 160: 61 mm/stronę
+protokół;P1;koło 273 kg na L2 (x +45), środek A (s = 600);ugięcie przewidywane 1,2 mm;skok na styku -0,3 mm;
+protokół;P2;koło 273 kg na L2 przy zawiasie (A, s = 1250);ugięcie przewidywane 5,1 mm;skok na styku -1,9 mm;
+protokół;P3;koło 273 kg na L4 w środku B (s = 600);ugięcie przewidywane 1,1 mm;skok na styku -0,1 mm;
+protokół;P4;stopa 105 kg na C2 przy zawiasie (A, s = 1250);ugięcie przewidywane 2,7 mm;skok na styku -0,0 mm;
+protokół;P5;stopa 105 kg na C2 w środku A (s = 600);ugięcie przewidywane 1,3 mm;skok na styku -0,0 mm;
+protokół;P6;stopa 105 kg na C3 krawędź, środek B (s = 600);ugięcie przewidywane 1,7 mm;skok na styku 0,0 mm;
