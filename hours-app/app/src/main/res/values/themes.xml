@@ -75,6 +75,11 @@
         <item name="android:fontFeatureSettings">tnum</item>
     </style>
 
+    <style name="Btn.Toggle" parent="Btn.Ghost.Small">
+        <item name="android:background">@drawable/toggle_bg</item>
+        <item name="android:textColor">@color/toggle_text</item>
+    </style>
+
     <style name="Btn.Dark">
         <item name="android:background">@drawable/btn_dark</item>
         <item name="android:textColor">@color/on_strong</item>

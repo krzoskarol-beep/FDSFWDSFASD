@@ -50,6 +50,11 @@ jobs:
       - name: Testy jednostkowe, lint, APK debug
         run: ./gradlew testDebugUnitTest lintDebug assembleDebug
 
+      # Dowód niezależny od kodu aplikacji: skrypt w Pythonie (Decimal) przelicza eksport CSV
+      # próbki 12 tygodni wg FLSA i porównuje z sumami aplikacji co do minuty i centa.
+      - name: Niezależne przeliczenie wypłaty (Python vs aplikacja)
+        run: python3 tools/sprawdz_csv.py app/build/weryfikacja/probka.csv --porownaj app/build/weryfikacja/oczekiwane.txt
+
       - name: Klucz podpisu z sekretów
         if: env.HAS_SIGNING == 'true'
         env:
@@ -93,6 +98,7 @@ jobs:
           path: |
             hours-app/app/build/reports/
             hours-app/app/build/test-results/
+            hours-app/app/build/weryfikacja/
           if-no-files-found: ignore
 
   emulator:

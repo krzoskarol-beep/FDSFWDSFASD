@@ -15,20 +15,31 @@ Stawka domyślna: **$34.00/h** (można zmienić).
   (w zakończonej zmianie przesuwają koniec, w trwającej — początek). Trwającej zmianie
   można też ustawić koniec, co ją kończy. „+ Dodaj wpis ręcznie” dodaje zapomnianą zmianę. Aplikacja nie pozwala
   zapisać wpisów nakładających się na siebie, dłuższych niż 24 h ani w przyszłości.
+- **Nadgodziny (FLSA)** — ponad 40 h w tygodniu dopłata ½ stawki regularnej (czyli ×1.5);
+  przy kilku stawkach w tygodniu stawka regularna to średnia ważona. Można wyłączyć.
+- **Przerwa bezpłatna** (0/15/30/45/60 min) przy każdym wpisie — odejmowana od czasu.
+- **Stawka zapisana przy wpisie** — zmiana stawki nie przelicza wstecz starych tygodni.
+- **Ślad zmian** — każdy wpis pamięta godziny z zegara (Clock In/Out); lista, raport i CSV
+  pokazują, co poprawiono ręcznie albo dodano ręcznie.
+- **Kopia CSV** — eksport do Excela/Arkuszy i przywracanie z tego samego pliku (Ustawienia).
+- **Ostrzeżenie** przy zmianie trwającej ponad 12 h (zapomniany Clock Out).
 - **Raport tygodnia** — czytelne zestawienie dzień po dniu z sumą godzin i wypłatą;
   można je skopiować albo udostępnić (SMS, e-mail, WhatsApp…).
-- **Ustawienia** (przycisk ze stawką): stawka godzinowa, początek tygodnia
-  (poniedziałek albo niedziela) i wygląd.
+- **Ustawienia** (przycisk ze stawką): stawka godzinowa, nadgodziny, dzień początku
+  tygodnia roboczego (dowolny, jak u pracodawcy), wygląd, kopia CSV.
 - **Tryb ciemny** — domyślnie aplikacja jest jasna albo ciemna tak jak telefon;
   w Ustawieniach można wymusić motyw jasny lub ciemny.
 
 ## Zasady liczenia
 
-- Czas wpisu liczony jest w pełnych minutach; wypłata tygodnia = suma minut × stawka / 60,
-  zaokrąglona do centa. Dzięki temu godziny i kwota w raporcie zawsze do siebie pasują.
-- Zmiana przez północ (np. 22:00–06:00) należy do dnia, w którym się zaczęła.
-- Zmiana krótsza niż minuta (przypadkowe Clock In → Clock Out) nie jest zapisywana.
-- Nadgodziny (np. ×1.5 powyżej 40 h) **nie** są liczone osobno.
+Reguły i ich źródła (przepisy FLSA, 29 CFR) oraz sposób weryfikacji opisuje
+[docs/ZRODLA-I-WERYFIKACJA.md](docs/ZRODLA-I-WERYFIKACJA.md). W skrócie:
+
+- czas wpisu w pełnych minutach, minus przerwa; bez zaokrąglania,
+- podstawa = Σ minuty × stawka wpisu; nadgodziny ponad 40 h: + ½ stawki regularnej,
+- zmiana przez północ należy do dnia, w którym się zaczęła,
+- zmiana krótsza niż minuta (przypadkowe Clock In → Clock Out) nie jest zapisywana,
+- kwoty są brutto (bez podatków); przepisy stanowe (np. nadgodziny dzienne w Kalifornii) nie są liczone.
 
 ## Prywatność
 
@@ -45,5 +56,10 @@ cd hours-app
 ./gradlew testDebugUnitTest -Pscreenshots --tests '*ScreenshotTest*'   # ekran główny i okno edycji (jasny i ciemny) w hours-app/screenshots/
 ```
 
-Logika (tydzień, wypłata, walidacja, raport) jest w `WorkMath` i `Report` i ma testy JUnit.
+Logika (tydzień, wypłata, walidacja, raport, CSV) jest w `WorkMath`, `Report` i `Csv` i ma testy JUnit.
+Niezależne przeliczenie próbki (robi to też CI):
+
+```bash
+python3 tools/sprawdz_csv.py app/build/weryfikacja/probka.csv --porownaj app/build/weryfikacja/oczekiwane.txt
+```
 Podpis wersji release: zmienne `SIGNING_*` albo `hours-app/keystore.properties` (poza repozytorium).

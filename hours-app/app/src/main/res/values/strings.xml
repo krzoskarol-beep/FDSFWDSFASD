@@ -21,9 +21,7 @@
     <string name="start">Początek</string>
     <string name="end">Koniec</string>
     <string name="rate_label">Stawka godzinowa (USD)</string>
-    <string name="week_start_label">Tydzień zaczyna się w</string>
-    <string name="monday">poniedziałek</string>
-    <string name="sunday">niedzielę</string>
+    <string name="week_start_label">Tydzień roboczy zaczyna się (jak u pracodawcy)</string>
     <string name="theme_label">Wygląd</string>
     <string name="theme_system">jak w telefonie</string>
     <string name="theme_light">jasny</string>
@@ -34,4 +32,13 @@
     <string name="plus_15">+15 min</string>
     <string name="plus_60">+1 h</string>
     <string name="tap_to_edit">Dotknij wpis, aby go zmienić.</string>
+    <string name="break_label">Przerwa bezpłatna (min)</string>
+    <string name="rate_this_week">Nowa stawka także dla wpisów z bieżącego tygodnia</string>
+    <string name="overtime_label">Nadgodziny</string>
+    <string name="overtime_switch">×1.5 ponad 40 h w tygodniu (FLSA)</string>
+    <string name="overtime_help">Federalne prawo USA dla pracowników godzinowych: ½ stawki regularnej dopłaty za każdą godzinę ponad 40. Wyłącz, jeśli Twoja umowa tego nie obejmuje.</string>
+    <string name="backup_label">Kopia danych (CSV)</string>
+    <string name="backup_help">Plik otworzysz w Excelu/Arkuszach. Ten sam plik przywraca wszystkie wpisy, np. na nowym telefonie.</string>
+    <string name="export_csv">Eksportuj</string>
+    <string name="import_csv">Przywróć</string>
 </resources>

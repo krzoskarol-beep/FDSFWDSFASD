@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -55,9 +58,35 @@
             android:text="@string/plus_60" />
     </LinearLayout>
 
+    <TextView style="@style/Text.Title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="14dp"
+        android:text="@string/break_label" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" android:orientation="horizontal">
+        <Button android:id="@+id/break0" style="@style/Btn.Toggle" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="0" />
+        <Button android:id="@+id/break15" style="@style/Btn.Toggle" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="15" />
+        <Button android:id="@+id/break30" style="@style/Btn.Toggle" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="30" />
+        <Button android:id="@+id/break45" style="@style/Btn.Toggle" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="45" />
+        <Button android:id="@+id/break60" style="@style/Btn.Toggle" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="60" />
+    </LinearLayout>
+
     <TextView android:id="@+id/summary" style="@style/Text.Num"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="14dp" android:textColor="@color/ink" android:textSize="16sp" />
+
+    <TextView android:id="@+id/clockInfo" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="4dp"
+        android:textColor="@color/ink_dim" android:textSize="13sp" android:visibility="gone" />
 
     <TextView android:id="@+id/hint" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:layout_marginTop="4dp"
@@ -67,3 +96,4 @@
         android:layout_height="wrap_content" android:layout_marginTop="6dp"
         android:textColor="@color/red" android:textSize="14sp" android:visibility="gone" />
 </LinearLayout>
+</ScrollView>

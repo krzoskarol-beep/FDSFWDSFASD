@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -17,17 +21,32 @@
         android:inputType="numberDecimal" android:minHeight="48dp"
         android:textSize="22sp" />
 
+    <CheckBox android:id="@+id/rateThisWeek" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:minHeight="48dp" android:checked="true"
+        android:text="@string/rate_this_week" />
+
+    <TextView android:id="@+id/rateError" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:textColor="@color/red"
+        android:textSize="14sp" android:visibility="gone" />
+
     <TextView style="@style/Text.Title" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_marginTop="16dp"
-        android:text="@string/week_start_label" />
+        android:text="@string/overtime_label" />
 
-    <RadioGroup android:id="@+id/weekStart" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="horizontal">
-        <RadioButton android:id="@+id/startMon" android:layout_width="wrap_content"
-            android:layout_height="48dp" android:layout_marginEnd="16dp" android:text="@string/monday" />
-        <RadioButton android:id="@+id/startSun" android:layout_width="wrap_content"
-            android:layout_height="48dp" android:text="@string/sunday" />
-    </RadioGroup>
+    <Switch android:id="@+id/overtime" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/overtime_switch" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/overtime_help" android:textColor="@color/ink_dim"
+        android:textSize="12sp" />
+
+    <TextView style="@style/Text.Title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        android:labelFor="@+id/weekStart" android:text="@string/week_start_label" />
+
+    <Spinner android:id="@+id/weekStart" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:minHeight="48dp" />
 
     <TextView style="@style/Text.Title" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_marginTop="16dp"
@@ -43,7 +62,23 @@
             android:layout_height="48dp" android:text="@string/theme_dark" />
     </RadioGroup>
 
-    <TextView android:id="@+id/rateError" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:textColor="@color/red"
-        android:textSize="14sp" android:visibility="gone" />
+    <TextView style="@style/Text.Title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        android:text="@string/backup_label" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/backup_help" android:textColor="@color/ink_dim"
+        android:textSize="12sp" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="6dp" android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+        <Button android:id="@+id/exportBtn" style="@style/Btn.Ghost" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="6dp" android:text="@string/export_csv" />
+        <Button android:id="@+id/importBtn" style="@style/Btn.Ghost" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/import_csv" />
+    </LinearLayout>
 </LinearLayout>
+</ScrollView>

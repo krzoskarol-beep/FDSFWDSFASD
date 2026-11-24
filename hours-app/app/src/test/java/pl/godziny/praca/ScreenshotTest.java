@@ -46,6 +46,14 @@ public class ScreenshotTest {
         renderDialog("edycja-ciemny.png");
     }
 
+    @Test public void settingsDialog() throws Exception {
+        Context ctx = ApplicationProvider.getApplicationContext();
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        a.findViewById(R.id.rateBtn).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        saveDialog(a, org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog(), "ustawienia.png");
+    }
+
     private void renderDialog(String fileName) throws Exception {
         Context ctx = ApplicationProvider.getApplicationContext();
         long now = System.currentTimeMillis();
@@ -58,6 +66,11 @@ public class ScreenshotTest {
         org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
         android.app.Dialog dlg = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
         dlg.findViewById(R.id.minus15).performClick();
+        dlg.findViewById(R.id.break30).performClick();
+        saveDialog(a, dlg, fileName);
+    }
+
+    private static void saveDialog(MainActivity a, android.app.Dialog dlg, String fileName) throws Exception {
         View d = dlg.getWindow().getDecorView();
         int w = a.findViewById(R.id.root).getWidth() * 88 / 100;
         d.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY),
@@ -85,7 +98,11 @@ public class ScreenshotTest {
         // Kilka zmian z poprzednich dni tygodnia (o ile już minęły) i trwająca od 2 h 14 min.
         for (int d = 0; d < 4; d++) {
             long s = WorkMath.atTime(WorkMath.addDays(w, d, tz), 8, d * 5, tz);
-            if (s + 9 * h < now - 3 * h) store.add(s, s + 8 * h + 30 * m + d * 7 * m);
+            if (s + 9 * h < now - 3 * h) {
+                Entry e = store.add(s, s + 8 * h + 30 * m + d * 7 * m);
+                if (d == 1) store.update(e.withBreak(30));
+                if (d == 2) store.update(e.withTimes(e.start - 12 * m, e.end));
+            }
         }
         store.add(now - 2 * h - 14 * m - 9_000, 0);
 

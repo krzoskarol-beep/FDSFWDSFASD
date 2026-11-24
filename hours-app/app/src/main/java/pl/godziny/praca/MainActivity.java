@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,15 +16,24 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -37,6 +47,11 @@ import java.util.TimeZone;
 public class MainActivity extends Activity {
 
     private static final String K_WEEK = "week_start";
+    private static final long FORGOTTEN_AFTER = 12 * WorkMath.HOUR;
+    private static final int REQ_EXPORT = 1, REQ_IMPORT = 2;
+
+    /** Długości przerwy do wyboru w edycji (min). */
+    static final int[] BREAKS = {0, 15, 30, 45, 60};
 
     private EntryStore store;
     private TimeZone tz;
@@ -142,7 +157,7 @@ public class MainActivity extends Activity {
         if (run == null) return;
         timer.setText(WorkMath.formatHms(now - run.start));
         long min = WorkMath.minutes(run, now);
-        earned.setText(WorkMath.formatMoney(WorkMath.payCents(min, store.rateCents())));
+        earned.setText(WorkMath.formatMoney(WorkMath.payCents(min, run.rateCents)));
         // Co pełną minutę przelicz tydzień i listę (godziny trwającej zmiany rosną).
         if (min != lastTickMinute) {
             lastTickMinute = min;
@@ -163,10 +178,16 @@ public class MainActivity extends Activity {
                     + (WorkMath.dayStart(run.start, tz) == WorkMath.dayStart(now, tz)
                     ? "" : " (" + Report.dayShort(run.start, tz) + " " + fmt("dd.MM").format(run.start) + ")"));
             status.setTextColor(getColor(R.color.green));
+            if (now - run.start > FORGOTTEN_AFTER) {
+                // Zapomniany Clock Out zawyża godziny: ostrzeż, zamiast liczyć po cichu.
+                status.setText("Ponad 12 h od Clock In (" + fmt("HH:mm").format(run.start)
+                        + "). Zapomniany Clock Out? Dotknij wpis, aby ustawić koniec.");
+                status.setTextColor(getColor(R.color.red));
+            }
             timer.setText(WorkMath.formatHms(now - run.start));
             timer.setTextColor(getColor(R.color.ink));
             long min = WorkMath.minutes(run, now);
-            earned.setText(WorkMath.formatMoney(WorkMath.payCents(min, rate)));
+            earned.setText(WorkMath.formatMoney(WorkMath.payCents(min, run.rateCents)));
             earned.setVisibility(View.VISIBLE);
             earnedLabel.setVisibility(View.VISIBLE);
             clockBtn.setText(R.string.clock_out);
@@ -189,16 +210,19 @@ public class MainActivity extends Activity {
         nextWeek.setAlpha(current ? 0.35f : 1f);
 
         List<Entry> week = WorkMath.inRange(all, weekStart, WorkMath.addWeeks(weekStart, 1, tz));
-        WorkMath.Summary s = WorkMath.summarize(week, rate, now, tz);
+        WorkMath.Summary s = WorkMath.summarize(week, store.overtime(), now, tz);
         weekHours.setText(WorkMath.formatHm(s.minutes) + " h");
-        weekHoursDec.setText("= " + WorkMath.formatDecimalHours(s.minutes) + " h");
+        weekHoursDec.setText("= " + WorkMath.formatDecimalHours(s.minutes) + " h"
+                + (s.overtimeMinutes > 0 ? " · nadgodziny " + WorkMath.formatHm(s.overtimeMinutes) + " h" : ""));
         weekPay.setText(WorkMath.formatMoney(s.payCents));
-        weekDays.setText("dni pracy: " + s.days);
+        weekDays.setText(s.overtimeMinutes > 0
+                ? "brutto, w tym " + WorkMath.formatMoney(s.overtimePremiumCents) + " dopłaty"
+                : "brutto · dni pracy: " + s.days);
 
-        buildList(week, rate, now);
+        buildList(week, now);
     }
 
-    private void buildList(List<Entry> week, long rate, long now) {
+    private void buildList(List<Entry> week, long now) {
         entryList.removeAllViews();
         emptyMsg.setVisibility(week.isEmpty() ? View.VISIBLE : View.GONE);
         findViewById(R.id.editHint).setVisibility(week.isEmpty() ? View.GONE : View.VISIBLE);
@@ -212,17 +236,21 @@ public class MainActivity extends Activity {
             if (d != day) {
                 day = d;
                 // Suma dnia (wpisy, które zaczęły się tego dnia).
-                long dayMin = 0;
-                for (Entry o : week) if (WorkMath.dayStart(o.start, tz) == d) dayMin += WorkMath.minutes(o, now);
+                long dayMin = 0, dayPay = 0;
+                for (Entry o : week) {
+                    if (WorkMath.dayStart(o.start, tz) != d) continue;
+                    long m = WorkMath.minutes(o, now);
+                    dayMin += m;
+                    dayPay += WorkMath.payCents(m, o.rateCents);
+                }
                 entryList.addView(dayHeader(Report.dayShort(e.start, tz) + " " + dm.format(e.start),
-                        WorkMath.formatHm(dayMin) + " h · "
-                                + WorkMath.formatMoney(WorkMath.payCents(dayMin, rate))));
+                        WorkMath.formatHm(dayMin) + " h · " + WorkMath.formatMoney(dayPay)));
             }
             long min = WorkMath.minutes(e, now);
             String range = hm.format(e.start) + " – " + (e.isRunning() ? "teraz" : hm.format(e.end));
             if (!e.isRunning() && WorkMath.dayStart(e.end, tz) != d) range += " (+1)";
-            entryList.addView(entryRow(e, range, WorkMath.formatHm(min) + " h",
-                    WorkMath.formatMoney(WorkMath.payCents(min, rate))));
+            entryList.addView(entryRow(e, range, Report.notes(e, tz), WorkMath.formatHm(min) + " h",
+                    WorkMath.formatMoney(WorkMath.payCents(min, e.rateCents))));
         }
     }
 
@@ -239,7 +267,7 @@ public class MainActivity extends Activity {
         return row;
     }
 
-    private View entryRow(Entry e, String range, String dur, String pay) {
+    private View entryRow(Entry e, String range, String notes, String dur, String pay) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -249,9 +277,17 @@ public class MainActivity extends Activity {
         row.setOnClickListener(v -> showEntryDialog(e));
         row.setContentDescription("Edytuj wpis " + range);
 
+        LinearLayout left = new LinearLayout(this);
+        left.setOrientation(LinearLayout.VERTICAL);
         TextView t = text(range, 16, e.isRunning() ? R.color.green : R.color.ink);
         t.setFontFeatureSettings("tnum");
-        row.addView(t, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        left.addView(t);
+        if (!notes.isEmpty()) {
+            // Przerwa i ślad poprawek widoczne od razu na liście, nie tylko w raporcie.
+            TextView nt = text((e.isEdited() ? "✎ " : "") + notes, 12, R.color.ink_dim);
+            left.addView(nt);
+        }
+        row.addView(left, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
         TextView dv = text(dur, 15, R.color.ink_dim);
         dv.setFontFeatureSettings("tnum");
@@ -278,9 +314,11 @@ public class MainActivity extends Activity {
                 store.delete(run.id);
                 toast("Zmiana krótsza niż minuta — nie zapisano.");
             } else {
-                store.update(run.withTimes(run.start, now));
-                toast("Zapisano: " + WorkMath.formatHm(min) + " h · "
-                        + WorkMath.formatMoney(WorkMath.payCents(min, store.rateCents())));
+                Entry done = run.clockedOut(now);
+                store.update(done);
+                long paid = WorkMath.minutes(done, now);
+                toast("Zapisano: " + WorkMath.formatHm(paid) + " h · "
+                        + WorkMath.formatMoney(WorkMath.payCents(paid, done.rateCents)));
             }
         } else {
             String err = WorkMath.validate(all, -1, now, 0, now, tz);
@@ -317,6 +355,8 @@ public class MainActivity extends Activity {
         }
         // Trwająca zmiana: koniec = „teraz”, dopóki nie ustawisz końca (to ją zakończy).
         final boolean[] running = {entry != null && entry.isRunning()};
+        final int[] brk = {entry != null ? entry.breakMin : 0};
+        final long rate = entry != null ? entry.rateCents : store.rateCents();
 
         View v = getLayoutInflater().inflate(R.layout.dialog_entry, null);
         Button dateBtn = v.findViewById(R.id.dateBtn);
@@ -325,6 +365,16 @@ public class MainActivity extends Activity {
         TextView summary = v.findViewById(R.id.summary);
         TextView hint = v.findViewById(R.id.hint);
         TextView error = v.findViewById(R.id.error);
+        TextView clockInfo = v.findViewById(R.id.clockInfo);
+        Button[] breakBtns = new Button[BREAKS.length];
+        int[] breakIds = {R.id.break0, R.id.break15, R.id.break30, R.id.break45, R.id.break60};
+        for (int i = 0; i < BREAKS.length; i++) breakBtns[i] = v.findViewById(breakIds[i]);
+        if (entry != null && !entry.manual) {
+            clockInfo.setText("Z zegara: " + fmt("HH:mm").format(entry.origStart) + " – "
+                    + (entry.origEnd == 0 ? (entry.isRunning() ? "trwa" : "brak Clock Out")
+                    : fmt("HH:mm").format(entry.origEnd)) + "  (zachowane w raporcie)");
+            clockInfo.setVisibility(View.VISIBLE);
+        }
 
         Runnable update = () -> {
             long n = System.currentTimeMillis();
@@ -332,10 +382,11 @@ public class MainActivity extends Activity {
             dateBtn.setText(Report.dayShort(start[0], tz) + " " + fmt("dd.MM.yyyy").format(start[0]));
             startBtn.setText(fmt("HH:mm").format(c.getTime()));
             endBtn.setText(running[0] ? "trwa… ✎" : fmt("HH:mm").format(end[0]));
-            Entry probe = new Entry(-1, start[0], end[0]);
+            Entry probe = new Entry(-1, start[0], running[0] ? 0 : end[0], brk[0], rate, 0, 0, true);
             long min = WorkMath.minutes(probe, n);
-            summary.setText(WorkMath.formatHm(min) + " h  ·  "
-                    + WorkMath.formatMoney(WorkMath.payCents(min, store.rateCents())));
+            summary.setText(WorkMath.formatHm(min) + " h  ·  " + WorkMath.formatMoney(WorkMath.payCents(min, rate))
+                    + "   (" + WorkMath.formatMoney(rate) + "/h)");
+            for (int i = 0; i < BREAKS.length; i++) breakBtns[i].setSelected(brk[0] == BREAKS[i]);
             if (!running[0] && WorkMath.dayStart(end[0], tz) != WorkMath.dayStart(start[0], tz)) {
                 hint.setText("Koniec następnego dnia: " + Report.dayShort(end[0], tz) + " "
                         + fmt("dd.MM").format(end[0]) + " (zmiana przez północ)");
@@ -392,6 +443,14 @@ public class MainActivity extends Activity {
             }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
         });
 
+        for (int i = 0; i < BREAKS.length; i++) {
+            int minutes = BREAKS[i];
+            breakBtns[i].setOnClickListener(b -> {
+                brk[0] = minutes;
+                update.run();
+            });
+        }
+
         long[] deltas = {-WorkMath.HOUR, -15 * WorkMath.MINUTE, 15 * WorkMath.MINUTE, WorkMath.HOUR};
         int[] ids = {R.id.minus60, R.id.minus15, R.id.plus15, R.id.plus60};
         for (int i = 0; i < ids.length; i++) {
@@ -423,14 +482,14 @@ public class MainActivity extends Activity {
                 long n = System.currentTimeMillis();
                 long e = running[0] ? 0 : end[0];
                 String err = WorkMath.validate(store.all(), entry == null ? -1 : entry.id,
-                        start[0], e, n, tz);
+                        start[0], e, brk[0], n, tz);
                 if (err != null) {
                     error.setText(err);
                     error.setVisibility(View.VISIBLE);
                     return;
                 }
-                if (entry == null) store.add(start[0], e);
-                else store.update(entry.withTimes(start[0], e));
+                if (entry == null) store.addManual(start[0], e, brk[0]);
+                else store.update(entry.withTimes(start[0], e).withBreak(brk[0]));
                 lastTickMinute = -1;
                 weekStart = WorkMath.weekStart(start[0], store.firstDay(), tz);
                 dlg.dismiss();
@@ -456,14 +515,32 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------ ustawienia
 
+    /** Dni w kolejności listy (od poniedziałku) jako stałe Calendar.DAY_OF_WEEK. */
+    static final int[] WEEK_DAYS = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY,
+            Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
+
     private void showSettings() {
         View v = getLayoutInflater().inflate(R.layout.dialog_settings, null);
         EditText input = v.findViewById(R.id.rateInput);
-        RadioGroup group = v.findViewById(R.id.weekStart);
+        CheckBox rateThisWeek = v.findViewById(R.id.rateThisWeek);
+        Switch overtime = v.findViewById(R.id.overtime);
+        Spinner weekDay = v.findViewById(R.id.weekStart);
         TextView err = v.findViewById(R.id.rateError);
         input.setText(WorkMath.rateForInput(store.rateCents()));
         input.setSelection(input.getText().length());
-        group.check(store.firstDay() == Calendar.SUNDAY ? R.id.startSun : R.id.startMon);
+        overtime.setChecked(store.overtime());
+
+        String[] names = new String[WEEK_DAYS.length];
+        int selected = 0;
+        for (int i = 0; i < WEEK_DAYS.length; i++) {
+            names[i] = Report.DAYS_FULL[WEEK_DAYS[i]] + ", 00:00";
+            if (WEEK_DAYS[i] == store.firstDay()) selected = i;
+        }
+        ArrayAdapter<String> days = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+        days.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weekDay.setAdapter(days);
+        weekDay.setSelection(selected);
+
         RadioGroup themeGroup = v.findViewById(R.id.themeMode);
         int theme = ThemePrefs.get(this);
         themeGroup.check(theme == ThemePrefs.MODE_DARK ? R.id.themeDark
@@ -475,6 +552,14 @@ public class MainActivity extends Activity {
                 .setPositiveButton("Zapisz", null)
                 .setNegativeButton("Anuluj", null)
                 .create();
+        v.findViewById(R.id.exportBtn).setOnClickListener(x -> {
+            dlg.dismiss();
+            exportCsv();
+        });
+        v.findViewById(R.id.importBtn).setOnClickListener(x -> {
+            dlg.dismiss();
+            importCsv();
+        });
         dlg.setOnShowListener(d -> dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(x -> {
             long cents = WorkMath.parseRate(input.getText().toString());
             if (cents <= 0) {
@@ -482,8 +567,12 @@ public class MainActivity extends Activity {
                 err.setVisibility(View.VISIBLE);
                 return;
             }
-            store.setRateCents(cents);
-            int first = group.getCheckedRadioButtonId() == R.id.startSun ? Calendar.SUNDAY : Calendar.MONDAY;
+            if (cents != store.rateCents()) {
+                // Historia zostaje przy starej stawce; bieżący tydzień — według wyboru.
+                store.setRateCents(cents, rateThisWeek.isChecked() ? currentWeekStart() : Long.MAX_VALUE);
+            }
+            store.setOvertime(overtime.isChecked());
+            int first = WEEK_DAYS[weekDay.getSelectedItemPosition()];
             store.setFirstDay(first);
             weekStart = WorkMath.weekStart(weekStart, first, tz);
             int id = themeGroup.getCheckedRadioButtonId();
@@ -500,12 +589,84 @@ public class MainActivity extends Activity {
         dlg.show();
     }
 
+    // ------------------------------------------------------------ kopia CSV
+
+    private void exportCsv() {
+        String name = "godziny-pracy-" + fmt("yyyy-MM-dd").format(System.currentTimeMillis()) + ".csv";
+        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("text/csv")
+                .putExtra(Intent.EXTRA_TITLE, name);
+        startActivityForResult(i, REQ_EXPORT);
+    }
+
+    private void importCsv() {
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("*/*")
+                .putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"text/csv",
+                        "text/comma-separated-values", "text/plain", "application/octet-stream"});
+        startActivityForResult(i, REQ_IMPORT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
+        Uri uri = data.getData();
+        if (requestCode == REQ_EXPORT) {
+            // BOM, żeby Excel rozpoznał UTF-8 (polskie znaki w kolumnie dnia).
+            String csv = "\uFEFF" + Csv.export(store.all(), System.currentTimeMillis(), tz);
+            try (OutputStream out = getContentResolver().openOutputStream(uri, "wt")) {
+                if (out == null) throw new IOException("brak pliku");
+                out.write(csv.getBytes(StandardCharsets.UTF_8));
+                toast("Zapisano kopię: " + store.all().size() + " wpisów.");
+            } catch (IOException | RuntimeException e) {
+                toast("Nie udało się zapisać pliku.");
+            }
+        } else if (requestCode == REQ_IMPORT) {
+            String text;
+            try (InputStream in = getContentResolver().openInputStream(uri)) {
+                if (in == null) throw new IOException("brak pliku");
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                byte[] b = new byte[8192];
+                int n;
+                while ((n = in.read(b)) > 0) {
+                    buf.write(b, 0, n);
+                    if (buf.size() > 5_000_000) throw new IOException("za duży");
+                }
+                text = new String(buf.toByteArray(), StandardCharsets.UTF_8);
+            } catch (IOException | RuntimeException e) {
+                toast("Nie udało się odczytać pliku.");
+                return;
+            }
+            Csv.Result r = Csv.parse(text);
+            if (r.error != null) {
+                new AlertDialog.Builder(this).setTitle("Nie przywrócono")
+                        .setMessage(r.error).setPositiveButton("OK", null).show();
+                return;
+            }
+            new AlertDialog.Builder(this)
+                    .setTitle("Przywrócić kopię?")
+                    .setMessage("Obecne wpisy (" + store.all().size() + ") zostaną zastąpione "
+                            + r.entries.size() + " wpisami z pliku.")
+                    .setPositiveButton("Przywróć", (d, w) -> {
+                        store.replaceAll(r.entries);
+                        lastTickMinute = -1;
+                        refresh();
+                        toast("Przywrócono " + r.entries.size() + " wpisów.");
+                    })
+                    .setNegativeButton("Anuluj", null)
+                    .show();
+        }
+    }
+
     // ------------------------------------------------------------ raport
 
     private void showReport() {
         long now = System.currentTimeMillis();
         List<Entry> week = WorkMath.inRange(store.all(), weekStart, WorkMath.addWeeks(weekStart, 1, tz));
-        String report = Report.build(week, weekStart, store.rateCents(), now, tz);
+        String report = Report.build(week, weekStart, store.overtime(), now, tz);
 
         TextView t = text(report, 12, R.color.ink);
         t.setTypeface(Typeface.MONOSPACE);

@@ -28,8 +28,8 @@ android {
         applicationId "pl.godziny.praca"
         minSdk 24
         targetSdk 36
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -63,6 +63,7 @@ android {
             all {
                 if (!project.hasProperty("screenshots")) exclude "**/ScreenshotTest*"
                 systemProperty "screenshots.dir", "${rootProject.projectDir}/screenshots"
+                systemProperty "verify.dir", "${project.buildDir}/weryfikacja"
                 systemProperty "robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2"
             }
         }

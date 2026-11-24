@@ -85,8 +85,14 @@ public final class WorkMath {
 
     // ------------------------------------------------------------ czas i pieniądze
 
-    public static long minutes(Entry e, long now) {
+    /** Czas zmiany od początku do końca (bez odejmowania przerwy), w pełnych minutach. */
+    public static long grossMinutes(Entry e, long now) {
         return Math.max(0, e.endOr(now) - e.start) / MINUTE;
+    }
+
+    /** Płatny czas wpisu: od początku do końca minus bezpłatna przerwa, w pełnych minutach. */
+    public static long minutes(Entry e, long now) {
+        return Math.max(0, grossMinutes(e, now) - e.breakMin);
     }
 
     /** Wypłata za podane minuty, w centach, zaokrąglona do najbliższego centa. */
@@ -94,26 +100,63 @@ public final class WorkMath {
         return (minutes * rateCents + 30) / 60;
     }
 
+    /** Próg nadgodzin FLSA: 40 godzin w tygodniu roboczym (29 U.S.C. 207(a), 29 CFR 778.110). */
+    public static final long OVERTIME_THRESHOLD_MIN = 40 * 60;
+
     public static final class Summary {
+        /** Płatne minuty w tygodniu. */
         public final long minutes;
+        /** Minuty do 40 h i ponad 40 h (te drugie = 0, gdy nadgodziny są wyłączone). */
+        public final long regularMinutes, overtimeMinutes;
+        /** Wynagrodzenie za wszystkie godziny po stawkach wpisów (straight time). */
+        public final long straightCents;
+        /** Dopłata za nadgodziny: ½ stawki regularnej × godziny ponad 40 (29 CFR 778.110). */
+        public final long overtimePremiumCents;
+        /** Stawka regularna tygodnia: średnia ważona stawek (29 CFR 778.115), centy/h. */
+        public final long regularRateCents;
+        /** Razem brutto = straight + dopłata. */
         public final long payCents;
         public final int days;
 
-        Summary(long minutes, long payCents, int days) {
+        Summary(long minutes, long overtimeMinutes, long straightCents, long premiumCents,
+                long regularRateCents, int days) {
             this.minutes = minutes;
-            this.payCents = payCents;
+            this.overtimeMinutes = overtimeMinutes;
+            this.regularMinutes = minutes - overtimeMinutes;
+            this.straightCents = straightCents;
+            this.overtimePremiumCents = premiumCents;
+            this.regularRateCents = regularRateCents;
+            this.payCents = straightCents + premiumCents;
             this.days = days;
         }
     }
 
-    public static Summary summarize(List<Entry> week, long rateCents, long now, TimeZone tz) {
+    /**
+     * Podsumowanie tygodnia roboczego. Liczone na całych minutach i centach (bez float):
+     * straight = Σ minuty_i × stawka_i / 60; stawka regularna = straight / godziny;
+     * dopłata = ½ × stawka regularna × godziny ponad 40. Jedna stawka ⇒ to samo co ×1.5.
+     */
+    public static Summary summarize(List<Entry> week, boolean overtime, long now, TimeZone tz) {
         long total = 0;
+        long centMinutes = 0;   // Σ minuty × centy/h
         java.util.Set<Long> days = new java.util.HashSet<>();
         for (Entry e : week) {
-            total += minutes(e, now);
+            long m = minutes(e, now);
+            total += m;
+            centMinutes += m * e.rateCents;
             days.add(dayStart(e.start, tz));
         }
-        return new Summary(total, payCents(total, rateCents), days.size());
+        long straight = divRound(centMinutes, 60);
+        long rate = total == 0 ? 0 : divRound(centMinutes, total);
+        long ot = overtime ? Math.max(0, total - OVERTIME_THRESHOLD_MIN) : 0;
+        // dopłata = ½ × (centMinutes / total) × ot / 60  =  centMinutes × ot / (120 × total)
+        long premium = ot == 0 ? 0 : divRound(centMinutes * ot, 120 * total);
+        return new Summary(total, ot, straight, premium, rate, days.size());
+    }
+
+    /** Dzielenie z zaokrągleniem do najbliższej (połówki w górę), dla liczb nieujemnych. */
+    static long divRound(long a, long b) {
+        return (a + b / 2) / b;
     }
 
     /** "8:05" */
@@ -200,11 +243,19 @@ public final class WorkMath {
      * przy sprawdzaniu nakładania), -1 dla nowego.
      */
     public static String validate(List<Entry> all, long selfId, long start, long end, long now, TimeZone tz) {
+        return validate(all, selfId, start, end, 0, now, tz);
+    }
+
+    public static String validate(List<Entry> all, long selfId, long start, long end, int breakMin,
+                                  long now, TimeZone tz) {
         if (start > now) return "Początek nie może być w przyszłości.";
         long realEnd = end == 0 ? now : end;
         if (end != 0 && end <= start) return "Koniec musi być po początku.";
         if (end != 0 && end > now + MINUTE) return "Koniec nie może być w przyszłości.";
         if (realEnd - start > MAX_ENTRY) return "Wpis nie może być dłuższy niż 24 godziny.";
+        if (end != 0 && breakMin > 0 && (end - start) / MINUTE - breakMin < 1) {
+            return "Przerwa nie może być dłuższa niż cały wpis.";
+        }
         for (Entry o : all) {
             if (o.id == selfId) continue;
             long oEnd = o.endOr(now);

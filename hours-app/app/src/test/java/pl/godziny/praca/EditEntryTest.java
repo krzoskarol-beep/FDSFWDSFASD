@@ -100,4 +100,30 @@ public class EditEntryTest {
         dlg.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
         assertEquals(30, WorkMath.minutes(store.all().get(0), 0));   // bez zmian
     }
+
+    @Test public void unpaidBreakIsSubtracted() {
+        long now = System.currentTimeMillis();
+        long s = now - now % M - 6 * H;
+        store.add(s, s + 5 * H);
+
+        AlertDialog dlg = openEditor(s);
+        click(dlg, R.id.break30);
+        dlg.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+
+        Entry e = store.all().get(0);
+        assertEquals(30, e.breakMin);
+        assertEquals(4 * 60 + 30, WorkMath.minutes(e, 0));
+        assertTrue(!e.isEdited());   // godziny bez zmian, przerwa to nie poprawka zegara
+    }
+
+    @Test public void rateChangeKeepsHistory() {
+        long now = System.currentTimeMillis();
+        long old = now - 30L * 24 * H;
+        store.add(old, old + 8 * H);
+        store.setRateCents(4000, WorkMath.weekStart(now, store.firstDay(), java.util.TimeZone.getDefault()));
+        assertEquals(3400, store.all().get(0).rateCents);    // stary wpis: stara stawka
+        store.add(now - 2 * H, now - H);
+        assertEquals(4000, store.all().get(1).rateCents);    // nowy: nowa stawka
+    }
 }
