@@ -75,9 +75,9 @@
 74;21;–;wspornik K (sprężyna, x +): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi – tu nieużywany (część identyczna)
 75;21;M20;wspornik K (zawias, x −): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi
 76;21;M20;wspornik K (zawias, x +): Ø21 (pin), y=40 od ściany belki, z=-25 od podłogi
-77;13;M12;wspornik K (sprężyna, x +): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi
-78;13;M12;wspornik K (zawias, x −): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi
-79;13;–;wspornik K (zawias, x +): Ø13 (sprez.), y=30 od ściany belki, z=-100 od podłogi – tu nieużywany (część identyczna)
+77;13;M12;wspornik K (sprężyna, x +): Ø13 (sprez.), y=35 od ściany belki, z=-100 od podłogi
+78;13;M12;wspornik K (zawias, x −): Ø13 (sprez.), y=35 od ściany belki, z=-100 od podłogi
+79;13;–;wspornik K (zawias, x +): Ø13 (sprez.), y=35 od ściany belki, z=-100 od podłogi – tu nieużywany (część identyczna)
 80;21;M20;"płyta Z (A, zewn., x −): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, zewn., x −): Ø21, (30; 25) od rogu przy sworzniu"
 81;21;M20;"płyta Z (A, zewn., x +): Ø21, (30; 25) od rogu przy sworzniu | płyta Z (B, zewn., x +): Ø21, (30; 25) od rogu przy sworzniu"
 82;21;M20;"płyta Z chodnika (A): Ø21, (30; 25) od rogu przy sworzniu | płyta Z chodnika (B): Ø21, (30; 25) od rogu przy sworzniu"

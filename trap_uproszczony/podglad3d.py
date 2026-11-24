@@ -570,8 +570,9 @@ def build(layout=None):
         Lb = 10 * math.ceil((grip + 3 + eye["size"] + 4) / 10)
         b = M.mesh(f"T:M12oko:{sg}", T, C_BOLT, "śruba", f"śruba M{eye['size']}×{Lb} 8.8 – oś dolnego oczka sprężyny\n"
                    f"ramię K 10 + tuleja dystansowa {eye['sleeve']} dł. {fmt(spr['k_sp'])} + oczko {fmt(eye['w'])} + podkładka + nakrętka samohamowna")
-        bolt(b, "x", 30.0, -100.0, sg * xa, sg, Lb, eye["size"], grip)
-        cyl("x", 30.0, -100.0, sg * (xa + 10), sg * (xa + 10 + spr["k_sp"]), eye["r"], b, 16)
+        ky, kz = next((y, z) for (n_, y, z, d_) in g.K_PL["holes_arm"] if n_ == "sprez.")
+        bolt(b, "x", ky, kz, sg * xa, sg, Lb, eye["size"], grip)
+        cyl("x", ky, kz, sg * (xa + 10), sg * (xa + 10 + spr["k_sp"]), eye["r"], b, 16)
         M.bolt_axes.append((f"Tspr:{spr['k_nm']}:{sg}", f"M{eye['size']}"))
     for key in list(M.m):
         if key.startswith("otw:"):

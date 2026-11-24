@@ -240,3 +240,13 @@ Zarejestrowana przyczepa: badanie dodatkowe + zawiadomienie starosty w 30 dni.
 Poprawka: dwa wysięgniki lamp WL-L i WL-P (345 mm za belką, poza obrysem trapu). Mają lampy zespolone, odblaski i tablicę dwurzędową,
 które mieszczą się w wysokościach z zał. 6. W skrzyżowaniach są nakrętki kołpakowe DIN 986. Złożony trap ma środek masy 139 mm za belką
 i 697 mm nad podłogą – to dane do przeliczenia nacisku na hak.
+
+## Weryfikacja (S5): analizy dodatkowe, FMEA, testy, protokół badań
+
+- `analizy_dodatkowe.py` → `stal_S5/analizy_dodatkowe.md/.csv`: sprężyny od −20 do +50 °C z tolerancją i awarią, NIOSH,
+  trap w czasie jazdy, prześwit Fat Boya (dane producenta), miejsca zgniecenia (EN ISO 13854), przewidywane ugięcia do próby.
+- Otwór sprężyny we wspornikach K przesunięty z (30; −100) na **(35; −100)**: podnoszenie 22,7 kg, warunki spełnione od −20 do +50 °C.
+- `stal_S5/fmea_S5.md` – 16 wad z oceną ryzyka; `stal_S5/metodyka_weryfikacji.md` – odpowiedzi na pytania „co zrobiłby specjalista”.
+- `stal_S5/protokol_badan_S5.pdf` – próba prototypu z wartościami z modelu i kryteriami.
+- `testy/test_trap_s5.py` (`python3 -m pytest testy`) – 9 testów. Znalazły dwa błędy: zawias w modelu rusztu był półsztywny
+  (ugięcia zawyżone o 17 %), a otwór sprężyny z pierwszej optymalizacji łamał warunek w upale.

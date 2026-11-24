@@ -101,6 +101,17 @@ gdy sworznie Ø12 zostaną w kieszeni (wytężenie 21 %). Do wydruku: stal_S5/li
 Otwór przechodzący przez kilka części wierć razem albo przez płytę jako szablon. Model sprawdza, że każda śruba przechodzi przez otwory we wszystkich częściach, bez kolizji z materiałem.</p></div>
 <h2>Zakupy</h2><div class="card">%BUY%
 <p class="note">Orientacyjny koszt materiału z cynkowaniem: ok. %COST% zł netto (ceny-założenia w stal.py, sprawdź w swojej hurtowni).</p></div>
+<h2>Weryfikacja – co sprawdziłby specjalista</h2>
+<div class="card"><div class="tw"><table><thead><tr><th>Sprawdzenie</th><th>Wynik</th><th>Stan</th></tr></thead><tbody>
+<tr><td>Sprężyny od −20 do +50 °C, tolerancja ±5 %, awaria jednej</td><td>otwór sprężyny w K przesunięty 30 → 35 mm: 22,7 kg (było 24,0), w mrozie do 27,7 kg, jedna sprężyna padła: 36 kg</td><td><span class="pill ok">poprawione</span></td></tr>
+<tr><td>Ergonomia – równanie NIOSH</td><td>wskaźnik LI ≈ 2,4 (ryzyko podwyższone); bez sprężyn 5,2</td><td><span class="pill warn">zimą we dwóch</span></td></tr>
+<tr><td>Trap złożony w jeździe (2 g, 0,8 g, 0,5 g)</td><td>sworzeń blokady 9,7 kN ≈ 30 % nośności; pas usuwa stukanie w luzie</td><td><span class="pill ok">OK</span></td></tr>
+<tr><td>Prześwit Fat Boya na krawędzi podłogi (dane producenta)</td><td>traci 80 z 115 mm – zapas 35 mm; z kierowcą prawie zero</td><td><span class="pill warn">bez kierowcy</span></td></tr>
+<tr><td>Miejsca zgniecenia (EN ISO 13854)</td><td>styk rur na zawiasie, krawędź podłogi 15 mm (&lt; 25 mm)</td><td><span class="pill warn">naklejki, zderzak</span></td></tr>
+<tr><td>Testy automatyczne modelu (podręcznik, równowaga, kolizje)</td><td>9 / 9 zaliczonych; znalazły 2 błędy, oba poprawione</td><td><span class="pill ok">OK</span></td></tr>
+</tbody></table></div>
+<p class="note">Dowód jakości poza obliczeniami: próba prototypu wg stal_S5/protokol_badan_S5.pdf (ugięcia czujnikiem w 6 punktach vs model, próba 1,5 ×, masa, siła podnoszenia), atesty 3.1 stali,
+niezależne sprawdzenie przez inżyniera i badanie w stacji kontroli. Szczegóły: analizy_dodatkowe.md, fmea_S5.md, metodyka_weryfikacji.md.</p></div>
 <h2>Zgodność z polskimi przepisami</h2>
 <div class="card"><div class="tw"><table><thead><tr><th>Obszar</th><th>Stan</th><th>Co zrobić</th></tr></thead><tbody>
 <tr><td>Światła, odblaski, tablica</td><td><span class="pill ok">po zmianie</span></td><td>Dwa wysięgniki lamp (WL-L, WL-P) 345 mm za belką, czyli za złożonym trapem (328 mm), i poza jego obrysem w poprzek.

@@ -78,6 +78,9 @@ VARIANTS["S5L"] = dict(nazwa="S5 lekki i tani: chodnik 340 mm, pojedyncze płyty
                        eye_lever=34.0, eye_tube=(22, 12, "Ø22×5 + M12"), wspolne_delta=-60.0, **_light)
 # po analizie dróg sił (rusztu): 2. poprzeczka w B zamiast nitowanej listwy T, poprzeczki 60×40×3 (ścianka pod nakrętką),
 # zawias na krawędzi chodnika (C2|C3) + oparcie chodnika na przyczepie
+# otwór sprężyny we wsporniku K przesunięty z (30; −100) na (35; −100): optymalizacja geometrii sprężyny (analizy_dodatkowe.py)
+K_EYE_S5 = (35.0, -100.0)
+VARIANTS["S5L"].update(eye_low=(K_EYE_S5[0] - g.PIN_Y, K_EYE_S5[1] - g.PIN_Z))
 VARIANTS["S5L"].update(crossB=[260.0, 650.0], tie=False, walk_hinge=True, wspolne_delta=-20.0,
                        cross=("RHS 60×40×3 S235JRH (na płasko)", rhs(60, 40, 3), 235, 360))
 VARIANTS["S6"] = dict(nazwa="stal optymalna, chodnik z lewej + 3 rury pod koło (szer. 660 mm, pas 222 mm) – tylko opony do ~180 mm, NIE dla tylnej opony 240", n_walk=2, n_lane=3,
@@ -119,9 +122,12 @@ def masses(v):
     return acc(A), acc(B)
 
 
-def lift(mA, cA, mB, cB, F1, n):
+def lift(mA, cA, mB, cB, F1, n, eye_low=None):
+    """eye_low: dolne oczko sprężyny względem osi zawiasu (y, z) – gdy inne niż w g.SPRING"""
     old = copy.deepcopy(g.SPRING)
     g.SPRING.update(F1=F1, n=n)
+    if eye_low is not None:
+        g.SPRING["eye_low"] = eye_low
     try:
         return g.lift_table(mA, cA[0], cA[1], mB, cB[0], cB[1], n > 0)
     finally:
@@ -129,15 +135,17 @@ def lift(mA, cA, mB, cB, F1, n):
         g.SPRING.update(old)
 
 
-def pick_springs(mA, cA, mB, cB, fmax_all=5000):
+def pick_springs(mA, cA, mB, cB, fmax_all=5000, eye_low=None):
     """najmniejszy wysiłek przy: rozłożony leży na ziemi (moment w dół ≥ 60 N·m), w pionie nie pcha (< 60 N·m);
     fmax_all = 2500 -> tylko tanie sprężyny Ø28"""
     cands = []
     for n, fmax in ((2, min(5000, fmax_all)), (4, 2500)):
         for F1 in range(1600, fmax + 1, 100):
-            lt = lift(mA, cA, mB, cB, F1, n)
+            lt = lift(mA, cA, mB, cB, F1, n, eye_low)
             mx, down, top = max(r["user_kg"] for r in lt), lt[0]["Tg"] + lt[0]["Ts"], lt[-1]["Tg"] + lt[-1]["Ts"]
-            if down < -60 and top < 60:
+            Ls = [r["L"] for r in lt]
+            stroke_ok = min(Ls) >= g.SPRING["L_ext"] - g.SPRING["stroke"] + 2 and max(Ls) <= g.SPRING["L_ext"] - 2   # sprężyna w skoku
+            if down < -60 and top < 60 and stroke_ok:
                 cands.append((mx + (1.5 if n == 4 else 0), n, F1, lt, mx, down, top))
     _, n, F1, lt, mx, down, top = min(cands, key=lambda c: c[0])
     return dict(sztuk=n, F1_N=F1, max_wysilek_kg=mx, moment_rozlozony_Nm=round(down, 1), moment_pion_Nm=round(top, 1)), lt
@@ -249,7 +257,7 @@ def main():
     for key, v in VARIANTS.items():
         (mA, cAs, cAz), (mB, cBs, cBz) = masses(v)
         l0 = lift(mA, (cAs, cAz), mB, (cBs, cBz), 0, 0)
-        spr, lt = pick_springs(mA, (cAs, cAz), mB, (cBs, cBz), v.get("spring_max", 5000))
+        spr, lt = pick_springs(mA, (cAs, cAz), mB, (cBs, cBz), v.get("spring_max", 5000), v.get("eye_low"))
         rows = calcs(v, mA, mB, spr["F1_N"])
         cst = cost(v, mA, mB, spr)
         res[key] = dict(v=v, mA=mA, mB=mB, l0=max(r["user_kg"] for r in l0), spr=spr, lt=lt, rows=rows, cost=cst,

@@ -92,7 +92,8 @@ class Ruszt:
         for (a, b, tag) in self.links:
             K[np.ix_([3 * a, 3 * b], [3 * a, 3 * b])] += k * np.array([[1, -1], [-1, 1]])
         for (a, b, tag) in self.joints:
-            for d, kk in ((0, k), (1, k * 1e3), (2, k * 1e3)):
+            # zawias z płytami Z: przenosi siłę i moment; obroty wiązane sztywno (1e12 N·mm/rad ≫ EI/L ≈ 3e9)
+            for d, kk in ((0, k * 10), (1, 1e12), (2, 1e12)):
                 K[np.ix_([3 * a + d, 3 * b + d], [3 * a + d, 3 * b + d])] += kk * np.array([[1, -1], [-1, 1]])
         K += np.eye(len(K)) * 1e-3
         F = np.zeros(len(K))

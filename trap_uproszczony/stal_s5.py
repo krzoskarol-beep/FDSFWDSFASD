@@ -8,7 +8,7 @@ model 3D glTF z otworami i śrubami, zrzuty, kontrola otworów, strona z modelem
 
 LEWA strona = patrząc od ziemi na przyczepę (od tej strony pchasz motocykl, od strony stopki) = x > 0.
 """
-import copy, csv, json, math, os, sys
+import contextlib, copy, csv, json, math, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import matplotlib
@@ -119,7 +119,8 @@ def layout():
 
 # ------------------------------------------------------------------ dane wariantu
 (mA, cAs, cAz), (mB, cBs, cBz) = stal.masses(V)
-SPR, LIFT = stal.pick_springs(mA, (cAs, cAz), mB, (cBs, cBz), V["spring_max"])
+EYE_LOW = V["eye_low"]                                # dolne oczko sprężyny – otwór w K przesunięty na (35; −100)
+SPR, LIFT = stal.pick_springs(mA, (cAs, cAz), mB, (cBs, cBz), V["spring_max"], EYE_LOW)
 LIFT0 = stal.lift(mA, (cAs, cAz), mB, (cBs, cBz), 0, 0)
 ROWS = stal.calcs(V, mA, mB, SPR["F1_N"])
 
@@ -590,19 +591,42 @@ def write_csv(name, head, rows):
 
 
 # ------------------------------------------------------------------ MAIN
-def main():
-    os.makedirs(OUT, exist_ok=True)
-    old = (copy.deepcopy(g.S_PL), copy.deepcopy(g.K_PL), g.holes_long, g.OUT, dict(g.SPRING), g.TEMPL_NAME, g.SINGLE_PLATES,
+@contextlib.contextmanager
+def s5_globals():
+    """ustawienia wariantu S5 w module generuj (poprzeczki, prowadnice, płyty, sprężyna) – na czas generowania, potem przywraca"""
+    old = (copy.deepcopy(g.S_PL), copy.deepcopy(g.K_PL), g.holes_long, g.OUT, copy.deepcopy(g.SPRING), g.TEMPL_NAME, g.SINGLE_PLATES,
            list(g.CROSS_B), g.TIE_B, list(g.GUIDE_BOLTS_A), list(g.GUIDE_BOLTS_B))
     g.CROSS_B, g.TIE_B = list(CROSS_B_S5), None
     g.GUIDE_BOLTS_A, g.GUIDE_BOLTS_B = list(GUIDE_BOLTS_A_S5), list(GUIDE_BOLTS_B_S5)
     g.K_PL["n"] = 3
+    g.K_PL["holes_arm"] = [(n, stal.K_EYE_S5[0], stal.K_EYE_S5[1], d) if n == "sprez." else (n, y, z, d) for (n, y, z, d) in g.K_PL["holes_arm"]]
+    g.SPRING["eye_low"] = EYE_LOW
     g.SINGLE_PLATES = V["single_plates"]
     g.SPRING["F1"] = float(SPR["F1_N"])
     g.TEMPL_NAME = "szablony_1do1_S5.pdf"
     g.holes_long = holes_long
     g.OUT = OUT
     try:
+        yield
+    finally:
+        (g.S_PL, g.K_PL, g.holes_long, g.OUT, g.SPRING, g.TEMPL_NAME, g.SINGLE_PLATES,
+         g.CROSS_B, g.TIE_B, g.GUIDE_BOLTS_A, g.GUIDE_BOLTS_B) = old
+
+
+def model():
+    """model 3D wariantu S5 (do testów i podglądu)"""
+    with s5_globals():
+        return p3.build(layout())
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    with s5_globals():
+        return _main()
+
+
+def _main():
+    if True:
         write_csv("lista_czesci.csv", ["nr", "nazwa", "szt.", "materiał", "wymiar", "masa szt. [kg]", "otwory", "gdzie"], bom())
         write_csv("lista_srub.csv", ["śruba / element", "rodzaj", "szt.", "gdzie"], bolts())
         write_csv("lista_zakupow.csv", ["pozycja", "ilość", "uwagi"], buy())
@@ -667,9 +691,6 @@ def main():
             json.dump(dict(podsumowanie=summary, obliczenia=ROWS, podnoszenie=LIFT, podnoszenie_bez=LIFT0), f, ensure_ascii=False, indent=1)
         print(json.dumps(summary, ensure_ascii=False, indent=1))
         return M, summary
-    finally:
-        (g.S_PL, g.K_PL, g.holes_long, g.OUT, g.SPRING, g.TEMPL_NAME, g.SINGLE_PLATES,
-         g.CROSS_B, g.TIE_B, g.GUIDE_BOLTS_A, g.GUIDE_BOLTS_B) = old
 
 
 if __name__ == "__main__":

@@ -19,12 +19,12 @@ Prowadnica – kątownik 40×40×3 S235: zginanie półki pionowej od bocznego p
 Prowadnica – śruba M8 8.8 rozrywana (dźwignia 37/20 mm);3.34;21.08;kN;0.159;cała siła boczna na jednej śrubie
 [INFO] Siatka – koło zamiast stopy (dlaczego są prowadnice);6.03;2.32;kN;2.6;"siatka liczona na stopę 105 kg; koło to 2,6 × więcej"
 Rura L1 w miejscu 2 otworów Ø18,5 płyty S (całe koło na jednej rurze, s = 259);130.4;355.0;MPa;0.367;"przekrój netto 86 % pełnego; w lewej rurze otwory zaślepione tuleją i śrubą"
-Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12;0.81;4.0;kN;0.202;"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
+Pas transportowy 25 mm (LC 400 daN) – trzyma trap bez sworzni Ø12;0.84;4.0;kN;0.211;"przyspieszenie 0,5 g ×1,5 do tyłu + sprężyny; pas na poprzeczce P (s = 830), 45° w dół do przodu"
 Zawias przy przyczepie: śruba M12 płyty H (jedna płyta, jednocięta);4.48;32.37;kN;0.138;mimośród 105 mm, rozstaw 80 mm
 Zawias przy przyczepie: sworzeń Ø20 – docisk w płycie H 6 mm;3.19;34.29;kN;0.093;koło przy przyczepie + ciężar trapu
 Płyta S prawa – śruby M12 w rurze jezdnej 2 mm S355 (docisk);5.95;24.39;kN;0.244;
-"Skrzyżowanie: śruba M8 8.8 – rozciąganie (poprzeczka wisi na rurze; ruszt)";7.54;21.08;kN;0.358;"B s=260 x=+125; koło x=+45, przy zawiasie (B)"
-Poprzeczka 60×40×3 – ścianka pod podkładką M8 (linie załomów);7.54;11.42;kN;0.66;przy ściance 2 mm nośność 5.1 kN – za mało
-Rura jezdna L2/L4 – ścianka górna pod łbem M8 (bez prowadnicy);6.08;10.87;kN;0.56;łeb zamkowy Ø20 przez siatkę
-[INFO] Ugięcie chodnika pod stopą (obliczeniowo), najgorsze miejsce;7.3;1962.3;mm;0.004;nośność = wartość PRZED poprawką (mechanizm: chodnik bez podparcia przy zawiasie)
-[INFO] Skok na styku sekcji pod kołem (obliczeniowo);4.4;658.1;mm;0.007;nośność = wartość PRZED poprawką
+"Skrzyżowanie: śruba M8 8.8 – rozciąganie (poprzeczka wisi na rurze; ruszt)";7.66;21.08;kN;0.363;"B s=260 x=+125; koło x=+45, przy zawiasie (B)"
+Poprzeczka 60×40×3 – ścianka pod podkładką M8 (linie załomów);7.66;11.42;kN;0.671;przy ściance 2 mm nośność 5.1 kN – za mało
+Rura jezdna L2/L4 – ścianka górna pod łbem M8 (bez prowadnicy);6.12;10.87;kN;0.563;łeb zamkowy Ø20 przez siatkę
+[INFO] Ugięcie chodnika pod stopą (obliczeniowo), najgorsze miejsce;6.8;1955.3;mm;0.003;nośność = wartość PRZED poprawką (mechanizm: chodnik bez podparcia przy zawiasie)
+[INFO] Skok na styku sekcji pod kołem (obliczeniowo);4.4;658.2;mm;0.007;nośność = wartość PRZED poprawką
