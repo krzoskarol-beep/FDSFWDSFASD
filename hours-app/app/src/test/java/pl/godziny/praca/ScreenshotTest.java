@@ -54,6 +54,35 @@ public class ScreenshotTest {
         saveDialog(a, org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog(), "ustawienia.png");
     }
 
+    @Test public void deleteDay() throws Exception {
+        Context ctx = ApplicationProvider.getApplicationContext();
+        TimeZone tz = TimeZone.getDefault();
+        long now = System.currentTimeMillis();
+        long day = WorkMath.dayStart(now - 26 * WorkMath.HOUR, tz);
+        EntryStore store = new EntryStore(ctx);
+        store.add(day + 7 * WorkMath.HOUR, day + 11 * WorkMath.HOUR + 30 * WorkMath.MINUTE);
+        store.add(day + 12 * WorkMath.HOUR, day + 16 * WorkMath.HOUR);
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        if (day < WorkMath.weekStart(now, java.util.Calendar.MONDAY, tz)) a.findViewById(R.id.prevWeek).performClick();
+        android.view.ViewGroup list = a.findViewById(R.id.entryList);
+        list.getChildAt(0).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        android.app.AlertDialog dlg = (android.app.AlertDialog) org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        saveDialog(a, dlg, "dzien.png");
+        dlg.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        View panel = (View) a.findViewById(R.id.undoBar).getParent();
+        int w = panel.getWidth();
+        Bitmap bmp = Bitmap.createBitmap(w, panel.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+        c.drawColor(a.getColor(R.color.bg));
+        panel.draw(c);
+        try (FileOutputStream out = new FileOutputStream(new File(
+                System.getProperty("screenshots.dir", "screenshots"), "po-usunieciu.png"))) {
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+        }
+    }
+
     private void renderDialog(String fileName) throws Exception {
         Context ctx = ApplicationProvider.getApplicationContext();
         long now = System.currentTimeMillis();

@@ -15,6 +15,8 @@ Stawka domyślna: **$34.00/h** (można zmienić).
   (w zakończonej zmianie przesuwają koniec, w trwającej — początek). Trwającej zmianie
   można też ustawić koniec, co ją kończy. „+ Dodaj wpis ręcznie” dodaje zapomnianą zmianę. Aplikacja nie pozwala
   zapisać wpisów nakładających się na siebie, dłuższych niż 24 h ani w przyszłości.
+- **Usuwanie całego dnia** — dotknij datę dnia na liście: podgląd wpisów i sumy, „Usuń dzień”
+  albo „Dodaj” wpis w tym dniu. Po usunięciu (dnia lub wpisu) przez 15 s działa „Cofnij”.
 - **Nadgodziny (FLSA)** — ponad 40 h w tygodniu dopłata ½ stawki regularnej (czyli ×1.5);
   przy kilku stawkach w tygodniu stawka regularna to średnia ważona. Można wyłączyć.
 - **Przerwa bezpłatna** (0/15/30/45/60 min) przy każdym wpisie — odejmowana od czasu.

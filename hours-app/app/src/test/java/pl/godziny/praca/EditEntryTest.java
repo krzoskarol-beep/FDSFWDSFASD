@@ -126,4 +126,54 @@ public class EditEntryTest {
         store.add(now - 2 * H, now - H);
         assertEquals(4000, store.all().get(1).rateCents);    // nowy: nowa stawka
     }
+
+    // ------------------------------------------------------------ usuwanie całego dnia
+
+    private static View findDayHeader(ViewGroup list, String ddMM) {
+        for (int i = 0; i < list.getChildCount(); i++) {
+            CharSequence cd = list.getChildAt(i).getContentDescription();
+            if (cd != null && cd.toString().startsWith("Dzień ") && cd.toString().contains(ddMM)) {
+                return list.getChildAt(i);
+            }
+        }
+        throw new AssertionError("brak nagłówka dnia " + ddMM);
+    }
+
+    @Test public void deleteWholeDayAndUndo() {
+        TimeZone tz = TimeZone.getDefault();
+        long now = System.currentTimeMillis();
+        long day = WorkMath.dayStart(now - 26 * H, tz);          // wczoraj albo przedwczoraj
+        long other = WorkMath.addDays(day, -1, tz);
+        store.add(day + 6 * H, day + 10 * H);
+        store.add(day + 11 * H, day + 15 * H);
+        store.add(other + 6 * H, other + 9 * H);                 // inny dzień zostaje
+
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        long week = WorkMath.weekStart(now, Calendar.MONDAY, tz);
+        if (day < week) a.findViewById(R.id.prevWeek).performClick();
+        java.text.SimpleDateFormat dm = new java.text.SimpleDateFormat("dd.MM", java.util.Locale.US);
+        dm.setTimeZone(tz);
+        findDayHeader(a.findViewById(R.id.entryList), dm.format(day)).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+        AlertDialog dlg = (AlertDialog) ShadowAlertDialog.getLatestAlertDialog();
+        dlg.getButton(AlertDialog.BUTTON_POSITIVE).performClick();   // „Usuń cały dzień”
+        shadowOf(Looper.getMainLooper()).idle();
+
+        assertEquals(1, store.all().size());
+        assertEquals(other + 6 * H, store.all().get(0).start);
+        assertEquals(View.VISIBLE, a.findViewById(R.id.undoBar).getVisibility());
+
+        a.findViewById(R.id.undoBtn).performClick();               // „Cofnij”
+        assertEquals(3, store.all().size());
+        assertEquals(View.GONE, a.findViewById(R.id.undoBar).getVisibility());
+    }
+
+    @Test public void undoNeverCreatesTwoRunningShifts() {
+        long now = System.currentTimeMillis();
+        Entry run = store.add(now - 2 * H, 0);
+        store.deleteAll(java.util.Collections.singletonList(run.id));
+        store.add(now - H, 0);                                    // nowy Clock In
+        assertEquals(0, store.restore(java.util.Collections.singletonList(run)));
+        assertEquals(1, store.all().size());
+    }
 }

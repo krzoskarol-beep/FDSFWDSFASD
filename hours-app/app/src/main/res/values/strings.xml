@@ -31,7 +31,7 @@
     <string name="minus_15">−15 min</string>
     <string name="plus_15">+15 min</string>
     <string name="plus_60">+1 h</string>
-    <string name="tap_to_edit">Dotknij wpis, aby go zmienić.</string>
+    <string name="tap_to_edit">Dotknij wpis, aby go zmienić. Dotknij datę dnia, aby usunąć cały dzień.</string>
     <string name="break_label">Przerwa bezpłatna (min)</string>
     <string name="rate_this_week">Nowa stawka także dla wpisów z bieżącego tygodnia</string>
     <string name="overtime_label">Nadgodziny</string>
@@ -41,4 +41,5 @@
     <string name="backup_help">Plik otworzysz w Excelu/Arkuszach. Ten sam plik przywraca wszystkie wpisy, np. na nowym telefonie.</string>
     <string name="export_csv">Eksportuj</string>
     <string name="import_csv">Przywróć</string>
+    <string name="undo">Cofnij</string>
 </resources>

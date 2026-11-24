@@ -73,6 +73,33 @@ public final class EntryStore {
         save(out);
     }
 
+    /** Usuwa podane wpisy (np. cały dzień). */
+    public void deleteAll(java.util.Collection<Long> ids) {
+        List<Entry> out = new ArrayList<>();
+        for (Entry e : all()) if (!ids.contains(e.id)) out.add(e);
+        save(out);
+    }
+
+    /** Przywraca usunięte wpisy (Cofnij). Identyfikatory nie są używane ponownie, więc nie kolidują. */
+    public int restore(List<Entry> deleted) {
+        List<Entry> list = all();
+        java.util.Set<Long> have = new java.util.HashSet<>();
+        boolean running = false;
+        for (Entry e : list) {
+            have.add(e.id);
+            running |= e.isRunning();
+        }
+        int n = 0;
+        for (Entry e : deleted) {
+            if (have.contains(e.id)) continue;
+            if (e.isRunning() && running) continue;   // tylko jedna trwająca zmiana naraz
+            list.add(e);
+            n++;
+        }
+        save(list);
+        return n;
+    }
+
     /** Podmienia wszystkie wpisy (przywracanie kopii z pliku CSV). */
     public void replaceAll(List<Entry> entries) {
         long max = 0;

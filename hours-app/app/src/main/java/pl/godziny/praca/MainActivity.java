@@ -119,6 +119,7 @@ public class MainActivity extends Activity {
         thisWeek.setOnClickListener(v -> { weekStart = currentWeekStart(); refresh(); });
         findViewById(R.id.addEntry).setOnClickListener(v -> showEntryDialog(null));
         findViewById(R.id.reportBtn).setOnClickListener(v -> showReport());
+        findViewById(R.id.undoBtn).setOnClickListener(v -> undoDelete());
     }
 
     @Override protected void onSaveInstanceState(Bundle out) {
@@ -243,7 +244,7 @@ public class MainActivity extends Activity {
                     dayMin += m;
                     dayPay += WorkMath.payCents(m, o.rateCents);
                 }
-                entryList.addView(dayHeader(Report.dayShort(e.start, tz) + " " + dm.format(e.start),
+                entryList.addView(dayHeader(d, Report.dayShort(e.start, tz) + " " + dm.format(e.start),
                         WorkMath.formatHm(dayMin) + " h · " + WorkMath.formatMoney(dayPay)));
             }
             long min = WorkMath.minutes(e, now);
@@ -254,11 +255,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    private View dayHeader(String left, String right) {
+    private View dayHeader(long day, String left, String right) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(dp(8), dp(14), dp(8), dp(2));
-        TextView l = text(left, 13, R.color.ink);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setMinimumHeight(dp(44));
+        row.setPadding(dp(8), dp(10), dp(8), dp(2));
+        row.setBackgroundResource(R.drawable.row_bg);
+        row.setOnClickListener(v -> showDayDialog(day));
+        row.setContentDescription("Dzień " + left + ": usuń albo dodaj wpis");
+        TextView l = text(left + "  ⋯", 13, R.color.ink);
         l.setTypeface(Typeface.DEFAULT_BOLD);
         row.addView(l, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         TextView r = text(right, 13, R.color.ink_dim);
@@ -337,6 +343,11 @@ public class MainActivity extends Activity {
 
     /** Dialog dodawania (entry == null) albo edycji wpisu. */
     private void showEntryDialog(Entry entry) {
+        showEntryDialog(entry, -1);
+    }
+
+    /** {@code presetDay}: początek dnia dla nowego wpisu (-1 = dziś albo początek tygodnia). */
+    private void showEntryDialog(Entry entry, long presetDay) {
         long now = System.currentTimeMillis();
         final long[] start = new long[1];
         final long[] end = new long[1];
@@ -345,7 +356,8 @@ public class MainActivity extends Activity {
             end[0] = entry.end;
         } else {
             long weekEnd = WorkMath.addWeeks(weekStart, 1, tz);
-            long day = (now >= weekStart && now < weekEnd) ? WorkMath.dayStart(now, tz) : weekStart;
+            long day = presetDay >= 0 ? presetDay
+                    : (now >= weekStart && now < weekEnd) ? WorkMath.dayStart(now, tz) : weekStart;
             start[0] = WorkMath.atTime(day, 8, 0, tz);    // domyślnie 08:00–16:00
             end[0] = WorkMath.atTime(day, 16, 0, tz);
             if (end[0] > now) {                            // dziś przed 16:00: kończ „teraz”
@@ -502,15 +514,86 @@ public class MainActivity extends Activity {
                                 .setMessage("Usunąć wpis " + Report.dayShort(entry.start, tz) + " "
                                         + fmt("dd.MM HH:mm").format(entry.start) + "?")
                                 .setPositiveButton("Usuń", (dd, w) -> {
-                                    store.delete(entry.id);
                                     dlg.dismiss();
-                                    refresh();
+                                    deleteWithUndo(java.util.Collections.singletonList(entry),
+                                            "Usunięto wpis " + Report.dayShort(entry.start, tz) + " "
+                                                    + fmt("dd.MM HH:mm").format(entry.start));
                                 })
                                 .setNegativeButton("Anuluj", null)
                                 .show());
             }
         });
         dlg.show();
+    }
+
+    // ------------------------------------------------------------ cały dzień i „Cofnij”
+
+    /** Okno dnia: lista wpisów z sumą, usunięcie całego dnia albo dodanie wpisu w tym dniu. */
+    private void showDayDialog(long day) {
+        long now = System.currentTimeMillis();
+        List<Entry> entries = WorkMath.inRange(store.all(), day, WorkMath.addDays(day, 1, tz));
+        if (entries.isEmpty()) return;
+        long min = 0, pay = 0;
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat hm = fmt("HH:mm");
+        for (Entry e : entries) {
+            long m = WorkMath.minutes(e, now);
+            min += m;
+            pay += WorkMath.payCents(m, e.rateCents);
+            sb.append("• ").append(hm.format(e.start)).append(" – ")
+                    .append(e.isRunning() ? "teraz (trwa)" : hm.format(e.end))
+                    .append("   ").append(WorkMath.formatHm(m)).append(" h\n");
+        }
+        sb.append("\nRazem: ").append(WorkMath.formatHm(min)).append(" h · ")
+                .append(WorkMath.formatMoney(pay));
+        String label = Report.dayShort(day, tz) + " " + fmt("dd.MM.yyyy").format(day);
+        AlertDialog dlg = new AlertDialog.Builder(this)
+                .setTitle(label)
+                .setMessage(sb.toString())
+                .setPositiveButton("Usuń dzień", (d, w) -> deleteWithUndo(entries,
+                        "Usunięto " + Report.dayShort(day, tz) + " " + fmt("dd.MM").format(day) + ": "
+                                + WorkMath.formatHm(WorkMath.summarize(entries, false, now, tz).minutes) + " h"))
+                .setNeutralButton("Dodaj", (d, w) -> {
+                    if (day <= now) showEntryDialog(null, day);
+                })
+                .setNegativeButton("Anuluj", null)
+                .create();
+        dlg.setOnShowListener(d -> dlg.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(getColor(R.color.red)));
+        dlg.show();
+    }
+
+    private List<Entry> lastDeleted;
+    private final Runnable hideUndo = () -> {
+        lastDeleted = null;
+        findViewById(R.id.undoBar).setVisibility(View.GONE);
+    };
+
+    /** Usuwa wpisy i przez 15 s pokazuje „Cofnij”, które je przywraca 1:1. */
+    private void deleteWithUndo(List<Entry> entries, String message) {
+        java.util.List<Long> ids = new java.util.ArrayList<>();
+        for (Entry e : entries) ids.add(e.id);
+        store.deleteAll(ids);
+        lastDeleted = new java.util.ArrayList<>(entries);
+        ((TextView) findViewById(R.id.undoText)).setText(message);
+        findViewById(R.id.undoBar).setVisibility(View.VISIBLE);
+        handler.removeCallbacks(hideUndo);
+        handler.postDelayed(hideUndo, 15_000);
+        lastTickMinute = -1;
+        refresh();
+    }
+
+    private void undoDelete() {
+        if (lastDeleted != null) {
+            int n = store.restore(lastDeleted);
+            toast(n == lastDeleted.size() ? "Przywrócono (" + n + ")."
+                    : "Przywrócono " + n + " z " + lastDeleted.size()
+                    + " — trwającej zmiany nie, bo trwa już nowa.");
+        }
+        handler.removeCallbacks(hideUndo);
+        hideUndo.run();
+        lastTickMinute = -1;
+        refresh();
     }
 
     // ------------------------------------------------------------ ustawienia

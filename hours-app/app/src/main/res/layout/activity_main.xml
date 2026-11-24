@@ -272,6 +272,37 @@
                 android:textColor="@color/ink_dim"
                 android:textSize="12sp" />
 
+            <!-- Po usunięciu: krótka informacja z możliwością cofnięcia. -->
+            <LinearLayout
+                android:id="@+id/undoBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/chip_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/undoText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/undoBtn"
+                    style="@style/Btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="@drawable/row_bg"
+                    android:text="@string/undo"
+                    android:textColor="@color/green" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/emptyMsg"
                 android:layout_width="match_parent"
