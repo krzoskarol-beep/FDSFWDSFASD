@@ -80,7 +80,8 @@ public class EntryAndReportTest {
         assertTrue(r, r.contains("[przerwa 0:30; poprawiono, zegar: 06:07–16:30]"));
         assertTrue(r, r.contains("Razem:       42:00 h (42.00 h)"));
         assertTrue(r, r.contains("DO WYPŁATY:  $1,428.00 brutto"));      // 42 h × $34, bez dopłat
-        assertTrue(r, !r.toLowerCase().contains("nadgodziny:") && !r.contains("Dopłata"));
-        assertTrue(r, r.contains("Wpisy poprawione ręcznie"));
+        assertTrue(r, !r.toLowerCase().contains("nadgodzin") && !r.contains("FLSA") && !r.contains("Dopłata"));
+        assertTrue(r, !r.contains("Czas liczony") && !r.contains("Przerwy odjęte"));
+        assertTrue(r, r.trim().endsWith("DO WYPŁATY:  $1,428.00 brutto"));   // nic pod kwotą
     }
 }

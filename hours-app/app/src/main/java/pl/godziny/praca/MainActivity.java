@@ -624,7 +624,7 @@ public class MainActivity extends Activity {
                 : theme == ThemePrefs.MODE_LIGHT ? R.id.themeLight : R.id.themeSystem);
 
         AlertDialog dlg = new AlertDialog.Builder(this)
-                .setTitle("Ustawienia")
+                .setTitle("Ustawienia · wersja " + BuildConfig.VERSION_NAME)
                 .setView(v)
                 .setPositiveButton("Zapisz", null)
                 .setNegativeButton("Anuluj", null)
@@ -742,7 +742,8 @@ public class MainActivity extends Activity {
     private void showReport() {
         long now = System.currentTimeMillis();
         List<Entry> week = WorkMath.inRange(store.all(), weekStart, WorkMath.addWeeks(weekStart, 1, tz));
-        String report = Report.build(week, weekStart, now, tz);
+        String report = Report.build(week, weekStart, now, tz)
+                + "\nGodziny Pracy " + BuildConfig.VERSION_NAME + "\n";
 
         TextView t = text(report, 12, R.color.ink);
         t.setTypeface(Typeface.MONOSPACE);

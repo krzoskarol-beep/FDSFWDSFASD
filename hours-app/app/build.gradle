@@ -28,8 +28,8 @@ android {
         applicationId "pl.godziny.praca"
         minSdk 24
         targetSdk 36
-        versionCode 6
-        versionName "1.5"
+        versionCode 7
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,6 +67,10 @@ android {
                 systemProperty "robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2"
             }
         }
+    }
+
+    buildFeatures {
+        buildConfig true   // BuildConfig.VERSION_NAME: numer wersji widoczny w Ustawieniach i raporcie
     }
 
     compileOptions {

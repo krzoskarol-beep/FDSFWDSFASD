@@ -58,7 +58,6 @@ public final class Report {
             sb.append("Brak wpisów w tym tygodniu.\n");
         }
         long lastDay = -1;
-        boolean anyEdited = false;
         for (Entry e : week) {
             long d = WorkMath.dayStart(e.start, tz);
             String label = d == lastDay ? "        " : dayShort(e.start, tz) + " " + day.format(e.start);
@@ -72,7 +71,6 @@ public final class Report {
             if (e.isRunning()) sb.append("  (w trakcie)");
             String n = notes(e, tz);
             if (!n.isEmpty()) sb.append("  [").append(n).append(']');
-            if (e.isEdited()) anyEdited = true;
             sb.append('\n');
         }
 
@@ -87,10 +85,6 @@ public final class Report {
                     .append(s.mixedRates ? " (różne stawki)\n" : "\n");
         }
         sb.append("DO WYPŁATY:  ").append(WorkMath.formatMoney(s.payCents)).append(" brutto\n");
-        sb.append('\n');
-        sb.append("Każda godzina po stawce wpisu, bez nadgodzin.\n");
-        sb.append("Czas liczony co do minuty, bez zaokrąglania. Przerwy odjęte.\n");
-        if (anyEdited) sb.append("Wpisy poprawione ręcznie są oznaczone wraz z godzinami z zegara.\n");
         return sb.toString();
     }
 
