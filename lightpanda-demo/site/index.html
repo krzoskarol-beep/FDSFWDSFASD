@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sklep demo</title></head>
+<body><h1>Produkty</h1><ul id="list">Ładowanie…</ul>
+<script>
+fetch('/products.json').then(r => r.json()).then(items => {
+  const ul = document.getElementById('list'); ul.textContent = '';
+  for (const p of items) {
+    const li = document.createElement('li');
+    li.className = 'product';
+    li.dataset.price = p.price;
+    li.innerHTML = `<b>${p.name}</b> — <span class="price">${p.price.toFixed(2)} zł</span>`;
+    ul.appendChild(li);
+  }
+  document.title = `Sklep demo (${items.length})`;
+});
+</script></body></html>
