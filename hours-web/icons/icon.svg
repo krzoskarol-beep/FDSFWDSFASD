@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- Ten sam rysunek co ikona na Androidzie: tarcza zegara na papierowym tle. -->
+  <rect width="108" height="108" fill="#F3F0E8"/>
+  <circle cx="54" cy="54" r="32" fill="#17805A"/>
+  <circle cx="54" cy="54" r="25" fill="#FFFFFF"/>
+  <path d="M52 36h4v18.2l11 6.4-2 3.4-13-7.6z" fill="#1D232E"/>
+  <circle cx="54" cy="54" r="3" fill="#C2412D"/>
+</svg>

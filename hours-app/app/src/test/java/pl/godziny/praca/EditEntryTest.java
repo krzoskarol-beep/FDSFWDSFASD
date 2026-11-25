@@ -176,4 +176,18 @@ public class EditEntryTest {
         assertEquals(0, store.restore(java.util.Collections.singletonList(run)));
         assertEquals(1, store.all().size());
     }
+
+    @Test public void monthReportDialogShowsAndNavigates() {
+        long now = System.currentTimeMillis();
+        store.add(now - 5 * H, now - H);
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        a.findViewById(R.id.monthReportBtn).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+        AlertDialog dlg = (AlertDialog) ShadowAlertDialog.getLatestAlertDialog();
+        android.widget.TextView t = dlg.findViewById(R.id.monthReportText);
+        String thisMonth = Report.monthLabel(Report.monthStart(now, TimeZone.getDefault()), TimeZone.getDefault());
+        assertTrue(t.getText().toString(), t.getText().toString().contains("RAPORT MIESIĘCZNY"));
+        assertTrue(t.getText().toString().contains("Miesiąc: " + thisMonth));
+        assertTrue(t.getText().toString().contains("4:00 h"));
+    }
 }

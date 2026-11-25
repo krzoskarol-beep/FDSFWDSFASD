@@ -329,12 +329,28 @@
                 android:text="@string/add_entry" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/reportBtn"
-            style="@style/Btn.Dark"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="@string/report" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/reportBtn"
+                style="@style/Btn.Dark"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/report" />
+
+            <Button
+                android:id="@+id/monthReportBtn"
+                style="@style/Btn.Dark"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/month_report" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

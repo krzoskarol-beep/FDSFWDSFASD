@@ -83,6 +83,22 @@ public class ScreenshotTest {
         }
     }
 
+    @Test public void monthReport() throws Exception {
+        Context ctx = ApplicationProvider.getApplicationContext();
+        TimeZone tz = TimeZone.getDefault();
+        long now = System.currentTimeMillis();
+        EntryStore store = new EntryStore(ctx);
+        long m = Report.monthStart(now, tz);
+        for (int d = 0; d < 20; d += (d % 7 == 4 ? 3 : 1)) {
+            long s = WorkMath.atTime(WorkMath.addDays(m, d, tz), 7, 30, tz);
+            if (s + 9 * WorkMath.HOUR < now) store.add(s, s + 8 * WorkMath.HOUR + 15 * WorkMath.MINUTE);
+        }
+        MainActivity a = Robolectric.buildActivity(MainActivity.class).setup().get();
+        a.findViewById(R.id.monthReportBtn).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        saveDialog(a, org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog(), "raport-miesiac.png");
+    }
+
     private void renderDialog(String fileName) throws Exception {
         Context ctx = ApplicationProvider.getApplicationContext();
         long now = System.currentTimeMillis();

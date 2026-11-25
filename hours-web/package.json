@@ -1,0 +1,11 @@
+{
+  "name": "godziny-pracy-web",
+  "version": "1.7.0",
+  "private": true,
+  "type": "module",
+  "description": "Godziny Pracy — wersja webowa (PWA) na iPhone'a",
+  "scripts": {
+    "test": "TZ=America/New_York node --test test/core.test.mjs",
+    "e2e": "node test/e2e.mjs"
+  }
+}

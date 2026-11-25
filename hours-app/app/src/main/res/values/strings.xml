@@ -39,4 +39,7 @@
     <string name="export_csv">Eksportuj</string>
     <string name="import_csv">Przywróć</string>
     <string name="undo">Cofnij</string>
+    <string name="month_report">Raport miesiąca</string>
+    <string name="prev_month">Poprzedni miesiąc</string>
+    <string name="next_month">Następny miesiąc</string>
 </resources>

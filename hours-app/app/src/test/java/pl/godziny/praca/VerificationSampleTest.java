@@ -66,5 +66,15 @@ public class VerificationSampleTest {
             }
         }
         assertTrue("próbka musi zawierać tygodnie ponad 40 h", longWeeks >= 3);
+
+        // Raporty z tej samej próbki — wersja webowa (iPhone) musi dać identyczny tekst.
+        long ws = WorkMath.addWeeks(w0, 9, tz);
+        try (Writer out = new OutputStreamWriter(new FileOutputStream(new File(dir, "raport-tydzien.txt")), StandardCharsets.UTF_8)) {
+            out.write(Report.build(WorkMath.inRange(all, ws, WorkMath.addWeeks(ws, 1, tz)), ws, 0, tz));
+        }
+        long october = Report.monthStart(WorkMathTest.t(tz, 2026, 10, 15, 12, 0), tz);
+        try (Writer out = new OutputStreamWriter(new FileOutputStream(new File(dir, "raport-miesiac.txt")), StandardCharsets.UTF_8)) {
+            out.write(Report.buildMonth(all, october, Calendar.MONDAY, 0, tz));
+        }
     }
 }

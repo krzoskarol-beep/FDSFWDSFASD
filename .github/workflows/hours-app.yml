@@ -12,10 +12,12 @@ on:
   push:
     paths:
       - "hours-app/**"
+      - "hours-web/test/fixtures/**"
       - ".github/workflows/hours-app.yml"
   pull_request:
     paths:
       - "hours-app/**"
+      - "hours-web/test/fixtures/**"
       - ".github/workflows/hours-app.yml"
   workflow_dispatch:
 
@@ -54,6 +56,13 @@ jobs:
       # próbki 12 tygodni wg FLSA i porównuje z sumami aplikacji co do minuty i centa.
       - name: Niezależne przeliczenie wypłaty (Python vs aplikacja)
         run: python3 tools/sprawdz_csv.py app/build/weryfikacja/probka.csv --porownaj app/build/weryfikacja/oczekiwane.txt
+
+      # Wersja webowa (iPhone) jest testowana na tych samych danych: pliki muszą być aktualne.
+      - name: Zgodność z wersją webową (pliki testów)
+        run: |
+          for f in probka.csv oczekiwane.txt raport-tydzien.txt raport-miesiac.txt; do
+            diff -u "app/build/weryfikacja/$f" "../hours-web/test/fixtures/$f"
+          done
 
       - name: Klucz podpisu z sekretów
         if: env.HAS_SIGNING == 'true'

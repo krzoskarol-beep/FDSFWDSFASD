@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Godziny Pracy</title>
+<meta name="description" content="Clock In / Clock Out, godziny i wypłata tygodnia i miesiąca.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Godziny">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F3F0E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="app">
+  <header class="top">
+    <div>
+      <h1>Godziny Pracy</h1>
+      <p class="sub">Clock In · Clock Out · wypłata</p>
+    </div>
+    <button id="rateBtn" class="chip" aria-label="Ustawienia i stawka"></button>
+  </header>
+
+  <section class="card clock">
+    <p id="status" class="status">Nie jesteś w pracy</p>
+    <p id="timer" class="timer idle">00:00:00</p>
+    <p id="earned" class="earned" hidden></p>
+    <p id="earnedLabel" class="dim small" hidden>zarobione na tej zmianie</p>
+    <button id="clockBtn" class="big in">Clock In</button>
+  </section>
+
+  <section class="card">
+    <div class="nav">
+      <button id="prevWeek" class="ghost sq" aria-label="Poprzedni tydzień">‹</button>
+      <div class="navlabel"><span class="eyebrow">Tydzień</span><span id="weekLabel" class="num"></span></div>
+      <button id="nextWeek" class="ghost sq" aria-label="Następny tydzień">›</button>
+    </div>
+    <button id="thisWeek" class="link" hidden>Wróć do bieżącego tygodnia</button>
+    <div class="totals">
+      <div><span class="eyebrow">Godziny</span><span id="weekHours" class="figure num"></span><span id="weekHoursDec" class="dim small"></span></div>
+      <div class="right"><span class="eyebrow">Do wypłaty</span><span id="weekPay" class="figure num money"></span><span id="weekDays" class="dim small"></span></div>
+    </div>
+  </section>
+
+  <section class="card list">
+    <h2 class="eyebrow">Wpisy</h2>
+    <p id="editHint" class="dim small pad">Dotknij wpis, aby go zmienić. Dotknij datę dnia, aby usunąć cały dzień.</p>
+    <div id="undoBar" class="undo" hidden><span id="undoText"></span><button id="undoBtn" class="link">Cofnij</button></div>
+    <p id="emptyMsg" class="dim pad">Brak wpisów w tym tygodniu. Naciśnij Clock In albo dodaj wpis ręcznie.</p>
+    <div id="entryList"></div>
+    <button id="addEntry" class="ghost wide">+ Dodaj wpis ręcznie</button>
+  </section>
+
+  <div class="two">
+    <button id="weekReportBtn" class="dark">Raport tygodnia</button>
+    <button id="monthReportBtn" class="dark">Raport miesiąca</button>
+  </div>
+  <p id="installHint" class="dim small center" hidden>Na iPhonie: Udostępnij → „Do ekranu początkowego”, aby mieć ikonę i działać offline.</p>
+</main>
+
+<!-- Edycja / nowy wpis -->
+<dialog id="entryDlg">
+  <form method="dialog" id="entryForm">
+    <h3 id="entryTitle">Edytuj wpis</h3>
+    <label class="eyebrow" for="fDate">Data</label>
+    <input type="date" id="fDate" required>
+    <div class="row2">
+      <div><label class="eyebrow" for="fStart">Początek</label><input type="time" id="fStart" required></div>
+      <div><label class="eyebrow" for="fEnd">Koniec</label><input type="time" id="fEnd"><button type="button" id="fEndRunning" class="ghost wide" hidden>trwa… ✎</button></div>
+    </div>
+    <span class="eyebrow">Odejmij / dodaj czas</span>
+    <div class="row4" id="adjustRow">
+      <button type="button" class="ghost" data-delta="-60">−1 h</button>
+      <button type="button" class="ghost" data-delta="-15">−15 min</button>
+      <button type="button" class="ghost" data-delta="15">+15 min</button>
+      <button type="button" class="ghost" data-delta="60">+1 h</button>
+    </div>
+    <span class="eyebrow">Przerwa bezpłatna (min)</span>
+    <div class="row5" id="breakRow">
+      <button type="button" class="toggle" data-break="0">0</button>
+      <button type="button" class="toggle" data-break="15">15</button>
+      <button type="button" class="toggle" data-break="30">30</button>
+      <button type="button" class="toggle" data-break="45">45</button>
+      <button type="button" class="toggle" data-break="60">60</button>
+    </div>
+    <p id="fSummary" class="summary num"></p>
+    <p id="fClock" class="dim small" hidden></p>
+    <p id="fHint" class="dim small" hidden></p>
+    <p id="fError" class="error" hidden></p>
+    <div class="actions">
+      <button type="button" id="fDelete" class="link danger">Usuń</button>
+      <span class="grow"></span>
+      <button type="button" id="fCancel" class="link">Anuluj</button>
+      <button type="submit" id="fSave" class="link strong">Zapisz</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Dzień -->
+<dialog id="dayDlg">
+  <h3 id="dayTitle"></h3>
+  <pre id="dayText" class="daytext"></pre>
+  <div class="actions">
+    <button type="button" id="dayAdd" class="link">Dodaj</button>
+    <span class="grow"></span>
+    <button type="button" id="dayCancel" class="link">Anuluj</button>
+    <button type="button" id="dayDelete" class="link danger strong">Usuń dzień</button>
+  </div>
+</dialog>
+
+<!-- Raport -->
+<dialog id="reportDlg" class="wide">
+  <h3 id="reportTitle">Raport</h3>
+  <div class="nav">
+    <button type="button" id="repPrev" class="ghost sq" aria-label="Wcześniej">‹</button>
+    <div class="navlabel"><span id="repLabel" class="num strongtxt"></span></div>
+    <button type="button" id="repNext" class="ghost sq" aria-label="Później">›</button>
+  </div>
+  <pre id="reportText" class="report"></pre>
+  <div class="actions">
+    <button type="button" id="repCopy" class="link">Kopiuj</button>
+    <span class="grow"></span>
+    <button type="button" id="repClose" class="link">Zamknij</button>
+    <button type="button" id="repShare" class="link strong">Udostępnij</button>
+  </div>
+</dialog>
+
+<!-- Ustawienia -->
+<dialog id="settingsDlg">
+  <form method="dialog" id="settingsForm">
+    <h3>Ustawienia <span id="version" class="dim small"></span></h3>
+    <label class="eyebrow" for="sRate">Stawka godzinowa (USD)</label>
+    <input id="sRate" inputmode="decimal" autocomplete="off" class="num biginput">
+    <label class="check"><input type="checkbox" id="sRateWeek" checked> Nowa stawka także dla wpisów z bieżącego tygodnia</label>
+    <p id="sError" class="error" hidden></p>
+    <label class="eyebrow" for="sWeek">Tydzień roboczy zaczyna się (jak u pracodawcy)</label>
+    <select id="sWeek"></select>
+    <span class="eyebrow">Wygląd</span>
+    <div class="radios" id="sTheme">
+      <label><input type="radio" name="theme" value="system"> jak w telefonie</label>
+      <label><input type="radio" name="theme" value="light"> jasny</label>
+      <label><input type="radio" name="theme" value="dark"> ciemny</label>
+    </div>
+    <span class="eyebrow">Kopia danych (CSV)</span>
+    <p class="dim small">Dane są tylko w tym telefonie. Rób kopię co jakiś czas. Ten sam plik działa w aplikacji na Androida.</p>
+    <div class="row2">
+      <button type="button" id="sExport" class="ghost">Eksportuj</button>
+      <button type="button" id="sImport" class="ghost">Przywróć</button>
+    </div>
+    <input type="file" id="sFile" accept=".csv,text/csv,text/plain" hidden>
+    <div class="actions">
+      <span class="grow"></span>
+      <button type="button" id="sCancel" class="link">Anuluj</button>
+      <button type="submit" class="link strong">Zapisz</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Potwierdzenie / komunikat -->
+<dialog id="askDlg">
+  <h3 id="askTitle"></h3>
+  <p id="askText"></p>
+  <div class="actions"><span class="grow"></span><button type="button" id="askNo" class="link">Anuluj</button><button type="button" id="askYes" class="link strong">OK</button></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -118,6 +118,7 @@ public class MainActivity extends Activity {
         thisWeek.setOnClickListener(v -> { weekStart = currentWeekStart(); refresh(); });
         findViewById(R.id.addEntry).setOnClickListener(v -> showEntryDialog(null));
         findViewById(R.id.reportBtn).setOnClickListener(v -> showReport());
+        findViewById(R.id.monthReportBtn).setOnClickListener(v -> showMonthReport());
         findViewById(R.id.undoBtn).setOnClickListener(v -> undoDelete());
     }
 
@@ -771,6 +772,80 @@ public class MainActivity extends Activity {
                 })
                 .setNegativeButton("Zamknij", null)
                 .show();
+    }
+
+    /** Raport miesiąca: domyślnie miesiąc oglądanego tygodnia (bieżący, gdy to bieżący tydzień). */
+    private void showMonthReport() {
+        long now = System.currentTimeMillis();
+        long thisMonth = Report.monthStart(now, tz);
+        long[] month = {weekStart == currentWeekStart() ? thisMonth : Report.monthStart(weekStart, tz)};
+        String[] text = new String[1];
+
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout nav = new LinearLayout(this);
+        nav.setGravity(Gravity.CENTER_VERTICAL);
+        nav.setPadding(dp(16), dp(4), dp(16), 0);
+        Button prev = navButton("‹", getString(R.string.prev_month));
+        Button next = navButton("›", getString(R.string.next_month));
+        TextView label = text("", 17, R.color.ink);
+        label.setGravity(Gravity.CENTER);
+        label.setTypeface(Typeface.DEFAULT_BOLD);
+        nav.addView(prev, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        nav.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        nav.addView(next, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        box.addView(nav);
+
+        TextView t = text("", 12, R.color.ink);
+        t.setId(R.id.monthReportText);
+        t.setTypeface(Typeface.MONOSPACE);
+        t.setTextIsSelectable(true);
+        t.setPadding(dp(20), dp(8), dp(20), dp(8));
+        HorizontalScrollView h = new HorizontalScrollView(this);
+        h.addView(t);
+        ScrollView sv = new ScrollView(this);
+        sv.addView(h);
+        box.addView(sv);
+
+        Runnable render = () -> {
+            text[0] = Report.buildMonth(store.all(), month[0], store.firstDay(),
+                    System.currentTimeMillis(), tz) + "\nGodziny Pracy " + BuildConfig.VERSION_NAME + "\n";
+            t.setText(text[0]);
+            label.setText(Report.monthLabel(month[0], tz));
+            boolean last = month[0] >= thisMonth;
+            next.setEnabled(!last);
+            next.setAlpha(last ? 0.35f : 1f);
+        };
+        prev.setOnClickListener(v -> { month[0] = Report.addMonths(month[0], -1, tz); render.run(); });
+        next.setOnClickListener(v -> { month[0] = Report.addMonths(month[0], 1, tz); render.run(); });
+        render.run();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Raport miesiąca")
+                .setView(box)
+                .setPositiveButton("Udostępnij", (d, w) -> {
+                    Intent send = new Intent(Intent.ACTION_SEND)
+                            .setType("text/plain")
+                            .putExtra(Intent.EXTRA_SUBJECT, "Godziny pracy " + Report.monthLabel(month[0], tz))
+                            .putExtra(Intent.EXTRA_TEXT, text[0]);
+                    startActivity(Intent.createChooser(send, "Wyślij raport"));
+                })
+                .setNeutralButton("Kopiuj", (d, w) -> {
+                    ClipboardManager cm = getSystemService(ClipboardManager.class);
+                    cm.setPrimaryClip(ClipData.newPlainText("Raport godzin", text[0]));
+                    toast("Skopiowano raport.");
+                })
+                .setNegativeButton("Zamknij", null)
+                .show();
+    }
+
+    private Button navButton(String label, String description) {
+        Button b = new Button(this, null, 0, R.style.Btn_Ghost);
+        b.setText(label);
+        b.setTextSize(20);
+        b.setPadding(0, 0, 0, 0);
+        b.setContentDescription(description);
+        return b;
     }
 
     // ------------------------------------------------------------ pomocnicze

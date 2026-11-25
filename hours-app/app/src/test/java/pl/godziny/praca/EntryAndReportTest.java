@@ -84,4 +84,36 @@ public class EntryAndReportTest {
         assertTrue(r, !r.contains("Czas liczony") && !r.contains("Przerwy odjęte"));
         assertTrue(r, r.trim().endsWith("DO WYPŁATY:  $1,428.00 brutto"));   // nic pod kwotą
     }
+
+    @Test public void monthlyReportClipsToMonthAndGroupsWeeks() {
+        java.util.TimeZone tz = WorkMathTest.WAW;
+        long h = WorkMath.HOUR;
+        long oct30 = WorkMathTest.t(tz, 2026, 10, 30, 8, 0);   // pt — poza listopadem
+        long nov2 = WorkMathTest.t(tz, 2026, 11, 2, 8, 0);     // pn — tydzień 02.11
+        long nov1 = WorkMathTest.t(tz, 2026, 11, 1, 9, 0);     // nd — tydzień 26.10–01.11 (przycięty)
+        long nov30 = WorkMathTest.t(tz, 2026, 11, 30, 7, 0);   // pn — tydzień 30.11 (przycięty)
+        long dec1 = WorkMathTest.t(tz, 2026, 12, 1, 7, 0);     // wt — poza listopadem
+        java.util.List<Entry> all = Arrays.asList(
+                new Entry(1, oct30, oct30 + 8 * h),
+                new Entry(2, nov1, nov1 + 4 * h),
+                new Entry(3, nov2, nov2 + 8 * h),
+                new Entry(4, nov2 + 24 * h, nov2 + 24 * h + 8 * h + 30 * WorkMath.MINUTE),
+                new Entry(5, nov30, nov30 + 10 * h),
+                new Entry(6, dec1, dec1 + 8 * h));
+        long m = Report.monthStart(WorkMathTest.t(tz, 2026, 11, 17, 12, 0), tz);
+        assertEquals(WorkMathTest.t(tz, 2026, 11, 1, 0, 0), m);
+        String r = Report.buildMonth(all, m, java.util.Calendar.MONDAY, 0, tz);
+        assertTrue(r, r.contains("Miesiąc: listopad 2026 (01.11 – 30.11.2026)"));
+        assertTrue(r, r.contains("Tydzień 01.11 – 01.11\nNd 01.11  09:00–13:00    4:00 h    $136.00"));
+        assertTrue(r, r.contains("Tydzień 02.11 – 08.11\n"));
+        assertTrue(r, r.contains("razem tygodnia: 16:30 h  $561.00"));
+        assertTrue(r, r.contains("Tydzień 30.11 – 30.11\n"));
+        assertTrue(r, !r.contains("30.10") && !r.contains("01.12"));        // spoza miesiąca
+        assertTrue(r, r.contains("Dni pracy:   4"));
+        assertTrue(r, r.contains("Razem:       30:30 h (30.50 h)"));
+        assertTrue(r, r.contains("DO WYPŁATY:  $1,037.00 brutto"));          // 30.5 h × $34
+        assertEquals("październik 2026", Report.monthLabel(Report.addMonths(m, -1, tz), tz));
+        assertTrue(Report.buildMonth(all, Report.addMonths(m, -5, tz), java.util.Calendar.MONDAY, 0, tz)
+                .contains("Brak wpisów w tym miesiącu."));
+    }
 }

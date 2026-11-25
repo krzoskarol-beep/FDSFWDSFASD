@@ -23,6 +23,9 @@ Stawka domyślna: **$34.00/h** (można zmienić).
   pokazują, co poprawiono ręcznie albo dodano ręcznie.
 - **Kopia CSV** — eksport do Excela/Arkuszy i przywracanie z tego samego pliku (Ustawienia).
 - **Ostrzeżenie** przy zmianie trwającej ponad 12 h (zapomniany Clock Out).
+- **Raport miesiąca** — wpisy z miesiąca kalendarzowego pogrupowane w tygodnie robocze
+  (tydzień na przełomie miesięcy przycięty), suma każdego tygodnia i miesiąca; ‹ › zmienia miesiąc.
+- **Wersja na iPhone'a** — `hours-web/` (aplikacja webowa, ten sam CSV i te same raporty).
 - **Raport tygodnia** — czytelne zestawienie dzień po dniu z sumą godzin i wypłatą;
   można je skopiować albo udostępnić (SMS, e-mail, WhatsApp…).
 - **Ustawienia** (przycisk ze stawką): stawka godzinowa, dzień początku
