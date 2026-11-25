@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 8.1+: jasny pasek nawigacji z ciemnymi ikonami (tylko jasny motyw;
+         w trybie nocnym wygrywa values-night/themes.xml). -->
+    <style name="Base.AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

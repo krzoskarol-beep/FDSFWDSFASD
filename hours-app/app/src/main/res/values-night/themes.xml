@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ciemne bazy: widżety systemowe (pola, przełączniki, kalendarz, zegar) też są ciemne. -->
+    <style name="Base.AppTheme" parent="android:Theme.Material.NoActionBar">
+        <item name="android:navigationBarColor">@color/bg</item>
+    </style>
+    <style name="Base.DialogTheme" parent="android:Theme.Material.Dialog.Alert" />
+</resources>

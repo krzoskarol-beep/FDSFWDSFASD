@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Godziny Pracy</string>
+    <string name="header_sub">Clock In · Clock Out · wypłata</string>
+    <string name="clock_in">Clock In</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="status_off">Nie jesteś w pracy</string>
+    <string name="earned_label">zarobione na tej zmianie</string>
+    <string name="week_title">TYDZIEŃ</string>
+    <string name="this_week">Wróć do bieżącego tygodnia</string>
+    <string name="hours_label">GODZINY</string>
+    <string name="pay_label">DO WYPŁATY</string>
+    <string name="entries_title">WPISY</string>
+    <string name="no_entries">Brak wpisów w tym tygodniu. Naciśnij Clock In albo dodaj wpis ręcznie.</string>
+    <string name="add_entry">+ Dodaj wpis ręcznie</string>
+    <string name="report">Raport tygodnia</string>
+    <string name="prev_week">Poprzedni tydzień</string>
+    <string name="next_week">Następny tydzień</string>
+    <string name="settings">Ustawienia stawki</string>
+    <string name="date">Data</string>
+    <string name="start">Początek</string>
+    <string name="end">Koniec</string>
+    <string name="rate_label">Stawka godzinowa (USD)</string>
+    <string name="week_start_label">Tydzień roboczy zaczyna się (jak u pracodawcy)</string>
+    <string name="theme_label">Wygląd</string>
+    <string name="theme_system">jak w telefonie</string>
+    <string name="theme_light">jasny</string>
+    <string name="theme_dark">ciemny</string>
+    <string name="adjust_label">Odejmij / dodaj czas</string>
+    <string name="minus_60">−1 h</string>
+    <string name="minus_15">−15 min</string>
+    <string name="plus_15">+15 min</string>
+    <string name="plus_60">+1 h</string>
+    <string name="tap_to_edit">Dotknij wpis, aby go zmienić. Dotknij datę dnia, aby usunąć cały dzień.</string>
+    <string name="break_label">Przerwa bezpłatna (min)</string>
+    <string name="rate_this_week">Nowa stawka także dla wpisów z bieżącego tygodnia</string>
+    <string name="backup_label">Kopia danych (CSV)</string>
+    <string name="backup_help">Plik otworzysz w Excelu/Arkuszach. Ten sam plik przywraca wszystkie wpisy, np. na nowym telefonie.</string>
+    <string name="export_csv">Eksportuj</string>
+    <string name="import_csv">Przywróć</string>
+    <string name="undo">Cofnij</string>
+    <string name="month_report">Raport miesiąca</string>
+    <string name="prev_month">Poprzedni miesiąc</string>
+    <string name="next_month">Następny miesiąc</string>
+</resources>

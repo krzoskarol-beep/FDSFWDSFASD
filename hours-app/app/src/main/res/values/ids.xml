@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tekst raportu miesięcznego (widok tworzony w kodzie; id dla testów). -->
+    <item name="monthReportText" type="id" />
+</resources>

@@ -1,0 +1,60 @@
+# Testy wersji webowej (iPhone) „Godziny Pracy” (katalog hours-web/):
+#  - logika (Node) z danymi wygenerowanymi przez aplikację na Androida: te same sumy,
+#    identyczny CSV i identyczne raporty,
+#  - cała aplikacja w przeglądarce z ekranem iPhone'a (Playwright + Chromium).
+name: Web – Godziny Pracy (iPhone)
+
+on:
+  push:
+    paths:
+      - "hours-web/**"
+      - ".github/workflows/hours-web.yml"
+  pull_request:
+    paths:
+      - "hours-web/**"
+      - ".github/workflows/hours-web.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: hours-web-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: hours-web
+
+jobs:
+  test:
+    name: Logika i test w przeglądarce
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Logika (zgodność z Androidem)
+        run: npm test
+
+      - name: Playwright + Chromium
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+
+      - name: Test całej aplikacji (ekran iPhone'a)
+        run: node test/e2e.mjs "$RUNNER_TEMP/zrzuty"
+
+      - name: Zrzuty ekranu
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zrzuty-hours-web
+          path: ${{ runner.temp }}/zrzuty
+          if-no-files-found: ignore

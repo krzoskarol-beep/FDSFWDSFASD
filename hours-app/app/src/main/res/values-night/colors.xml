@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ciemny motyw: grafitowe tło, jasny tekst, rozjaśniona zieleń i czerwień
+         (kontrast tekstu co najmniej 4.5:1 na tle panelu). -->
+    <color name="bg">#111315</color>
+    <color name="panel">#1A1D21</color>
+    <color name="line">#2C3138</color>
+    <color name="chip">#262A30</color>
+    <color name="ink">#ECEEF1</color>
+    <color name="ink_dim">#9AA1AB</color>
+    <color name="green">#4CC793</color>
+    <color name="red">#F07A66</color>
+    <color name="ripple">#26FFFFFF</color>
+
+    <color name="btn_green">#1E8C63</color>
+    <color name="btn_red">#C2412D</color>
+    <color name="btn_strong">#2F343B</color>
+    <color name="on_strong">#ECEEF1</color>
+    <color name="on_color">#FFFFFF</color>
+    <color name="ripple_on_color">#40FFFFFF</color>
+
+    <bool name="light_bars">false</bool>
+</resources>
